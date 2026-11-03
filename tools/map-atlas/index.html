@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Krusha • collectible placement atlas</title><link rel="stylesheet" href="atlas.css"></head>
+<body>
+<header><div><span class="eyebrow">DK64 / PLACEMENT STUDY 01</span><h1>Room for one more.</h1></div>
+<div class="headnote">Original USA maps · existing collectibles<br><strong>Planning reference — no game changes</strong></div></header>
+<div class="layout">
+<aside class="sidebar">
+<label class="caption" for="search">FIND A LEVEL OR INTERIOR</label><input id="search" placeholder="Try Japes, lobby, mushroom…" type="search">
+<nav id="maps" aria-label="All game maps"></nav>
+<p class="small">Every adventure exterior, subarea and lobby is included. Shared shops and bonus maps are listed separately.</p>
+</aside>
+<main>
+<div class="mapheading"><div><span id="group" class="eyebrow"></span><h2 id="mapname">Loading map…</h2></div><span id="mapid" class="pill"></span></div>
+<div class="styles" role="group" aria-label="Compare map styles">
+<button data-style="A"><b>A</b><span>Clean plan<small>Best for marking placements</small></span></button>
+<button data-style="B"><b>B</b><span>Elevation plan<small>Height shown by terrain shade</small></span></button>
+<button data-style="C"><b>C</b><span>Tilted overview<small>Understand stacked spaces</small></span></button>
+</div>
+<div class="canvasbar"><span id="summary"></span><div><button id="zoomout" title="Zoom out">−</button><button id="zoomin" title="Zoom in">+</button><button id="fit">Fit map</button><button id="png">Save PNG</button></div></div>
+<div id="stage"><canvas id="map" aria-label="Map with color-coded collectibles; matching details in item list"></canvas><div id="tooltip" hidden></div></div>
+<div class="mapfoot"><span>Wheel: zoom · drag: pan · click an item: details</span><span id="coords">Top: −Z · right: +X · game coordinates</span></div>
+<div class="notice"><strong>Reference coverage:</strong> placed bananas, coins, supplies, reward objects, bonus barrels, Kasplats and fairies. Scripted rewards/enemy drops are not a complete item inventory. Balloons/fairies mark their initial anchor, not their whole route. Walls/props/water can differ from the collision floor plan.</div>
+<section class="annotations"><div><h3>Sketch Krusha’s placements</h3><p>Pick a height band first if floors overlap. Pins are proposals, never changes to the ROM.</p></div>
+<div class="pincontrols"><label><input type="checkbox" id="place"> Add pins on click</label><button id="export">Export notes JSON</button><label class="filebutton">Import notes<input type="file" id="import" accept="application/json"></label></div>
+<p class="small">Export your notes to keep a portable backup. Browser storage for local files is not guaranteed.</p><div id="pins"></div></section>
+</main>
+<aside class="inspector">
+<h3>Show existing items</h3><div id="owners" class="checks"></div><div id="kinds" class="checks"></div>
+<label class="check"><input id="labels" type="checkbox"> Show short item IDs</label>
+<h3>Separate overlapping floors</h3><label class="small" for="miny">Minimum height Y</label><input id="miny" type="number"><label class="small" for="maxy">Maximum height Y</label><input id="maxy" type="number"><button id="allheights">All heights</button><p class="small">A height band is a spatial slice, not an automatically identified room/floor. Item anchors can sit above the floor.</p>
+<h3>Selected item</h3><div id="detail" class="detail">Click a symbol or a row below to inspect exact coordinates and source.</div>
+<h3>Visible reference items</h3><p id="count" class="small"></p><div id="items"></div>
+</aside></div>
+<footer>Read-only extraction from your USA ROM. All 216 game map IDs indexed, including non-adventure maps. Collision-format reference: <a href="https://github.com/theballaam96/DonkViewer">DonkViewer</a> (Ballaam, MIT); <a href="DonkViewer-LICENSE.txt">license</a>. No network or ROM upload required.</footer>
+<script src="catalog.js"></script><script src="atlas.js"></script></body></html>
