@@ -14,6 +14,7 @@ import math
 import shutil
 import struct
 import sys
+import time
 import zlib
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -27,6 +28,7 @@ BASE = 0x101C50
 KONGS = ['DK', 'Diddy', 'Lanky', 'Tiny', 'Chunky']
 WORLDS = ['Jungle Japes', 'Angry Aztec', 'Frantic Factory', 'Gloomy Galleon',
           'Fungi Forest', 'Crystal Caves', 'Creepy Castle', 'DK Isles', 'Hideout Helm']
+UI_FILES = ('index.html', 'atlas.js', 'planner.js', 'atlas.css', 'DonkViewer-LICENSE.txt')
 
 
 def unpack(fmt, data, offset=0):
@@ -196,9 +198,25 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
     ap.add_argument('--out', type=Path, default=ROOT / 'runtime/map-atlas/atlas')
+    ap.add_argument('--refresh-ui', action='store_true',
+                    help='Back up and refresh only UI files of an existing atlas; keep geometry and exported plans.')
     args = ap.parse_args()
-    rom = ROM(args.rom)
     out = args.out.resolve()
+    if args.refresh_ui:
+        metadata = json.loads((out / 'coverage.json').read_text())
+        if metadata.get('source_sha1') != 'cf806ff2603640a748fca5026ded28802f1f4a50' or metadata.get('map_count') != 216:
+            raise SystemExit('Refresh requires an existing matching USA atlas.')
+        backup = out / 'ui-history' / str(time.time_ns())
+        backup.mkdir(parents=True)
+        for name in UI_FILES:
+            if (out / name).exists():
+                shutil.copyfile(out / name, backup / name)
+        for name in UI_FILES:
+            shutil.copyfile(ROOT / 'tools/map-atlas' / name, out / name)
+        print(f'Updated interface; previous UI preserved in {backup}')
+        print(out / 'index.html')
+        return
+    rom = ROM(args.rom)
     # Do not overwrite an atlas that may contain browser/downloaded planning notes.
     if out.exists():
         raise SystemExit('Output already exists. Choose a new --out directory to preserve annotations.')
@@ -232,9 +250,8 @@ def main():
                     coverage='Placed objects and enemy spawners; scripted rewards/drops are not a complete inventory.')
     (out / 'catalog.js').write_text('window.ATLAS_CATALOG=' + json.dumps(metadata, separators=(',', ':')) + ';\n')
     (out / 'coverage.json').write_text(json.dumps(metadata, indent=2) + '\n')
-    for name in ('index.html', 'atlas.js', 'atlas.css'):
+    for name in UI_FILES:
         shutil.copyfile(ROOT / 'tools/map-atlas' / name, out / name)
-    shutil.copyfile(ROOT / 'tools/map-atlas/DonkViewer-LICENSE.txt', out / 'DonkViewer-LICENSE.txt')
     print(f'Built {len(catalog)} maps, {sum(m["points"] for m in catalog):,} reference markers.')
     print(out / 'index.html')
 

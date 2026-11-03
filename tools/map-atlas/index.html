@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Krusha • collectible placement atlas</title><link rel="stylesheet" href="atlas.css"></head>
 <body>
-<header><div><span class="eyebrow">DK64 / PLACEMENT STUDY 01</span><h1>Room for one more.</h1></div>
+<header><div><span class="eyebrow">DK64 / COLLECTIBLE PLANNER</span><h1>Room for one more.</h1></div>
 <div class="headnote">Original USA maps · existing collectibles<br><strong>Planning reference — no game changes</strong></div></header>
 <div class="layout">
 <aside class="sidebar">
@@ -14,23 +14,34 @@
 <div class="mapheading"><div><span id="group" class="eyebrow"></span><h2 id="mapname">Loading map…</h2></div><span id="mapid" class="pill"></span></div>
 <div class="styles" role="group" aria-label="Compare map styles">
 <button data-style="A"><b>A</b><span>Clean plan<small>Best for marking placements</small></span></button>
-<button data-style="B"><b>B</b><span>Elevation plan<small>Height shown by terrain shade</small></span></button>
-<button data-style="C"><b>C</b><span>Tilted overview<small>Understand stacked spaces</small></span></button>
+<button data-style="C"><b>C</b><span>Rotatable overview<small>Look around stacked spaces</small></span></button>
 </div>
+<div id="rotation-controls" class="rotation" hidden><label for="yaw">Rotate around the map <output id="yaw-value" for="yaw">45°</output></label><input id="yaw" type="range" min="0" max="360" step="1" value="45"><button id="yaw-left">−90°</button><button id="yaw-reset">Reset</button><button id="yaw-right">+90°</button></div>
+<div class="heightbar"><strong>Visible height band</strong><label>Y from <input id="miny" type="number" step="any"></label><label>to <input id="maxy" type="number" step="any"></label><button id="allheights">All heights</button><span>Isolate stacked floors before placing.</span></div>
+<section class="brush" aria-label="Krusha collectible palette">
+<div class="brushhead"><strong>Krusha’s collectibles</strong><label><input type="checkbox" id="place"> Add on click</label><button id="undo" disabled>Undo</button><button id="redo" disabled>Redo</button><button id="export">Save plan JSON</button></div>
+<div class="brushfields"><label>Type<select id="brush-kind"></select></label><label>Objects at this point<input id="brush-quantity" type="number" min="1" max="9999" value="1" step="1"></label><label>Height<select id="height-mode"><option value="surface">On highest floor in band</option><option value="manual">Set Y manually</option></select></label><label id="offset-label">Above floor<input id="height-offset" type="number" value="20" step="1"></label><label id="manual-label" hidden>Y position<input id="manual-y" type="number" value="100" step="1"></label></div>
+<p id="placement-status" role="status">Choose a type, enable Add on click, then click map A. Select a gray proposal to edit it.</p>
+</section>
 <div class="canvasbar"><span id="summary"></span><div><button id="zoomout" title="Zoom out">−</button><button id="zoomin" title="Zoom in">+</button><button id="fit">Fit map</button><button id="png">Save PNG</button></div></div>
 <div id="stage"><canvas id="map" aria-label="Map with color-coded collectibles; matching details in item list"></canvas><div id="tooltip" hidden></div></div>
 <div class="mapfoot"><span>Wheel: zoom · drag: pan · click an item: details</span><span id="coords">Top: −Z · right: +X · game coordinates</span></div>
 <div class="notice"><strong>Reference coverage:</strong> placed bananas, coins, supplies, reward objects, bonus barrels, Kasplats and fairies. Scripted rewards/enemy drops are not a complete item inventory. Balloons/fairies mark their initial anchor, not their whole route. Walls/props/water can differ from the collision floor plan.</div>
-<section class="annotations"><div><h3>Sketch Krusha’s placements</h3><p>Pick a height band first if floors overlap. Pins are proposals, never changes to the ROM.</p></div>
-<div class="pincontrols"><label><input type="checkbox" id="place"> Add pins on click</label><button id="export">Export notes JSON</button><label class="filebutton">Import notes<input type="file" id="import" accept="application/json"></label></div>
-<p class="small">Export your notes to keep a portable backup. Browser storage for local files is not guaranteed.</p><div id="pins"></div></section>
+<section class="annotations"><h3>Your placement plan</h3><div id="plan-totals"></div>
+<div class="pincontrols"><label class="filebutton">Load plan<input type="file" id="import" accept="application/json"></label><label>Matching IDs<select id="import-policy"><option value="keep">Keep current edits</option><option value="replace">Use loaded edits</option></select></label></div>
+<p id="storage-status" class="small" role="status">Export your plan for a portable backup. Browser storage for local files is not guaranteed.</p>
+<label class="small">List proposals in <select id="list-scope"><option value="area">this area</option><option value="world">this world</option><option value="all">all maps</option></select></label><div id="pins"></div></section>
 </main>
 <aside class="inspector">
+<section id="proposal-editor" hidden><h3>Edit Krusha collectible</h3><form id="edit-proposal">
+<label>Label<input id="edit-label" maxlength="500" required></label><label>Type<select id="edit-kind"></select></label><label>Number of objects<input id="edit-quantity" type="number" min="1" max="9999" step="1" required></label>
+<div class="coordinates"><label>X<input id="edit-x" type="number" step="any" required></label><label>Y<input id="edit-y" type="number" step="any" required></label><label>Z<input id="edit-z" type="number" step="any" required></label></div>
+<label>Challenge / access notes<textarea id="edit-notes" rows="4" maxlength="5000" placeholder="How to reach it, puzzle idea, balloon route…"></textarea></label>
+<div class="editor-actions"><button type="submit">Apply edits</button><button type="button" id="move-proposal">Move on map A</button><button type="button" id="delete-proposal">Delete</button><button type="button" id="close-editor">Close</button></div><p id="editor-context" class="small"></p></form></section>
 <h3>Show existing items</h3><div id="owners" class="checks"></div><div id="kinds" class="checks"></div>
 <label class="check"><input id="labels" type="checkbox"> Show short item IDs</label>
-<h3>Separate overlapping floors</h3><label class="small" for="miny">Minimum height Y</label><input id="miny" type="number"><label class="small" for="maxy">Maximum height Y</label><input id="maxy" type="number"><button id="allheights">All heights</button><p class="small">A height band is a spatial slice, not an automatically identified room/floor. Item anchors can sit above the floor.</p>
 <h3>Selected item</h3><div id="detail" class="detail">Click a symbol or a row below to inspect exact coordinates and source.</div>
 <h3>Visible reference items</h3><p id="count" class="small"></p><div id="items"></div>
 </aside></div>
 <footer>Read-only extraction from your USA ROM. All 216 game map IDs indexed, including non-adventure maps. Collision-format reference: <a href="https://github.com/theballaam96/DonkViewer">DonkViewer</a> (Ballaam, MIT); <a href="DonkViewer-LICENSE.txt">license</a>. No network or ROM upload required.</footer>
-<script src="catalog.js"></script><script src="atlas.js"></script></body></html>
+<script src="catalog.js"></script><script src="planner.js"></script><script src="atlas.js"></script></body></html>
