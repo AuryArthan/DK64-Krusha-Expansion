@@ -55,6 +55,14 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
         table = 27;
         index -= 6999;
     }
+    if (table == 14 && index == 7200) {
+        table = 27;
+        index = 34;
+    }
+    if (table == 25 && index >= 7100 && index <= 7123) {
+        table = 27;
+        index -= 7090;
+    }
     return vanillaBarrelFile(table, index, synchronous, unique);
 }
 

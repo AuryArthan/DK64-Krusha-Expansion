@@ -293,3 +293,66 @@ krushaFilePortraitLayout:
     LWC1 f18, 0x8(t1)
     J 0x80031478
     NOP
+
+; Native pause builder and sprite updater prologues.
+vanillaPauseBuild:
+    ADDIU sp, sp, -0x90
+    LUI t6, 0x8075
+    J 0x806AA30C
+    NOP
+vanillaPauseSprite:
+    ADDIU sp, sp, -0x58
+    SW ra, 0x1C(sp)
+    J 0x806AC084
+    NOP
+
+; Replace page*5 with page*current character count. Original delay-slot
+; floating multiply at806A9B18 still executes before entering this branch.
+krushaPauseRingStride:
+    LUI at, hi(krushaPauseCount)
+    LW at, lo(krushaPauseCount)(at)
+    MULT t9, at
+    MFLO s4
+    J 0x806A9B20
+    NOP
+
+vanillaSnideBoard:
+    ADDIU sp, sp, -0x50
+    LUI v0, 0x8080
+    J 0x80024EF8
+    NOP
+vanillaSnideDraw:
+    ADDIU sp, sp, -0x190
+    SW s0, 0x18(sp)
+    J 0x800252B4
+    NOP
+
+; Keep the expanded six-face ring vertically clear of headings/GB counters.
+; Native delay-slot X-anchor adjustment at806A9B7C executes before this hook.
+krushaPauseRingY:
+    LUI at, hi(krushaPauseCount)
+    LW at, lo(krushaPauseCount)(at)
+    ADDIU at, at, -6
+    BNEZ at, @@native
+    NOP
+    LUI at, 0x3F40
+    MTC1 at, f8
+    MUL.S f8, f20, f8
+    MUL.S f8, f0, f8
+    J 0x806A9B80
+    NOP
+@@native:
+    MUL.S f8, f0, f20
+    J 0x806A9B80
+    NOP
+
+saveNativeTotalGBs:
+    LUI a0, 0x8080
+    LUI a3, 0x8080
+    J 0x806FB420
+    NOP
+saveNativeHUDGBs:
+    ANDI t6, a0, 0xFF
+    SLL t7, t6, 2
+    J 0x806F8280
+    NOP

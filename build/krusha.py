@@ -9,6 +9,8 @@ def patchKrushaShop(filename):
                    if len(line.split()) >= 2)
     with open(filename, 'r+b') as stream:
         for address, symbol, prologue in [
+            (0x80024EF0, 'krushasnideboard', '27bdffb03c028080'),
+            (0x800252AC, 'krushasnidedraw', '27bdfe70afb00018'),
             (0x80032304, 'krushacompletionpercentage', '27bdffd8afbf0014'),
             (0x800297B8, 'krushafilesummaryinit', '27bdff80afbf004c'),
             (0x800291CC, 'krushafilesummarydraw', '27bdff10f7b40038'),
@@ -23,6 +25,13 @@ def patchKrushaShop(filename):
             stream.seek(address - 0x80024000)
             stream.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
             stream.write(bytes(4))
+        from progress_snide import patchSnide
+        patchSnide(stream, symbols)
+        stream.seek(0x80026508 - 0x80024000)
+        assert stream.read(4) == bytes.fromhex('0c1cc6aa')
+        stream.seek(0x80026508 - 0x80024000)
+        target = int(symbols['krushashopmedals'], 16)
+        stream.write((0x0C000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
         # Only mode15's sixth-face layout uses resident values. Native arrays
         # stay five-wide; preserve the original delay-slot LUI t8,8003.
         stream.seek(0x80031470 - 0x80024000)

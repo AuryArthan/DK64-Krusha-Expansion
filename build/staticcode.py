@@ -14,6 +14,10 @@ def patchStaticCode(filename):
 			(0x8060C6B8, 'krushasavepackedread', '27bdffd8afbf001c'),
 			(0x8060DC3C, 'krushasaveloadgame', '27bdffb8afb00018'),
 			(0x806ABE3C, 'krushacollecttotals', '27bdffd83c028080'),
+			(0x806AA304, 'krushapausebuild', '27bdff703c0e8075'),
+			(0x806AC07C, 'krushapausesprite', '27bdffa8afbf001c'),
+			(0x806FB418, 'krushatotalgbs', '3c0480803c078080'),
+			(0x806F8278, 'krushahudgbs', '308e00ff000e7880'),
 		]:
 			fh.seek(address - 0x805FB300)
 			assert fh.read(8) == bytes.fromhex(prologue), f'Unexpected save prologue at {address:X}'
@@ -35,6 +39,9 @@ def patchStaticCode(filename):
 		assert len(matches) == 1, 'Rainbow tutorial call differs from USA'
 		fh.seek(0x806F54E0 - 0x805FB300 + matches[0])
 		fh.write((0x0C000000 | ((int(symbols['krusharainbowcredit'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+
+		from progress_pause import patchPause
+		patchPause(fh, symbols)
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude

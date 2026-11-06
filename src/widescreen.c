@@ -42,6 +42,8 @@ static void pauseOffsets(s32* x, s32* y) {
     else if (*y >= 180) *y += PAUSE_BOTTOM_Y;
 }
 
+extern const void* krushaPauseIcon(const void*);
+
 void widescreenPauseSprite(void* menu, void* sprite, s32 x, s32 y,
                            f32 scale, u8 layer, s32 mode) {
     /* Modes 3/14 use x for a medal row; 5/8 use an orbit angle; 10 uses
@@ -50,6 +52,7 @@ void widescreenPauseSprite(void* menu, void* sprite, s32 x, s32 y,
     if (active() && (mode == 1 || mode == 2 || mode == 4 || mode == 6 ||
                      mode == 7 || mode == 9 || mode == 13))
         pauseOffsets(&x, &y);
+    sprite = (void*)krushaPauseIcon(sprite);
     widescreenNativePauseSprite(menu, sprite, x, y, scale, layer, mode);
 }
 

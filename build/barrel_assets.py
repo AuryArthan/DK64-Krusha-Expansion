@@ -194,6 +194,10 @@ def appendBarrelAssets(rom_path):
     payloads = [(ASSETS/n).read_bytes() for n in ('tag-barrel-six.bin','face-left.rgba5551','face-right.rgba5551')]
     from character_colors import shockwave_payloads
     payloads += shockwave_payloads(Path(rom_path).read_bytes(), read_file)
+    from progress_icons import owned_icon_payloads
+    payloads += owned_icon_payloads(Path(rom_path).read_bytes(), read_file)
+    from progress_snide import blueprint_payload
+    payloads += [blueprint_payload(Path(rom_path).read_bytes(), read_file)]
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)
         end = stream.tell()

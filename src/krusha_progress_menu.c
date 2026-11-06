@@ -23,6 +23,8 @@ static const FaceSprite krusha_face = {
     0x4B525553, 2, 1, 0, 2, 0xFFFFFFFF, 0, 1, 32, 64, 1, {7001, 7002},
 };
 
+const void* krushaProgressFace(void) { return &krusha_face; }
+
 /* Native scale slot5 overlaps erase-confirmation state at80033FAC. Keep all
  * three sixth-face values resident; native arrays remain strictly five-wide. */
 f32 krushaFilePortraitTransform[3] = {-200.0f, -200.0f, 1.0f};

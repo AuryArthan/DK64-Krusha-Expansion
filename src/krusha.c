@@ -15,6 +15,7 @@ extern void krushaColorsInstall(void);
 extern void vanillaBarrelEligibility(void);
 extern void krushaBarrelInstall(void);
 extern void krushaBarrelOption(void);
+extern void krushaPauseOption(void);
 extern void krushaRoarInstall(void);
 extern void krushaRoarTick(void);
 extern u8 krushaRoarStart(void);
@@ -314,6 +315,7 @@ void krushaAdventure(void) {
         option_loaded = 1;
     }
     krushaBarrelOption();
+    krushaPauseOption();
     krushaRoarTick();
     *(const u32**)0x8074C7EC = enabled ? boulder_collisions : (const u32*)0x8074B00C;
     /* The roar uses shared crystals, not a borrowed Kong's instrument stock.
@@ -322,6 +324,7 @@ void krushaAdventure(void) {
         // The native bazooka uses shared standard ammo and actor-7 projectiles.
         MovesBase[5].weapon_bitfield |= 1;
         MovesBase[5].ammo_belt = MovesBase[0].ammo_belt;
+        MovesBase[5].simian_slam = MovesBase[0].simian_slam;
         MovesBase[5].instrument_bitfield = 0;
         MovesBase[5].instrument_energy = 0;
         if (Character == 5 && Player && *(void**)Player) {

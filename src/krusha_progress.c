@@ -173,3 +173,32 @@ void krushaSaveLoadGame(u8 file, int refill) {
         if (level < 7) *(s16*)(0x807FC930 + level * 2) += MovesBase[5].tns_cb_count[level];
     }
 }
+
+/* Only Cranky's native medal-status/Jetpac count callsite uses this adapter.
+ * Aggregate collection already adds these bits itself; do not hook the general
+ * countSetFlags function or those totals would be credited twice. */
+int krushaShopMedals(int base, int width, int type) {
+    int (*native)(int,int,int) = (void*)0x80731AA8;
+    int count = native(base,width,type);
+    if (base == 0x225 && width == 40 && type == 0) {
+        unsigned int file = *(volatile u8*)0x807467C8;
+        for (int level = 0; level < 7; level++)
+            count += krushaProgressRead(file,KRUSHA_MEDAL_BIT+level,1);
+    }
+    return count;
+}
+
+extern int saveNativeTotalGBs(void);
+extern void saveNativeHUDGBs(u8 player);
+int krushaTotalGBs(void) {
+    int total = saveNativeTotalGBs();
+    if (DetectAdventure())
+        for (int level = 0; level < 8; level++) total += MovesBase[5].gb_count[level];
+    return total;
+}
+void krushaHUDGBs(u8 player) {
+    saveNativeHUDGBs(player);
+    if (player == 0 && DetectAdventure() && HUD) {
+        for (int level = 0; level < 8; level++) HUD[9].hud_count += MovesBase[5].gb_count[level];
+    }
+}
