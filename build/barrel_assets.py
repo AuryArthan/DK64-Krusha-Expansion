@@ -1,4 +1,4 @@
-"""Six-face tag barrel, using the approved T portrait and native materials.
+"""Six-face tag barrel, using the current approved portrait and native materials.
 
 Keep the original model and texture table untouched. Custom uncompressed files
 in previously unused pointer table 27 use the native resource loader.
@@ -21,7 +21,7 @@ SCALE = 1.15
 
 
 def prepare_startup_logo():
-    """Keep the user's final adjusted startup PNG unchanged across builds."""
+    """Validate the prepared startup PNG; builds do not resample it."""
     with Image.open(ROOT/'bin/Nintendo_Krusha.png') as logo:
         width, height = logo.size
         assert (width, height) == (232, 48)

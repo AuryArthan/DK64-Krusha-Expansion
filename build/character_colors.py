@@ -6,7 +6,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SHOCKWAVE_TEXTURE_IDS = tuple(range(7003, 7009))
-SHOCKWAVE_SECONDARY_COLOR = (160, 176, 196)  # #A0B0C4, cool blue-gray spikes
+SHOCKWAVE_SECONDARY_COLOR = (160, 176, 224)  # #A0B0E0, cool blue-gray spikes
 
 
 def identity_color():

@@ -1,0 +1,31 @@
+{
+  "source_filename": "krusha-face-source-new.png",
+  "source_sha256": "298ead5e004936f81b00f83826ab48be62c8d1ee28e99764624c41525158dde9",
+  "source_dimensions": [
+    256,
+    256
+  ],
+  "portrait_dimensions": [
+    64,
+    64
+  ],
+  "portrait_sha256": "3d27fd9539df91a6f09030bb7d065eb62b468efffc7de7057416f568b7236fca",
+  "portrait_resampler": "Pillow RGBA LANCZOS, full square; no cropping",
+  "startup_dimensions": [
+    232,
+    48
+  ],
+  "startup_silhouette_box": [
+    188,
+    5,
+    225,
+    42
+  ],
+  "startup_rgb": [
+    208,
+    208,
+    208
+  ],
+  "startup_mask": "Source alpha >=128, then LANCZOS 37x37",
+  "original_five_pixel_sha256": "ce0b8f00c1a7ac54b62367500d38a29e7c8d7582dc221a1111358c85a6d660d6"
+}
