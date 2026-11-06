@@ -40,7 +40,7 @@ int krushaPauseCheckFlag(int flag, int type) {
         if (flag == 0x4200) return 0;
         return krushaProgressRead(file(), flag - 0x4000, 1);
     }
-    if (pause_data && Character == 5 && (flag == 0x18B || flag == 0x18C)) return 1;
+    if (pause_data && DetectAdventure() && Character == 5 && (flag == 0x18B || flag == 0x18C)) return 1;
     return checkFlag(flag, type);
 }
 int krushaPauseFlagRange(int base, int first, int last, int character) {
@@ -55,7 +55,7 @@ int krushaPauseFlagRange(int base, int first, int last, int character) {
 }
 
 static void refresh(void) {
-    int count = krushaEnabled() ? 6 : 5;
+    int count = krushaEnabled() && DetectAdventure() ? 6 : 5;
     for (int i = 0; i < 5; i++) {
         krushaPauseFaces[i] = ((const void**)0x80750518)[i];
         krushaPauseUnlocked[i] = ((u8*)0x80750530)[i];
@@ -110,7 +110,7 @@ static void immediate(u32 address, u16 value) {
 
 void krushaPauseOption(void) {
     static int previous = -1;
-    int count = krushaEnabled() ? 6 : 5;
+    int count = krushaEnabled() && DetectAdventure() ? 6 : 5;
     if (previous == count) return;
     krushaPauseCount = count;
     refresh();
@@ -151,7 +151,7 @@ static const OwnedSprite owned_icons[3] = {
     {0x4B520102,1,1,0,2,0xFFFFFFFF,1,1,48,42,8,{7116,7117,7118,7119,7120,7121,7122,7123}},
 };
 const void* krushaPauseIcon(const void* sprite) {
-    if (!krushaEnabled() || Character != 5) return sprite;
+    if (!krushaEnabled() || !DetectAdventure() || Character != 5) return sprite;
     if ((u32)sprite == 0) return &owned_icons[0];
     if ((u32)sprite == 1) return &owned_icons[1];
     if ((u32)sprite == 12) return &owned_icons[2];
@@ -164,7 +164,7 @@ int krushaPauseMedalLayout(void* menu, const void* sprite, s32* x, s32 mode) {
     u8* data = menu;
     int bank = data[0x15];
     int area;
-    if (!krushaEnabled() || bank > 1) return 0;
+    if (!krushaEnabled() || !DetectAdventure() || bank > 1) return 0;
     area = ((s16*)(data+8))[bank];
     if (area < 0 || area > 8 ||
         ((u8*)0x80750560)[area] != 8) return 0;
