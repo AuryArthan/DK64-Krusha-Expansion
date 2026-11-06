@@ -26,3 +26,6 @@ codec_test/*
 __pycache__/
 *.eep
 *.st[0-9]
+
+# Rebuilt from the supplied original ROM before C compilation.
+/include/m2_pickups.generated.h

@@ -356,3 +356,17 @@ saveNativeHUDGBs:
     SLL t7, t6, 2
     J 0x806F8280
     NOP
+
+; M2 HUD icon selector: preserve native argument/frame prologue.
+m2NativeHUDSprite:
+    ADDIU sp, sp, -0x20
+    SW ra, 0x14(sp)
+    J 0x806FACF0
+    NOP
+
+; Scoped actor collision table dispatch, unchanged for all ordinary actors.
+m2NativeActorCollision:
+    ADDIU sp, sp, -0x30
+    SW ra, 0x2C(sp)
+    J 0x80675818
+    NOP

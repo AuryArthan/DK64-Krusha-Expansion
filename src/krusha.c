@@ -106,7 +106,9 @@ s32 krushaAmmoCollectible(s32 item, s32 type, u8 homing) {
     return vanillaAmmoCollectible(item, type, homing);
 }
 
+extern s32 m2Balloon(void*);
 void krushaBananaBalloon(void* sprite) {
+    if (m2Balloon(sprite)) return;
     /* Krusha's bazooka is absent from native balloon collision lists. Also
      * reject a matching Kong's shot left in flight before tagging to Krusha:
      * native balloon rewards use the current character's banana counters. */
@@ -149,7 +151,10 @@ u8 krushaSetAction(s16 action, void* actor, u8 player) {
     return vanillaSetAction(action, actor, player);
 }
 
+extern s32 m2PickupAllowed(s16,u8,u16);
 s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
+    s32 private_pickup=m2PickupAllowed(object_id,player,type);
+    if (private_pickup >= 0) return private_pickup;
     /* This predicate runs before collection/despawn. Let native eligibility
      * and stock updates handle shared supplies and battle crowns. Everything
      * tied to an original Kong's progression remains excluded. */
@@ -254,7 +259,7 @@ u8 krushaScriptCondition(u16* instruction, void* script, s16 object_id) {
         (operation == 0x38 || (operation == 0x12 && instruction[1] == 6) ||
          (operation == 0x10 && instruction[1] == 1 && instruction[2] == 1))) {
         ModelTwoData* objects = ObjectModel2Pointer;
-        for (s32 i = 0; i < ObjectModel2Count; i++) {
+        for (s32 i = 0; i < ObjectModel2Count_Dupe; i++) {
             /* Script handles use runtime_id (0x88), not setup ID (0x8A). */
             if (objects[i].runtime_id != object_id) continue;
             u16 type = objects[i].object_type;

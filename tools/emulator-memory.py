@@ -106,10 +106,14 @@ class Memory:
                     'xyz': [round(self.read(p + off, 'f32'), 2) for off in (0x7C, 0x80, 0x84)]})
         result['objects'] = []
         base = self.u32(0x807F6000)
-        for i in range(min(self.u32(0x807F6004), 1024)):
+        # 807F6004 is the next runtime ID, not the compacted live array size.
+        result['model2_live_count'] = self.u32(0x80747D70)
+        result['model2_next_runtime_id'] = self.u32(0x807F6004)
+        for i in range(min(result['model2_live_count'], 1024)):
             p = base + i * 0x90
             result['objects'].append({'pointer': hex(p), 'type': self.read(p + 0x84, 'u16'),
                 'id': self.read(p + 0x8A, 'u16'),
+                'runtime_id': self.read(p + 0x88, 'u16'),
                 'xyz': [round(self.read(p + off, 'f32'), 2) for off in (0, 4, 8)]})
         return result
 

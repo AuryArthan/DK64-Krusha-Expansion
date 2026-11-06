@@ -42,6 +42,8 @@ def patchStaticCode(filename):
 
 		from progress_pause import patchPause
 		patchPause(fh, symbols)
+		from m2_pickups import patch_code
+		patch_code(fh,symbols)
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude

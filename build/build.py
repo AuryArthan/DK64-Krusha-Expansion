@@ -25,6 +25,8 @@ print()
 print("[1 / 8] - Compiling C Code")
 from character_colors import write_identity_header
 write_identity_header()
+from m2_pickups import prepare as prepareM2, patch_setup as patchM2Setup, patch_paths as patchM2Paths
+prepareM2(ROMName)
 if os.path.exists("obj"):
 	shutil.rmtree('obj')
 os.mkdir("obj")
@@ -65,6 +67,10 @@ subprocess.run([ARMIPS, "asm/main.asm", "-strequ", "OUTPUT_ROM", newROMName,
                 "-sym", newROMName.replace(".z64", ".sym")], check=True)
 
 file_dict = [
+	{"name":"M2 Japes balloon paths", "pointer_table_index":15, "file_index":7,
+	 "source_file":"bin/M2JapesPaths.bin", "patcher":patchM2Paths, "do_not_compress":True},
+	{"name":"M2 Japes pickups", "pointer_table_index":9, "file_index":7,
+	 "source_file":"bin/M2JapesSetup.bin", "patcher":patchM2Setup},
 	{
 		"name": "Shop menu code",
 		"start": 0xCBE70,
@@ -290,7 +296,7 @@ with open(ROMName, "rb") as fh:
 					os.remove(x["source_file"])
 
 				with open(x["source_file"], "wb") as fg:
-					dec = zlib.decompress(byte_read, 15 + 32)
+					dec = byte_read if x.get("do_not_compress") and byte_read[:2] != b"\x1f\x8b" else zlib.decompress(byte_read, 15 + 32)
 					fg.write(dec)
 
 print("[4 / 8] - Patching Extracted Files")

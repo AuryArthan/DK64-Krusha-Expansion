@@ -9,6 +9,8 @@ extern s32* getFlagBlockAddress(s8 flagType);
 extern s32 isAddressActor(void* address);
 extern s32 getTimestamp();
 extern void dmaFileTransfer(s32 romStart, s32 romEnd, s32 ramStart);
+/* Internal immediate destructor; never call inside an actor update iterator.
+ * Use krushaNativeActorDelete (806782C0), which queues native deletion safely. */
 extern void deleteActor(void* actor);
 extern s32 spawnActor(s32 actorID, s32 actorBehaviour);
 extern void spawnTextOverlay(s32 style, s32 x, s32 y, s8* string, s32 timer1, s32 timer2, u8 effect, u8 speed);
