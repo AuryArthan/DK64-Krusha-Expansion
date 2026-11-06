@@ -22,6 +22,7 @@ def patchSnide(fh,symbols):
         patch(a,0x0C000000|((target&0xFFFFFFF)>>2),
               0x0C000000|((int(symbols[name],16)&0xFFFFFFF)>>2))
     patch(0x80024F8C,0x24041400,0x24041800)  # 48 cells * 8 vertices * 16 bytes
+    call(0x800247F8,0x806F70A8,'krushasnidehandoverevent')
     call(0x80024FA4,0x80731AA8,'krushasnideboardcomplete')
     call(0x80024CF0,0x80731AA8,'krushasnidechoicecount')
     calls={0x807319D8:'krushapauseflagindex',0x80731A04:'krushapauseflagrange',

@@ -98,3 +98,13 @@ Gfx* krushaSnideDraw(Gfx* dl, void* actor) {
     codeImmediate(0x80025430, enabled ? 7200 : 0xA3);
     return vanillaSnideDraw(dl,actor);
 }
+
+int krushaSnideHandoverEvent(s16 event) {
+    int (*native)(s16) = (void*)0x806F70A8;
+    int ready = native(event);
+    /* Krusha has no native blueprint-handover animation event. This callsite
+     * runs only in Snide's handover stage: credit genuinely held flags there.
+     * The original once-only returned flags/save path still prevent repeats. */
+    if (!ready && Character == 5 && event == 4 && krushaEnabled()) return 1;
+    return ready;
+}

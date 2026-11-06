@@ -43,9 +43,11 @@ static void pauseOffsets(s32* x, s32* y) {
 }
 
 extern const void* krushaPauseIcon(const void*);
+extern int krushaPauseMedalLayout(void*, const void*, s32*, s32);
 
 void widescreenPauseSprite(void* menu, void* sprite, s32 x, s32 y,
                            f32 scale, u8 layer, s32 mode) {
+    if (krushaPauseMedalLayout(menu, sprite, &x, mode)) return;
     /* Modes 3/14 use x for a medal row; 5/8 use an orbit angle; 10 uses
      * a Kong/GB index. They are central animated compositions, not anchors.
      * Modes 11/12 are arrows positioned around the centered level title. */

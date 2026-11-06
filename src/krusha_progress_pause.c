@@ -157,3 +157,24 @@ const void* krushaPauseIcon(const void* sprite) {
     if ((u32)sprite == 12) return &owned_icons[2];
     return sprite;
 }
+
+/* There is no eighth Krusha medal. Hide the personal Helm medal and keep its
+ * team page as the original five gold medals, evenly spaced. */
+int krushaPauseMedalLayout(void* menu, const void* sprite, s32* x, s32 mode) {
+    u8* data = menu;
+    int bank = data[0x15];
+    int area;
+    if (!krushaEnabled() || bank > 1) return 0;
+    area = ((s16*)(data+8))[bank];
+    if (area < 0 || area > 8 ||
+        ((u8*)0x80750560)[area] != 8) return 0;
+    if (data[0x12] == 1 && data[0x14] == 5 && (u32)sprite == 10) return 1;
+    if (data[0x12] == 2 && (mode == 3 || mode == 14)) {
+        for (int i = 0; i < 6; i++) if (*x == krushaPauseAngles[i]) {
+            if (i == 5) return 1;
+            *x = ((s16*)0x807505A4)[i];
+            break;
+        }
+    }
+    return 0;
+}
