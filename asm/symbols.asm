@@ -251,6 +251,7 @@
 .definelabel krushaHolsterModel, 0x806F0C18
 .definelabel krushaDrawGunModel, 0x806F0D68
 .definelabel krushaMenuTransform, 0x800317E8
+.definelabel krushaMenuAddSprite, 0x80030894
 .definelabel krushaMenuDrawList, 0x8002F980
 .definelabel krushaPrintStyledText, 0x806FC530
 .definelabel krushaNativeBarrelFlag, 0x805FF018

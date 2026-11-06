@@ -62,7 +62,7 @@ def audit(path):
                     record_crc_offset_bytes=bits // 8 - 4)
 
     native = layout(0, '7.2')
-    expanded = layout(512, 'K07.1')
+    expanded = layout(512, 'K07.2')
     for address, expected in [(0x8060B7F0, '27bdffd8afb1001c'),
                               (0x8060C648, '27bdffd8afbf001c'),
                               (0x8060C6B8, '27bdffd8afbf001c'),
@@ -91,8 +91,8 @@ def audit(path):
                 schema=[dict(name=n, bit=b, width=w) for n, b, w in fields],
                 constraints=['384 separately tracked new colored pickups across the campaign, not 700 single-banana objects',
                              'Banana totals/GB counts/blueprint turn-ins derive from flags and a ROM-side item registry',
-                             'Registry is provisional; no world placements; final weights/IDs need approved annotations',
-                             'No old-format save import; native signature K07.1 distinguishes experimental saves',
+                             'Working native Lanky mix: 231 banana objects plus 99 coins, with 54 spare; no world placements yet',
+                             'No old-format save import; native signature K07.2 distinguishes experimental saves',
                              'Only 10 bytes remain after the new signature; future schema growth requires redesign'],
                 per_map=per_map)
 

@@ -242,3 +242,42 @@ saveNativeLoadGame:
     SW s0, 0x18(sp)
     J 0x8060DC44
     NOP
+
+saveNativeCollectTotals:
+    ADDIU sp, sp, -0x28
+    LUI v0, 0x8080
+    J 0x806ABE44
+    NOP
+
+vanillaCompletionPercentage:
+    ADDIU sp, sp, -0x28
+    SW ra, 0x14(sp)
+    J 0x8003230C
+    NOP
+
+vanillaFileSummaryInit:
+    ADDIU sp, sp, -0x80
+    SW ra, 0x4C(sp)
+    J 0x800297C0
+    NOP
+
+vanillaFileSummaryDraw:
+    ADDIU sp, sp, -0xF0
+    SDC1 f20, 0x38(sp)
+    J 0x800291D4
+    NOP
+
+; Native mode-15 face tick has only five lock-color entries. The sixth file
+; portrait is available in the interim build; never read its nonexistent color.
+; The patched J's delay slot retains native ADDU v0,t3,t5 at 800314EC.
+krushaFilePortraitUnlocked:
+    ADDIU at, r0, 5
+    BEQ a1, at, @@available
+    NOP
+    LB t2, 0x3804(t2)
+    J 0x800314F0
+    NOP
+@@available:
+    ADDIU t2, r0, 1
+    J 0x800314F0
+    NOP

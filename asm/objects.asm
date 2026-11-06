@@ -3,6 +3,7 @@
 .importobj "obj/src_krusha_colors.o"
 .importobj "obj/src_krusha_options.o"
 .importobj "obj/src_krusha_progress.o"
+.importobj "obj/src_krusha_progress_menu.o"
 .importobj "obj/src_krusha_roar.o"
 .importobj "obj/src_krusha_roar_framing.o"
 .importobj "obj/src_krusha_roar_stage.o"

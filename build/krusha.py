@@ -9,6 +9,9 @@ def patchKrushaShop(filename):
                    if len(line.split()) >= 2)
     with open(filename, 'r+b') as stream:
         for address, symbol, prologue in [
+            (0x80032304, 'krushacompletionpercentage', '27bdffd8afbf0014'),
+            (0x800297B8, 'krushafilesummaryinit', '27bdff80afbf004c'),
+            (0x800291CC, 'krushafilesummarydraw', '27bdff10f7b40038'),
             (0x80025FB4, 'krushafindpurchase', '27bdffd0afb30020'),
             (0x8002D8AC, 'krushaoptionsinput', '27bdffd0afbf0024'),
             (0x8002DBDC, 'krushaoptionsdraw', '3c0280802442bb60'),
@@ -20,6 +23,12 @@ def patchKrushaShop(filename):
             stream.seek(address - 0x80024000)
             stream.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
             stream.write(bytes(4))
+        # Only mode-15's lock-color lookup; preserve the five native entries.
+        stream.seek(0x800314E8 - 0x80024000)
+        assert stream.read(8) == bytes.fromhex('814a3804016d1021')
+        stream.seek(0x800314E8 - 0x80024000)
+        target = int(symbols['krushafileportraitunlocked'], 16)
+        stream.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
         # The complete options renderer is replaced by resident C code. No
         # trampoline calls its old body. Zero that unreachable body without
         # changing RAM offsets, keeping compressed menu code inside its slot.

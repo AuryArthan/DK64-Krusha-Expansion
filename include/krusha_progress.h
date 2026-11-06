@@ -6,6 +6,9 @@
  * Native record sizes/CRC/recovery derive from the enlarged layout count. */
 #define KRUSHA_SAVE_BITS 512
 #define KRUSHA_PICKUP_SLOTS 384
+#define KRUSHA_BANANA_OBJECTS 231
+#define KRUSHA_COIN_FIRST 231
+#define KRUSHA_COIN_OBJECTS 99
 #define KRUSHA_FED_BIT 384
 #define KRUSHA_GB_BIT 433
 #define KRUSHA_BLUEPRINT_BIT 473
@@ -21,5 +24,6 @@ int krushaProgressRead(unsigned int file, unsigned int bit, unsigned int width);
 void krushaProgressWrite(unsigned int file, unsigned int bit, unsigned int width, unsigned int value);
 int krushaProgressBananas(unsigned int file, unsigned int level);
 int krushaProgressGoldenBananas(unsigned int file, unsigned int level);
+int krushaProgressFullSet(void);
 
 #endif

@@ -4,8 +4,9 @@
 extern int saveNativePackedRead(int type, u8 character, u8 level, u8 file);
 extern void saveNativePackedWrite(int type, u8 character, u8 level, u8 file, u32 value);
 extern void saveNativeLoadGame(u8 file, int refill);
+extern void saveNativeCollectTotals(void);
 
-static const char format_signature[] = "K07.1";
+static const char format_signature[] = "K07.2";
 
 static u16 recordBits(void) {
     u32 count = *(volatile u16*)0x807ECEA0;
@@ -40,16 +41,45 @@ void krushaProgressWrite(unsigned int file, unsigned int bit, unsigned int width
     writeBits(value, extensionBit(file, bit), width);
 }
 
-/* Provisional logical registry: twenty potential bunches per main world,
- * followed by 128 potential coins, then 116 unassigned slots. These describe
- * no XYZ positions and spawn nothing. Later annotations supply the actual
- * registry/weights, within 384 separate colored pickups across the campaign.
- * Totals derive from collected flags, avoiding redundant saved CB counters. */
+/* Working counts follow Lanky's native 700-unit mix, as requested: first the
+ * bunches, then balloons, then singles in each area. This defines identities
+ * and weights, not XYZ placements. 231 banana objects + 99 coins leaves 54
+ * spare slots. Final annotations may revise the registry with a format bump. */
+typedef struct BananaBudget {
+    u16 first;
+    u8 bunches;
+    u8 balloons;
+    u8 singles;
+} BananaBudget;
+
+static const BananaBudget banana_budget[7] = {
+    {0, 10, 3, 20}, {33, 9, 3, 25}, {70, 10, 3, 20},
+    {103, 10, 3, 20}, {136, 10, 2, 30}, {178, 10, 3, 20},
+    {211, 11, 4, 5},
+};
+
 int krushaProgressBananas(unsigned int file, unsigned int level) {
-    int i, result = 0;
+    int i, weight, result = 0;
+    const BananaBudget* budget;
     if (level >= 7) return 0;
-    for (i = 0; i < 20; i++) result += 5 * krushaProgressRead(file, level * 20 + i, 1);
+    budget = &banana_budget[level];
+    for (i = 0; i < budget->bunches + budget->balloons + budget->singles; i++) {
+        weight = i < budget->bunches ? 5 : i < budget->bunches + budget->balloons ? 10 : 1;
+        result += weight * krushaProgressRead(file, budget->first + i, 1);
+    }
     return result;
+}
+
+/* Called only from the native rainbow-coin award branch, after its original
+ * five wallets were credited. OFF/recruitment deliberately do not gate credit.
+ * Keep native collection/once-only flags, FTT, sounds and original five intact. */
+void krushaRainbowCredit(void) {
+    void (*nativeFirstTime)(void) = (void*)0x806F5498;
+    if (DetectAdventure()) {
+        int coins = MovesBase[5].coins + 5;
+        MovesBase[5].coins = coins > 255 ? 255 : coins;
+    }
+    nativeFirstTime();
 }
 
 int krushaProgressGoldenBananas(unsigned int file, unsigned int level) {
@@ -57,6 +87,29 @@ int krushaProgressGoldenBananas(unsigned int file, unsigned int level) {
     if (level >= 8) return 0;
     for (i = 0; i < 5; i++) result += krushaProgressRead(file, KRUSHA_GB_BIT + level * 5 + i, 1);
     return result;
+}
+
+/* All aggregate readers see earned sixth progress even when it is hidden. */
+void krushaCollectTotals(void) {
+    volatile s16* totals = (volatile s16*)0x807FC828;
+    unsigned int file = *(volatile u8*)0x807467C8;
+    int level;
+    saveNativeCollectTotals();
+    for (level = 0; level < 8; level++) {
+        totals[0] += MovesBase[5].gb_count[level];
+        totals[7] += krushaProgressRead(file, KRUSHA_GB_BIT + level * 5 + 4, 1);
+        if (level < 7) totals[3] += krushaProgressRead(file, KRUSHA_MEDAL_BIT + level, 1);
+    }
+}
+
+int krushaProgressFullSet(void) {
+    volatile s16* totals = (volatile s16*)0x807FC828;
+    /* Native counters cover owned GBs; medal/fairy/crown/key/company-coin and
+     * returned-blueprint aggregates come from permanent flags. No coin-wallet
+     * or all-CB requirement. The Rareware GB's own permanent flag is required. */
+    return totals[0] == 241 && totals[1] == 10 && totals[2] == 8 &&
+           totals[3] == 47 && totals[4] == 1 && totals[5] == 20 &&
+           totals[6] == 1 && totals[7] == 48 && checkFlag(0x12D, 0);
 }
 
 int krushaSavePackedRead(int type, u8 character, u8 level, u8 file) {

@@ -13,6 +13,7 @@ def patchStaticCode(filename):
 			(0x8060C648, 'krushasavepackedwrite', '27bdffd8afbf001c'),
 			(0x8060C6B8, 'krushasavepackedread', '27bdffd8afbf001c'),
 			(0x8060DC3C, 'krushasaveloadgame', '27bdffb8afb00018'),
+			(0x806ABE3C, 'krushacollecttotals', '27bdffd83c028080'),
 		]:
 			fh.seek(address - 0x805FB300)
 			assert fh.read(8) == bytes.fromhex(prologue), f'Unexpected save prologue at {address:X}'
@@ -24,6 +25,16 @@ def patchStaticCode(filename):
 		# Clear only its unreachable body, retaining offsets and overlay slot size.
 		fh.seek(0x8060B7F8 - 0x805FB300)
 		fh.write(bytes(0x8060B84C - 0x8060B7F8))
+
+		# Only the rainbow award's FTT call, after the original five-wallet loop.
+		# The wrapper credits the sixth adventure wallet even when Krusha is OFF.
+		fh.seek(0x806F54E0 - 0x805FB300)
+		rainbow_body = fh.read(0x806F58A0 - 0x806F54E0)
+		native_call = (0x0C000000 | ((0x806F5498 & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big')
+		matches = [i for i in range(0, len(rainbow_body), 4) if rainbow_body[i:i+4] == native_call]
+		assert len(matches) == 1, 'Rainbow tutorial call differs from USA'
+		fh.seek(0x806F54E0 - 0x805FB300 + matches[0])
+		fh.write((0x0C000000 | ((int(symbols['krusharainbowcredit'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude
