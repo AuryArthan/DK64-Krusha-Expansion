@@ -23,6 +23,10 @@ static const FaceSprite krusha_face = {
     0x4B525553, 2, 1, 0, 2, 0xFFFFFFFF, 0, 1, 32, 64, 1, {7001, 7002},
 };
 
+/* Native scale slot5 overlaps erase-confirmation state at80033FAC. Keep all
+ * three sixth-face values resident; native arrays remain strictly five-wide. */
+f32 krushaFilePortraitTransform[3] = {-200.0f, -200.0f, 1.0f};
+
 s32 krushaCompletionPercentage(void) {
     /* Native weights, truncation and the 201-GB/exact-100 special cases stay
      * native. Its call to the totals collector now includes all six. */
@@ -38,8 +42,8 @@ void krushaFileSummaryInit(void* actor, s32 input) {
     for (level = 0; level < 8; level++) total += MovesBase[5].gb_count[level];
     *(s32*)0x8003380C += total; /* Earned totals remain credited when OFF. */
     if (krushaEnabled()) {
-        /* These native x/y/scale arrays have six slots, used by multiplayer.
-         * Do not grow the separate five-byte unlock array at 80033804. */
+        /* Do not grow native position/scale or unlock/color arrays. The
+         * sixth sprite callback reads its separate resident transform. */
         krushaMenuAddSprite(data, &krusha_face, 5, 5, 0.8f, 2, 15);
     }
 }
@@ -56,9 +60,15 @@ Gfx* krushaFileSummaryDraw(void* actor, Gfx* dl) {
              * before the rescue quest exists. Native lock presentation stays
              * intact for the five original Kongs. */
             if (i == 5 || *(u8*)(0x80033804 + i)) scale *= 0.85f;
-            ((f32*)0x80033F68)[i] = x * 4.0f - 32.0f;
-            ((f32*)0x80033F80)[i] = y * 4.0f - 100.0f;
-            ((f32*)0x80033F98)[i] = scale * 1.333f;
+            if (i == 5) {
+                krushaFilePortraitTransform[0] = x * 4.0f - 32.0f;
+                krushaFilePortraitTransform[1] = y * 4.0f - 100.0f;
+                krushaFilePortraitTransform[2] = scale * 1.333f;
+            } else {
+                ((f32*)0x80033F68)[i] = x * 4.0f - 32.0f;
+                ((f32*)0x80033F80)[i] = y * 4.0f - 100.0f;
+                ((f32*)0x80033F98)[i] = scale * 1.333f;
+            }
         }
     }
     return dl;

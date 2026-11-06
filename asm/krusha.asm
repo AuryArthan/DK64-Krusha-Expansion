@@ -267,17 +267,29 @@ vanillaFileSummaryDraw:
     J 0x800291D4
     NOP
 
-; Native mode-15 face tick has only five lock-color entries. The sixth file
-; portrait is available in the interim build; never read its nonexistent color.
-; The patched J's delay slot retains native ADDU v0,t3,t5 at 800314EC.
-krushaFilePortraitUnlocked:
-    ADDIU at, r0, 5
-    BEQ a1, at, @@available
+; Mode15's position/scale and lock-color arrays belong to five faces. Slot5
+; scale would overlap erase state. Only Krusha consumes resident values here.
+; The patched J's delay slot retains native LUI t8,8003 at80031474.
+krushaFilePortraitLayout:
+    LW t2, 0x8(t1)
+    LUI at, 0x40A0 ; float5.0 index, compared as raw bits
+    BNE t2, at, @@native
     NOP
-    LB t2, 0x3804(t2)
-    J 0x800314F0
+    LUI at, hi(krushaFilePortraitTransform)
+    ADDIU at, at, lo(krushaFilePortraitTransform)
+    LW t2, 0(at)
+    LW t3, 4(at)
+    LW t4, 8(at)
+    SW t2, 0x340(s0)
+    SW t3, 0x344(s0)
+    SW t4, 0x360(s0)
+    SW t4, 0x364(s0)
+    LUI t2, 0xC348
+    SW t2, 0(at)
+    SW t2, 4(at)
+    J 0x80031510
     NOP
-@@available:
-    ADDIU t2, r0, 1
-    J 0x800314F0
+@@native:
+    LWC1 f18, 0x8(t1)
+    J 0x80031478
     NOP

@@ -23,11 +23,12 @@ def patchKrushaShop(filename):
             stream.seek(address - 0x80024000)
             stream.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
             stream.write(bytes(4))
-        # Only mode-15's lock-color lookup; preserve the five native entries.
-        stream.seek(0x800314E8 - 0x80024000)
-        assert stream.read(8) == bytes.fromhex('814a3804016d1021')
-        stream.seek(0x800314E8 - 0x80024000)
-        target = int(symbols['krushafileportraitunlocked'], 16)
+        # Only mode15's sixth-face layout uses resident values. Native arrays
+        # stay five-wide; preserve the original delay-slot LUI t8,8003.
+        stream.seek(0x80031470 - 0x80024000)
+        assert stream.read(8) == bytes.fromhex('c53200083c188003')
+        stream.seek(0x80031470 - 0x80024000)
+        target = int(symbols['krushafileportraitlayout'], 16)
         stream.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
         # The complete options renderer is replaced by resident C code. No
         # trampoline calls its old body. Zero that unreachable body without
