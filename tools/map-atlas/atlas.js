@@ -1,7 +1,7 @@
 'use strict';
 (() => {
 const $=id=>document.getElementById(id);
-const colors={DK:'#e2bb18',Diddy:'#dd4c3e',Lanky:'#448bdd',Tiny:'#aa5ac8',Chunky:'#56a64f',Shared:'#f2f0df',Unknown:'#7c8583',Krusha:'#adadad'};
+const colors={DK:'#e2bb18',Diddy:'#dd4c3e',Lanky:'#448bdd',Tiny:'#aa5ac8',Chunky:'#56a64f',Shared:'#f2f0df',Unknown:'#7c8583',Krusha:'#d0d0d0'};
 const kinds={single:['Single banana','●'],bunch:['Banana bunch ×5','◆'],balloon:['Balloon ×10 (anchor)','○'],coin:['Colored coin','○'],gb:['Golden Banana','★'],blueprint:['Kasplat / blueprint','■'],medal:['Helm medal','⬟'],fairy:['Fairy (anchor)','✧'],rainbow:['Rainbow coin / dirt patch','⊕'],crown:['Crown / pad','♛'],quest:['Key / company coin / bean / pearl','⬟'],bonus:['Bonus barrel (reward site)','B'],supply:['Shared supplies','+'],landmark:['Shops / warps / tag barrels','T'],exit:['Area entrance / exit','↗']};
 const canvas=$('map'),ctx=canvas.getContext('2d'),catalog=window.ATLAS_CATALOG.maps;
 let map=null,style='A',zoom=1,pan=[0,0],bounds=null,view=null,hit=[],request=0,selected=null,drag=null,planner=null,yaw=45,cosYaw=Math.SQRT1_2,sinYaw=Math.SQRT1_2,terrainCache=null;
@@ -97,7 +97,9 @@ function draw(){
   ctx.beginPath();ctx.arc(x,y,chosen?13:10,0,Math.PI*2);ctx.fillStyle=chosen?'#e9c55e':'#ffffffcc';ctx.fill();
   symbol({...p,owner:'Krusha'},x,y,7);hit.push({p,x,y,r:12,proposal:true});
   ctx.font='bold 10px system-ui';ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#fff';
+  if(chosen||$('labels').checked||!['single','coin'].includes(p.kind)){
   const text=p.label+(p.quantity>1?' ×'+p.quantity:'');ctx.strokeText(text,x+13,y);ctx.fillStyle='#263c31';ctx.fillText(text,x+13,y);
+  }
  }
  ctx.fillStyle='#2b4e3e';ctx.font='bold 11px system-ui';ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText(style==='C'?'C · ROTATION '+Math.round(yaw)+'°':style+' · TOP DOWN / −Z UP',view.w-12,view.h-12);
  if(!map.floors.length){ctx.textAlign='center';ctx.fillText('No collision-floor geometry in this map slot',view.w/2,view.h/2);}

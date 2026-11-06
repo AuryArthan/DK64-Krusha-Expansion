@@ -28,7 +28,7 @@ BASE = 0x101C50
 KONGS = ['DK', 'Diddy', 'Lanky', 'Tiny', 'Chunky']
 WORLDS = ['Jungle Japes', 'Angry Aztec', 'Frantic Factory', 'Gloomy Galleon',
           'Fungi Forest', 'Crystal Caves', 'Creepy Castle', 'DK Isles', 'Hideout Helm']
-UI_FILES = ('index.html', 'atlas.js', 'planner.js', 'atlas.css', 'DonkViewer-LICENSE.txt')
+UI_FILES = ('index.html', 'atlas.js', 'planner.js', 'atlas.css', 'DonkViewer-LICENSE.txt', 'assistant-draft.html')
 
 
 def unpack(fmt, data, offset=0):
@@ -194,6 +194,18 @@ def group(map_id):
     return 'Other maps / bonus games'
 
 
+def write_placement_draft(out):
+    source=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
+    if source.exists():
+        draft=json.loads(source.read_text())
+        assert draft['format']=='krusha-atlas-notes-v2' and draft['draft_id']=='assistant-v1'
+        assert draft['source_sha1']=='cf806ff2603640a748fca5026ded28802f1f4a50'
+        (out/'assistant-draft-v1.json').write_text(json.dumps(draft,indent=2)+'\n')
+        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')
+    else:
+        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFT=null;\n')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
@@ -208,11 +220,12 @@ def main():
             raise SystemExit('Refresh requires an existing matching USA atlas.')
         backup = out / 'ui-history' / str(time.time_ns())
         backup.mkdir(parents=True)
-        for name in UI_FILES:
+        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json'):
             if (out / name).exists():
                 shutil.copyfile(out / name, backup / name)
         for name in UI_FILES:
             shutil.copyfile(ROOT / 'tools/map-atlas' / name, out / name)
+        write_placement_draft(out)
         print(f'Updated interface; previous UI preserved in {backup}')
         print(out / 'index.html')
         return
@@ -252,6 +265,7 @@ def main():
     (out / 'coverage.json').write_text(json.dumps(metadata, indent=2) + '\n')
     for name in UI_FILES:
         shutil.copyfile(ROOT / 'tools/map-atlas' / name, out / name)
+    write_placement_draft(out)
     print(f'Built {len(catalog)} maps, {sum(m["points"] for m in catalog):,} reference markers.')
     print(out / 'index.html')
 

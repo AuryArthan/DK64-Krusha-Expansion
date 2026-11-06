@@ -10,7 +10,18 @@ window.createKrushaPlanner = function (host) {
     key: ['Recruitment key', 0, 20], supply: ['Shared supply', 0, 20],
     note: ['Other / planning note', 0, 20],
   };
-  const storageKey = 'krusha-atlas-pins-v2';
+  const draft = window.KRUSHA_DRAFT;
+  const draftMode = !!draft && new URL(location).searchParams.get('draft') === draft.draft_id;
+  // Draft edits have their own namespace. Original user plans are never seeded
+  // over, silently merged, replaced or written by opening the draft URL.
+  const storageKey = draftMode ? 'krusha-atlas-pins-' + draft.draft_id : 'krusha-atlas-pins-v2';
+  if (draft) {
+    $('draft-notice').hidden = false;
+    $('draft-title').textContent = draftMode ? 'Assistant Draft 1 · review/edit' : 'Assistant placement draft available';
+    $('draft-description').textContent = draftMode ? 'Proposed locations, not in the ROM. This draft has separate saved edits; your original plan is preserved. Check routes/doors/props in-game before approval.' : '700 bananas, 99 coins and 40 GB reward sites. Open the draft to inspect/edit it without replacing your original plan.';
+    const u = new URL(location); u.searchParams.set('draft',draft.draft_id); $('open-assistant-draft').href = u;
+    u.searchParams.delete('draft'); $('open-original-plan').href = u;
+  }
   let pins = [], selectedId = null, moving = false, sequence = 0;
   const undo = [], redo = [];
   const clone = x => JSON.parse(JSON.stringify(x));
@@ -35,10 +46,11 @@ window.createKrushaPlanner = function (host) {
   let storageNotice = '';
   try {
     const saved = localStorage.getItem(storageKey);
-    const legacy = saved === null;
-    const data = JSON.parse(saved ?? localStorage.getItem('krusha-atlas-pins-v1') ?? '[]');
+    const legacy = !draftMode && saved === null;
+    const data = saved !== null ? JSON.parse(saved) : draftMode ? draft.pins : JSON.parse(localStorage.getItem('krusha-atlas-pins-v1') ?? '[]');
     if (!Array.isArray(data)) throw Error('Unexpected autosave format.');
     pins = data.map(p => normalize(p, legacy));
+    if (draftMode && saved === null) storageNotice = 'Loaded assistant Draft 1; edits are separate from your original plan. ';
     if (legacy && pins.length) storageNotice = `Recovered ${pins.length} older pins as planning notes. Original autosave preserved. `;
   } catch (e) {
     storageNotice = 'Browser autosave could not be read. Original storage was left intact; load an exported plan. ';
@@ -98,12 +110,19 @@ window.createKrushaPlanner = function (host) {
     const totals = $('plan-totals'); totals.replaceChildren();
     const title = document.createElement('strong'); title.textContent = 'Draft totals · ' + group; totals.append(title);
     const counts = document.createElement('p');
-    counts.textContent = `${bananas}${targets ? '/' + (main ? 100 : 0) : ''} bananas · ${rewards}${targets ? '/5' : ''} GB reward sites · ${sum('blueprint')}${targets ? '/1' : ''} blueprints · ${sum('coin')} coins (budget TBD)`;
+    counts.textContent = `${bananas}${targets ? '/' + (main ? 100 : 0) : ''} bananas · ${rewards}${targets ? '/5' : ''} GB reward sites · ${sum('blueprint')}${targets ? '/1' : ''} blueprints · ${sum('coin')} coins`;
     if (targets && (bananas > (main ? 100 : 0) || rewards > 5 || sum('blueprint') > 1)) counts.className = 'over-budget';
     totals.append(counts);
     const help = document.createElement('p'); help.className = 'small';
     help.textContent = 'A bunch counts as 5 bananas; a balloon as 10. GB reward sites include bonus barrels and blueprint hand-ins: mark each reward once. These are proposed totals, not ROM edits.';
     totals.append(help);
+    const global = document.createElement('p'); global.className = 'small';
+    const n = kind => pins.filter(p => p.kind===kind).reduce((s,p)=>s+p.quantity,0);
+    const objects=n('single')+n('bunch')+n('balloon')+n('coin');
+    const units=n('single')+5*n('bunch')+10*n('balloon');
+    global.textContent=`Campaign: ${units}/700 bananas · ${n('coin')}/99 coins · ${objects}/384 colored objects · ${n('gb')+n('bonus')+n('blueprint')}/40 GB sites · ${n('blueprint')}/8 blueprints`;
+    if(units>700||n('coin')>99||objects>384)global.classList.add('over-budget');
+    totals.append(global);
     const scope = $('list-scope').value;
     const list = $('pins'); list.replaceChildren();
     const included = pins.filter(p => scope === 'all' || (scope === 'world' ? world.includes(p) : p.map === map.meta.id));
@@ -180,7 +199,7 @@ window.createKrushaPlanner = function (host) {
   };
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { moving = false; $('place').checked = false; message('Placement cancelled. Existing proposals kept.'); } });
   $('export').onclick = () => {
-    host.download(new Blob([JSON.stringify({format:'krusha-atlas-notes-v2', source_sha1:host.sourceSha1, pins},null,2)], {type:'application/json'}), 'krusha-placement-plan.json');
+    host.download(new Blob([JSON.stringify({format:'krusha-atlas-notes-v2', source_sha1:host.sourceSha1, pins},null,2)], {type:'application/json'}), draftMode ? 'krusha-assistant-draft-edited.json' : 'krusha-placement-plan.json');
     $('storage-status').textContent = 'Plan export requested. Keep the downloaded JSON to reopen or share the plan.';
   };
   $('import').onchange = async e => {
