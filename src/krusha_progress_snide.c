@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/krusha_identity.h"
 
 extern void vanillaSnideBoard(void);
 extern Gfx* vanillaSnideDraw(Gfx*, void*);
@@ -77,7 +78,7 @@ void krushaSnideBoard(void) {
             *(s16*)(v+2) += 150*4;
             *(s16*)(v+10) += 150*64;
             if (*(u8*)0x80033258) { v[12] = 0; v[13] = v[14] = 255; }
-            else v[12] = v[13] = v[14] = 173;
+            else v[12] = v[13] = v[14] = KRUSHA_IDENTITY_GRAY;
         }
         for (int i = 0; i < 6*8*8; i++)
             *(s16*)(vertices+i*16+2) -= 15*4;

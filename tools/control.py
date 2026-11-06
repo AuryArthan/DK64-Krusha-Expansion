@@ -54,7 +54,14 @@ def main():
             if display.poll() is not None:
                 raise RuntimeError("Xvfb failed; see runtime/logs/xvfb.log")
             game_args = ['--verbose'] if CAPTURE_AUDIO else []
-            game = subprocess.Popen([str(ROOT / "tools/play.sh"), *game_args, *sys.argv[1:]], env=ENV, stdout=elog, stderr=subprocess.STDOUT)
+            launcher = os.environ.get('DK64_PLAY_LAUNCHER', str(ROOT/'tools/play.sh'))
+            if 'DK64_PLAY_LAUNCHER' in os.environ:
+                info = subprocess.run([launcher,'--info'], env=ENV, text=True,
+                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True).stdout
+                if 'SHA256: '+ROM_HASH not in info:
+                    raise RuntimeError('Selected launcher ROM does not match the requested test ROM')
+                elog.write(info); elog.flush()
+            game = subprocess.Popen([launcher, *game_args, *sys.argv[1:]], env=ENV, stdout=elog, stderr=subprocess.STDOUT)
             time.sleep(float(os.environ.get('DK64_BOOT_WAIT', '4'))) # Optional early splash capture; diagnostics wait for RDRAM themselves.
             deadline = time.monotonic() + 20
             windows = []

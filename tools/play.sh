@@ -11,6 +11,14 @@ if [[ "$ROM_HASH" != b6347d9f1f75d38a88d829b4f80b1acf0d93344170a5fbe9546c484dae4
   RUN="$ROOT/runtime/roms/$ROM_HASH"
 fi
 RUN=${DK64_RUNTIME:-$RUN}
+printf 'ROM: %s\nSHA256: %s\nProfile: %s\n' "$ROM" "$ROM_HASH" "$RUN" >&2
+if [[ ${1:-} == --info ]]; then
+  printf 'Existing states:\n'
+  for state in "$RUN"/states/*.st[0-9]; do
+    [[ -f "$state" ]] && printf '  %s\n' "$state"
+  done
+  exit 0
+fi
 export XDG_CONFIG_HOME="$RUN/xdg-config"
 export XDG_DATA_HOME="$RUN/xdg-data"
 export XDG_CACHE_HOME="$RUN/xdg-cache"

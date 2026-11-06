@@ -23,6 +23,8 @@ print("Cranky's Lab Build System")
 print()
 
 print("[1 / 8] - Compiling C Code")
+from character_colors import write_identity_header
+write_identity_header()
 if os.path.exists("obj"):
 	shutil.rmtree('obj')
 os.mkdir("obj")
