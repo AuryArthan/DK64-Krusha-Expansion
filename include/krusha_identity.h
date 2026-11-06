@@ -1,5 +1,5 @@
 /* Generated from bin/Nintendo_Krusha.png before C compilation. */
 #ifndef KRUSHA_IDENTITY_H
 #define KRUSHA_IDENTITY_H
-#define KRUSHA_IDENTITY_GRAY 192
+#define KRUSHA_IDENTITY_GRAY 208
 #endif
