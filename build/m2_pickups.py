@@ -39,6 +39,13 @@ def prepare(rom_path):
             num=struct.unpack_from('>I',data)[0]
             assert all(struct.unpack_from('>H',data,4+i*48+40)[0]!=typ for i in range(num))
     data=zlib.decompress(rom[0xC29D4:],47)
+    # Suction also consults native per-object flag/owner metadata. A free setup
+    # ID must not accidentally reuse one of those hardcoded Japes identities.
+    special={struct.unpack_from('>H',data,0x80755A20-0x80744460+i*8+2)[0]
+             for i in range(113) if data[0x80755A20-0x80744460+i*8]==7}
+    special|={struct.unpack_from('>H',data,0x80747D50-0x80744460+i*4+2)[0]
+              for i in range(8) if struct.unpack_from('>H',data,0x80747D50-0x80744460+i*4)[0]==7}
+    assert not special & {p['object_id'] for p in rows()}
     native=data[0x80753EF0-0x80744460:0x80753EF0-0x80744460+42*20]
     defs=bytearray(native)
     for kind,row in [('single',0),('bunch',10),('coin',9)]:
