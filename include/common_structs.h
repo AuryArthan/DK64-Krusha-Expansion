@@ -219,8 +219,8 @@ typedef struct KongBase {
 	/* 0x002 */ s8 weapon_bitfield;
 	/* 0x003 */ s8 ammo_belt;
 	/* 0x004 */ s8 instrument_bitfield;
-	/* 0x005 */ s8 unk_05[0x2];
-	/* 0x007 */ s8 coins;
+	/* 0x005 */ u8 unk_05;
+	/* 0x006 */ u16 coins;
 	/* 0x008 */ s16 instrument_energy;
 	/* 0x00A */ s16 cb_count[0xE];
 	/* 0x026 */ s16 tns_cb_count[0xE];

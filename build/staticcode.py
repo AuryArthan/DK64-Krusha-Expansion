@@ -1,5 +1,30 @@
 def patchStaticCode(filename):
 	with open(filename, "r+b") as fh:
+		# Experimental M1 save foundation. Install before native EEPROM startup.
+		# All original layout users derive sizes from 807ECEA0; adding a reserved
+		# 512-bit region retains native records, CRCs, spare-slot rotation and globals.
+		import os
+		from pathlib import Path
+		rom = os.environ.get('DK64_BUILD_ROM', './rom/dk64-krusha-dev.z64')
+		symbols = dict(line.split()[:2][::-1] for line in
+			Path(rom.replace('.z64', '.sym')).read_text().splitlines() if len(line.split()) >= 2)
+		for address, name, prologue in [
+			(0x8060B7F0, 'krushasavelayoutinit', '27bdffd8afb1001c'),
+			(0x8060C648, 'krushasavepackedwrite', '27bdffd8afbf001c'),
+			(0x8060C6B8, 'krushasavepackedread', '27bdffd8afbf001c'),
+			(0x8060DC3C, 'krushasaveloadgame', '27bdffb8afb00018'),
+		]:
+			fh.seek(address - 0x805FB300)
+			assert fh.read(8) == bytes.fromhex(prologue), f'Unexpected save prologue at {address:X}'
+			target = int(symbols[name], 16)
+			fh.seek(address - 0x805FB300)
+			fh.write((0x08000000 | ((target & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+			fh.write(bytes(4))
+		# The size initializer is replaced completely, without a native trampoline.
+		# Clear only its unreachable body, retaining offsets and overlay slot size.
+		fh.seek(0x8060B7F8 - 0x805FB300)
+		fh.write(bytes(0x8060B84C - 0x8060B7F8))
+
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude
 		# Rambi/Enguarde. No change to collectible or character identities.

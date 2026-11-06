@@ -223,3 +223,22 @@ vanillaDialogueLine:
     SW s0, 0x28(sp)
     J 0x8070DEDC
     NOP
+
+; Preserve the first two native instructions, then resume the original body.
+saveNativePackedRead:
+    ADDIU sp, sp, -0x28
+    SW ra, 0x1C(sp)
+    J 0x8060C6C0
+    NOP
+
+saveNativePackedWrite:
+    ADDIU sp, sp, -0x28
+    SW ra, 0x1C(sp)
+    J 0x8060C650
+    NOP
+
+saveNativeLoadGame:
+    ADDIU sp, sp, -0x48
+    SW s0, 0x18(sp)
+    J 0x8060DC44
+    NOP
