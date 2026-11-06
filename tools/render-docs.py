@@ -36,6 +36,8 @@ def main():
             if dest in outputs:dest=outputs[dest]
             elif dest.is_relative_to(ROOT) and (OUT/dest.relative_to(ROOT).with_suffix('.html')).is_file() and dest.suffix=='.md':
                 dest=OUT/dest.relative_to(ROOT).with_suffix('.html')
+            elif dest.suffix=='.md' and (dest.parent/'htmls'/dest.with_suffix('.html').name).is_file():
+                dest=dest.parent/'htmls'/dest.with_suffix('.html').name
             value=urlunsplit(('', '',Path(os.path.relpath(dest,target.parent)).as_posix(),parts.query,parts.fragment))
             return attr+'="'+html.escape(value,quote=True)+'"'
         body=re.sub(r'(href|src)="([^\"]+)"',link,body)
