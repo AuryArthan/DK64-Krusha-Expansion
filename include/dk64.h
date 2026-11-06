@@ -28,7 +28,7 @@ extern void displaySprite(void* control_pointer, void* sprite, s32 x, s32 y, s32
 extern void alterSize(void* object, s32 size);
 extern void unkSizeFunction(void* object);
 extern void spawnRocketbarrel(void* object, s32 unk);
-extern void playSong(s32 songIndex);
+extern void playSong(s32 songIndex, f32 volume);
 extern void playCutscene(void* actor, s32 cutscene_index, s32 cutscene_type);
 extern void setHUDItemAsInfinite(s32 item_index, s32 player_index, s8 isInfinite);
 extern void copyFromROM(s32 rom_start, void* write_Location, void* file_size_location, s32 unk1, s32 unk2, s32 unk3, s32 unk4);
@@ -61,8 +61,8 @@ extern s8 LogosDestMode;
 extern s8 Gamemode;
 extern void* ObjectModel2Pointer; // TODO: Object model 2 struct array
 extern s32 ObjectModel2Timer;
-extern s32 ObjectModel2Count;
-extern s32 ObjectModel2Count_Dupe;
+extern s32 ObjectModel2Count; // Next runtime ID, not compacted live count.
+extern s32 ObjectModel2Count_Dupe; // Native compacted live object count.
 extern s16 CutsceneIndex;
 extern s16 CutsceneTimer;
 extern s8 CutsceneActive;

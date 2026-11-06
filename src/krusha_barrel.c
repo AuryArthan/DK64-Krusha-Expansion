@@ -73,6 +73,38 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table == 25 && index >= 7300 && index <= 7307) {
         table = 27; index -= 7250;
     }
+    if (table == 27) {
+        /* Native tables4/7/14/25 cache shared files; the originally empty
+         * table27 has no cache. World pickups can request each model/frame
+         * many times, so preserve the same reference-counted sharing here.
+         * Native loading, allocation, reference tracking and release still
+         * own every payload. This is a pointer array, not a payload lifetime
+         * extension or a separate untracked cache. */
+        void (*initTable)(s32)=(void*)0x8066B5F4;
+        initTable(27);
+        u32** caches=(u32**)0x807F95A8;
+        if (!caches[27]) {
+            u32* offsets=((u32**)0x807F9528)[27];
+            u32 table_offset=(*(u32**)0x807F9520)[27];
+            u32 bytes=(offsets[0]&0x7FFFFFFF)-table_offset;
+            u32* cache=(bytes >= 4 && bytes <= 4096 && !(bytes&3)) ? dk_malloc(bytes) : 0;
+            if (cache) {
+                for (u32 i=0;i<bytes/4;i++) cache[i]=0;
+                caches[27]=cache;
+            }
+        }
+    }
+    if (table == 27 && (index == 0 || index == 3)) {
+        /* These two actor models replace table5 files, which are deliberately
+         * uncached in vanilla. Keep each actor's native model ownership while
+         * sharing only the table4 models and table7/14/25 texture resources. */
+        u32** caches=(u32**)0x807F95A8;
+        u32* saved=caches[27];
+        caches[27]=0;
+        void* result=vanillaBarrelFile(table,index,synchronous,unique);
+        caches[27]=saved;
+        return result;
+    }
     return vanillaBarrelFile(table, index, synchronous, unique);
 }
 

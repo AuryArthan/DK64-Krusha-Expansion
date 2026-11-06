@@ -94,7 +94,7 @@ def main():
                         visible = xdo('search', '--onlyvisible', '--class', '.').splitlines()
                         window = visible[-1]
                         xdo('windowfocus', '--sync', window)
-                    if any(k in cmd for k in ('status', 'read', 'write', 'position', 'scene', 'fixture_map')):
+                    if any(k in cmd for k in ('status', 'read', 'write', 'position', 'scene', 'fixture_map', 'dump_rdram')):
                         if memory is None:
                             spec = importlib.util.spec_from_file_location('emulator_memory', ROOT / 'tools/emulator-memory.py')
                             module = importlib.util.module_from_spec(spec)
@@ -106,6 +106,8 @@ def main():
                             memory.position(cmd['position'], cmd.get('facing'))
                         if 'fixture_map' in cmd:
                             memory.transition_fixture(cmd['fixture_map'], cmd.get('fixture_exit', 0))
+                        if cmd.get('dump_rdram'):
+                            memory.dump_rdram(RUN/'logs'/Path(str(cmd['dump_rdram'])).name)
                         if cmd.get('scene'):
                             scene = memory.scene()
                             (RUN / 'logs' / (Path(str(cmd['scene'])).name + '.json')).write_text(json.dumps(scene, indent=2))

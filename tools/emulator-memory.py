@@ -49,6 +49,10 @@ class Memory:
     def u32(self, address):
         return self.read(address)
 
+    def dump_rdram(self, path):
+        """Read-only diagnostic; host word-swapped 8MiB RDRAM, never restored."""
+        Path(path).write_bytes(os.pread(self.fd, 0x800000, self.base))
+
     def status(self):
         p = self.u32(0x807FBB4C)
         result = {'map': self.u32(0x8076A0A8), 'character': self.read(0x8074E77C, 'u8'),

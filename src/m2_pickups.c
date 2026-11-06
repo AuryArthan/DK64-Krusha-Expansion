@@ -24,7 +24,7 @@ static s32 m2Award(u16 slot,u8 units,u8 coin) {
         krushaProgressWrite(file,slot,1,1);
         if (coin) {
             if (MovesBase[5].coins < 255) MovesBase[5].coins++;
-            playSong(23);
+            playSong(23,1.0f);
         } else {
             s32 total=before+units;
             MovesBase[5].cb_count[0]=total-MovesBase[5].tns_cb_count[0];
@@ -34,10 +34,10 @@ static s32 m2Award(u16 slot,u8 units,u8 coin) {
                 void (*medal)(void)=(void*)0x80687C48;
                 medal();
             }
-            if (before<100 && total>=100) playSong(172);
+            if (before<100 && total>=100) playSong(172,1.0f);
         }
         void (*refresh)(s32,u8,s32)=(void*)0x806F8BC4;
-        if (Character == 5) refresh(coin ? 1 : 0,1,0);
+        if (Character == 5) refresh(coin ? 1 : 0,0,0);
         return 1;
 }
 
