@@ -390,8 +390,11 @@ void tagAnywhere(void) {
 		}
 	}
 
-	// Skip GB/Key dances
-	if (StorySkip) {
+	// Snide's cutscene starts the victory pose before the physical GB reaches
+	// Krusha. Speed Mode must retain the native pickup initializer here, or
+	// contact returns him to idle and cuts off the actual reward animation.
+	// Keep the original skip policy for every other character and location.
+	if (StorySkip && !(CurrentMap == 15 && Character == 5 && krushaEnabled())) {
 		switch (CurrentMap) {
 			// Disable dance skips on the following maps
 			// If these are enabled, pause + exit is required to leave the map after collecting the GB
