@@ -108,6 +108,12 @@ vanillaBuildActorBones:
     J 0x80614A6C
     NOP
 
+vanillaCharacterScript:
+    LW v0, 4(a0)
+    MTC1 r0, f4
+    J 0x80614EC4
+    NOP
+
 vanillaSetAction:
     ANDI t8, a2, 0xFF
     LUI a3, 0x8080

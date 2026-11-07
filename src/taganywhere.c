@@ -539,7 +539,7 @@ void tagAnywhere(void) {
 
 	if (Player) {
 		// If the destination kong hasn't bought their gun, or if the current kong does not have their gun out
-		if (_dest_character == 5 || ((MovesBase[_dest_character].weapon_bitfield & 1) == 0) || (Player->was_gun_out == 0)) {
+		if (((MovesBase[_dest_character].weapon_bitfield & 1) == 0) || (Player->was_gun_out == 0)) {
 			Player->hand_state = 1;
 			Player->was_gun_out = 0;
 			// Without this, tags to and from Diddy mess up

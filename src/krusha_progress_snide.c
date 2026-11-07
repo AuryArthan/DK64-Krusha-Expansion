@@ -5,8 +5,35 @@
 extern void vanillaSnideBoard(void);
 extern Gfx* vanillaSnideDraw(Gfx*, void*);
 extern int krushaPauseFlagRange(int,int,int,int);
+extern void vanillaCharacterScript(void*,s32);
+
+void krushaSnideAnimation(void* actor, s32 script) {
+    /* Both queued GB actions and cutscene-driven pickups start these native
+     * Chunky/Krusha GB scripts. Substitute only Snide's player presentation,
+     * at real script initialization, never while SetAction merely queues it. */
+    if (CurrentMap==15 && krushaEnabled() && DetectAdventure() &&
+        Character==5 && actor==(void*)Player && (script==0x1D2 || script==0x1D0))
+        script=script==0x1D2 ? 0x145 : 0x144;
+    vanillaCharacterScript(actor,script);
+}
 
 static unsigned int activeFile(void) { return *(volatile u8*)0x807467C8; }
+
+int krushaSnideDisplayRewardReady(void) {
+    /* The setup prop already sits near the doorway before its presentation.
+     * Wait for the native hand-in phase, and require this visit to have held
+     * blueprints. A repeat/no-blueprint visit must not collect the idle prop. */
+    u32* actors=(u32*)0x807FB930;
+    int count=*(u16*)0x807FBB34;
+    if (count>64) count=64;
+    for (int i=0;i<count;i++) {
+        u8* actor=(u8*)actors[i*2];
+        if (!actor || *(u32*)(actor+0x58)!=184) continue;
+        u8* data=*(u8**)(actor+0x180);
+        return data && data[0]==4 && data[0x1A]>0;
+    }
+    return 0;
+}
 static int returned(void) {
     int count = 0;
     for (int level = 0; level < 8; level++)
@@ -98,14 +125,4 @@ Gfx* krushaSnideDraw(Gfx* dl, void* actor) {
     codeImmediate(0x800259E8, enabled ? 0x1800 : 0x1400);
     codeImmediate(0x80025430, enabled ? 7200 : 0xA3);
     return vanillaSnideDraw(dl,actor);
-}
-
-int krushaSnideHandoverEvent(s16 event) {
-    int (*native)(s16) = (void*)0x806F70A8;
-    int ready = native(event);
-    /* Krusha has no native blueprint-handover animation event. This callsite
-     * runs only in Snide's handover stage: credit genuinely held flags there.
-     * The original once-only returned flags/save path still prevent repeats. */
-    if (!ready && Character == 5 && event == 4 && krushaEnabled()) return 1;
-    return ready;
 }

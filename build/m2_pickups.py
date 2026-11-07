@@ -119,6 +119,11 @@ def payloads(rom):
         native=read_file(rom,25,index);out=bytearray()
         for (value,) in struct.iter_unpack('>H',native):
             r,g,b=(value>>11)&31,(value>>6)&31,(value>>1)&31
+            # Native Chunky balloon: green body and gold banana emblem.
+            # Keep its yellow/orange texels verbatim; silver only the body.
+            if r >= g and g > b:
+                out+=struct.pack('>H',value)
+                continue
             light=min(31,round((.2126*r+.7152*g+.0722*b)*gray/(255*.9278)))
             out+=struct.pack('>H',light<<11|light<<6|light<<1|value&1)
         result.append(bytes(out))

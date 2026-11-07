@@ -9,8 +9,8 @@
     64,
     64
   ],
-  "texture_sha256": "7c6796c5156ffd1ae3bbb8b7ba6876cf257f24d945441d6fe71111a9b5a54c31",
-  "preparation": "Pillow RGBA LANCZOS, full square, no cropping",
+  "texture_sha256": "0a1c64271964c2f197b99029cdb654ba8c4c0a50a0a0e9cea726f00f5568d8b0",
+  "preparation": "Pillow RGBA LANCZOS from full source to48x48, centered in transparent64x64 frame;25% smaller in each axis; no crop or runtime scaling",
   "purpose": "Krusha instrument-energy HUD sprite only",
   "texture_ids": [
     7600,
@@ -21,5 +21,13 @@
     63,
     64
   ],
-  "storage": "Upside-down RGBA5551, two32x64 halves; native alpha threshold128"
+  "storage": "Upside-down RGBA5551, two32x64 halves; native alpha threshold128",
+  "content_dimensions": [
+    48,
+    48
+  ],
+  "transparent_inset": [
+    8,
+    8
+  ]
 }

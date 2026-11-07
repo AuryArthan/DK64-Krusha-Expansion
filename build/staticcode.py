@@ -64,6 +64,9 @@ def patchStaticCode(filename):
 		fh.write(bytes(4))
 		from m3_progress import patch_pickups
 		patch_pickups(fh,symbols)
+		# Runtime script adapter's displaced native instructions (see trampoline).
+		fh.seek(0x80614EBC - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('8c82000444802000'), 'Animation script prologue differs from USA'
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude

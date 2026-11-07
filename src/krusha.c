@@ -23,6 +23,8 @@ extern void krushaRoarTick(void);
 extern u8 krushaRoarStart(void);
 extern void krushaHolsterModel(void* actor);
 extern void krushaDrawGunModel(void* actor);
+extern int krushaSnideDisplayRewardReady(void);
+extern void krushaSnideAnimation(void*,s32);
 extern s32 vanillaBuildActorBones(void* actor);
 extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
 
@@ -161,6 +163,14 @@ s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
      * tied to an original Kong's progression remains excluded. */
     if (enabled && player == 0 && Character == 5 && DetectAdventure()) {
         switch (type) {
+            case 0x74: /* Snide's animated display banana, setup ID4 only. */
+                if (CurrentMap != 15 || !krushaSnideDisplayRewardReady()) return 0;
+                for (s32 i=0;i<ObjectModel2Count_Dupe;i++) {
+                    ModelTwoData* object=&((ModelTwoData*)ObjectModel2Pointer)[i];
+                    if (object->runtime_id==object_id && object->object_id==4)
+                        return vanillaModelPickupAllowed(object_id,player,type);
+                }
+                return 0;
             case 0x11:  /* homing crate -> regular bazooka ammo */
                 if (MovesBase[5].weapon_bitfield&2) break;
                 return vanillaModelPickupAllowed(object_id, player, 0x8F);
@@ -310,6 +320,7 @@ void krushaAdventure(void) {
     static void* last_model = 0;
     if (!installed) {
         hook(0x80614A64, krushaBuildActorBones);
+        hook(0x80614EBC, krushaSnideAnimation);
         hook(0x806EB0C0, krushaSetAction);
         hook(0x806F6644, krushaModelPickupAllowed);
         hook(0x806F544C, krushaAmmoCollectible);
