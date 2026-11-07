@@ -33,6 +33,13 @@ def patchStaticCode(filename):
 		fh.seek(0x8060B7F8 - 0x805FB300)
 		fh.write(bytes(0x8060B84C - 0x8060B7F8))
 
+		# Native EEPROM writer: desired data was already snapshotted by the
+		# preceding memcpy. Replace ONLY its local old-device comparison copy.
+		fh.seek(0x8060D38C - 0x805FB300)
+		assert fh.read(24) == bytes.fromhex('27be00603c05807f24a5d6a803c020250c000c0024060800'), 'EEPROM comparison copy differs from USA'
+		fh.seek(0x8060D39C - 0x805FB300)
+		fh.write((0x0C000000 | ((int(symbols['krushasavecomparesnapshot'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
+
 		# Only the rainbow award's FTT call, after the original five-wallet loop.
 		# The wrapper credits the sixth adventure wallet even when Krusha is OFF.
 		fh.seek(0x806F54E0 - 0x805FB300)

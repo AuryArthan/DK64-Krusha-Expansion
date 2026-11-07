@@ -9,6 +9,58 @@ extern void saveNativeCollectTotals(void);
 
 static const char format_signature[] = "K07.2";
 
+/* The native writer compares its desired snapshot to a RAM shadow of EEPROM.
+ * Mupen states restore that shadow without restoring battery storage. Refresh
+ * only the writer's LOCAL comparison snapshot if the device has moved on.
+ * Never replace live progress, packed working RAM, or the native shadow here.
+ * Footer reads are cheap in the normal case; a mismatch causes one full read.
+ * Keep the native SI arbitration, 15 ms pacing, CRCs and incremental writes.
+ */
+u32 krushaSaveSyncTrace[4] = {0x4B535931, 0, 0, 0}; /* calls, rebases, read errors */
+static u8 save_device_snapshot[2048] = {1};
+
+void* krushaSaveCompareSnapshot(void* dest, void* src, int size) {
+    void (*delay)(float) = (void*)0x8060B84C;
+    volatile u8* controller_busy = (void*)0x807ECD08;
+    volatile u8* eeprom_busy = (void*)0x807467C4;
+    OSMesgQueue* queue = (void*)0x807ECCF0;
+    u8 footer[8];
+    int i, byte, offset, mismatch = 0, error = 0;
+    int bytes = (((*(volatile u16*)0x807ECEA0 + 0x6B7) & ~63) + 0x27) & ~7;
+    bytes >>= 3;
+    dk_memcpy(dest, src, size);
+    /* This hook has a single guarded USA callsite in the native IO thread. */
+    if (src != (void*)0x807ED6A8 || size != 2048 ||
+        *(volatile int*)0x807EDEAC != 2 || bytes != 492 ||
+        *(volatile u8*)0x80744460) return dest;
+    krushaSaveSyncTrace[1]++;
+    while (*controller_busy) delay(1.0f);
+    *eeprom_busy = 1;
+    for (i = 0; i < 5 && !error; i++) {
+        offset = (i < 4 ? (i + 1) * bytes - 4 : bytes * 4 + 60) & ~7;
+        error = osEepromRead(queue, offset >> 3, footer);
+        delay(15.0f);
+        if (error) break;
+        for (byte = 0; byte < 8; byte++)
+            if (footer[byte] != ((u8*)dest)[offset + byte]) mismatch = 1;
+        if (*(volatile u8*)0x80744460) error = -1;
+    }
+    if (mismatch && !error) {
+        for (i = 0; i < 256 && !error; i++) {
+            error = osEepromRead(queue, i, &save_device_snapshot[i * 8]);
+            delay(15.0f);
+            if (*(volatile u8*)0x80744460) error = -1;
+        }
+        if (!error) {
+            dk_memcpy(dest, save_device_snapshot, 2048);
+            krushaSaveSyncTrace[2]++;
+        }
+    }
+    if (error) krushaSaveSyncTrace[3]++;
+    *eeprom_busy = 0;
+    return dest;
+}
+
 static u16 recordBits(void) {
     u32 count = *(volatile u16*)0x807ECEA0;
     return (((count + 0x6B7) & ~63) + 0x27) & ~7;
