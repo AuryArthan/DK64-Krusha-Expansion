@@ -1,20 +1,29 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/krusha_identity.h"
+#include "../include/krusha_victory.generated.h"
 
 extern void vanillaSnideBoard(void);
 extern Gfx* vanillaSnideDraw(Gfx*, void*);
 extern int krushaPauseFlagRange(int,int,int,int);
 extern void vanillaCharacterScript(void*,s32);
+extern int m4VictoryActive(void);
 
 void krushaSnideAnimation(void* actor, s32 script) {
     /* Both queued GB actions and cutscene-driven pickups start these native
      * Chunky/Krusha GB scripts. Substitute only Snide's player presentation,
      * at real script initialization, never while SetAction merely queues it. */
-    if (CurrentMap==15 && krushaEnabled() && DetectAdventure() &&
+    if ((CurrentMap==15 || m4VictoryActive()) && krushaEnabled() && DetectAdventure() &&
         Character==5 && actor==(void*)Player && (script==0x1D2 || script==0x1D0))
-        script=script==0x1D2 ? 0x145 : 0x144;
+        script=script==0x1D2 ? 0x174 : 0x173;
     vanillaCharacterScript(actor,script);
+    if ((CurrentMap==15 || m4VictoryActive()) && krushaEnabled() && DetectAdventure() &&
+        Character==5 && actor==(void*)Player && script==0x173) {
+        u8* animation=*(u8**)((u8*)actor+4);
+        *(const u8**)(animation+0x68)=krushaVictoryScript;
+        *(const u8**)(animation+0x6C)=krushaVictoryScript;
+        *(const u8**)0x807F5AF0=krushaVictoryScript;
+    }
 }
 
 static unsigned int activeFile(void) { return *(volatile u8*)0x807467C8; }

@@ -29,3 +29,5 @@ __pycache__/
 
 # Rebuilt from the supplied original ROM before C compilation.
 /include/m2_pickups.generated.h
+/include/krusha_victory.generated.h
+/include/m4_rewards.generated.h

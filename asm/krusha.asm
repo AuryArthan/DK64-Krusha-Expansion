@@ -114,6 +114,12 @@ vanillaCharacterScript:
     J 0x80614EC4
     NOP
 
+m4NativeCollectEffect:
+    .word 0x00047400
+    .word 0x000E7C03
+    J 0x806F79E8
+    NOP
+
 vanillaSetAction:
     ANDI t8, a2, 0xFF
     LUI a3, 0x8080
@@ -426,6 +432,24 @@ m3BlueprintOwner:
     ; s8 the player. Override only the registered gray actor's owner.
     LUI at, hi(m3CollectingBlueprint)
     SW zero, lo(m3CollectingBlueprint)(at)
+    LUI at, hi(m4CollectingBonus)
+    SW zero, lo(m4CollectingBonus)(at)
+    LUI at, hi(m4DroppedBonus)
+    LW at, lo(m4DroppedBonus)(at)
+    BNE at, s2, @@blueprint
+    NOP
+    LW v0, 0x54(s2)
+    LUI at, hi(m4DroppedBonusID)
+    LW at, lo(m4DroppedBonusID)(at)
+    BNE v0, at, @@blueprint
+    NOP
+    LI v0, 1
+    LUI at, hi(m4CollectingBonus)
+    SW v0, lo(m4CollectingBonus)(at)
+    LI v0, 7
+    J 0x806F74A4
+    NOP
+@@blueprint:
     LUI at, hi(m3DroppedBlueprint)
     LW at, lo(m3DroppedBlueprint)(at)
     BNE at, s2, @@ordinary

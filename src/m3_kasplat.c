@@ -6,6 +6,9 @@ extern void m3NativeKasplatInit(u8);
 extern void m3NativeEnemyDrop(void*);
 extern void m3NativeBlueprint(void);
 extern void krushaNativeActorDelete(void*);
+extern u32 m4CollectingBonus;
+extern u8* m4DroppedBonus;
+extern s32 m4BonusPhysicalID;
 
 u8* m3DroppedBlueprint=0;
 u32 m3DroppedBlueprintID=0;
@@ -128,15 +131,27 @@ void m3Blueprint(void) {
 int m3SpawnPhysical(s16 type,f32 x,f32 y,f32 z,f32 angle,u32 flags) {
     int (*native)(s16,f32,f32,f32,f32,u32)=(void*)0x80632630;
     if (m3CollectingBlueprint) type=7;
+    if (m4CollectingBonus) {
+        type=9;
+        /* Native bonus GBs hang at barrel height. Place this private model
+         * near the actual floor so Krusha's native foot contact can take it
+         * on return, through the ordinary suction/award path. */
+        f32 ground=y+20;
+        int (*floor)(f32,f32,f32*)=(void*)0x80667110;
+        if (floor(x,z,&ground) && ground<=y && y-ground<128) y=ground+4;
+    }
     int id=native(type,x,y,z,angle,flags);
     if (m3CollectingBlueprint) physical_id=id;
+    if (m4CollectingBonus) m4BonusPhysicalID=id;
     return id;
 }
 
 void m3RegisterPhysical(s16 id,s16 type,s16 arg2,u8 arg3,u8 arg4,u8 arg5) {
     void (*native)(s16,s16,s16,u8,u8,u8)=(void*)0x806F50C8;
     if (m3CollectingBlueprint) type=7;
+    if (m4CollectingBonus) type=9;
     native(id,type,arg2,arg3,arg4,arg5);
+    if (m4CollectingBonus) {m4DroppedBonus=0;m4CollectingBonus=0;}
     if (m3CollectingBlueprint) {
         m3DroppedBlueprint=0;m3CollectingBlueprint=0;m3KasplatTrace[4]++;
     }

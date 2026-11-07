@@ -2,10 +2,13 @@
 #include "../include/krusha_progress.h"
 #include "../include/m3_progress.h"
 #include "../include/m2_pickups.generated.h"
+extern int m4SetupHidden(s32,s32);
 
 /* Only the setup constructor's permanent-object predicate calls this wrapper.
  * The original pickup ordering/counts are unchanged, as are cached map files. */
 s32 m2SetupHidden(s32 map, s32 object_id) {
+    int private=m4SetupHidden(map,object_id);
+    if (private>=0) return private;
     s32 (*nativeHidden)(s32,s32) = (void*)0x807315D4;
     if (map == 7) for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
         if (object_id != m2Pickups[i].object_id) continue;

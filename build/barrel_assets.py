@@ -206,6 +206,9 @@ def appendBarrelAssets(rom_path):
     assert len(payloads)==63
     from shout_icon import payloads as shout_payloads
     payloads += shout_payloads()
+    from m4_rewards import payloads as m4_payloads
+    assert len(payloads)==65
+    payloads += m4_payloads(Path(rom_path).read_bytes())
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02100000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)

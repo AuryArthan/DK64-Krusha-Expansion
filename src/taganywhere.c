@@ -427,6 +427,8 @@ void tagAnywhere(void) {
 		*(u32 *)(0x806EFBA8) = 0xA3000155; // Enable Control State Progress Zeroing
 	}
 
+	extern int m4RewardBusy(void);
+	if (m4RewardBusy()) { tagDenied(); return; }
 	// Map is loading
 	if (LZFadeoutProgress > 0) {
 		tagDenied();

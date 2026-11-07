@@ -25,6 +25,10 @@ extern void krushaHolsterModel(void* actor);
 extern void krushaDrawGunModel(void* actor);
 extern int krushaSnideDisplayRewardReady(void);
 extern void krushaSnideAnimation(void*,s32);
+extern int m4PickupAllowed(s16,u8,u16);
+extern void m4CollectEffect(s16,u8);
+extern void m4RewardsTick(void);
+extern void m4BonusInstall(void);
 extern s32 vanillaBuildActorBones(void* actor);
 extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
 
@@ -154,6 +158,8 @@ u8 krushaSetAction(s16 action, void* actor, u8 player) {
 
 extern s32 m2PickupAllowed(s16,u8,u16);
 s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
+    int gold=m4PickupAllowed(object_id,player,type);
+    if (gold>=0) return gold;
     int blueprint=m3BlueprintAllowed(object_id,player,type);
     if (blueprint>=0) return player==0 && blueprint;
     s32 private_pickup=m2PickupAllowed(object_id,player,type);
@@ -321,6 +327,8 @@ void krushaAdventure(void) {
     if (!installed) {
         hook(0x80614A64, krushaBuildActorBones);
         hook(0x80614EBC, krushaSnideAnimation);
+        hook(0x806F79E0, m4CollectEffect);
+        m4BonusInstall();
         hook(0x806EB0C0, krushaSetAction);
         hook(0x806F6644, krushaModelPickupAllowed);
         hook(0x806F544C, krushaAmmoCollectible);
@@ -334,6 +342,7 @@ void krushaAdventure(void) {
         krushaRoarInstall();
         installed = 1;
     }
+    m4RewardsTick();
     if (CurrentMap == 80 && !option_loaded) {
         enabled = !checkFlag(0x24, 1);
         option_loaded = 1;
