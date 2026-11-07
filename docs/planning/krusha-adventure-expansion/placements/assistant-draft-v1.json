@@ -168,10 +168,10 @@
       "label": "JP-B01",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 0.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 0. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1731.835,
-        311.323,
+        297.323,
         1505.451
       ],
       "status": "proposal",
@@ -184,10 +184,10 @@
       "label": "JP-B02",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 1.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 1. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1613.917,
-        305.609,
+        291.609,
         1604.342
       ],
       "status": "proposal",
@@ -200,10 +200,10 @@
       "label": "JP-S01",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 13.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 13. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1697.64,
-        305.402,
+        291.402,
         1590.554
       ],
       "status": "proposal",
@@ -216,10 +216,10 @@
       "label": "JP-S02",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 14.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 14. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1707.936,
-        305.609,
+        291.609,
         1456.938
       ],
       "status": "proposal",
@@ -232,10 +232,10 @@
       "label": "JP-S03",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 15.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 15. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1572.638,
-        303.261,
+        289.261,
         1575.397
       ],
       "status": "proposal",
@@ -248,10 +248,10 @@
       "label": "JP-S04",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 16.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 16. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1725.988,
-        305.978,
+        291.978,
         1553.673
       ],
       "status": "proposal",
@@ -264,10 +264,10 @@
       "label": "JP-S05",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 17.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 17. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1553.401,
-        300.92,
+        286.92,
         1528.795
       ],
       "status": "proposal",
@@ -280,10 +280,10 @@
       "label": "JP-C01",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 231.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 231. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1656.669,
-        298.566,
+        284.566,
         1430.192
       ],
       "status": "proposal",
@@ -296,10 +296,10 @@
       "label": "JP-C02",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 232.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 232. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1561.365,
-        298.0,
+        284.0,
         1480.984
       ],
       "status": "proposal",
@@ -312,10 +312,10 @@
       "label": "JP-C03",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 233.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Lower route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-008 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 233. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1603.206,
-        298.0,
+        284.0,
         1438.347
       ],
       "status": "proposal",
@@ -328,10 +328,10 @@
       "label": "JP-B03",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 2.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 2. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1900.229,
-        298.0,
+        284.0,
         3953.437
       ],
       "status": "proposal",
@@ -344,10 +344,10 @@
       "label": "JP-B04",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 3.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 3. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1668.14,
-        298.0,
+        284.0,
         3790.269
       ],
       "status": "proposal",
@@ -360,10 +360,10 @@
       "label": "JP-S06",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 18.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 18. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1843.981,
-        298.0,
+        284.0,
         3850.398
       ],
       "status": "proposal",
@@ -376,10 +376,10 @@
       "label": "JP-S07",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 19.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 19. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1560.578,
-        298.0,
+        284.0,
         3837.293
       ],
       "status": "proposal",
@@ -392,10 +392,10 @@
       "label": "JP-S08",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 20.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 20. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1522.747,
-        298.0,
+        284.0,
         4118.466
       ],
       "status": "proposal",
@@ -408,10 +408,10 @@
       "label": "JP-S09",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 21.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 21. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1799.535,
-        298.0,
+        284.0,
         4180.734
       ],
       "status": "proposal",
@@ -424,10 +424,10 @@
       "label": "JP-S10",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 22.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 22. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1885.763,
-        298.0,
+        284.0,
         3910.449
       ],
       "status": "proposal",
@@ -440,10 +440,10 @@
       "label": "JP-C04",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 234.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 234. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1903.252,
-        298.0,
+        284.0,
         4026.531
       ],
       "status": "proposal",
@@ -456,10 +456,10 @@
       "label": "JP-C05",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 235.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Cranky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-060 (Cranky's Lab). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 235. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1741.218,
-        298.0,
+        284.0,
         3793.648
       ],
       "status": "proposal",
@@ -472,10 +472,10 @@
       "label": "JP-B05",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Pond-side path. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-009 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 4.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Pond-side path. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-009 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 4. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1793.746,
-        298.0,
+        284.0,
         3645.288
       ],
       "status": "proposal",
@@ -488,10 +488,10 @@
       "label": "JP-B06",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Pond-side path. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-009 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 5.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Pond-side path. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-009 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 5. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1637.818,
-        298.0,
+        284.0,
         3578.073
       ],
       "status": "proposal",
@@ -504,10 +504,10 @@
       "label": "JP-B07",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 6.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 6. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2042.991,
-        538.0,
+        524.0,
         2040.895
       ],
       "status": "proposal",
@@ -520,10 +520,10 @@
       "label": "JP-B08",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 7.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 7. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1866.059,
-        538.0,
+        524.0,
         2220.314
       ],
       "status": "proposal",
@@ -536,10 +536,10 @@
       "label": "JP-A01",
       "kind": "balloon",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
         2049.663,
-        820.0,
+        806.0,
         2297.82
       ],
       "status": "proposal",
@@ -552,10 +552,10 @@
       "label": "JP-C06",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 236.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 236. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1892.712,
-        538.0,
+        524.0,
         2142.833
       ],
       "status": "proposal",
@@ -568,10 +568,10 @@
       "label": "JP-C07",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 237.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 237. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1929.59,
-        538.0,
+        524.0,
         2096.246
       ],
       "status": "proposal",
@@ -584,10 +584,10 @@
       "label": "JP-C08",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 238.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 238. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2097.973,
-        538.0,
+        524.0,
         2039.927
       ],
       "status": "proposal",
@@ -600,10 +600,10 @@
       "label": "JP-B09",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 8.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 8. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2026.997,
-        698.0,
+        684.0,
         2432.339
       ],
       "status": "proposal",
@@ -616,10 +616,10 @@
       "label": "JP-A02",
       "kind": "balloon",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 11.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 11. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
         1976.184,
-        820.0,
+        806.0,
         2513.244
       ],
       "status": "proposal",
@@ -632,10 +632,10 @@
       "label": "JP-S11",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 23.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 23. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1979.457,
-        698.0,
+        684.0,
         2504.382
       ],
       "status": "proposal",
@@ -648,10 +648,10 @@
       "label": "JP-S12",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 24.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 24. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2278.726,
-        581.377,
+        567.377,
         2764.014
       ],
       "status": "proposal",
@@ -664,10 +664,10 @@
       "label": "JP-S13",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 25.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 25. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2207.946,
-        698.0,
+        684.0,
         2374.192
       ],
       "status": "proposal",
@@ -680,10 +680,10 @@
       "label": "JP-S14",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 26.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 26. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2205.415,
-        557.333,
+        543.333,
         2789.305
       ],
       "status": "proposal",
@@ -696,10 +696,10 @@
       "label": "JP-S15",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 27.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 27. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         1966.742,
-        701.358,
+        687.358,
         2552.79
       ],
       "status": "proposal",
@@ -712,10 +712,10 @@
       "label": "JP-B10",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 9.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 9. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2607.283,
-        557.333,
+        543.333,
         3172.769
       ],
       "status": "proposal",
@@ -728,10 +728,10 @@
       "label": "JP-A03",
       "kind": "balloon",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 12.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 12. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
         2605.236,
-        679.333,
+        665.333,
         3031.361
       ],
       "status": "proposal",
@@ -744,10 +744,10 @@
       "label": "JP-S16",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 28.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 28. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2677.341,
-        557.333,
+        543.333,
         3154.485
       ],
       "status": "proposal",
@@ -760,10 +760,10 @@
       "label": "JP-S17",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 29.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 29. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2557.4,
-        557.333,
+        543.333,
         3147.072
       ],
       "status": "proposal",
@@ -776,10 +776,10 @@
       "label": "JP-S18",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 30.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 30. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2541.991,
-        557.333,
+        543.333,
         3041.738
       ],
       "status": "proposal",
@@ -792,10 +792,10 @@
       "label": "JP-S19",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 31.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 31. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2533.487,
-        557.333,
+        543.333,
         3102.688
       ],
       "status": "proposal",
@@ -808,10 +808,10 @@
       "label": "JP-S20",
       "kind": "single",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 32.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Part of a short regional breadcrumb trail; refine spacing by playtesting.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 32. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2645.504,
-        557.333,
+        543.333,
         2997.159
       ],
       "status": "proposal",
@@ -824,10 +824,10 @@
       "label": "JP-C09",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 239.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 239. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2573.662,
-        557.333,
+        543.333,
         3007.669
       ],
       "status": "proposal",
@@ -840,10 +840,10 @@
       "label": "JP-C10",
       "kind": "coin",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 240.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Upper tag-barrel route. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move.  Anchor: 007-actor-049 (Tag Barrel). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 240. 2026-11-07 pickup polish: lowered 14 units; ground markers now approximately 4 units above sampled floor.",
       "xyz": [
         2655.636,
-        557.333,
+        543.333,
         3204.15
       ],
       "status": "proposal",

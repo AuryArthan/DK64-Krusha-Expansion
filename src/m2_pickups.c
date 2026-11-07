@@ -72,6 +72,26 @@ void* m2HUDSprite(u32 item) {
     return m2NativeHUDSprite(item);
 }
 
+/* Extend the native billboard ownership fade without changing collection IDs.
+ * The renderer supplies the distance-faded alpha and opaque-pass flag afresh
+ * each draw. Match its non-owner cap100 and preserve any lower distance alpha.
+ * Native logic remains in charge of every original item and menu/MP context. */
+void m2PickupOpacity(s16 type,u8* opaque,s16* alpha) {
+    void (*nativeOpacity)(s16,u8*,s16*)=(void*)0x806392BC;
+    if (CurrentMap == 7 && krushaEnabled() && DetectAdventure() &&
+        (type == 2 || type == 4 || type == 6)) {
+        u8* changes=*(u8**)0x807FC924;
+        u8 viewport=*(u8*)0x807FC929;
+        u8* actor=(changes && viewport < 4) ? *(u8**)(changes+viewport*0x2F0+4) : 0;
+        if (!actor || *(u32*)(actor+0x58) != 7) {
+            *opaque=0;
+            if (*alpha > 100) *alpha=100;
+        }
+        return;
+    }
+    nativeOpacity(type,opaque,alpha);
+}
+
 /* Reuse the native nonpersistent K.Rool balloon actor, with explicit private
  * spawner identities. It consumes no original permanent balloon flag. Routes,
  * collision volumes, sprite lifetime and actor cleanup remain native. */

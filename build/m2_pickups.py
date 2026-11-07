@@ -128,6 +128,8 @@ def patch_code(fh,symbols):
     def patch(a,expected,new):
         assert word(a)==expected,hex(a)
         fh.seek(a-base);fh.write(new.to_bytes(4,'big'))
+    # Native2D model2 ownership-opacity call; original routine remains callable.
+    patch(0x806380B0,0x0C18E4AF,0x0C000000|(int(symbols['m2pickupopacity'],16)&0xFFFFFFF)>>2)
     target=int(symbols['m2collectdefs'],16)
     for h,l,offset in [(0x806F48D0,0x806F48D4,0),(0x806F4E7C,0x806F4E8C,0),(0x806F51C0,0x806F51CC,12),(0x806F5554,0x806F5560,2),(0x806F626C,0x806F6278,0),(0x806F6AC4,0x806F6ACC,0),(0x806F7428,0x806F7448,0),(0x806F7994,0x806F7998,42*20)]:
         hi,lo=word(h),word(l);signed=(lo&65535)-(65536 if lo&32768 else 0)

@@ -3,8 +3,8 @@
 window.createKrushaPlanner = function (host) {
   const $ = id => document.getElementById(id);
   const types = {
-    single: ['Single banana', 1, 20], bunch: ['Banana bunch (5)', 5, 20],
-    balloon: ['Banana balloon (10)', 10, 100], coin: ['Gray coin', 0, 20],
+    single: ['Single banana', 1, 4], bunch: ['Banana bunch (5)', 5, 4],
+    balloon: ['Banana balloon (10)', 10, 100], coin: ['Gray coin', 0, 4],
     gb: ['Golden Banana', 0, 20], blueprint: ['Kasplat / blueprint', 0, 5],
     bonus: ['Bonus barrel (GB reward)', 0, 60], switch: ['Weapon switch', 0, 20],
     key: ['Recruitment key', 0, 20], supply: ['Shared supply', 0, 20],

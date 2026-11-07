@@ -22,9 +22,9 @@
     42
   ],
   "startup_rgb": [
-    208,
-    208,
-    208
+    224,
+    224,
+    224
   ],
   "startup_mask": "Source alpha >=128, then LANCZOS 37x37",
   "original_five_pixel_sha256": "ce0b8f00c1a7ac54b62367500d38a29e7c8d7582dc221a1111358c85a6d660d6"
