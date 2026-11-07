@@ -14,6 +14,14 @@ static u32 last_frame;
 
 static int claimed(void) { return krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1); }
 
+void m4BonusRegisterFlag(s16 map,s16 id,s16 flag,u8 type) {
+    /* Native actor-to-model conversion separately binds the new setup ID to
+     * its permanent flag. This reward is saved by the private contact path. */
+    if (m4CollectingBonus && map==7 && flag==0x1C4) return;
+    void (*native)(s16,s16,s16,u8)=(void*)0x80731410;
+    native(map,id,flag,type);
+}
+
 int m4PrivateBarrel(void* actor) {
     s16 (*spawner)(void*)=(void*)0x80688E68;
     return CurrentMap==7 && actor && *(u32*)((u8*)actor+0x58)==28 && spawner(actor)==610;

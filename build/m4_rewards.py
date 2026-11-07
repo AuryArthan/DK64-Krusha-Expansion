@@ -147,7 +147,7 @@ def patched_scripts(data):
     return struct.pack('>H',struct.unpack_from('>H',data)[0]+2)+data[2:offset]+gate+switch+data[offset:]
 
 def patch_code(fh,symbols):
-    for address,old,name in [(0x80680AFC,'0c1cc443','m4bonuscheckflag'),(0x80680DF0,'0c1a021b','m4bonuseligibility')]:
+    for address,old,name in [(0x80680AFC,'0c1cc443','m4bonuscheckflag'),(0x80680DF0,'0c1a021b','m4bonuseligibility'),(0x806F78D8,'0c1cc504','m4bonusregisterflag')]:
         target=int(symbols[name],16)
         fh.seek(address-0x805FB300);assert fh.read(4)==bytes.fromhex(old)
         fh.seek(address-0x805FB300);fh.write((0x0C000000|((target&0xFFFFFFF)>>2)).to_bytes(4,'big'))
