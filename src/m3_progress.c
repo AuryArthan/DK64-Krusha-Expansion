@@ -66,9 +66,8 @@ void m3ProgressTick(void) {
     }
     MovesBase[5].weapon_bitfield=(guns&6) | krushaProgressRead(file(),KRUSHA_GUN_BIT,1);
     MovesBase[5].instrument_bitfield=(instruments&14) | krushaProgressRead(file(),KRUSHA_SHOUT_BIT,1);
-    /* Match Tag Anywhere's existing Speed Mode policy for the original five:
-     * their instruments stay at20 every frame. Normal mode remains finite. */
-    if (StorySkip) MovesBase[5].instrument_energy=20;
+    /* Speed Mode supplies ownership/upgrades, not infinite energy. The
+     * original five are filled in the main menu, not on adventure ticks. */
     MovesBase[5].ammo_belt=StorySkip ? 2 : MovesBase[0].ammo_belt;
     MovesBase[5].simian_slam=StorySkip ? 3 : MovesBase[0].simian_slam;
     if (MovesBase[5].instrument_energy>capacity()) MovesBase[5].instrument_energy=capacity();
