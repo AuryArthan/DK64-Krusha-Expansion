@@ -80,6 +80,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table==25 && (index==7400 || index==7401)) { table=27; index-=7341; }
     if (table==4 && index==7) { table=27; index=62; }
     if (table==7 && index>=7500 && index<=7507) { table=27; index-=7474; }
+    if (table==25 && (index==7600 || index==7601)) { table=27; index-=7537; }
     if (table == 27) {
         /* Native tables4/7/14/25 cache shared files; the originally empty
          * table27 has no cache. World pickups can request each model/frame

@@ -1,0 +1,25 @@
+{
+  "source_filename": "input_files/krusha-shout.png",
+  "source_sha256": "8914ccb783bd25dd71402dab7a5a89161149dae09824891e303f39e1e09d1ac2",
+  "source_dimensions": [
+    1224,
+    1224
+  ],
+  "texture_dimensions": [
+    64,
+    64
+  ],
+  "texture_sha256": "7c6796c5156ffd1ae3bbb8b7ba6876cf257f24d945441d6fe71111a9b5a54c31",
+  "preparation": "Pillow RGBA LANCZOS, full square, no cropping",
+  "purpose": "Krusha instrument-energy HUD sprite only",
+  "texture_ids": [
+    7600,
+    7601
+  ],
+  "custom_table": 27,
+  "custom_indices": [
+    63,
+    64
+  ],
+  "storage": "Upside-down RGBA5551, two32x64 halves; native alpha threshold128"
+}

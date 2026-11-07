@@ -7,4 +7,5 @@ void m3FindPurchase(void* menu, void* progress, int first);
 void m3ShopInstrument(void);
 const char* m3ShopDialogue(const unsigned char* text,unsigned short length);
 const void* m3FaceIcon(void);
+const void* m3ShoutIcon(void);
 #endif

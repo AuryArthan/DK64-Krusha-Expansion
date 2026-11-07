@@ -76,7 +76,8 @@ void* m2HUDSprite(u32 item) {
         if (item == 12) return (void*)krushaOwnedIcon(2);
         /* Native price displays request sprite 20+character. 25 has no
          * vanilla descriptor and crashes the sprite allocator on entry. */
-        if (item == 7 || item == 25) return (void*)m3FaceIcon();
+        if (item == 7) return (void*)m3ShoutIcon();
+        if (item == 25) return (void*)m3FaceIcon();
     }
     return m2NativeHUDSprite(item);
 }

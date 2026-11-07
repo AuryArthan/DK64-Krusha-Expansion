@@ -20,11 +20,16 @@ static int offer_type = -1;
 static int offer_value;
 /* Native two-tile head descriptor, reusing the approved barrel/file portrait.
  * Native shop prices 20..24 show the wallet owner's head; 25 is Krusha. */
-static const struct {
+typedef struct {
     u32 id;u8 across,down,flags,codec;u32 rgba;
     u8 animated,table;u16 width,height,frames;u16 images[2];
-} face_icon={0x4B520130,2,1,0,2,0xFFFFFFFF,0,1,32,64,1,{7001,7002}};
+} HeadIcon;
+static const HeadIcon face_icon={0x4B520130,2,1,0,2,0xFFFFFFFF,0,1,32,64,1,{7001,7002}};
+/* Separate identity/cache key: the energy counter must not replace the
+ * approved ordinary portrait used by shop prices, barrels or menus. */
+static const HeadIcon shout_icon={0x4B520131,2,1,0,2,0xFFFFFFFF,0,1,32,64,1,{7600,7601}};
 const void* m3FaceIcon(void) { return &face_icon; }
+const void* m3ShoutIcon(void) { return &shout_icon; }
 static unsigned int file(void) { return *(volatile u8*)0x807467C8; }
 static int active(void) { return krushaEnabled() && DetectAdventure() && Character == 5; }
 
