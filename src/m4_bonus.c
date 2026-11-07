@@ -35,7 +35,7 @@ void m4BonusEligibility(void) {
     } else {
         *(u32*)(actor+0x60)&=~0x8000;
         *(u16*)(actor+0x132)=4;
-        actor[0x144]=0x7F;
+        *(u16*)(actor+0x128)=0x7F;
     }
 }
 

@@ -21,11 +21,23 @@ static int reward(u16 map,u16 id) {
 
 int m4SetupHidden(s32 map,s32 id) {
     if (map==7 && (id==M4_GATE_ID || id==M4_SWITCH_ID))
-        return !krushaEnabled() || !DetectAdventure() || krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
+        /* Native cached-script restore assumes every scripted prop exists.
+         * Keep these records alive; their scripts hide/disable them instead. */
+        return 0;
     int slot=reward(map,id);
     if (slot<0) return -1;
     return !krushaEnabled() || !DetectAdventure() ||
         krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+slot,1);
+}
+
+int m4ScriptCondition(u16* instruction,s16 runtime) {
+    if ((instruction[0]&0x7FFF)!=0x7FFE || instruction[1]!=0x4D34 || CurrentMap!=7) return -1;
+    s16 (*setupId)(s16)=(void*)0x8063D990;
+    s16 id=setupId(runtime);
+    if (id!=M4_GATE_ID && id!=M4_SWITCH_ID) return -1;
+    int disabled=!krushaEnabled() || !DetectAdventure() ||
+        krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
+    return (instruction[0]&0x8000) ? !disabled : disabled;
 }
 
 int m4VictoryActive(void) { return reward_map==CurrentMap && owner==Player && owner; }
@@ -34,14 +46,24 @@ int m4RewardBusy(void) { return m4VictoryActive(); }
 void m4RewardsTick(void) {
     m4BonusTick();
     cage_open=0;
-    if (CurrentMap==7 && krushaEnabled() && DetectAdventure()) {
-        s16 runtime=*(s16*)(0x807F6240+2*M4_SWITCH_ID);
+    if (CurrentMap==7 && frame()>1) {
+        int disabled=!krushaEnabled() || !DetectAdventure() ||
+            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
+        const s16 ids[2]={M4_GATE_ID,M4_SWITCH_ID};
         s16 (*indexOf)(s16)=(void*)0x80659470;
-        s16 index=runtime>=0 ? indexOf(runtime) : -1;
+        void (*runState)(void*,s8,s16)=(void*)0x8064199C;
         ModelTwoData* objects=ObjectModel2Pointer;
-        if (index>=0 && index<ObjectModel2Count_Dupe && objects[index].object_id==M4_SWITCH_ID) {
+        for (int i=0;i<2;i++) {
+            s16 runtime=*(s16*)(0x807F6240+2*ids[i]);
+            s16 index=runtime>=0 ? indexOf(runtime) : -1;
+            if (index<0 || index>=ObjectModel2Count_Dupe || objects[index].object_id!=ids[i]) continue;
             u8* script=objects[index].behaviour_pointer;
-            if (script && script[0x48]>=2) cage_open=1;
+            if (!script) continue;
+            /* A cached/opened button may be sleeping when its GB is claimed.
+             * Wake only until native script operations have hidden it. */
+            if (disabled && (script[0x60]!=1 || *(u16*)(script+0x62) || script[0x70] || script[0x71]))
+                runState(script,1,0);
+            if (!disabled && ids[i]==M4_SWITCH_ID && script[0x48]>=2) cage_open=1;
         }
     }
     if (reward_map<0) return;

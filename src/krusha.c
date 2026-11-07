@@ -278,6 +278,9 @@ static s32 krushaQuestTouch(ModelTwoData* object, void* script) {
 }
 
 u8 krushaScriptCondition(u16* instruction, void* script, s16 object_id) {
+    extern int m4ScriptCondition(u16*,s16);
+    int m4=m4ScriptCondition(instruction,object_id);
+    if (m4>=0) return m4;
     s32 operation = instruction[0] & 0x7FFF;
     if (enabled && Character == 5 && DetectAdventure() &&
         (operation == 0x38 || (operation == 0x12 && instruction[1] == 6) ||

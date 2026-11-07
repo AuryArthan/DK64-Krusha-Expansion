@@ -45,7 +45,8 @@ def prepare(rom_path):
     rom=Path(rom_path).read_bytes();assert not read_file(rom,4,TYPE) and not read_file(rom,4,33)
     static=zlib.decompress(rom[0xC29D4:],47)
     assert static[0x80755F54-0x80744460:0x80755F58-0x80744460]==bytes.fromhex('01c40000')
-    for mid in range(216):
+    setup_count=struct.unpack_from('>I',rom,0x101C50+(32+9)*4)[0]
+    for mid in range(setup_count):
         data=read_file(rom,9,mid)
         if not data:continue
         for i in range(struct.unpack_from('>I',data)[0]):assert struct.unpack_from('>H',data,4+i*48+40)[0] not in (TYPE,33)
@@ -117,6 +118,10 @@ def patched_scripts(data):
     """Native switch contact/animation and metal cage animation; no flags."""
     ids=props()
     def script(ident,blocks):
+        # Private condition only for these two scripts: preserve live records
+        # for native cached-script restore, hide them through native controls.
+        blocks=[([(-2,0x4D34,0,0)]+conditions,executions) for conditions,executions in blocks]
+        blocks.append(([(0x7FFE,0x4D34,0,0)],[(69,1,0,255),(70,0,0,0),(71,0,0,0),(38,2,0,0)]))
         result=struct.pack('>3H',ident,len(blocks),0)
         for conditions,executions in blocks:
             result+=struct.pack('>H',len(conditions))+b''.join(struct.pack('>4h',*c) for c in conditions)
@@ -146,4 +151,3 @@ def patch_code(fh,symbols):
         target=int(symbols[name],16)
         fh.seek(address-0x805FB300);assert fh.read(4)==bytes.fromhex(old)
         fh.seek(address-0x805FB300);fh.write((0x0C000000|((target&0xFFFFFFF)>>2)).to_bytes(4,'big'))
-

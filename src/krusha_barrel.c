@@ -43,7 +43,9 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table==4 && index==9) { table=27;index=65; }
-    if (table==10 && index==7 && krushaEnabled()) { table=27;index=67; }
+    /* Keep the private scripts present for native map-cache restoration even
+     * with Krusha OFF. Their private predicate hides the two inert props. */
+    if (table==10 && index==7) { table=27;index=67; }
     if (table==4 && index==33) { table=27;index=66; }
     if (table==25 && index==7410) { table=27;index=68; }
     if (table == 5 && index == 0xC0 && krushaEnabled()) {
