@@ -149,7 +149,12 @@ int m3SpawnPhysical(s16 type,f32 x,f32 y,f32 z,f32 angle,u32 flags) {
 void m3RegisterPhysical(s16 id,s16 type,s16 arg2,u8 arg3,u8 arg4,u8 arg5) {
     void (*native)(s16,s16,s16,u8,u8,u8)=(void*)0x806F50C8;
     if (m3CollectingBlueprint) type=7;
-    if (m4CollectingBonus) type=9;
+    if (m4CollectingBonus) {
+        type=9;
+        /* The actor's1C4 is only a native barrel token. Register no native
+         * pickup flag: m4PickupAllowed alone owns the persistent reward bit. */
+        arg2=-1;
+    }
     native(id,type,arg2,arg3,arg4,arg5);
     if (m4CollectingBonus) {m4DroppedBonus=0;m4CollectingBonus=0;}
     if (m3CollectingBlueprint) {
