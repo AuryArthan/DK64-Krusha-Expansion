@@ -18,6 +18,9 @@ def patchStaticCode(filename):
 			(0x806AC07C, 'krushapausesprite', '27bdffa8afbf001c'),
 			(0x806FB418, 'krushatotalgbs', '3c0480803c078080'),
 			(0x806F8278, 'krushahudgbs', '308e00ff000e7880'),
+			(0x806B1DD4, 'm3kasplatinit', '3c0280808c42bb40'),
+			(0x806A5C60, 'm3enemydrop', '27bdffc03c0e8080'),
+			(0x806A610C, 'm3blueprint', '27bdffe8afbf0014'),
 		]:
 			fh.seek(address - 0x805FB300)
 			assert fh.read(8) == bytes.fromhex(prologue), f'Unexpected save prologue at {address:X}'
@@ -44,6 +47,16 @@ def patchStaticCode(filename):
 		patchPause(fh, symbols)
 		from m2_pickups import patch_code
 		patch_code(fh,symbols)
+		# T&S's native five-character sum is unrolled. Keep its ownership,
+		# decrement, animation, quota and boss-selection logic; add sixth fed
+		# stock only to the quota-stop comparison. Delay-slot LUI stays native.
+		fh.seek(0x806BE49C - 0x805FB300)
+		assert fh.read(12) == bytes.fromhex('0069082a142000063c0a8080'), 'T&S quota differs from USA'
+		fh.seek(0x806BE49C - 0x805FB300)
+		fh.write((0x08000000 | ((int(symbols['m3tnsquota'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
+		fh.write(bytes(4))
+		from m3_progress import patch_pickups
+		patch_pickups(fh,symbols)
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude

@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/m3_progress.h"
 #include "../include/m2_pickups.generated.h"
 
 /* Only the setup constructor's permanent-object predicate calls this wrapper.
@@ -64,10 +65,18 @@ s32 m2PickupAllowed(s16 object_id,u8 player,u16 type) {
  * current player identity. */
 extern void* m2NativeHUDSprite(u32 item);
 extern const void* krushaPauseIcon(const void*);
+extern const void* krushaOwnedIcon(int);
 void* m2HUDSprite(u32 item) {
+    if (krushaEnabled() && DetectAdventure() && item==13 && *(u32*)0x80754288==5)
+        return (void*)krushaOwnedIcon(0);
     if (krushaEnabled() && DetectAdventure() && Character == 5) {
         if (item == 0) return (void*)krushaPauseIcon((void*)0);
         if (item == 1) return (void*)krushaPauseIcon((void*)1);
+        if (item == 14) return (void*)krushaOwnedIcon(1);
+        if (item == 12) return (void*)krushaOwnedIcon(2);
+        /* Native price displays request sprite 20+character. 25 has no
+         * vanilla descriptor and crashes the sprite allocator on entry. */
+        if (item == 7 || item == 25) return (void*)m3FaceIcon();
     }
     return m2NativeHUDSprite(item);
 }
@@ -79,7 +88,7 @@ void* m2HUDSprite(u32 item) {
 void m2PickupOpacity(s16 type,u8* opaque,s16* alpha) {
     void (*nativeOpacity)(s16,u8*,s16*)=(void*)0x806392BC;
     if (CurrentMap == 7 && krushaEnabled() && DetectAdventure() &&
-        (type == 2 || type == 4 || type == 6)) {
+        (type == 2 || type == 4 || type == 6 || type == 7)) {
         u8* changes=*(u8**)0x807FC924;
         u8 viewport=*(u8*)0x807FC929;
         u8* actor=(changes && viewport < 4) ? *(u8**)(changes+viewport*0x2F0+4) : 0;

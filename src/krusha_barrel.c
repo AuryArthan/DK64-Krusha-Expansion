@@ -73,6 +73,13 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table == 25 && index >= 7300 && index <= 7307) {
         table = 27; index -= 7250;
     }
+    if (krushaEnabled() && DetectAdventure()) {
+        if (table==5 && index==54) { table=27; index=58; }
+        if (table==16 && index==7) { table=27; index=61; }
+    }
+    if (table==25 && (index==7400 || index==7401)) { table=27; index-=7341; }
+    if (table==4 && index==7) { table=27; index=62; }
+    if (table==7 && index>=7500 && index<=7507) { table=27; index-=7474; }
     if (table == 27) {
         /* Native tables4/7/14/25 cache shared files; the originally empty
          * table27 has no cache. World pickups can request each model/frame
@@ -94,7 +101,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (index == 0 || index == 3)) {
+    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61)) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */

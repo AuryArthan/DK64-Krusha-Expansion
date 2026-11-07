@@ -150,6 +150,9 @@ static const OwnedSprite owned_icons[3] = {
     {0x4B520101,1,1,0,2,0xFFFFFFFF,1,1,48,42,8,{7108,7109,7110,7111,7112,7113,7114,7115}},
     {0x4B520102,1,1,0,2,0xFFFFFFFF,1,1,48,42,8,{7116,7117,7118,7119,7120,7121,7122,7123}},
 };
+const void* krushaOwnedIcon(int index) {
+    return index>=0 && index<3 ? &owned_icons[index] : 0;
+}
 const void* krushaPauseIcon(const void* sprite) {
     if (!krushaEnabled() || !DetectAdventure() || Character != 5) return sprite;
     if ((u32)sprite == 0) return &owned_icons[0];

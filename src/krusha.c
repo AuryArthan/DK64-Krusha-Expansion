@@ -1,4 +1,6 @@
 #include "../include/common.h"
+#include "../include/m3_progress.h"
+#include "../include/m3_kasplat.h"
 
 /* Krusha is character 5 / actor 7 throughout adventure mode. Compatibility
  * decisions belong to the individual interaction, never a global ID swap. */
@@ -96,7 +98,7 @@ s32 krushaAmmoCollectible(s32 item, s32 type, u8 homing) {
     /* Classify at collection, not when a crate spills: this also handles
      * homing props left by an original Kong before tagging to Krusha. Native
      * stock updates, limits and HUD then all use the regular ammo counter. */
-    if (enabled && Character == 5 && DetectAdventure()) {
+    if (enabled && Character == 5 && DetectAdventure() && !(MovesBase[5].weapon_bitfield&2)) {
         switch (type) {
             case 0x91: case 0x15D: case 0x15E: case 0x15F: case 0x160:
                 homing = 0;
@@ -124,13 +126,7 @@ void krushaBananaBalloon(void* sprite) {
 
 void krushaFindPurchase(void* menu, void* progress, s32 arg2) {
     if (enabled && Character == 5 && DetectAdventure()) {
-        /* Shop stock is [5][7]. Index 5 reads the next shop's stock table.
-         * Use the ordinary 'nothing for sale' conversation instead. */
-        u8* data = menu;
-        *(s16*)(data + 4) = 0;
-        data[0xB] = 0xFF;
-        data[0x10] = CollectableBase.Melons;
-        *(s16*)0x80750AC8 = 0;
+        m3FindPurchase(menu,progress,arg2);
         return;
     }
     vanillaFindPurchase(menu, progress, arg2);
@@ -147,12 +143,17 @@ static void hook(u32 address, void* target) {
 u8 krushaSetAction(s16 action, void* actor, u8 player) {
     /* Route the sixth character around the undefined native instrument
      * cutscene. Input and script requests use the same safe roar initializer. */
-    if (enabled && player == 0 && Character == 5 && action == 0x53 && DetectAdventure()) return krushaRoarStart();
+    if (enabled && player == 0 && Character == 5 && action == 0x53 && DetectAdventure()) {
+        if (CurrentMap==25) { m3ShopInstrument(); return 1; }
+        return krushaRoarStart();
+    }
     return vanillaSetAction(action, actor, player);
 }
 
 extern s32 m2PickupAllowed(s16,u8,u16);
 s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
+    int blueprint=m3BlueprintAllowed(object_id,player,type);
+    if (blueprint>=0) return player==0 && blueprint;
     s32 private_pickup=m2PickupAllowed(object_id,player,type);
     if (private_pickup >= 0) return private_pickup;
     /* This predicate runs before collection/despawn. Let native eligibility
@@ -161,6 +162,7 @@ s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
     if (enabled && player == 0 && Character == 5 && DetectAdventure()) {
         switch (type) {
             case 0x11:  /* homing crate -> regular bazooka ammo */
+                if (MovesBase[5].weapon_bitfield&2) break;
                 return vanillaModelPickupAllowed(object_id, player, 0x8F);
             case 0x8E:  /* shared crystals, after their normal global unlock */
                 if (!krushaCrystalsUnlocked()) return 0;
@@ -192,6 +194,12 @@ s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
 void krushaDialogueLine(void* owner, u8* text, u16 length) {
     u8 line[512];
     s32 out = 0, changed = 0;
+    const char* shop=m3ShopDialogue(text,length);
+    if (shop) {
+        int n=0;while (shop[n]) n++;
+        vanillaDialogueLine(owner,(u8*)shop,n);
+        return;
+    }
     if (!enabled || Character != 5 || CurrentMap != 15 || !DetectAdventure()) {
         vanillaDialogueLine(owner, text, length);
         return;
@@ -323,15 +331,8 @@ void krushaAdventure(void) {
     krushaPauseOption();
     krushaRoarTick();
     *(const u32**)0x8074C7EC = enabled ? boulder_collisions : (const u32*)0x8074B00C;
-    /* The roar uses shared crystals, not a borrowed Kong's instrument stock.
-     * Keep the nonexistent instrument prop/stock paths disabled. */
+    m3ProgressTick();
     if (enabled && DetectAdventure()) {
-        // The native bazooka uses shared standard ammo and actor-7 projectiles.
-        MovesBase[5].weapon_bitfield |= 1;
-        MovesBase[5].ammo_belt = MovesBase[0].ammo_belt;
-        MovesBase[5].simian_slam = MovesBase[0].simian_slam;
-        MovesBase[5].instrument_bitfield = 0;
-        MovesBase[5].instrument_energy = 0;
         if (Character == 5 && Player && *(void**)Player) {
             void* model = *(void**)Player;
             if (last_character != 5 || last_player != Player || last_model != model) {

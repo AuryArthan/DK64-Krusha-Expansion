@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/m3_progress.h"
 
 extern int saveNativePackedRead(int type, u8 character, u8 level, u8 file);
 extern void saveNativePackedWrite(int type, u8 character, u8 level, u8 file, u32 value);
@@ -127,6 +128,7 @@ int krushaSavePackedRead(int type, u8 character, u8 level, u8 file) {
         case 5: /* Shared upgrade levels come from the existing team. */
         case 7: return saveNativePackedRead(type, 0, level, file);
         case 9: return krushaProgressRead(file, KRUSHA_WALLET_BIT, 8);
+        case 6: case 8: return m3SavedMoves(file,type);
         default: return 0;
     }
 }
@@ -159,6 +161,8 @@ void krushaSavePackedWrite(int type, u8 character, u8 level, u8 file, u32 value)
 
 void krushaSaveLoadGame(u8 file, int refill) {
     int level;
+    int old_file=*(u8*)0x807467C8;
+    int energy=MovesBase[5].instrument_energy;
     void (*nativeZero)(void*, int) = (void*)0x800051C0;
     saveNativeLoadGame(file, refill);
     /* Clear all 94 bytes, including unused level entries and stale stock. */
@@ -166,6 +170,12 @@ void krushaSaveLoadGame(u8 file, int refill) {
     MovesBase[5].coins = krushaSavePackedRead(9, 5, 0, file);
     MovesBase[5].simian_slam = MovesBase[0].simian_slam;
     MovesBase[5].ammo_belt = MovesBase[0].ammo_belt;
+    m3RestoreMoves(file,refill);
+    if (!refill && old_file==file && (MovesBase[5].instrument_bitfield&1)) {
+        int bits=MovesBase[5].instrument_bitfield,capacity=5;
+        while (bits) { capacity+=5;bits>>=1; }
+        MovesBase[5].instrument_energy=energy<0 ? 0 : energy>capacity ? capacity : energy;
+    }
     for (level = 0; level < 8; level++) {
         MovesBase[5].cb_count[level] = krushaSavePackedRead(1, 5, level, file);
         MovesBase[5].tns_cb_count[level] = krushaSavePackedRead(2, 5, level, file);

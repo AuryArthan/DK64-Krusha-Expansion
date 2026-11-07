@@ -200,6 +200,9 @@ def appendBarrelAssets(rom_path):
     payloads += [blueprint_payload(Path(rom_path).read_bytes(), read_file)]
     from m2_pickups import payloads as m2_payloads
     payloads += m2_payloads(Path(rom_path).read_bytes())
+    assert len(payloads)==58
+    from m3_kasplat import payloads as m3_payloads
+    payloads += m3_payloads(Path(rom_path).read_bytes(),read_file)
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02100000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)

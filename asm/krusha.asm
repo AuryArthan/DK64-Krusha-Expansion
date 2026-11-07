@@ -132,6 +132,39 @@ vanillaFindPurchase:
     J 0x80025FBC
     NOP
 
+m3NativeShopPurchase:
+    ADDIU sp, sp, -0x20
+    SW a0, 0x20(sp)
+    J 0x80025E0C
+    NOP
+
+m3NativeShopControl:
+    ADDIU sp, sp, -0x20
+    MOVE a3, a0
+    J 0x80027030
+    NOP
+
+.definelabel m3NativePurchaseText, 0x8070E750
+.definelabel m3NativeShopAnimation, 0x80614E78
+
+m3NativeKasplatInit:
+    LUI v0, 0x8080
+    LW v0, 0xBB40(v0)
+    J 0x806B1DDC
+    NOP
+
+m3NativeEnemyDrop:
+    ADDIU sp, sp, -0x40
+    LUI t6, 0x8080
+    J 0x806A5C68
+    NOP
+
+m3NativeBlueprint:
+    ADDIU sp, sp, -0x18
+    SW ra, 0x14(sp)
+    J 0x806A6114
+    NOP
+
 vanillaAmmoCollectible:
     SW a2, 0x8(sp)
     ANDI t6, a2, 0xFF
@@ -365,6 +398,54 @@ m2NativeHUDSprite:
     NOP
 
 ; Scoped actor collision table dispatch, unchanged for all ordinary actors.
+m3TnsQuota:
+    ; 806BE498 has summed the original five fed counters in v1. a0 is
+    ; level*2; t1 is the native quota. Include earned sixth credit even OFF.
+    ; No player/owner swap, no change to the original quota or boss choice.
+    LUI at, 0x8080
+    ADDU at, at, a0
+    LHU at, 0xCB4C(at)
+    ADDU v1, v1, at
+    SLT at, v1, t1
+    BEQZ at, @@stop
+    LUI t2, 0x8080
+    J 0x806BE4BC
+    NOP
+@@stop:
+    J 0x806BE4A8
+    NOP
+
+m3BlueprintOwner:
+    ; s2 is the actual candidate actor, s3 its native collect definition,
+    ; s8 the player. Override only the registered gray actor's owner.
+    LUI at, hi(m3CollectingBlueprint)
+    SW zero, lo(m3CollectingBlueprint)(at)
+    LUI at, hi(m3DroppedBlueprint)
+    LW at, lo(m3DroppedBlueprint)(at)
+    BNE at, s2, @@ordinary
+    NOP
+    LW v0, 0x54(s2)
+    LUI at, hi(m3DroppedBlueprintID)
+    LW at, lo(m3DroppedBlueprintID)(at)
+    BNE v0, at, @@ordinary
+    NOP
+    LI v0, 1
+    LUI at, hi(m3CollectingBlueprint)
+    SW v0, lo(m3CollectingBlueprint)(at)
+    LI v0, 7
+    J 0x806F74A4
+    NOP
+@@ordinary:
+    LH v0, 0xC(s3)
+    BNEZ v0, @@owned
+    NOP
+    LH t2, 0x10(s3)
+    J 0x806F74B4
+    NOP
+@@owned:
+    J 0x806F74A4
+    NOP
+
 m2NativeActorCollision:
     ADDIU sp, sp, -0x30
     SW ra, 0x2C(sp)

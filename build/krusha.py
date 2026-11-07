@@ -8,6 +8,8 @@ def patchKrushaShop(filename):
                    Path(rom.replace('.z64', '.sym')).read_text().splitlines()
                    if len(line.split()) >= 2)
     with open(filename, 'r+b') as stream:
+        from m3_progress import patch_shop
+        patch_shop(stream,symbols)
         for address, symbol, prologue in [
             (0x80024EF0, 'krushasnideboard', '27bdffb03c028080'),
             (0x800252AC, 'krushasnidedraw', '27bdfe70afb00018'),

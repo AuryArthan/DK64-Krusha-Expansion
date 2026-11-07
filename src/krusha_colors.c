@@ -1,12 +1,13 @@
 #include "../include/common.h"
+#include "../include/m3_kasplat.h"
 
 /* One-based model 0xED follows the 236 native actor models. The resource hook
  * maps its file request (0xEC) into custom table 27, before native table access.
  * Its distinct model-cache key keeps DK/enemy rings independent, even alive
  * at the same time. No native model slot or player identity is overwritten. */
 static s32 spawnShockwaveActor(s32 actor, s32 model, actorData* parent) {
-    if (krushaEnabled() && parent && parent == (void*)Player &&
-        parent->actorType == 7 && DetectAdventure()) model = 0xED;
+    if (krushaEnabled() && parent && DetectAdventure() &&
+        ((parent == (void*)Player && parent->actorType == 7) || m3GrayKasplat(parent))) model = 0xED;
     return spawnActor(actor, model);
 }
 

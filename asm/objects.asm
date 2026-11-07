@@ -12,6 +12,8 @@
 .importobj "obj/src_krusha_scream.o"
 .importobj "obj/src_lib.o"
 .importobj "obj/src_m2_pickups.o"
+.importobj "obj/src_m3_kasplat.o"
+.importobj "obj/src_m3_progress.o"
 .importobj "obj/src_main.o"
 .importobj "obj/src_taganywhere.o"
 .importobj "obj/src_widescreen.o"

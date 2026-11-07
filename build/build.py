@@ -39,7 +39,7 @@ with open('./asm/objects.asm', 'w') as obj_asm:
 				_o = os.path.join(root, file).replace("/", "_").replace("\\", "_").replace(".c", ".o")
 				print(os.path.join(root, file))
 				obj_asm.write(".importobj \"obj/" + _o + "\"\n")
-				subprocess.run([GCC, "-Wall", "-O1", "-mtune=vr4300", "-march=vr4300", "-mabi=32", "-fomit-frame-pointer", "-G0", "-c", os.path.join(root, file)], check=True)
+				subprocess.run([GCC, "-Wall", "-O1", "-fno-common", "-mtune=vr4300", "-march=vr4300", "-mabi=32", "-fomit-frame-pointer", "-G0", "-c", os.path.join(root, file)], check=True)
 				shutil.move("./" + file.replace(".c", ".o"), "obj/" + _o)
 print()
 

@@ -50,9 +50,12 @@ def prepare(rom_path):
     defs=bytearray(native)
     for kind,row in [('single',0),('bunch',10),('coin',9)]:
         value=bytearray(native[row*20:(row+1)*20]);struct.pack_into('>H',value,0,KINDS[kind][0]);struct.pack_into('>hh',value,12,7,0);defs+=value
-    words=struct.unpack('>225I',defs)
+    # M3's dynamic private blueprint; native actor scanning still stops at42.
+    blueprint=bytearray(native[26*20:27*20])
+    struct.pack_into('>H',blueprint,0,7);struct.pack_into('>hh',blueprint,12,7,0);defs+=blueprint
+    words=struct.unpack('>230I',defs)
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
-    header+='const u32 m2CollectDefs[225] = {\n'+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
+    header+='const u32 m2CollectDefs[230] = {\n'+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
     header+='static const struct { u16 slot, object_id, type; u8 units, coin; } m2Pickups[] = {\n'
     for p in rows():header+='    {%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin')
     header+='};\n'
@@ -136,7 +139,7 @@ def patch_code(fh,symbols):
         assert hi>>26==15 and ((hi&65535)<<16)+signed==0x80753EF0+offset,(hex(h),hex(lo))
         # The actor loop retains its native 42-row bound via its relocated end.
         ptr=target+offset;patch(h,hi,hi&0xFFFF0000|((ptr+32768)>>16&65535));patch(l,lo,lo&0xFFFF0000|ptr&65535)
-    patch(0x806F4A8C,0x2401002A,0x2401002D)
+    patch(0x806F4A8C,0x2401002A,0x2401002E)
     # The existing tag-anywhere build already allocates530 model2 slots/map.
     patch(0x80632188,0x0C1CC575,0x0C000000|(int(symbols['m2setuphidden'],16)&0xFFFFFFF)>>2)
 

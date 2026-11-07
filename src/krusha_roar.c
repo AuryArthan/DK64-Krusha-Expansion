@@ -17,7 +17,7 @@ extern void krushaRoarStageTick(u32);
 extern void krushaRoarStageEnd(void);
 extern void krushaRoarBuildCameraMatrices(void*);
 
-u32 krushaRoarCost = 150;
+u32 krushaRoarCost = 1;
 
 #define ROAR_START_FRAME (110.0f / 5.0f)
 #define ROAR_SPEED 1.2f
@@ -64,13 +64,13 @@ u8 krushaRoarStart(void) {
     if (!isKrusha() || active_player || frame() < ready_at || CutsceneActive ||
         CurrentMap == 1 || CurrentMap == 5 || CurrentMap == 15 || CurrentMap == 25 ||
         Player->held_actor || Player->control_state == 0x67) return 0;
-    if (!krushaCrystalsUnlocked() || CollectableBase.Crystals < krushaRoarCost) {
+    if (!(MovesBase[5].instrument_bitfield&1) || MovesBase[5].instrument_energy < krushaRoarCost) {
         playSound(0x98, 0x7FFF, 63.0f, 1.0f, 0, 0);
         return 0;
     }
     if (krushaRoarCost) {
-        krushaChangeCollectable(5, 0, -(s16)krushaRoarCost);
-        krushaShowHUD(5, 0, 0);
+        krushaChangeCollectable(7, 0, -(s16)krushaRoarCost);
+        krushaShowHUD(7, 0, 0);
     }
     active_player = (u8*)Player;
     active_map = CurrentMap;
