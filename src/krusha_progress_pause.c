@@ -27,9 +27,10 @@ s16 krushaPauseFractionTotal(s16 value, s16 total) {
         krushaPauseFractionTrace[3] = value;
         krushaPauseFractionTrace[4] = total;
     } else {
-        /* Native807FC80C is the four-page selector, not a blend bank. */
-        u8 page = *(u8*)0x807FC80C;
-        s8 kind = page < 4 ? *(s8*)(0x807FC818 + page) : -1;
+        /* Native807FC80C selects one of eight overall carousel slots.
+         * 807FC818 maps their visual order to the permanent category. */
+        u8 slot = *(u8*)0x807FC80C;
+        s8 kind = slot < 8 ? *(s8*)(0x807FC818 + slot) : -1;
         /* Native pause caps GBs at200; the file score counts Rareware too. */
         if (kind == 0 && total == 200) total = 225;
         if (kind == 3 && total == 40) total = 47;
