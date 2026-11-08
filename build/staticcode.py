@@ -21,6 +21,7 @@ def patchStaticCode(filename):
 			(0x806B1DD4, 'm3kasplatinit', '3c0280808c42bb40'),
 			(0x806A5C60, 'm3enemydrop', '27bdffc03c0e8080'),
 			(0x806A610C, 'm3blueprint', '27bdffe8afbf0014'),
+			(0x806C9974, 'm4encounterplayerdamage', '308e00ff000ec080'),
 		]:
 			fh.seek(address - 0x805FB300)
 			assert fh.read(8) == bytes.fromhex(prologue), f'Unexpected save prologue at {address:X}'

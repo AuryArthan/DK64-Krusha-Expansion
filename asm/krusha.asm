@@ -126,6 +126,12 @@ m4NativeDamage:
     J 0x80675DD8
     NOP
 
+m4NativePlayerDamage:
+    ANDI t6, a0, 0xFF
+    SLL t8, t6, 2
+    J 0x806C997C
+    NOP
+
 vanillaSetAction:
     ANDI t8, a2, 0xFF
     LUI a3, 0x8080

@@ -2,6 +2,7 @@
 #include "../include/krusha_progress.h"
 
 extern void m4NativeDamage(void*,void*);
+extern s32 m4NativePlayerDamage(u8,s8);
 extern void krushaNativeActorDelete(void*);
 
 #define ENCOUNTER_TRIGGER 250
@@ -11,16 +12,65 @@ extern void krushaNativeActorDelete(void*);
 
 s32 m4EncounterPickupID=-1;
 volatile u32 m4EncounterTrace[16]={0};
+volatile u32 m4EncounterHurtTrace[12]={0};
 static s32 previous_map=-1;
 static u32 previous_frame,pending_at;
 static u8 pending,dropped;
 static u32 hit_ids[5];
 static u8 hits;
 static struct {u8* pointer;u16 id;} grenades[24];
+static void* hurt_source;
+static u32 hurt_frame;
+static u32 hurt_uid;
+static s16 hurt_action;
 
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static u32 frame(void) {return *(u32*)0x8076A064;}
 static int won(void) {return krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1);}
+
+/* Adventure player damage is a separate native path: its hurt initializers
+ * normally request one slice regardless of actor+136. Associate an accepted
+ * action with a live, owned grenade before its native node can be deleted.
+ * Never dereference that source later or change its identity. */
+void m4EncounterActionResult(s16 action,void* source,u8 player,u8 accepted) {
+    if (!accepted || player) return;
+    hurt_source=0;
+    if (CurrentMap!=7 || !krushaEnabled() || !DetectAdventure() || !valid(source,0x180)) return;
+    if (*(u32*)((u8*)source+0x58)!=50) return;
+    u8* node=*(u8**)0x807FC400;
+    for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
+        if (*(void**)(node+0x44)!=source) continue;
+        for (int i=0;i<24;i++) if (grenades[i].pointer==node && grenades[i].id==*(u16*)(node+0x5A)) {
+            hurt_source=source;hurt_frame=frame();
+            hurt_uid=*(u32*)((u8*)source+0x54);hurt_action=action;
+            m4EncounterHurtTrace[0]++;m4EncounterHurtTrace[1]=action;
+            m4EncounterHurtTrace[2]=(u32)source;
+            return;
+        }
+        return;
+    }
+}
+
+s32 m4EncounterPlayerDamage(u8 player,s8 amount) {
+    if (!player && amount<0) {
+        u8* cc=*(u8**)0x807FC924;
+        u32 gap=frame()-hurt_frame;
+        m4EncounterHurtTrace[3]++;
+        if (amount==-1 && hurt_source && gap<=4 && CurrentMap==7 &&
+            krushaEnabled() && DetectAdventure() && valid(cc,0x2B4) &&
+            *(s16*)(cc+0x29C)==hurt_action && *(u32*)(cc+0x2A4)==hurt_uid &&
+            (!*(void**)(cc+0x2A0) || *(void**)(cc+0x2A0)==hurt_source)) {
+            amount=-2;m4EncounterHurtTrace[4]++;
+        }
+        m4EncounterHurtTrace[5]=(s32)amount;m4EncounterHurtTrace[6]=gap;
+        m4EncounterHurtTrace[7]=valid(cc,0x2B4) ? *(u32*)(cc+0x2A0) : 0;
+        m4EncounterHurtTrace[8]=valid(cc,0x2B4) ? (s32)*(s16*)(cc+0x29C) : 0;
+        m4EncounterHurtTrace[9]=valid(cc,0x2B4) ? *(u32*)(cc+0x2A4) : 0;
+        m4EncounterHurtTrace[10]=hurt_uid;m4EncounterHurtTrace[11]=hurt_action;
+        hurt_source=0;
+    }
+    return m4NativePlayerDamage(player,amount);
+}
 
 int m4EncounterKlump(void* pointer) {
     u8* actor=pointer;
@@ -136,9 +186,11 @@ void m4EncounterGrenadeUpdate(void) {
 void m4EncounterTick(void) {
     if (CurrentMap!=previous_map || frame()<previous_frame) {
         pending=dropped=hits=0;m4EncounterPickupID=-1;
+        hurt_source=0;
         for (int i=0;i<24;i++) grenades[i].pointer=0;
     }
     previous_map=CurrentMap;previous_frame=frame();
+    if (hurt_source && frame()-hurt_frame>4) hurt_source=0;
     if (CurrentMap!=7 || !krushaEnabled() || !DetectAdventure()) return;
     /* Resolve queued native grenade nodes by pointer AND native spawner ID;
      * never follow a freed parent or retain an unvalidated actor address. */

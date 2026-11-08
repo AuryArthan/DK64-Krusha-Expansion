@@ -30,6 +30,7 @@ extern void m4CollectEffect(s16,u8);
 extern void m4RewardsTick(void);
 extern void m4BonusInstall(void);
 extern void m4EncounterInstall(void);
+extern void m4EncounterActionResult(s16,void*,u8,u8);
 extern s32 vanillaBuildActorBones(void* actor);
 extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
 
@@ -154,7 +155,9 @@ u8 krushaSetAction(s16 action, void* actor, u8 player) {
         if (CurrentMap==25) { m3ShopInstrument(); return 1; }
         return krushaRoarStart();
     }
-    return vanillaSetAction(action, actor, player);
+    u8 accepted=vanillaSetAction(action, actor, player);
+    m4EncounterActionResult(action,actor,player,accepted);
+    return accepted;
 }
 
 extern s32 m2PickupAllowed(s16,u8,u16);
