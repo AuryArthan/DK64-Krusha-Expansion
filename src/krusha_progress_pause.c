@@ -9,6 +9,36 @@ extern const void* krushaProgressFace(void);
  * original flag strides nor adjacent native menu state are enlarged. */
 s32 krushaPauseCount = 5;
 static u8* pause_data = 0;
+/* Read-only QA observations of actual rendered fractions: personal(value,max,
+ * character), team(value,max), overall(kind,value,max), and total draw calls. */
+volatile s32 krushaPauseFractionTrace[9] = {0};
+
+s16 krushaPauseFractionTotal(s16 value, s16 total) {
+    if (!DetectAdventure()) return total;
+    if (total == 5) {
+        if (pause_data && pause_data[0x12] == 1 &&
+            pause_data[0x14] == 5 && krushaEnabled()) total = 3;
+        krushaPauseFractionTrace[0] = value;
+        krushaPauseFractionTrace[1] = total;
+        krushaPauseFractionTrace[2] = pause_data ? pause_data[0x14] : -1;
+    } else if (total == 30) {
+        /* Five native allotments plus three personal rewards, even OFF. */
+        total = 28;
+        krushaPauseFractionTrace[3] = value;
+        krushaPauseFractionTrace[4] = total;
+    } else {
+        u8 bank = *(u8*)0x807FC80C;
+        s8 kind = bank < 2 ? *(s8*)(0x807FC818 + bank) : -1;
+        if (kind == 0 && total == 201) total = 225;
+        if (kind == 3 && total == 40) total = 47;
+        if (kind == 7 && total == 40) total = 48;
+        krushaPauseFractionTrace[5] = kind;
+        krushaPauseFractionTrace[6] = value;
+        krushaPauseFractionTrace[7] = total;
+    }
+    krushaPauseFractionTrace[8]++;
+    return total;
+}
 s16 krushaPauseAngles[6] = {0};
 u8 krushaPauseUnlocked[6] = {0};
 const void* krushaPauseFaces[6] = {0};

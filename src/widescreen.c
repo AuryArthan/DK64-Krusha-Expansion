@@ -18,6 +18,7 @@ extern Gfx* widescreenNativeHealth(Gfx*, void*, void*, void*);
 extern void widescreenNativePauseSprite(void*, void*, s32, s32, f32, u8, s32);
 extern void widescreenNativePauseCounter(void*, s16, s16, s16, s16, s32, s32, s32);
 extern Gfx* widescreenNativePauseFraction(s16, s16, s16, s16, Gfx*, s8, f32);
+extern s16 krushaPauseFractionTotal(s16, s16);
 extern s32 widescreenProject(f32, f32, f32, f32*, f32*, s32, f32, s32);
 extern Gfx* widescreenImage(Gfx*, u16, s32, s32, s32, s32, s16, s16, f32, f32, s32, f32);
 extern Gfx* widescreenAnimatedText(Gfx*, s16, s32, f32, f32, f32, f32);
@@ -67,6 +68,7 @@ void widescreenPauseCounter(void* menu, s16 x, s16 y, s16 dx, s16 dy,
 
 Gfx* widescreenPauseFraction(s16 x, s16 y, s16 value, s16 total,
                              Gfx* dl, s8 align, f32 scale) {
+    total = krushaPauseFractionTotal(value, total);
     /* The lower GB and overall totals bypass the counter constructor. These
      * use quarter-pixel coordinates and must follow the lower icon row. */
     if (active()) y += PAUSE_BOTTOM_Y * 4;
