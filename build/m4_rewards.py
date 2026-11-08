@@ -6,9 +6,14 @@ from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parents[1]
 PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
 TYPE=9
+CAGE_TYPE=46
+CAGE_XYZ=(1680,286.27,4245)
+# Rotated button back reaches +10X; cage's left rim is -52*.33X.
+# 1653+10=1663 meets 1680-52*.33=1662.84 without a visible gap.
+SWITCH_XYZ=(1653,280,4245)
 
 def legacy_rows():
-    from m2_pickups import rows as m2_rows
+    from m2_pickups import registry_rows as m2_rows
     pins=[p for p in json.loads(PLAN.read_text())['pins'] if p.get('reward_id') in (1,2,3) and p['map'] in (7,33)]
     rom=(ROOT/'rom/dk64.z64').read_bytes();result=[]
     for mid in (7,33):
@@ -41,7 +46,7 @@ def props():
     rom=(ROOT/'rom/dk64.z64').read_bytes();data=read_file(rom,9,7)
     used={struct.unpack_from('>H',data,4+i*48+42)[0] for i in range(struct.unpack_from('>I',data)[0])}
     script=read_file(rom,10,7);used.update(struct.unpack('>%dH'%(len(script)//2),script[:len(script)//2*2]))
-    from m2_pickups import rows as m2_rows
+    from m2_pickups import registry_rows as m2_rows
     used.update(p['object_id'] for p in m2_rows());used.update(p['object_id'] for p in legacy_rows() if p['map']==7)
     free=iter(i for i in range(529,-1,-1) if i not in used)
     return dict(gate=next(free),switch=next(free),pad=next(free))
@@ -78,7 +83,7 @@ def patch_setup(filename,mid):
         factory_count=struct.unpack_from('>I',factory)[0]
         cage=next(factory[4+i*48:4+(i+1)*48] for i in range(factory_count) if struct.unpack_from('>HH',factory,4+i*48+40)==(0xD3,33))
         switch=next(data[4+i*48:4+(i+1)*48] for i in range(n) if struct.unpack_from('>H',data,4+i*48+42)[0]==291)
-        for source,typ,ident,xyz,scale,rotation in [(cage,0xD3,props()['gate'],(1680,280,4245),.66,0),(switch,33,props()['switch'],(1545,280,4245),1.0,180)]:
+        for source,typ,ident,xyz,scale,rotation in [(cage,CAGE_TYPE,props()['gate'],CAGE_XYZ,.33,0),(switch,33,props()['switch'],SWITCH_XYZ,1.0,180)]:
             rec=bytearray(source)
             struct.pack_into('>4f',rec,0,*xyz,scale);struct.pack_into('>3f',rec,24,0,rotation,0);struct.pack_into('>HH',rec,40,typ,ident);extra+=rec
     tail=data[4+n*48:]
@@ -94,7 +99,7 @@ def patch_setup(filename,mid):
                     pad=bytearray(native[4+i*48:4+(i+1)*48]);break
             if pad:break
         assert pad is not None
-        struct.pack_into('>4f',pad,0,*PAD_XYZ,.5)
+        struct.pack_into('>4f',pad,0,*PAD_XYZ,.25)
         struct.pack_into('>3f',pad,24,0,0,0)
         struct.pack_into('>HH',pad,40,PAD_TYPE,props()['pad'])
         extra+=pad
@@ -127,8 +132,29 @@ def payloads(rom):
     struct.pack_into('>I',switch,0x22C,7410)
     return [read_file(rom,4,0x74),bytes(switch),patched_scripts(read_file(rom,10,7)),switch_texture(rom)]
 
+def cage_model(rom):
+    """Private static cage, retaining native body geometry/materials.
+
+    Five hanging chain links and the top eyelet occupy DL B0..388. Omit
+    only their triangles. Native skeleton, bounds, vertex and animation data
+    remain valid; Factory's original hanging cages are never changed.
+    """
+    assert not read_file(rom,4,CAGE_TYPE)
+    model=bytearray(read_file(rom,4,0xD3))
+    original=(ROOT/'rom/dk64.z64').read_bytes()
+    for mid in range(216):
+        setup=read_file(original,9,mid)
+        if setup:assert all(struct.unpack_from('>H',setup,4+i*48+40)[0]!=CAGE_TYPE for i in range(struct.unpack_from('>I',setup)[0]))
+    assert len(model)==9664 and struct.unpack_from('>I',model,0x48)[0]==0x740
+    removed=0
+    for offset in range(0xB0,0x390,8):
+        if model[offset] in (5,6):
+            model[offset:offset+8]=bytes(8);removed+=1
+    assert removed==24,removed
+    return bytes(model)
+
 def patched_scripts(data):
-    """Native switch contact/animation and metal cage animation; no flags."""
+    """Native projectile button and static disappearing cage; no native flags."""
     ids=props()
     def script(ident,blocks):
         # Private condition only for these two scripts: preserve live records
@@ -141,9 +167,8 @@ def patched_scripts(data):
             result+=struct.pack('>H',len(executions))+b''.join(struct.pack('>4h',*e) for e in executions)
         return result
     gate=script(ids['gate'],[
-        ([(1,0,0,0)],[(20,1,80,0),(17,1,-1,0),(38,2,0,0)]),
-        ([(1,10,0,0)],[(18,1,0,0),(20,2,6,0),(17,2,1,0),(1,11,0,0)]),
-        ([(1,11,0,0),(-32747,2,0,0)],[(69,1,0,255),(70,0,0,0),(71,0,0,0),(38,2,0,0)]),
+        ([(1,0,0,0)],[(1,1,0,0),(38,2,0,0)]),
+        ([(1,10,0,0)],[(69,1,0,255),(70,0,0,0),(71,0,0,0),(1,11,0,0),(38,2,0,0)]),
     ])
     switch=script(ids['switch'],[
         ([(1,0,0,0)],[(20,1,10,0),(22,1,1,0),(1,1,0,0)]),

@@ -149,6 +149,8 @@ static void hook(u32 address, void* target) {
 }
 
 u8 krushaSetAction(s16 action, void* actor, u8 player) {
+    extern int m4SkipGBAction(s16,void*,u8);
+    if (m4SkipGBAction(action,actor,player)) return 1;
     /* Route the sixth character around the undefined native instrument
      * cutscene. Input and script requests use the same safe roar initializer. */
     if (enabled && player == 0 && Character == 5 && action == 0x53 && DetectAdventure()) {

@@ -5,6 +5,9 @@ def owned_icon_payloads(rom, read_file):
     gray = identity_color()[0]
     result=[]
     for table, first, pixels in [(7,0xA8,44*44),(7,0xE0,48*42),(25,0x15F8,48*42)]:
+        # Coins alone are brighter silver. Keep identity color and every
+        # banana/blueprint/intro/shockwave resource byte-for-byte unchanged.
+        tint=242 if table==7 and first==0xE0 else gray
         for index in range(first,first+8):
             native=read_file(rom,table,index)
             assert pixels*2 <= len(native) <= 4096 and len(native)%2 == 0, (table,index,len(native))
@@ -14,7 +17,7 @@ def owned_icon_payloads(rom, read_file):
                 r,g,b=(value>>11)&31,(value>>6)&31,(value>>1)&31
                 # Native yellow's luminance is .9278 of white. Normalize it
                 # before tinting so silver bananas retain their intended value.
-                light=min(31,round((.2126*r+.7152*g+.0722*b)*gray/(255*.9278)))
+                light=min(31,round((.2126*r+.7152*g+.0722*b)*tint/(255*.9278)))
                 packed=light<<11 | light<<6 | light<<1 | value&1
                 out.extend(packed.to_bytes(2,'big'))
             result.append(bytes(out))

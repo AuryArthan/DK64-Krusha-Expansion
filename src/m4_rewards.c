@@ -10,9 +10,12 @@ extern void m4EncounterTick(void);
 
 static s32 reward_map=-1;
 static u32 started,effect_at;
+static u32 pickup_frame;
+static void* pickup_owner;
+static s32 pickup_map=-1;
 static void* owner;
 static u8 cage_open;
-volatile u32 m4RewardTrace[8]={0};
+volatile u32 m4RewardTrace[16]={0};
 static u32 frame(void) { return *(u32*)0x8076A064; }
 
 /* Model2's render subtype is separate from its pickup/flag identity. Native
@@ -99,6 +102,20 @@ int m4ScriptCondition(u16* instruction,s16 runtime) {
 int m4VictoryActive(void) { return reward_map==CurrentMap && owner==Player && owner; }
 int m4RewardBusy(void) { return m4VictoryActive(); }
 
+/* A renderer/pickup callback can request the native GB action separately
+ * from the effect callback. Tag Anywhere skips its state/animation writes,
+ * but the rest of that initializer still runs and can inherit prior motion.
+ * A skipped private world reward must never queue that initializer. Keep a
+ * short same-player/contact token after releasing the dance/tagging token. */
+int m4SkipGBAction(s16 action,void* source,u8 player) {
+    if (action!=0x29 || player || Character!=5 || !krushaEnabled() ||
+        !DetectAdventure() || CurrentMap!=pickup_map || Player!=pickup_owner ||
+        frame()<pickup_frame || frame()-pickup_frame>12) return 0;
+    m4RewardTrace[8]++;m4RewardTrace[9]=frame()-pickup_frame;
+    m4RewardTrace[10]=Player->control_state;
+    return StorySkip && CurrentMap!=15;
+}
+
 void m4RewardsTick(void) {
     m4BonusTick();
     m4EncounterTick();
@@ -147,6 +164,7 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
     krushaProgressWrite(file,KRUSHA_GB_BIT+slot,1,1);
     MovesBase[5].gb_count[0]=krushaProgressGoldenBananas(file,0);
     reward_map=CurrentMap;owner=Player;started=frame();effect_at=0;
+    pickup_map=CurrentMap;pickup_owner=Player;pickup_frame=frame();
     m4RewardTrace[0]++;m4RewardTrace[1]=slot;m4RewardTrace[2]=object_id;
     void (*hud)(u8)=(void*)0x806F8278;
     void (*save)(void)=(void*)0x8060DEC8;
@@ -155,6 +173,9 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
 }
 
 void m4CollectEffect(s16 type,u8 player) {
+    if (pickup_map==CurrentMap && Player==pickup_owner && frame()>=pickup_frame && frame()-pickup_frame<12) {
+        m4RewardTrace[11]=type;m4RewardTrace[12]++;
+    }
     if (type==9) {
         m4RewardTrace[3]++;
         if (m4VictoryActive() && Character==5) {

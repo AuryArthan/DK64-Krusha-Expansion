@@ -62,22 +62,17 @@ def tint(data,kind):
     return bytes(result)
 
 def pad_images(rom):
-    from PIL import Image,ImageDraw
-    from character_colors import identity_color
-    silver=identity_color()[0]
-    face=Image.open(ROOT/'assets/krusha/hud/krusha-shout-source.png').convert('RGBA').resize((50,50),Image.Resampling.LANCZOS)
-    top=Image.new('RGBA',(64,64),(0,0,0,255));ImageDraw.Draw(top).ellipse((2,2,61,61),fill=(45,59,87,255),outline=(silver,silver,silver,255),width=2)
-    top.alpha_composite(face,(7,7))
+    from PIL import Image
+    face=Image.open(ROOT/'assets/krusha/hud/krusha-shout-source.png').convert('RGBA')
+    face.thumbnail((58,58),Image.Resampling.LANCZOS)
+    # The native metal/purple pad already supplies the circular base. Only
+    # its floating instrument glyph is replaced; transparent corners matter.
+    top=Image.new('RGBA',(64,64))
+    top.alpha_composite(face,((64-face.width)//2,(64-face.height)//2))
     # Pad glyph uses two32x64 texture halves, upside-down like native art.
     top=top.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     def encode(im):return b''.join(struct.pack('>H',(r>>3)<<11|(g>>3)<<6|(b>>3)<<1|int(a>=128)) for r,g,b,a in im.getdata())
-    images=[]
-    for index in PAD_TEXTURES[:4]:
-        data=read_file(rom,25,index);out=bytearray()
-        for (v,) in struct.iter_unpack('>H',data):
-            light=round((.2126*(v>>11&31)+.7152*(v>>6&31)+.0722*(v>>1&31))*silver/255)
-            out+=struct.pack('>H',light<<11|light<<6|light<<1|v&1)
-        images.append(bytes(out))
+    images=[read_file(rom,25,index) for index in PAD_TEXTURES[:4]]
     images+=[encode(top.crop((0,0,32,64))),encode(top.crop((32,0,64,64)))]
     return images
 

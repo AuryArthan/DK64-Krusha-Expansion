@@ -1,0 +1,282 @@
+{
+  "format": "krusha-japes-pickup-overlay-v1",
+  "map": 7,
+  "notes": "Japes pilot only: nine coins in three clusters, four trails of five singles. Original stable pickup slots and object IDs retained. Slot240 retired, never reused. Other worlds remain design drafts; nine coins per main world is the later target.",
+  "retired_slots": [
+    240
+  ],
+  "overrides": {
+    "13": {
+      "xyz": [
+        1450,
+        285.379,
+        1460
+      ],
+      "note": "Five-single trail leading to bunch slot 1"
+    },
+    "14": {
+      "xyz": [
+        1484,
+        286.798,
+        1477
+      ],
+      "note": "Five-single trail leading to bunch slot 1"
+    },
+    "15": {
+      "xyz": [
+        1518,
+        288.252,
+        1494
+      ],
+      "note": "Five-single trail leading to bunch slot 1"
+    },
+    "16": {
+      "xyz": [
+        1552,
+        286.849,
+        1511
+      ],
+      "note": "Five-single trail leading to bunch slot 1"
+    },
+    "17": {
+      "xyz": [
+        1586,
+        286.224,
+        1528
+      ],
+      "note": "Five-single trail leading to bunch slot 1"
+    },
+    "1": {
+      "xyz": [
+        1620,
+        287.44,
+        1545
+      ],
+      "note": "Bunch at the end of the five-single trail"
+    },
+    "18": {
+      "xyz": [
+        1510,
+        284.0,
+        3670
+      ],
+      "note": "Five-single trail leading to bunch slot 2"
+    },
+    "19": {
+      "xyz": [
+        1510,
+        284.0,
+        3730
+      ],
+      "note": "Five-single trail leading to bunch slot 2"
+    },
+    "20": {
+      "xyz": [
+        1510,
+        284.0,
+        3790
+      ],
+      "note": "Five-single trail leading to bunch slot 2"
+    },
+    "21": {
+      "xyz": [
+        1510,
+        284.0,
+        3850
+      ],
+      "note": "Five-single trail leading to bunch slot 2"
+    },
+    "22": {
+      "xyz": [
+        1510,
+        284.0,
+        3910
+      ],
+      "note": "Five-single trail leading to bunch slot 2"
+    },
+    "2": {
+      "xyz": [
+        1510,
+        284.0,
+        3970
+      ],
+      "note": "Bunch at the end of the five-single trail"
+    },
+    "23": {
+      "xyz": [
+        1990,
+        684.0,
+        2350
+      ],
+      "note": "Five-single trail leading to bunch slot 8"
+    },
+    "24": {
+      "xyz": [
+        1990,
+        684.0,
+        2382
+      ],
+      "note": "Five-single trail leading to bunch slot 8"
+    },
+    "25": {
+      "xyz": [
+        1990,
+        684.0,
+        2414
+      ],
+      "note": "Five-single trail leading to bunch slot 8"
+    },
+    "26": {
+      "xyz": [
+        1990,
+        684.0,
+        2446
+      ],
+      "note": "Five-single trail leading to bunch slot 8"
+    },
+    "27": {
+      "xyz": [
+        1990,
+        684.0,
+        2478
+      ],
+      "note": "Five-single trail leading to bunch slot 8"
+    },
+    "8": {
+      "xyz": [
+        1990,
+        684.0,
+        2510
+      ],
+      "note": "Bunch at the end of the five-single trail"
+    },
+    "28": {
+      "xyz": [
+        2535,
+        543.333,
+        2990
+      ],
+      "note": "Five-single trail leading to bunch slot 9"
+    },
+    "29": {
+      "xyz": [
+        2551,
+        543.333,
+        3022
+      ],
+      "note": "Five-single trail leading to bunch slot 9"
+    },
+    "30": {
+      "xyz": [
+        2567,
+        543.333,
+        3054
+      ],
+      "note": "Five-single trail leading to bunch slot 9"
+    },
+    "31": {
+      "xyz": [
+        2583,
+        543.333,
+        3086
+      ],
+      "note": "Five-single trail leading to bunch slot 9"
+    },
+    "32": {
+      "xyz": [
+        2599,
+        543.333,
+        3118
+      ],
+      "note": "Five-single trail leading to bunch slot 9"
+    },
+    "9": {
+      "xyz": [
+        2615,
+        543.333,
+        3150
+      ],
+      "note": "Bunch at the end of the five-single trail"
+    },
+    "0": {
+      "xyz": [
+        1835,
+        294,
+        1490
+      ],
+      "note": "Isolated bunch above the native shout pad"
+    },
+    "231": {
+      "xyz": [
+        1551,
+        284.0,
+        1395
+      ],
+      "note": "Three-coin cluster 1"
+    },
+    "232": {
+      "xyz": [
+        1575,
+        284.0,
+        1415
+      ],
+      "note": "Three-coin cluster 1"
+    },
+    "233": {
+      "xyz": [
+        1599,
+        284.0,
+        1395
+      ],
+      "note": "Three-coin cluster 1"
+    },
+    "234": {
+      "xyz": [
+        1506,
+        284.0,
+        4100
+      ],
+      "note": "Three-coin cluster 2"
+    },
+    "235": {
+      "xyz": [
+        1530,
+        284.0,
+        4120
+      ],
+      "note": "Three-coin cluster 2"
+    },
+    "236": {
+      "xyz": [
+        1554,
+        284.0,
+        4100
+      ],
+      "note": "Three-coin cluster 2"
+    },
+    "237": {
+      "xyz": [
+        1916,
+        524.0,
+        2115
+      ],
+      "note": "Three-coin cluster 3"
+    },
+    "238": {
+      "xyz": [
+        1940,
+        524.0,
+        2135
+      ],
+      "note": "Three-coin cluster 3"
+    },
+    "239": {
+      "xyz": [
+        1964,
+        524.0,
+        2115
+      ],
+      "note": "Three-coin cluster 3"
+    }
+  }
+}

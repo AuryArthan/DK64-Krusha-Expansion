@@ -70,6 +70,8 @@ def patchStaticCode(filename):
 		assert fh.read(8) == bytes.fromhex('8c82000444802000'), 'Animation script prologue differs from USA'
 		fh.seek(0x806F79E0 - 0x805FB300)
 		assert fh.read(8) == bytes.fromhex('00047400000e7c03'), 'Pickup effect prologue differs from USA'
+		fh.seek(0x806F9B64 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('27bdff883c0e8075'), 'GB portrait constructor prologue differs from USA'
 		from m4_rewards import patch_code as patchM4
 		patchM4(fh,symbols)
 

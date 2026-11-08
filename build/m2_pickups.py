@@ -4,15 +4,19 @@ import json, struct, zlib
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parent.parent
 PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
+POLISH=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
 # Japes pilot registry; the three-object contact proof is preserved under runtime/.
 GROUND_SLOTS=tuple(range(10))+tuple(range(13,33))+tuple(range(231,241))
 BALLOON_SLOTS=(10,11,12)
 KINDS={'single':(2,13,7100,8),'bunch':(4,43,7201,12),'coin':(6,29,7108,8)}
 
 def plan_pins():
-    return {p['pickup_slot']:p for p in json.loads(PLAN.read_text())['pins'] if 'pickup_slot' in p}
+    pins={p['pickup_slot']:p for p in json.loads(PLAN.read_text())['pins'] if 'pickup_slot' in p}
+    for slot,change in json.loads(POLISH.read_text())['overrides'].items():
+        pins[int(slot)]=dict(pins[int(slot)],xyz=change['xyz'],notes=change['note'])
+    return pins
 
-def rows():
+def registry_rows():
     pins=plan_pins()
     rom=(ROOT/'rom/dk64.z64').read_bytes();setup=read_file(rom,9,7);n=struct.unpack_from('>I',setup)[0]
     used={struct.unpack_from('>H',setup,4+i*48+42)[0] for i in range(n)}
@@ -20,6 +24,10 @@ def rows():
     free=[i for i in range(505,530) if i not in used and i not in refs]+[i for i in range(505) if i not in used and i not in refs]
     assert len(free)>=len(GROUND_SLOTS)
     return [dict(pins[slot],object_id=free[i],type=KINDS[pins[slot]['kind']][0]) for i,slot in enumerate(GROUND_SLOTS)]
+
+def rows():
+    retired=json.loads(POLISH.read_text())['retired_slots']
+    return [p for p in registry_rows() if p['pickup_slot'] not in retired]
 
 def balloons():
     pins=plan_pins()
@@ -59,7 +67,7 @@ def prepare(rom_path):
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
     header+='const u32 m2CollectDefs[235] = {\n'+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
     header+='static const struct { u16 slot, object_id, type; u8 units, coin; } m2Pickups[] = {\n'
-    for p in rows():header+='    {%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin')
+    for p in registry_rows():header+='    {%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin')
     header+='};\n'
     header+='static const struct { u16 slot, spawner_id; } m2Balloons[] = {\n'+''.join('    {%d,%d},\n'%(p['pickup_slot'],p['spawner_id']) for p in balloons())+'};\n'
     (ROOT/'include/m2_pickups.generated.h').write_text(header)

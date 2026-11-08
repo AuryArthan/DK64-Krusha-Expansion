@@ -201,7 +201,21 @@ def write_placement_draft(out):
         assert draft['format']=='krusha-atlas-notes-v2' and draft['draft_id']=='assistant-v1'
         assert draft['source_sha1']=='cf806ff2603640a748fca5026ded28802f1f4a50'
         (out/'assistant-draft-v1.json').write_text(json.dumps(draft,indent=2)+'\n')
-        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')
+        drafts=[draft]
+        polish=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
+        if polish.exists():
+            from m2_pickups import rows,balloons
+            from m4_rewards import SWITCH_XYZ
+            current=json.loads((polish.parent/'three-japes-implemented.json').read_text())
+            current.update(draft_id='japes-polish-v1',title='Implemented Japes pilot',scope='implemented-japes-pilot')
+            current.pop('rom_sha256',None) # Source layout, not a binary certification.
+            for pin in current['pins']:
+                if pin.get('label')=='JP-SW01':pin['xyz']=list(SWITCH_XYZ)
+            current['pins']=rows()+balloons()+current['pins']
+            drafts.append(current)
+            (out/'japes-polish-implemented.json').write_text(json.dumps(current,indent=2)+'\n')
+            draft=current
+        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFTS='+json.dumps(drafts,separators=(',',':'))+';\nwindow.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')
     else:
         (out/'draft-seed.js').write_text('window.KRUSHA_DRAFT=null;\n')
 
@@ -220,7 +234,7 @@ def main():
             raise SystemExit('Refresh requires an existing matching USA atlas.')
         backup = out / 'ui-history' / str(time.time_ns())
         backup.mkdir(parents=True)
-        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json'):
+        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json', 'japes-polish-implemented.json'):
             if (out / name).exists():
                 shutil.copyfile(out / name, backup / name)
         for name in UI_FILES:

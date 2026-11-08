@@ -13,6 +13,8 @@ extern Gfx* widescreenNativeText(Gfx*, u8, s16, s16, char*);
 extern void widescreenNativePerspective(Mtx*, u16*, f32, f32, f32, f32, f32);
 extern Gfx* widescreenNativeHUDCounter(s32, void*, Gfx*);
 extern Gfx* widescreenNativeHUDGroup(s32, void*, Gfx*);
+extern Gfx* krushaGBHUDGroup(s32,void*,Gfx*);
+extern void krushaGBHUDInit(s32);
 extern void widescreenNativeHUDIcon(void*, s32);
 extern Gfx* widescreenNativeHealth(Gfx*, void*, void*, void*);
 extern void widescreenNativePauseSprite(void*, void*, s32, s32, f32, u8, s32);
@@ -125,14 +127,17 @@ Gfx* widescreenHUDCounter(s32 item, void* counter, Gfx* dl) {
 Gfx* widescreenHUDGroup(s32 item, void* counter, Gfx* dl) {
     f32 x, y;
     if (!hudOffsets(item, &x, &y))
-        return widescreenNativeHUDGroup(item, counter, dl);
+        return krushaGBHUDGroup(item, counter, dl);
+    /* The six-row layout already uses the full safe vertical span. Moving
+     * it another six pixels up clips DK's first portrait in Widescreen. */
+    if (item==8 && krushaEnabled()) y=0;
     /* This renderer derives all five GB icons from the same counter origin.
      * Shift the group once so its numbers and icons stay together. */
     s32* position = *(s32**)((u8*)counter + 0x14);
     s32 saved_x = position[0], saved_y = position[1];
     position[0] += (s32)x; position[1] += (s32)y;
     hud_group_scope++;
-    dl = widescreenNativeHUDGroup(item, counter, dl);
+    dl = krushaGBHUDGroup(item, counter, dl);
     hud_group_scope--;
     position[0] = saved_x; position[1] = saved_y;
     return dl;
@@ -425,6 +430,7 @@ void widescreenTick(void) {
         install(0x80006050, widescreenPerspective);
         install(0x806F9D8C, widescreenHUDCounter);
         install(0x806FA1A4, widescreenHUDGroup);
+        install(0x806F9B64, krushaGBHUDInit);
         install(0x8071BE04, widescreenHUDIcon);
         install(0x807085D0, widescreenHealth);
         install(0x806AB4EC, widescreenPauseSprite);

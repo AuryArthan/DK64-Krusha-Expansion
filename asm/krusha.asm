@@ -24,6 +24,12 @@ widescreenNativeHUDGroup:
     J 0x806FA1AC
     NOP
 
+krushaNativeGBHUDInit:
+    ADDIU sp, sp, -0x78
+    LUI t6, 0x8075
+    J 0x806F9B6C
+    NOP
+
 widescreenNativeHUDIcon:
     ADDIU sp, sp, -0xB0
     SW ra, 0x1C(sp)
