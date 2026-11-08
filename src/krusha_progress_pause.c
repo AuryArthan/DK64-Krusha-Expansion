@@ -29,7 +29,8 @@ s16 krushaPauseFractionTotal(s16 value, s16 total) {
     } else {
         u8 bank = *(u8*)0x807FC80C;
         s8 kind = bank < 2 ? *(s8*)(0x807FC818 + bank) : -1;
-        if (kind == 0 && total == 201) total = 225;
+        /* Native pause caps GBs at200; the file score counts Rareware too. */
+        if (kind == 0 && total == 200) total = 225;
         if (kind == 3 && total == 40) total = 47;
         if (kind == 7 && total == 40) total = 48;
         krushaPauseFractionTrace[5] = kind;
