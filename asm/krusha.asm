@@ -120,6 +120,12 @@ m4NativeCollectEffect:
     J 0x806F79E8
     NOP
 
+m4NativeDamage:
+    LH t6, 0x134(a0)
+    LH t7, 0x136(a1)
+    J 0x80675DD8
+    NOP
+
 vanillaSetAction:
     ANDI t8, a2, 0xFF
     LUI a3, 0x8080

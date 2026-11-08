@@ -42,6 +42,9 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * barrel and all five original faces remain byte-for-byte available when OFF.
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
+    if (table==5 && index==0xED) { table=27;index=69; }
+    if (table==4 && index==42) { table=27;index=70; }
+    if (table==25 && index>=7420 && index<7436) { table=27;index-=7349; }
     if (table==4 && index==9) { table=27;index=65; }
     /* Keep the private scripts present for native map-cache restoration even
      * with Krusha OFF. Their private predicate hides the two inert props. */
@@ -81,7 +84,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     }
     if (krushaEnabled() && DetectAdventure()) {
         if (table==5 && index==54) { table=27; index=58; }
-        if (table==16 && index==7) { table=27; index=61; }
+        if (table==16 && index==7) { table=27; index=87; }
     }
     if (table==25 && (index==7400 || index==7401)) { table=27; index-=7341; }
     if (table==4 && index==7) { table=27; index=62; }
@@ -108,7 +111,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61)) {
+    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87)) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */

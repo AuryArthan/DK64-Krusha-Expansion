@@ -5,6 +5,8 @@
 extern void m4NativeCollectEffect(s16,u8);
 extern void m4BonusTick(void);
 extern s32 m4BonusPhysicalID;
+extern s32 m4EncounterPickupID;
+extern void m4EncounterTick(void);
 
 static s32 reward_map=-1;
 static u32 started,effect_at;
@@ -12,6 +14,42 @@ static void* owner;
 static u8 cage_open;
 volatile u32 m4RewardTrace[8]={0};
 static u32 frame(void) { return *(u32*)0x8076A064; }
+
+/* Model2's render subtype is separate from its pickup/flag identity. Native
+ * 80636FFC rotates render subtype74 by ten degrees per draw. Keep type9 in
+ * every ownership, suction and save path, but give its renderer that subtype.
+ * Native GB glitter is normally registered by hardcoded setup type74; emit
+ * the same sprite/settings for these private models, including dynamic drops. */
+static void presentation(void) {
+    if (!krushaEnabled() || !DetectAdventure() || !Player) return;
+    ModelTwoData* objects=ObjectModel2Pointer;
+    u8* changes=*(u8**)0x807FC924;
+    s32 (*random)(void)=(void*)0x80611A44;
+    int (*visible)(s16)=(void*)0x8063C2A8;
+    void (*setMode)(s32)=(void*)0x807149B8;
+    void (*setType)(s32)=(void*)0x80714998;
+    void (*setLayer)(s32)=(void*)0x80714A28;
+    void (*sprite)(void*,f32,f32,f32,f32)=(void*)0x80714CC0;
+    for (int i=0;i<ObjectModel2Count_Dupe;i++) {
+        if (objects[i].object_type!=9 || objects[i].unk_86!=1) continue;
+        u8* model=*(u8**)((u8*)&objects[i]+0x20);
+        if (!model) continue;
+        *(s16*)(model+0xB4)=0x74;
+        if (!visible(objects[i].runtime_id)) continue;
+        f32 x=*(f32*)model,y=*(f32*)(model+4),z=*(f32*)(model+8);
+        f32 dx=*(f32*)(changes+0x21C)-x;
+        f32 dy=*(f32*)(changes+0x220)-y;
+        f32 dz=*(f32*)(changes+0x224)-z;
+        if (dx*dx+dy*dy+dz*dz>=90000 || (random()%10000)%10) continue;
+        f32 scale=*(f32*)(model+0xC)*4;
+        setMode(1);setType(2);setLayer(4);
+        f32 sx=x+(((random()%10000)%300)/20.0f-7.5f)*scale;
+        f32 sy=y+(((random()%10000)%600)/20.0f)*scale;
+        f32 sz=z+(((random()%10000)%300)/20.0f-7.5f)*scale;
+        sprite((void*)0x80720A7C,0.4f,sx,sy,sz);
+        m4RewardTrace[4]++;
+    }
+}
 
 static int reward(u16 map,u16 id) {
     for (int i=0;i<sizeof(m4Rewards)/sizeof(m4Rewards[0]);i++)
@@ -24,6 +62,9 @@ int m4SetupHidden(s32 map,s32 id) {
         /* Native cached-script restore assumes every scripted prop exists.
          * Keep these records alive; their scripts hide/disable them instead. */
         return 0;
+    if (map==7 && id==M4_PAD_ID)
+        return !krushaEnabled() || !DetectAdventure() ||
+            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1);
     int slot=reward(map,id);
     if (slot<0) return -1;
     return !krushaEnabled() || !DetectAdventure() ||
@@ -45,6 +86,8 @@ int m4RewardBusy(void) { return m4VictoryActive(); }
 
 void m4RewardsTick(void) {
     m4BonusTick();
+    m4EncounterTick();
+    presentation();
     cage_open=0;
     if (CurrentMap==7 && frame()>1) {
         int disabled=!krushaEnabled() || !DetectAdventure() ||
@@ -78,7 +121,7 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
     if (type!=9) return -1;
     if (!krushaEnabled() || !DetectAdventure() || Character!=5 || player || !Player) return 0;
     s16 (*setupId)(s16)=(void*)0x8063D990;
-    int slot=(CurrentMap==7 && object_id==m4BonusPhysicalID) ? 0 : reward(CurrentMap,setupId(object_id));
+    int slot=(CurrentMap==7 && (object_id==m4BonusPhysicalID || object_id==m4EncounterPickupID)) ? 0 : reward(CurrentMap,setupId(object_id));
     if (slot<0) return 0;
     if (slot==1 && !cage_open) return 0;
     u8 file=*(u8*)0x807467C8;
@@ -97,7 +140,18 @@ void m4CollectEffect(s16 type,u8 player) {
     if (type==9) {
         m4RewardTrace[3]++;
         if (m4VictoryActive() && Character==5) {
-            effect_at=frame();m4NativeCollectEffect(0x74,player);
+            effect_at=frame();
+            if (StorySkip && CurrentMap!=15) {
+                /* Tag Anywhere blanks the GB initializer in Speed Mode,
+                 * including the state write. Queuing its action can therefore
+                 * trap the previous running/jumping action for the music.
+                 * A skipped world dance needs its music, not that action. */
+                playSong(18,1.0f);
+                reward_map=-1;owner=0;
+            } else {
+                Player->hSpeed=0;
+                m4NativeCollectEffect(0x74,player);
+            }
         }
         return;
     }

@@ -15,6 +15,7 @@
 .importobj "obj/src_m3_kasplat.o"
 .importobj "obj/src_m3_progress.o"
 .importobj "obj/src_m4_bonus.o"
+.importobj "obj/src_m4_encounter.o"
 .importobj "obj/src_m4_rewards.o"
 .importobj "obj/src_main.o"
 .importobj "obj/src_taganywhere.o"

@@ -98,6 +98,8 @@ void m3KasplatInit(u8 color) {
 }
 
 void m3EnemyDrop(void* enemy) {
+    extern int m4EncounterDrop(void*);
+    if (m4EncounterDrop(enemy)) return;
     if (!m3GrayKasplat(enemy)) { m3NativeEnemyDrop(enemy); return; }
     if (!krushaEnabled() || pending_spawner || m3DroppedBlueprint || physical_id>=0 || krushaProgressRead(file(),KRUSHA_BLUEPRINT_BIT,1)) return;
     u8* before=*(u8**)0x807FC400;

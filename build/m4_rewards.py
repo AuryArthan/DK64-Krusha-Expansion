@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
 TYPE=9
 
-def rows():
+def legacy_rows():
     from m2_pickups import rows as m2_rows
     pins=[p for p in json.loads(PLAN.read_text())['pins'] if p.get('reward_id') in (1,2,3) and p['map'] in (7,33)]
     rom=(ROOT/'rom/dk64.z64').read_bytes();result=[]
@@ -31,15 +31,20 @@ def rows():
                 result.append(row)
     return result
 
+def rows():
+    # Keep the reserved five-bit stride. Only gate1, encounter0 and Snide4
+    # belong to the new three-reward design; retired2/3 remain stored only.
+    return [r for r in legacy_rows() if r['reward_id']==1]
+
 def props():
     """Private script identities, disjoint from native and all new pickups."""
     rom=(ROOT/'rom/dk64.z64').read_bytes();data=read_file(rom,9,7)
     used={struct.unpack_from('>H',data,4+i*48+42)[0] for i in range(struct.unpack_from('>I',data)[0])}
     script=read_file(rom,10,7);used.update(struct.unpack('>%dH'%(len(script)//2),script[:len(script)//2*2]))
     from m2_pickups import rows as m2_rows
-    used.update(p['object_id'] for p in m2_rows());used.update(p['object_id'] for p in rows() if p['map']==7)
+    used.update(p['object_id'] for p in m2_rows());used.update(p['object_id'] for p in legacy_rows() if p['map']==7)
     free=iter(i for i in range(529,-1,-1) if i not in used)
-    return dict(gate=next(free),switch=next(free))
+    return dict(gate=next(free),switch=next(free),pad=next(free))
 
 def prepare(rom_path):
     rom=Path(rom_path).read_bytes();assert not read_file(rom,4,TYPE) and not read_file(rom,4,33)
@@ -59,7 +64,7 @@ def prepare(rom_path):
     h='/* Generated M4 stable reward slots; no native permanent flags added. */\n'
     h+='static const struct { u16 map,object_id; u8 reward; } m4Rewards[] = {\n'
     h+=''.join('    {%d,%d,%d},\n'%(p['map'],p['object_id'],p['reward_id']) for p in rows())+'};\n'
-    h+='#define M4_GATE_ID %d\n#define M4_SWITCH_ID %d\n'%(props()['gate'],props()['switch'])
+    h+='#define M4_GATE_ID %d\n#define M4_SWITCH_ID %d\n#define M4_PAD_ID %d\n'%(props()['gate'],props()['switch'],props()['pad'])
     (ROOT/'include/m4_rewards.generated.h').write_text(h)
 
 def patch_setup(filename,mid):
@@ -78,13 +83,21 @@ def patch_setup(filename,mid):
             struct.pack_into('>4f',rec,0,*xyz,scale);struct.pack_into('>3f',rec,24,0,rotation,0);struct.pack_into('>HH',rec,40,typ,ident);extra+=rec
     tail=data[4+n*48:]
     if mid==7:
-        offset=4+struct.unpack_from('>I',tail)[0]*36
-        count=struct.unpack_from('>I',tail,offset)[0];actors=tail[offset+4:offset+4+count*56]
-        barrel=bytearray(next(actors[i*56:(i+1)*56] for i in range(count) if struct.unpack_from('>H',actors,i*56+50)[0]+16==28))
-        assert not any(struct.unpack_from('>H',actors,i*56+52)[0]==610 for i in range(count))
-        struct.pack_into('>4f',barrel,0,1835,351,1490,1.0)
-        struct.pack_into('>I',barrel,16,32);struct.pack_into('>I',barrel,24,2);struct.pack_into('>H',barrel,52,610)
-        tail=tail[:offset]+struct.pack('>I',count+1)+actors+barrel+tail[offset+4+count*56:]
+        from m4_encounter import PAD_TYPE,PAD_XYZ
+        original=(ROOT/'rom/dk64.z64').read_bytes()
+        pad=None
+        for map_id in range(216):
+            native=read_file(original,9,map_id)
+            if not native:continue
+            for i in range(struct.unpack_from('>I',native)[0]):
+                if struct.unpack_from('>H',native,4+i*48+40)[0]==171:
+                    pad=bytearray(native[4+i*48:4+(i+1)*48]);break
+            if pad:break
+        assert pad is not None
+        struct.pack_into('>4f',pad,0,*PAD_XYZ,.5)
+        struct.pack_into('>3f',pad,24,0,0,0)
+        struct.pack_into('>HH',pad,40,PAD_TYPE,props()['pad'])
+        extra+=pad
     path.write_bytes(struct.pack('>I',n+len(extra)//48)+data[4:4+n*48]+extra+tail)
 
 def patch_japes(filename):patch_setup(filename,7)
@@ -147,7 +160,5 @@ def patched_scripts(data):
     return struct.pack('>H',struct.unpack_from('>H',data)[0]+2)+data[2:offset]+gate+switch+data[offset:]
 
 def patch_code(fh,symbols):
-    for address,old,name in [(0x80680AFC,'0c1cc443','m4bonuscheckflag'),(0x80680DF0,'0c1a021b','m4bonuseligibility'),(0x806F78D8,'0c1cc504','m4bonusregisterflag')]:
-        target=int(symbols[name],16)
-        fh.seek(address-0x805FB300);assert fh.read(4)==bytes.fromhex(old)
-        fh.seek(address-0x805FB300);fh.write((0x0C000000|((target&0xFFFFFFF)>>2)).to_bytes(4,'big'))
+    from m4_encounter import patch_code as encounter_patch
+    encounter_patch(fh,symbols)

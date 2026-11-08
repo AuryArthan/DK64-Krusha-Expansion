@@ -29,6 +29,7 @@ extern int m4PickupAllowed(s16,u8,u16);
 extern void m4CollectEffect(s16,u8);
 extern void m4RewardsTick(void);
 extern void m4BonusInstall(void);
+extern void m4EncounterInstall(void);
 extern s32 vanillaBuildActorBones(void* actor);
 extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
 
@@ -331,7 +332,7 @@ void krushaAdventure(void) {
         hook(0x80614A64, krushaBuildActorBones);
         hook(0x80614EBC, krushaSnideAnimation);
         hook(0x806F79E0, m4CollectEffect);
-        m4BonusInstall();
+        m4EncounterInstall();
         hook(0x806EB0C0, krushaSetAction);
         hook(0x806F6644, krushaModelPickupAllowed);
         hook(0x806F544C, krushaAmmoCollectible);

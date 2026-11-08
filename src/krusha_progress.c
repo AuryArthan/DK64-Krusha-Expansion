@@ -138,7 +138,8 @@ void krushaRainbowCredit(void) {
 int krushaProgressGoldenBananas(unsigned int file, unsigned int level) {
     int i, result = 0;
     if (level >= 8) return 0;
-    for (i = 0; i < 5; i++) result += krushaProgressRead(file, KRUSHA_GB_BIT + level * 5 + i, 1);
+    for (i = 0; i < 5; i++) if (i==0 || i==1 || i==4)
+        result += krushaProgressRead(file, KRUSHA_GB_BIT + level * 5 + i, 1);
     return result;
 }
 
@@ -160,7 +161,7 @@ int krushaProgressFullSet(void) {
     /* Native counters cover owned GBs; medal/fairy/crown/key/company-coin and
      * returned-blueprint aggregates come from permanent flags. No coin-wallet
      * or all-CB requirement. The Rareware GB's own permanent flag is required. */
-    return totals[0] == 241 && totals[1] == 10 && totals[2] == 8 &&
+    return totals[0] == 225 && totals[1] == 10 && totals[2] == 8 &&
            totals[3] == 47 && totals[4] == 1 && totals[5] == 20 &&
            totals[6] == 1 && totals[7] == 48 && checkFlag(0x12D, 0);
 }

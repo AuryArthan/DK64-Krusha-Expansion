@@ -96,6 +96,8 @@ u8 krushaRoarStart(void) {
     Player->control_state_progress = 0;
     krushaRoarStageBegin(Player);
     krushaPlayScream(); // Only the supplied recording, at original pitch.
+    extern void m4EncounterShout(void);
+    m4EncounterShout();
     return 1;
 }
 
