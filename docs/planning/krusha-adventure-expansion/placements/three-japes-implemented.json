@@ -1,0 +1,88 @@
+{
+  "format": "krusha-atlas-notes-v2",
+  "source_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
+  "title": "Three-reward Japes implemented pilot",
+  "rom_sha256": "286a0a0773267d1f22e7d0849208b6e77767912a452a51d97fb3d543296ccc95",
+  "pins": [
+    {
+      "id": "assistant-draft1-jp-g01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-G01",
+      "kind": "gb",
+      "quantity": 1,
+      "notes": "Three-reward Japes pilot. Actual ROM coordinates; access and full campaign balance remain subject to later M6 review. Stable private reward slot 1.",
+      "xyz": [
+        1680,
+        284,
+        4245
+      ],
+      "status": "implemented-pilot",
+      "reward_id": 1,
+      "object_id": 503,
+      "type": 9
+    },
+    {
+      "id": "assistant-draft1-jp-bp01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-BP01",
+      "kind": "blueprint",
+      "quantity": 1,
+      "notes": "Gray Kasplat. Take its blueprint to Snide for GB slot4, one of three total.",
+      "xyz": [
+        2151.559,
+        525.0,
+        2053.359
+      ],
+      "status": "implemented-pilot",
+      "reward_id": 4
+    },
+    {
+      "id": "assistant-draft1-jp-sw01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-SW01",
+      "kind": "switch",
+      "quantity": 1,
+      "xyz": [
+        1545,
+        280,
+        4245
+      ],
+      "notes": "Silver orange-emblem switch outside the full cage. Krusha bazooka171 only. Cage opening is map-local until its GB is collected.",
+      "status": "implemented-pilot"
+    },
+    {
+      "id": "three-jp-shout-pad",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-PAD",
+      "kind": "switch",
+      "quantity": 1,
+      "xyz": [
+        1835,
+        286,
+        1490
+      ],
+      "notes": "Silver Krusha shout pad. A successful paid shout summons the rare Klump after the animation. Claimed reward hides this pad.",
+      "status": "implemented-pilot"
+    },
+    {
+      "id": "three-jp-rare-klump",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-KLUMP",
+      "kind": "gb",
+      "quantity": 1,
+      "xyz": [
+        2110,
+        286,
+        1450
+      ],
+      "notes": "Rare silver-blue/purple Klump: native AI at twice ordinary size, five distinct bazooka hits, three double-damage grenades per volley. Drops GB at its actual death position. Private slot0.",
+      "reward_id": 0,
+      "status": "implemented-pilot"
+    }
+  ]
+}
