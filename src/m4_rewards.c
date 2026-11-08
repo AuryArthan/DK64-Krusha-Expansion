@@ -57,6 +57,21 @@ static int reward(u16 map,u16 id) {
     return -1;
 }
 
+/* Native interior caching keeps the dynamic model2 but resets map-local
+ * bindings. Resolve only a live unregistered private type9, on demand. Native
+ * type74 and registered static rewards (including the locked cage) are excluded.
+ * runtime<0 asks whether an unclaimed drop already blocks another summon. */
+s32 m4EncounterFindPickup(s16 runtime) {
+    if (CurrentMap!=7) return -1;
+    ModelTwoData* objects=ObjectModel2Pointer;
+    for (int i=0;i<ObjectModel2Count_Dupe;i++) {
+        if ((runtime<0 || objects[i].runtime_id==runtime) &&
+            objects[i].object_type==9 && objects[i].unk_86==1 &&
+            reward(7,objects[i].object_id)<0) return objects[i].runtime_id;
+    }
+    return -1;
+}
+
 int m4SetupHidden(s32 map,s32 id) {
     if (map==7 && (id==M4_GATE_ID || id==M4_SWITCH_ID))
         /* Native cached-script restore assumes every scripted prop exists.
@@ -122,19 +137,8 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
     if (!krushaEnabled() || !DetectAdventure() || Character!=5 || player || !Player) return 0;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     int slot=(CurrentMap==7 && (object_id==m4BonusPhysicalID || object_id==m4EncounterPickupID)) ? 0 : reward(CurrentMap,setupId(object_id));
-    if (slot<0 && CurrentMap==7) {
-        /* Native interior caching preserves a dynamic model2 drop, but our
-         * map-local runtime ID is reset. Resolve that live private model at
-         * contact instead of retaining an ID/pointer across maps. Type9 is
-         * reserved by the builder; every static private GB is in m4Rewards.
-         * Never reinterpret the registered cage or a native gold banana. */
-        ModelTwoData* objects=ObjectModel2Pointer;
-        for (int i=0;i<ObjectModel2Count_Dupe;i++) {
-            if (objects[i].runtime_id==object_id && objects[i].object_type==9 &&
-                objects[i].unk_86==1 && reward(7,objects[i].object_id)<0) {
-                m4EncounterPickupID=object_id;slot=0;break;
-            }
-        }
+    if (slot<0 && m4EncounterFindPickup(object_id)>=0) {
+        m4EncounterPickupID=object_id;slot=0;
     }
     if (slot<0) return 0;
     if (slot==1 && !cage_open) return 0;

@@ -3,6 +3,7 @@
 
 extern void m4NativeDamage(void*,void*);
 extern s32 m4NativePlayerDamage(u8,s8);
+extern s32 m4EncounterFindPickup(s16);
 extern void krushaNativeActorDelete(void*);
 
 #define ENCOUNTER_TRIGGER 250
@@ -88,6 +89,9 @@ void m4EncounterShout(void) {
     if (CurrentMap!=7 || !krushaEnabled() || !Player || won() || pending || dropped) return;
     f32 dx=Player->xPos-PAD_X,dz=Player->zPos-PAD_Z,dy=Player->yPos-PAD_Y;
     if (dx*dx+dz*dz>70*70 || dy < -20 || dy>35) return;
+    s32 existing=m4EncounterFindPickup(-1);
+    if (existing>=0) {m4EncounterPickupID=existing;dropped=1;return;}
+
     u8* spawners=*(u8**)0x807FDC8C;
     int count=*(u16*)0x807FDC88;
     if (count>256 || !valid(spawners,count*0x48)) return;
