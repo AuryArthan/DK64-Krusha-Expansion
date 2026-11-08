@@ -84,7 +84,10 @@ def payloads(rom):
         s=read_file(original,9,mid)
         if s:assert all(struct.unpack_from('>H',s,4+i*48+40)[0]!=PAD_TYPE for i in range(struct.unpack_from('>I',s)[0]))
     model=remap_model(read_file(rom,5,57),{i:7420+n for n,i in enumerate(TINT_IDS)})
-    pad=remap_model(read_file(rom,4,171),{i:7430+n for n,i in enumerate(PAD_TEXTURES)})
+    # Reuse the native base files directly; only the two portrait halves are
+    # private. Model2 texture streaming must restore their external IDs on
+    # unload (see z_texture_identity.c), rather than table27's storage IDs.
+    pad=remap_model(read_file(rom,4,171),{i:7430+n for n,i in enumerate(PAD_TEXTURES) if n>=4})
     textures=[tint(read_file(rom,25,i),'skin' if i in (0x104D,0x1058) else 'helmet' if i==0x1059 else 'armor') for i in TINT_IDS]
     result=[model,pad]+textures+pad_images(rom)+[spawners(rom)]
     assert len(result)==19

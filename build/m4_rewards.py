@@ -187,3 +187,12 @@ def patched_scripts(data):
 def patch_code(fh,symbols):
     from m4_encounter import patch_code as encounter_patch
     encounter_patch(fh,symbols)
+    # These two Model2 unload paths turn a live texture pointer back into a
+    # file ID for a later table25 reload. Preserve the external alias; the
+    # native reference/free path must continue to see its real table27 key.
+    for address in (0x806368A0,0x80636BAC):
+        fh.seek(address-0x805FB300)
+        assert fh.read(4)==bytes.fromhex('0c19adeb'),hex(address)
+        target=int(symbols['krushamodel2textureidentity'],16)
+        fh.seek(address-0x805FB300)
+        fh.write((0x0C000000|((target&0xFFFFFFF)>>2)).to_bytes(4,'big'))
