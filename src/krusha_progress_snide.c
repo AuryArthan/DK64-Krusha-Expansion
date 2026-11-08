@@ -14,8 +14,13 @@ void krushaSnideAnimation(void* actor, s32 script) {
      * Chunky/Krusha GB scripts. Substitute only Snide's player presentation,
      * at real script initialization, never while SetAction merely queues it. */
     if ((CurrentMap==15 || m4VictoryActive()) && krushaEnabled() && DetectAdventure() &&
-        Character==5 && actor==(void*)Player && (script==0x1D2 || script==0x1D0))
+        Character==5 && actor==(void*)Player && (script==0x1D2 || script==0x1D0)) {
+        /* Stop momentum at the actual world victory initializer. A high-air
+         * pickup that native code deliberately leaves playable must retain
+         * its normal movement; the music callback alone is not a dance. */
+        if (m4VictoryActive()) Player->hSpeed=0;
         script=script==0x1D2 ? 0x174 : 0x173;
+    }
     vanillaCharacterScript(actor,script);
     if ((CurrentMap==15 || m4VictoryActive()) && krushaEnabled() && DetectAdventure() &&
         Character==5 && actor==(void*)Player && script==0x173) {

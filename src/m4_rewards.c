@@ -149,7 +149,6 @@ void m4CollectEffect(s16 type,u8 player) {
                 playSong(18,1.0f);
                 reward_map=-1;owner=0;
             } else {
-                Player->hSpeed=0;
                 m4NativeCollectEffect(0x74,player);
             }
         }
