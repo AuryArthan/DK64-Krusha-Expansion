@@ -5,7 +5,6 @@
 extern void m4NativeDamage(void*,void*);
 extern s32 m4NativePlayerDamage(u8,s8);
 extern s32 m4EncounterFindPickup(s16);
-extern void krushaNativeActorDelete(void*);
 
 #define ENCOUNTER_TRIGGER 250
 #define ENCOUNTER_HITS 8
@@ -129,7 +128,16 @@ void m4EncounterKlumpUpdate(void) {
     u8* actor=*(u8**)0x807FBB40;
     void (*native)(void)=(void*)0x806AEE84;
     if (!m4EncounterKlump(actor)) {native();return;}
-    if (!krushaEnabled() || !DetectAdventure() || won()) {krushaNativeActorDelete(actor);return;}
+    if (!krushaEnabled() || !DetectAdventure() || won()) {
+        /* This is a character-spawner actor, not a free-standing effect.
+         * Deleting it here leaves spawner state5/6 pointing at freed memory
+         * if its GB is collected before the death animation finishes. The
+         * native manager80727958 owns state40 retirement: unlink movement
+         * box, finish model cleanup, delete actor and advance spawner state. */
+        actor[0x154]=0x40;
+        actor[0x155]=0;
+        return;
+    }
     u8* context=(void*)0x807FBB70;
     /* Shouts use the spawner's native instrument-immunity bit. Other instant
      * kill flags (shockwave/slam) must not bypass the eight-projectile fight. */
@@ -143,7 +151,15 @@ void m4EncounterKlumpUpdate(void) {
 void m4EncounterThrow(s16 type,s16 model,f32 scale,s16 angle,f32 forward,f32 vertical,void* parent) {
     void (*native)(s16,s16,f32,s16,f32,f32,void*)=(void*)0x8069084C;
     if (!m4EncounterKlump(parent)) {native(type,model,scale,angle,forward,vertical,parent);return;}
+    /* Native Klump aims along its body yaw but releases at its right hand.
+     * At this scale that lateral offset is conspicuous. Aim the middle round
+     * from the actual release point to the player, retaining native speeds. */
+    f32 x=*(f32*)0x807FC7B0,y=*(f32*)0x807FC7B4,z=*(f32*)0x807FC7B8;
+    s16 (*toward)(f32,f32,f32,f32)=(void*)0x80665DE0;
+    void (*origin)(f32,f32,f32)=(void*)0x806907F0;
+    if (Player) angle=toward(Player->xPos,Player->zPos,x,z);
     for (int n=-1;n<=1;n++) {
+        origin(x,y,z);
         native(type,model,scale,(angle+n*170)&4095,forward,vertical,parent);
         u8* node=*(u8**)0x807FC400;
         if (node) {
@@ -223,6 +239,11 @@ void m4EncounterTick(void) {
         u8* actor=*(u8**)0x807FBB44;
         void (*init)(void*,void*)=(void*)0x80726744;
         init(actor,record);
+        /* Apply the requested additional8% exactly. The packed spawner size
+         * is integral; rounding80 to74 would be only7.5%. Native collision
+         * and shadow helpers use these same animation scales. */
+        u8* animation=*(u8**)(actor+4);
+        for (int axis=0;axis<3;axis++) *(f32*)(animation+0x34+axis*4)*=0.92f;
         *(u16*)(record+0x46)|=0x44; /* native: force loaded, instrument immune */
         *(s16*)(actor+0x134)=ENCOUNTER_HITS;
         *(s16*)(actor+0x136)=2 * *(s16*)(0x8074D0C4+187*4+2);

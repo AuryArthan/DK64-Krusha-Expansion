@@ -88,7 +88,11 @@ void m3KasplatInit(u8 color) {
         }
         m3NativeKasplatInit(color);return;
     }
-    if (!krushaEnabled() || !DetectAdventure()) { krushaNativeActorDelete(actor); return; }
+    if (!krushaEnabled() || !DetectAdventure()) {
+        /* Let the native character-spawner manager retire its owned actor;
+         * direct deletion leaves a live spawner with a freed actor pointer. */
+        actor[0x154]=0x40;actor[0x155]=0;return;
+    }
     int uncollected=!krushaProgressRead(file(),blueprintBit(),1);
     if (!(*(u32*)(actor+0x60)&0x10) || actor[0x15F]!=uncollected) {
         void (*hair)(u8)=(void*)0x806B1D78;

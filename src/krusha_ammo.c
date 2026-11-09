@@ -10,6 +10,12 @@ static const AmmoSprite lime = {
      7708,7709,7710,7711,7712,7713,7714,7715}
 };
 const void* krushaAmmoSprite(void) { return &lime; }
+/* A stationary upright frame for the cage. The moving round deliberately
+ * tumbles through all sixteen frames; frame zero shows its pin below it. */
+static const AmmoSprite cage_hint = {
+    0x4B520141,1,1,0,2,0xFFFFFFFF,0,1,32,32,1,{7710}
+};
+const void* krushaCageHintSprite(void) { return &cage_hint; }
 
 static u8 homing_crate;
 void krushaAmmoCrateBurst(u8 player,s16 id,void* actor,u16 crate) {

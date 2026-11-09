@@ -8,7 +8,7 @@ extern void m4BonusTick(void);
 extern s32 m4BonusPhysicalID;
 extern s32 m4EncounterPickupID;
 extern void m4EncounterTick(void);
-extern const void* krushaAmmoSprite(void);
+extern const void* krushaCageHintSprite(void);
 
 static s32 reward_map=-1;
 static u32 started,effect_at;
@@ -19,6 +19,18 @@ static void* owner;
 static u8 cage_open;
 volatile u32 m4RewardTrace[16]={0};
 static u32 frame(void) { return *(u32*)0x8076A064; }
+
+/* Native world sprites normally billboard toward the camera. Give only the
+ * cage decal a complete world matrix, laying its XY quad flat on the roof.
+ * Mode3 tells the native updater the matrix is complete (no billboard).
+ * The one-frame descriptor is freed normally on the following update. */
+static void cageHintMatrix(u8* sprite,u8* done) {
+    f32 s=*(f32*)(sprite+0x360);
+    f32 matrix[4][4]={{s,0,0,0},{0,0,-s,0},{0,1,0,0},
+        {*(f32*)(sprite+0x340),*(f32*)(sprite+0x344),*(f32*)(sprite+0x348),1}};
+    guMtxF2L(matrix,(Mtx*)(sprite+0x128+64*(*(u8*)0x807444FC)));
+    sprite[0x32C]=3;
+}
 
 /* Model2's render subtype is separate from its pickup/flag identity. Native
  * 80636FFC rotates render subtype74 by ten degrees per draw. Keep type9 in
@@ -177,10 +189,12 @@ void m4RewardsTick(void) {
                     void (*begin)(s32)=(void*)0x807149B8;
                     void (*mode)(s32)=(void*)0x80714998;
                     void (*layer)(s32)=(void*)0x80714A28;
+                    void (*callback)(void*)=(void*)0x8071498C;
                     void (*draw)(const void*,f32,f32,f32,f32)=(void*)0x80714CC0;
-                    begin(1);mode(2);layer(4);
-                    /* Small hint on the south face, just outside its bars. */
-                    draw(krushaAmmoSprite(),0.35f,area->cage[0],area->cage[1]+12.73f,area->cage[2]-19);
+                    begin(1);mode(1);layer(4);callback(cageHintMatrix);
+                    /* Roof is cage origin+26.4. Clear it by0.8 to avoid
+                     * z-fighting;14.4 units is larger than the old11.2. */
+                    draw(krushaCageHintSprite(),0.45f,area->cage[0],area->cage[1]+27.2f,area->cage[2]);
                 }
             }
         }
