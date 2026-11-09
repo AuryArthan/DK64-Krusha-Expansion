@@ -74,6 +74,8 @@ def patchStaticCode(filename):
 		assert fh.read(8) == bytes.fromhex('27bdff883c0e8075'), 'GB portrait constructor prologue differs from USA'
 		from m4_rewards import patch_code as patchM4
 		patchM4(fh,symbols)
+		from m5_campaign import patch_code as patchM5
+		patchM5(fh,symbols)
 
 		# RDRAM Address - 0x5FB300 = ROM address
 		# Only the fairy-camera entry check: allow character 5, still exclude

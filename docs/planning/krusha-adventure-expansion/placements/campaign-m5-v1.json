@@ -1,0 +1,4521 @@
+{
+  "format": "krusha-campaign-content-v1",
+  "draft_id": "campaign-m5-v1",
+  "title": "M5 campaign draft \u2014 50 bananas and three rewards",
+  "status": "provisional; floor audit then gameplay verification",
+  "source_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
+  "worlds": [
+    {
+      "world": 0,
+      "map": 7,
+      "name": "Jungle Japes",
+      "code": "JP",
+      "pad": [
+        1835,
+        286,
+        1490
+      ],
+      "boss": [
+        2110,
+        286,
+        1450
+      ],
+      "cage": [
+        1680,
+        286.27,
+        4245
+      ],
+      "kasplat": [
+        2151.559,
+        525.0,
+        2053.359
+      ],
+      "kasplat_map": 7,
+      "gate_id": 498,
+      "switch_id": 496,
+      "pad_id": 495,
+      "reward_id": 503,
+      "kasplat_id": 3,
+      "trigger": 250,
+      "fence": [
+        [
+          1780,
+          286,
+          1360
+        ],
+        [
+          2270,
+          286,
+          1360
+        ],
+        [
+          2270,
+          286,
+          1550
+        ],
+        [
+          1780,
+          286,
+          1550
+        ],
+        [
+          1780,
+          286,
+          1360
+        ]
+      ]
+    },
+    {
+      "world": 1,
+      "map": 38,
+      "name": "Angry Aztec",
+      "code": "AZ",
+      "pad": [
+        2540.0,
+        126.0,
+        720.0
+      ],
+      "boss": [
+        2700.0,
+        130.592,
+        900.0
+      ],
+      "cage": [
+        3770,
+        126.27,
+        2500
+      ],
+      "kasplat": [
+        2290.0,
+        117.0,
+        3900.0
+      ],
+      "kasplat_map": 38,
+      "fence": [
+        [
+          2580,
+          131,
+          800
+        ],
+        [
+          2820,
+          131,
+          800
+        ],
+        [
+          2820,
+          131,
+          1000
+        ],
+        [
+          2580,
+          131,
+          1000
+        ],
+        [
+          2580,
+          131,
+          800
+        ]
+      ],
+      "kasplat_id": 3,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    },
+    {
+      "world": 2,
+      "map": 26,
+      "name": "Frantic Factory",
+      "code": "FA",
+      "pad": [
+        350,
+        171.5,
+        730
+      ],
+      "boss": [
+        500,
+        171.5,
+        730
+      ],
+      "cage": [
+        1420.0,
+        12.77,
+        700.0
+      ],
+      "kasplat": [
+        1700.0,
+        841.869,
+        2330.0
+      ],
+      "kasplat_map": 26,
+      "fence": [
+        [
+          420,
+          172,
+          680
+        ],
+        [
+          580,
+          172,
+          680
+        ],
+        [
+          580,
+          172,
+          780
+        ],
+        [
+          420,
+          172,
+          780
+        ],
+        [
+          420,
+          172,
+          680
+        ]
+      ],
+      "kasplat_id": 3,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    },
+    {
+      "world": 3,
+      "map": 30,
+      "name": "Gloomy Galleon",
+      "code": "GA",
+      "pad": [
+        2200.0,
+        1621.953,
+        3150.0
+      ],
+      "boss": [
+        2400.0,
+        1624.375,
+        3200.0
+      ],
+      "cage": [
+        3390.0,
+        1682.918,
+        2640.0
+      ],
+      "kasplat": [
+        2910.0,
+        1684.782,
+        3250.0
+      ],
+      "kasplat_map": 30,
+      "fence": [
+        [
+          2280,
+          1624,
+          3100
+        ],
+        [
+          2520,
+          1624,
+          3100
+        ],
+        [
+          2520,
+          1624,
+          3300
+        ],
+        [
+          2280,
+          1624,
+          3300
+        ],
+        [
+          2280,
+          1624,
+          3100
+        ]
+      ],
+      "kasplat_id": 3,
+      "trigger": 250,
+      "gate_id": 527,
+      "pad_id": 526,
+      "reward_id": 525,
+      "switch_id": 65535
+    },
+    {
+      "world": 4,
+      "map": 48,
+      "name": "Fungi Forest",
+      "code": "FU",
+      "pad": [
+        3150.0,
+        214.372,
+        500.0
+      ],
+      "boss": [
+        3370.0,
+        201.833,
+        500.0
+      ],
+      "cage": [
+        3850.0,
+        190.731,
+        3350.0
+      ],
+      "kasplat": [
+        3290.0,
+        250.939,
+        3550.0
+      ],
+      "kasplat_map": 48,
+      "fence": [
+        [
+          3250,
+          202,
+          400
+        ],
+        [
+          3490,
+          202,
+          400
+        ],
+        [
+          3490,
+          202,
+          600
+        ],
+        [
+          3250,
+          202,
+          600
+        ],
+        [
+          3250,
+          202,
+          400
+        ]
+      ],
+      "kasplat_id": 3,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    },
+    {
+      "world": 5,
+      "map": 72,
+      "name": "Crystal Caves",
+      "code": "CV",
+      "pad": [
+        3300.0,
+        115.304,
+        2030.0
+      ],
+      "boss": [
+        3330.0,
+        125.111,
+        1850.0
+      ],
+      "cage": [
+        2845.0,
+        286.27,
+        1230.0
+      ],
+      "kasplat": [
+        1370.0,
+        103.56,
+        770.0
+      ],
+      "kasplat_map": 72,
+      "fence": [
+        [
+          3210,
+          125,
+          1750
+        ],
+        [
+          3450,
+          125,
+          1750
+        ],
+        [
+          3450,
+          125,
+          1950
+        ],
+        [
+          3210,
+          125,
+          1950
+        ],
+        [
+          3210,
+          125,
+          1750
+        ]
+      ],
+      "kasplat_id": 11,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    },
+    {
+      "world": 6,
+      "map": 87,
+      "name": "Creepy Castle",
+      "code": "CC",
+      "pad": [
+        1050.0,
+        679.5,
+        490.0
+      ],
+      "boss": [
+        1150,
+        679.5,
+        560
+      ],
+      "cage": [
+        515,
+        1141.94,
+        1430
+      ],
+      "kasplat": [
+        977.0,
+        1784.839,
+        1279.0
+      ],
+      "kasplat_map": 87,
+      "fence": [
+        [
+          1060,
+          680,
+          510
+        ],
+        [
+          1240,
+          680,
+          510
+        ],
+        [
+          1240,
+          680,
+          610
+        ],
+        [
+          1060,
+          680,
+          610
+        ],
+        [
+          1060,
+          680,
+          510
+        ]
+      ],
+      "kasplat_id": 17,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    },
+    {
+      "world": 7,
+      "map": 34,
+      "name": "DK Isles",
+      "code": "IS",
+      "pad": [
+        2940.0,
+        511.848,
+        2220.0
+      ],
+      "boss": [
+        3090.0,
+        509.307,
+        2160.0
+      ],
+      "cage": [
+        3170.0,
+        528.328,
+        1910.0
+      ],
+      "kasplat": [
+        700.0,
+        9.359,
+        300.0
+      ],
+      "kasplat_map": 169,
+      "fence": [
+        [
+          2970,
+          509,
+          2060
+        ],
+        [
+          3210,
+          509,
+          2060
+        ],
+        [
+          3210,
+          509,
+          2260
+        ],
+        [
+          2970,
+          509,
+          2260
+        ],
+        [
+          2970,
+          509,
+          2060
+        ]
+      ],
+      "kasplat_id": 3,
+      "trigger": 250,
+      "gate_id": 529,
+      "pad_id": 528,
+      "reward_id": 527,
+      "switch_id": 65535
+    }
+  ],
+  "pins": [
+    {
+      "id": "assistant-draft1-jp-b01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "notes": "Bunch above Krusha shout pad",
+      "xyz": [
+        1835,
+        294,
+        1490
+      ],
+      "status": "proposal",
+      "pickup_slot": 0,
+      "object_id": 505,
+      "type": 4,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-b02",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "notes": "Bunch four units above measured cage roof312.67; normal jump remains possible when cage opens",
+      "xyz": [
+        1680,
+        316.67,
+        4245
+      ],
+      "status": "proposal",
+      "pickup_slot": 1,
+      "object_id": 506,
+      "type": 4,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-b03",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "notes": "Bunch on vacant palm120 canopy east of shout pad",
+      "xyz": [
+        2267,
+        493,
+        1523
+      ],
+      "status": "proposal",
+      "pickup_slot": 2,
+      "object_id": 507,
+      "type": 4,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S01",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "xyz": [
+        2370,
+        284.0,
+        1420
+      ],
+      "status": "proposal",
+      "pickup_slot": 13,
+      "object_id": 515,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s02",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S02",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "xyz": [
+        2255,
+        284.0,
+        1425
+      ],
+      "status": "proposal",
+      "pickup_slot": 14,
+      "object_id": 516,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s03",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S03",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "xyz": [
+        2140,
+        287.396,
+        1435
+      ],
+      "status": "proposal",
+      "pickup_slot": 15,
+      "object_id": 517,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s04",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S04",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "xyz": [
+        2025,
+        286.554,
+        1450
+      ],
+      "status": "proposal",
+      "pickup_slot": 16,
+      "object_id": 518,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s05",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S05",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "xyz": [
+        1910,
+        290.311,
+        1470
+      ],
+      "status": "proposal",
+      "pickup_slot": 17,
+      "object_id": 519,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s06",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S06",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "xyz": [
+        1695,
+        284.0,
+        3615
+      ],
+      "status": "proposal",
+      "pickup_slot": 18,
+      "object_id": 520,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s07",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S07",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "xyz": [
+        1605,
+        284.0,
+        3730
+      ],
+      "status": "proposal",
+      "pickup_slot": 19,
+      "object_id": 521,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s08",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S08",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "xyz": [
+        1550,
+        284.0,
+        3850
+      ],
+      "status": "proposal",
+      "pickup_slot": 20,
+      "object_id": 522,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s09",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S09",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "xyz": [
+        1580,
+        284.0,
+        3990
+      ],
+      "status": "proposal",
+      "pickup_slot": 21,
+      "object_id": 523,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s10",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S10",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "xyz": [
+        1615,
+        284.0,
+        4120
+      ],
+      "status": "proposal",
+      "pickup_slot": 22,
+      "object_id": 524,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s11",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S11",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Single just above riverbed, following the bottom underwater",
+      "xyz": [
+        1350,
+        164.0,
+        1810
+      ],
+      "status": "proposal",
+      "pickup_slot": 23,
+      "object_id": 525,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s12",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S12",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Single just above riverbed, following the bottom underwater",
+      "xyz": [
+        1460,
+        164.0,
+        1830
+      ],
+      "status": "proposal",
+      "pickup_slot": 24,
+      "object_id": 526,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s13",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S13",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Single just above riverbed, following the bottom underwater",
+      "xyz": [
+        1570,
+        164.0,
+        1850
+      ],
+      "status": "proposal",
+      "pickup_slot": 25,
+      "object_id": 527,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s14",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S14",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Single just above riverbed, following the bottom underwater",
+      "xyz": [
+        1680,
+        164.0,
+        1870
+      ],
+      "status": "proposal",
+      "pickup_slot": 26,
+      "object_id": 528,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-s15",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-S15",
+      "kind": "single",
+      "quantity": 1,
+      "notes": "Single just above riverbed, following the bottom underwater",
+      "xyz": [
+        1790,
+        164.0,
+        1890
+      ],
+      "status": "proposal",
+      "pickup_slot": 27,
+      "object_id": 529,
+      "type": 2,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins close around the shout pad, radius46-53",
+      "xyz": [
+        1794,
+        287.877,
+        1469
+      ],
+      "status": "proposal",
+      "pickup_slot": 231,
+      "object_id": 359,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c02",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins close around the shout pad, radius46-53",
+      "xyz": [
+        1844,
+        290.826,
+        1537
+      ],
+      "status": "proposal",
+      "pickup_slot": 232,
+      "object_id": 360,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c03",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins close around the shout pad, radius46-53",
+      "xyz": [
+        1876,
+        286.971,
+        1456
+      ],
+      "status": "proposal",
+      "pickup_slot": 233,
+      "object_id": 363,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c04",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along west wall near cage",
+      "xyz": [
+        1308,
+        284.0,
+        4125
+      ],
+      "status": "proposal",
+      "pickup_slot": 234,
+      "object_id": 373,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c05",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along west wall near cage",
+      "xyz": [
+        1319,
+        284.0,
+        4160
+      ],
+      "status": "proposal",
+      "pickup_slot": 235,
+      "object_id": 374,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c06",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along west wall near cage",
+      "xyz": [
+        1329,
+        284.0,
+        4195
+      ],
+      "status": "proposal",
+      "pickup_slot": 236,
+      "object_id": 375,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c07",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along wall near gray Kasplat",
+      "xyz": [
+        1897,
+        524.0,
+        2230
+      ],
+      "status": "proposal",
+      "pickup_slot": 237,
+      "object_id": 376,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c08",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along wall near gray Kasplat",
+      "xyz": [
+        1924,
+        524.0,
+        2252
+      ],
+      "status": "proposal",
+      "pickup_slot": 238,
+      "object_id": 377,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-c09",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "notes": "Three coins along wall near gray Kasplat",
+      "xyz": [
+        1951,
+        524.0,
+        2274
+      ],
+      "status": "proposal",
+      "pickup_slot": 239,
+      "object_id": 378,
+      "type": 6,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-a01",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
+      "xyz": [
+        2049.663,
+        806.0,
+        2297.82
+      ],
+      "status": "proposal",
+      "pickup_slot": 10,
+      "spawner_id": 600,
+      "path_id": 22,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-jp-a02",
+      "map": 7,
+      "map_name": "Jungle Japes",
+      "label": "JP-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 11. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
+      "xyz": [
+        1976.184,
+        806.0,
+        2513.244
+      ],
+      "status": "proposal",
+      "pickup_slot": 11,
+      "spawner_id": 601,
+      "path_id": 23,
+      "world": 0
+    },
+    {
+      "id": "assistant-draft1-az-b01",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        2540.0,
+        134.0,
+        720.0
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 33,
+      "object_id": 526,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-az-b02",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3770,
+        156.67,
+        2500
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 34,
+      "object_id": 516,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-az-b03",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        2778.521,
+        126.0,
+        4752.402
+      ],
+      "notes": "Distinctive native warp pad",
+      "status": "provisional-m5",
+      "pickup_slot": 35,
+      "object_id": 515,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-az-s01",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2630.0,
+        124.0,
+        1400.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 45,
+      "object_id": 508,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s02",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2540.0,
+        124.0,
+        1270.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 46,
+      "object_id": 507,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s03",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2500.0,
+        114.0,
+        1130.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 47,
+      "object_id": 506,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s04",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2510.0,
+        119.5,
+        1000.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 48,
+      "object_id": 505,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s05",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2540.0,
+        114.0,
+        850.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 49,
+      "object_id": 504,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s06",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S06",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3750,
+        124.0,
+        2110
+      ],
+      "notes": "Open east-side cage approach alongside the native purple route",
+      "status": "provisional-m5",
+      "pickup_slot": 50,
+      "object_id": 503,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s07",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S07",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3750,
+        124.0,
+        2190
+      ],
+      "notes": "Open east-side cage approach alongside the native purple route",
+      "status": "provisional-m5",
+      "pickup_slot": 51,
+      "object_id": 502,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s08",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S08",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3750,
+        124.0,
+        2270
+      ],
+      "notes": "Open east-side cage approach alongside the native purple route",
+      "status": "provisional-m5",
+      "pickup_slot": 52,
+      "object_id": 501,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s09",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S09",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3750,
+        124.0,
+        2350
+      ],
+      "notes": "Open east-side cage approach alongside the native purple route",
+      "status": "provisional-m5",
+      "pickup_slot": 53,
+      "object_id": 499,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s10",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S10",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3760,
+        124.0,
+        2430
+      ],
+      "notes": "Open east-side cage approach alongside the native purple route",
+      "status": "provisional-m5",
+      "pickup_slot": 54,
+      "object_id": 498,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s11",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S11",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3260.0,
+        73.889,
+        3650.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 55,
+      "object_id": 497,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s12",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S12",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3160.0,
+        72.117,
+        3720.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 56,
+      "object_id": 496,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s13",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S13",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3060.0,
+        74.903,
+        3790.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 57,
+      "object_id": 495,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s14",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S14",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2960.0,
+        84.0,
+        3860.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 58,
+      "object_id": 494,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-s15",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-S15",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2860.0,
+        121.603,
+        3930.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 59,
+      "object_id": 493,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-az-a01",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        2500,
+        260,
+        1020
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 42,
+      "spawner_id": 600,
+      "path_id": 7
+    },
+    {
+      "id": "assistant-draft1-az-a02",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        3060,
+        260,
+        3830
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 43,
+      "spawner_id": 601,
+      "path_id": 8
+    },
+    {
+      "id": "assistant-draft1-az-c01",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2497.0,
+        124.0,
+        695.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 241,
+      "object_id": 492,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c02",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2540.0,
+        124.0,
+        770.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 242,
+      "object_id": 491,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c03",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2579.173,
+        124.0,
+        704.239
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 243,
+      "object_id": 490,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c04",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2390.0,
+        124.0,
+        3840.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 244,
+      "object_id": 489,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c05",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2390.0,
+        124.0,
+        3900.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 245,
+      "object_id": 488,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c06",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2390.0,
+        124.0,
+        3960.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 246,
+      "object_id": 487,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c07",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3890,
+        124.0,
+        2300
+      ],
+      "notes": "Three coins along the outer edge of the east-side clearing",
+      "status": "provisional-m5",
+      "pickup_slot": 247,
+      "object_id": 486,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c08",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3890,
+        124.0,
+        2360
+      ],
+      "notes": "Three coins along the outer edge of the east-side clearing",
+      "status": "provisional-m5",
+      "pickup_slot": 248,
+      "object_id": 485,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-az-c09",
+      "map": 38,
+      "map_name": "Angry Aztec",
+      "world": 1,
+      "label": "AZ-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3890,
+        124.0,
+        2420
+      ],
+      "notes": "Three coins along the outer edge of the east-side clearing",
+      "status": "provisional-m5",
+      "pickup_slot": 249,
+      "object_id": 484,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-b01",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        350,
+        179.5,
+        730
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 70,
+      "object_id": 526,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fa-b02",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1420.0,
+        43.17,
+        700.0
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 71,
+      "object_id": 525,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fa-b03",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1435.392,
+        848.667,
+        2173.301
+      ],
+      "notes": "Bunch on an otherwise unoccupied native warp pad; original Kong bunches preserved",
+      "status": "provisional-m5",
+      "pickup_slot": 72,
+      "object_id": 524,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fa-s01",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        875,
+        170.333,
+        740
+      ],
+      "notes": "Five-single trail from the corridor into the broad shop-floor arena",
+      "status": "provisional-m5",
+      "pickup_slot": 83,
+      "object_id": 523,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s02",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        775,
+        170.118,
+        710
+      ],
+      "notes": "Five-single trail from the corridor into the broad shop-floor arena",
+      "status": "provisional-m5",
+      "pickup_slot": 84,
+      "object_id": 522,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s03",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        675,
+        170.333,
+        740
+      ],
+      "notes": "Five-single trail from the corridor into the broad shop-floor arena",
+      "status": "provisional-m5",
+      "pickup_slot": 85,
+      "object_id": 521,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s04",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        575,
+        169.5,
+        740
+      ],
+      "notes": "Five-single trail from the corridor into the broad shop-floor arena",
+      "status": "provisional-m5",
+      "pickup_slot": 86,
+      "object_id": 520,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s05",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        450,
+        169.5,
+        740
+      ],
+      "notes": "Five-single trail from the corridor into the broad shop-floor arena",
+      "status": "provisional-m5",
+      "pickup_slot": 87,
+      "object_id": 519,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s06",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S06",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1120.0,
+        10.5,
+        610.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 88,
+      "object_id": 518,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s07",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S07",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1200.0,
+        10.5,
+        620.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 89,
+      "object_id": 517,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s08",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S08",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1270.0,
+        10.5,
+        640.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 90,
+      "object_id": 516,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s09",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S09",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1330.0,
+        10.5,
+        660.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 91,
+      "object_id": 515,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s10",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S10",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1380.0,
+        10.5,
+        680.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 92,
+      "object_id": 514,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s11",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S11",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1570,
+        814.667,
+        2200
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 93,
+      "object_id": 513,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s12",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S12",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1620.0,
+        814.667,
+        2180.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 94,
+      "object_id": 512,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s13",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S13",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1720.0,
+        814.667,
+        2190.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 95,
+      "object_id": 511,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s14",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S14",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1770.0,
+        814.667,
+        2250.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 96,
+      "object_id": 510,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-s15",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-S15",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1710.0,
+        840.994,
+        2290.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 97,
+      "object_id": 509,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fa-a01",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        690,
+        270,
+        730
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 80,
+      "spawner_id": 600,
+      "path_id": 22
+    },
+    {
+      "id": "assistant-draft1-fa-a02",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        1360,
+        130,
+        700
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 81,
+      "spawner_id": 601,
+      "path_id": 23
+    },
+    {
+      "id": "assistant-draft1-fa-c01",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        307,
+        169.5,
+        705
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 253,
+      "object_id": 508,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c02",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        350,
+        169.5,
+        780
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 254,
+      "object_id": 507,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c03",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        393,
+        169.5,
+        705
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 255,
+      "object_id": 506,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c04",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1685,
+        840.691,
+        2310
+      ],
+      "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
+      "status": "provisional-m5",
+      "pickup_slot": 256,
+      "object_id": 505,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c05",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1685,
+        840.638,
+        2350
+      ],
+      "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
+      "status": "provisional-m5",
+      "pickup_slot": 257,
+      "object_id": 504,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c06",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1685,
+        840.811,
+        2390
+      ],
+      "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
+      "status": "provisional-m5",
+      "pickup_slot": 258,
+      "object_id": 503,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c07",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1330.0,
+        10.5,
+        640.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 259,
+      "object_id": 502,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c08",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1330.0,
+        10.5,
+        700.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 260,
+      "object_id": 501,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fa-c09",
+      "map": 26,
+      "map_name": "Frantic Factory",
+      "world": 2,
+      "label": "FA-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1330.0,
+        10.5,
+        760.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 261,
+      "object_id": 499,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-b01",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        2200.0,
+        1629.953,
+        3150.0
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 103,
+      "object_id": 524,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-ga-b02",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3390.0,
+        1713.318,
+        2640.0
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 104,
+      "object_id": 523,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-ga-b03",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1519.874,
+        1616.421,
+        4220.399
+      ],
+      "notes": "Distinctive native warp pad",
+      "status": "provisional-m5",
+      "pickup_slot": 105,
+      "object_id": 522,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-ga-s01",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2430.0,
+        1623.562,
+        3310.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 116,
+      "object_id": 521,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s02",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2340.0,
+        1623.562,
+        3310.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 117,
+      "object_id": 519,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s03",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2250.0,
+        1621.51,
+        3290.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 118,
+      "object_id": 518,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s04",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2180.0,
+        1621.935,
+        3230.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 119,
+      "object_id": 517,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s05",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2170.0,
+        1615.637,
+        3160.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 120,
+      "object_id": 516,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s06",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S06",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3210.0,
+        1676.64,
+        2980.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 121,
+      "object_id": 515,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s07",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S07",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3270.0,
+        1679.406,
+        2880.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 122,
+      "object_id": 514,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s08",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S08",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3330.0,
+        1674.0,
+        2800.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 123,
+      "object_id": 513,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s09",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S09",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3380.0,
+        1679.035,
+        2720.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 124,
+      "object_id": 511,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s10",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S10",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3390.0,
+        1680.509,
+        2670.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 125,
+      "object_id": 510,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s11",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S11",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2830.0,
+        567.746,
+        1600.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 126,
+      "object_id": 509,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s12",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S12",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2870.0,
+        581.264,
+        1730.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 127,
+      "object_id": 508,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s13",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S13",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2900.0,
+        597.89,
+        1860.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 128,
+      "object_id": 507,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s14",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S14",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2930.0,
+        611.069,
+        1990.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 129,
+      "object_id": 506,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-s15",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-S15",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2970.0,
+        618.711,
+        2120.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 130,
+      "object_id": 505,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-ga-a01",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        2280,
+        1745,
+        3230
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 113,
+      "spawner_id": 600,
+      "path_id": 20
+    },
+    {
+      "id": "assistant-draft1-ga-a02",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        3050,
+        1810,
+        3180
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 114,
+      "spawner_id": 601,
+      "path_id": 21
+    },
+    {
+      "id": "assistant-draft1-ga-c01",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2157.0,
+        1617.503,
+        3125.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 267,
+      "object_id": 504,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c02",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2200.0,
+        1614.558,
+        3200.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 268,
+      "object_id": 499,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c03",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2243.0,
+        1623.807,
+        3145.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 269,
+      "object_id": 498,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c04",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3010.0,
+        1694.0,
+        3190.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 270,
+      "object_id": 497,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c05",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3010.0,
+        1685.387,
+        3250.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 271,
+      "object_id": 496,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c06",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3010.0,
+        1674.0,
+        3310.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 272,
+      "object_id": 495,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c07",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3300.0,
+        1676.161,
+        2580.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 273,
+      "object_id": 494,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c08",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3300.0,
+        1680.203,
+        2640.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 274,
+      "object_id": 493,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-ga-c09",
+      "map": 30,
+      "map_name": "Gloomy Galleon",
+      "world": 3,
+      "label": "GA-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3300.0,
+        1680.248,
+        2700.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 275,
+      "object_id": 492,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-b01",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3150.0,
+        222.372,
+        500.0
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 136,
+      "object_id": 526,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fu-b02",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3850.0,
+        221.131,
+        3350.0
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 137,
+      "object_id": 525,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fu-b03",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1288.307,
+        219.333,
+        2916.875
+      ],
+      "notes": "Native stump top along the woodland path",
+      "status": "provisional-m5",
+      "pickup_slot": 138,
+      "object_id": 524,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-fu-s01",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3440.0,
+        200.334,
+        920.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 148,
+      "object_id": 523,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s02",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3400.0,
+        207.099,
+        810.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 149,
+      "object_id": 522,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s03",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3330.0,
+        225.125,
+        700.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 150,
+      "object_id": 521,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s04",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3250.0,
+        231.247,
+        610.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 151,
+      "object_id": 519,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s05",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3180.0,
+        219.748,
+        540.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 152,
+      "object_id": 518,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s06",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S06",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        4060.0,
+        189.943,
+        3000.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 153,
+      "object_id": 517,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s07",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S07",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        4030.0,
+        171.886,
+        3090.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 154,
+      "object_id": 516,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s08",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S08",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3990.0,
+        165.787,
+        3170.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 155,
+      "object_id": 515,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s09",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S09",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3940.0,
+        177.37,
+        3250.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 156,
+      "object_id": 514,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s10",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-S10",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3890.0,
+        187.711,
+        3320.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 157,
+      "object_id": 513,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s11",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-S11",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        700,
+        4.0,
+        400
+      ],
+      "notes": "Giant Mushroom ground-floor arc",
+      "status": "provisional-m5",
+      "pickup_slot": 158,
+      "object_id": 529,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s12",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-S12",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        700,
+        4.0,
+        500
+      ],
+      "notes": "Giant Mushroom ground-floor arc",
+      "status": "provisional-m5",
+      "pickup_slot": 159,
+      "object_id": 528,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s13",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-S13",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        670,
+        4.0,
+        600
+      ],
+      "notes": "Giant Mushroom ground-floor arc",
+      "status": "provisional-m5",
+      "pickup_slot": 160,
+      "object_id": 527,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s14",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-S14",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        630,
+        4.0,
+        680
+      ],
+      "notes": "Giant Mushroom ground-floor arc",
+      "status": "provisional-m5",
+      "pickup_slot": 161,
+      "object_id": 526,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-s15",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-S15",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        560,
+        4.0,
+        730
+      ],
+      "notes": "Giant Mushroom ground-floor arc",
+      "status": "provisional-m5",
+      "pickup_slot": 162,
+      "object_id": 525,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-fu-a01",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        3330,
+        340,
+        700
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 146,
+      "spawner_id": 600,
+      "path_id": 11
+    },
+    {
+      "id": "assistant-draft1-fu-a02",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        3980,
+        300,
+        3230
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 147,
+      "spawner_id": 601,
+      "path_id": 12
+    },
+    {
+      "id": "assistant-draft1-fu-c01",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3107.0,
+        209.331,
+        475.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 279,
+      "object_id": 507,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c02",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3150.0,
+        224.017,
+        550.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 280,
+      "object_id": 506,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c03",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3193.0,
+        205.713,
+        475.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 281,
+      "object_id": 505,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c04",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3390.0,
+        228.67,
+        3490.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 282,
+      "object_id": 504,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c05",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3390.0,
+        236.022,
+        3550.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 283,
+      "object_id": 503,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c06",
+      "map": 48,
+      "map_name": "Fungi Forest",
+      "world": 4,
+      "label": "FU-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3390.0,
+        241.384,
+        3610.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 284,
+      "object_id": 502,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c07",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        145,
+        4.0,
+        480
+      ],
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "status": "provisional-m5",
+      "pickup_slot": 285,
+      "object_id": 524,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c08",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        145,
+        7.274,
+        540
+      ],
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "status": "provisional-m5",
+      "pickup_slot": 286,
+      "object_id": 523,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-fu-c09",
+      "map": 64,
+      "map_name": "Fungi Forest: Giant Mushroom",
+      "world": 4,
+      "label": "FU-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        145,
+        20.688,
+        600
+      ],
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "status": "provisional-m5",
+      "pickup_slot": 287,
+      "object_id": 522,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-b01",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3300.0,
+        123.304,
+        2030.0
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 178,
+      "object_id": 526,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cv-b02",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        2845.0,
+        316.67,
+        1230.0
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 179,
+      "object_id": 525,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cv-b03",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        3614.799,
+        349.0,
+        1838.974
+      ],
+      "notes": "Bunch on an otherwise unoccupied native warp pad; original Kong bunches preserved",
+      "status": "provisional-m5",
+      "pickup_slot": 180,
+      "object_id": 524,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cv-s01",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3500.0,
+        165.182,
+        1980.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 191,
+      "object_id": 523,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s02",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3470.0,
+        141.986,
+        2030.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 192,
+      "object_id": 522,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s03",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3410.0,
+        116.775,
+        2070.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 193,
+      "object_id": 521,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s04",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3360.0,
+        116.627,
+        2090.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 194,
+      "object_id": 520,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s05",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        3320.0,
+        115.04,
+        2060.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 195,
+      "object_id": 519,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s06",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S06",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2990,
+        257.667,
+        970
+      ],
+      "notes": "Approach the cage along the real ramp to Funky, beside the native red trail",
+      "status": "provisional-m5",
+      "pickup_slot": 196,
+      "object_id": 518,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s07",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S07",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2950,
+        262.257,
+        1020
+      ],
+      "notes": "Approach the cage along the real ramp to Funky, beside the native red trail",
+      "status": "provisional-m5",
+      "pickup_slot": 197,
+      "object_id": 517,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s08",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S08",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2900,
+        278.975,
+        1090
+      ],
+      "notes": "Approach the cage along the real ramp to Funky, beside the native red trail",
+      "status": "provisional-m5",
+      "pickup_slot": 198,
+      "object_id": 516,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s09",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S09",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2860,
+        284.27,
+        1160
+      ],
+      "notes": "Approach the cage along the real ramp to Funky, beside the native red trail",
+      "status": "provisional-m5",
+      "pickup_slot": 199,
+      "object_id": 515,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s10",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S10",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        2845.0,
+        284.0,
+        1200.0
+      ],
+      "notes": "Approach the cage along the real ramp to Funky, beside the native red trail",
+      "status": "provisional-m5",
+      "pickup_slot": 200,
+      "object_id": 514,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s11",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S11",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1480.0,
+        102.939,
+        800.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 201,
+      "object_id": 513,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s12",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S12",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1590.0,
+        102.757,
+        820.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 202,
+      "object_id": 512,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s13",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S13",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1700.0,
+        103.226,
+        840.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 203,
+      "object_id": 511,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s14",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S14",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1810.0,
+        90.128,
+        850.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 204,
+      "object_id": 510,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-s15",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-S15",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1910.761,
+        69.704,
+        846.173
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 205,
+      "object_id": 509,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cv-a01",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        3350,
+        250,
+        2000
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 188,
+      "spawner_id": 600,
+      "path_id": 15
+    },
+    {
+      "id": "assistant-draft1-cv-a02",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        2710,
+        415,
+        1260
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 189,
+      "spawner_id": 601,
+      "path_id": 16
+    },
+    {
+      "id": "assistant-draft1-cv-c01",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3257.0,
+        112.052,
+        2005.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 293,
+      "object_id": 508,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c02",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3300.0,
+        116.442,
+        2080.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 294,
+      "object_id": 507,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c03",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3343.0,
+        116.108,
+        2005.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 295,
+      "object_id": 506,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c04",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1466.173,
+        102.534,
+        719.239
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 296,
+      "object_id": 505,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c05",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1470.0,
+        103.666,
+        770.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 297,
+      "object_id": 504,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c06",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1470.0,
+        102.28,
+        830.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 298,
+      "object_id": 503,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c07",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2712.929,
+        284.0,
+        1197.071
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 299,
+      "object_id": 502,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c08",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2720.0,
+        284.0,
+        1250.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 300,
+      "object_id": 501,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cv-c09",
+      "map": 72,
+      "map_name": "Crystal Caves",
+      "world": 5,
+      "label": "CV-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2720.0,
+        284.0,
+        1310.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 301,
+      "object_id": 499,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-b01",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-B01",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1050.0,
+        687.5,
+        490.0
+      ],
+      "notes": "Bunch above shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 211,
+      "object_id": 526,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cc-b02",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-B02",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        515,
+        1172.34,
+        1430
+      ],
+      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "status": "provisional-m5",
+      "pickup_slot": 212,
+      "object_id": 525,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cc-b03",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-B03",
+      "kind": "bunch",
+      "quantity": 1,
+      "xyz": [
+        1899.247,
+        910.136,
+        950.597
+      ],
+      "notes": "Distinctive native warp pad",
+      "status": "provisional-m5",
+      "pickup_slot": 213,
+      "object_id": 524,
+      "type": 4
+    },
+    {
+      "id": "assistant-draft1-cc-s01",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S01",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        715.307,
+        677.5,
+        613.045
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 226,
+      "object_id": 523,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cc-s02",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S02",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        780.0,
+        677.5,
+        600.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 227,
+      "object_id": 522,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cc-s03",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S03",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        860.0,
+        677.5,
+        550.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 228,
+      "object_id": 521,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cc-s04",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S04",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        940.0,
+        677.5,
+        500.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 229,
+      "object_id": 520,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cc-s05",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S05",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        1010.0,
+        677.5,
+        490.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 230,
+      "object_id": 519,
+      "type": 2
+    },
+    {
+      "id": "campaign-330",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S330",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        700,
+        1123.327,
+        1140
+      ],
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "status": "provisional-m5",
+      "pickup_slot": 330,
+      "object_id": 518,
+      "type": 2
+    },
+    {
+      "id": "campaign-331",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S331",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        620,
+        1129.36,
+        1200
+      ],
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "status": "provisional-m5",
+      "pickup_slot": 331,
+      "object_id": 517,
+      "type": 2
+    },
+    {
+      "id": "campaign-332",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S332",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        560,
+        1139.158,
+        1270
+      ],
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "status": "provisional-m5",
+      "pickup_slot": 332,
+      "object_id": 516,
+      "type": 2
+    },
+    {
+      "id": "campaign-333",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S333",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        500,
+        1140.41,
+        1330
+      ],
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "status": "provisional-m5",
+      "pickup_slot": 333,
+      "object_id": 515,
+      "type": 2
+    },
+    {
+      "id": "campaign-334",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S334",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        500,
+        1139.685,
+        1400
+      ],
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "status": "provisional-m5",
+      "pickup_slot": 334,
+      "object_id": 514,
+      "type": 2
+    },
+    {
+      "id": "campaign-335",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S335",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        700.0,
+        1798.167,
+        1390.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 335,
+      "object_id": 513,
+      "type": 2
+    },
+    {
+      "id": "campaign-336",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S336",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        780.0,
+        1798.167,
+        1430.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 336,
+      "object_id": 512,
+      "type": 2
+    },
+    {
+      "id": "campaign-337",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S337",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        850.0,
+        1798.167,
+        1400.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 337,
+      "object_id": 511,
+      "type": 2
+    },
+    {
+      "id": "campaign-338",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S338",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        920.0,
+        1797.675,
+        1350.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 338,
+      "object_id": 510,
+      "type": 2
+    },
+    {
+      "id": "campaign-339",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-S339",
+      "kind": "single",
+      "quantity": 1,
+      "xyz": [
+        970.0,
+        1785.681,
+        1300.0
+      ],
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "status": "provisional-m5",
+      "pickup_slot": 339,
+      "object_id": 509,
+      "type": 2
+    },
+    {
+      "id": "assistant-draft1-cc-a01",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-A01",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        1100,
+        810,
+        520
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 222,
+      "spawner_id": 600,
+      "path_id": 1
+    },
+    {
+      "id": "assistant-draft1-cc-a02",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-A02",
+      "kind": "balloon",
+      "quantity": 1,
+      "xyz": [
+        515,
+        1270,
+        1430
+      ],
+      "notes": "Short rectangular route above dry aiming approach",
+      "status": "provisional-m5",
+      "pickup_slot": 223,
+      "spawner_id": 601,
+      "path_id": 2
+    },
+    {
+      "id": "assistant-draft1-cc-c01",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1007.0,
+        677.5,
+        465.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 307,
+      "object_id": 508,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c02",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1050.0,
+        677.5,
+        540.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 308,
+      "object_id": 507,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c03",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1093.0,
+        677.5,
+        465.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 309,
+      "object_id": 506,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c04",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1077,
+        1761.587,
+        1309
+      ],
+      "notes": "Middle of the three coins along the Kasplat-side wall; keep clear of the northern ledge",
+      "status": "provisional-m5",
+      "pickup_slot": 310,
+      "object_id": 505,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c05",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1077.0,
+        1761.223,
+        1279.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 311,
+      "object_id": 504,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c06",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        1077.0,
+        1762.011,
+        1339.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 312,
+      "object_id": 503,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c07",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        535,
+        1140.791,
+        1350
+      ],
+      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "status": "provisional-m5",
+      "pickup_slot": 313,
+      "object_id": 502,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c08",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        535,
+        1140.036,
+        1410
+      ],
+      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "status": "provisional-m5",
+      "pickup_slot": 314,
+      "object_id": 501,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-cc-c09",
+      "map": 87,
+      "map_name": "Creepy Castle",
+      "world": 6,
+      "label": "CC-C09",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        535,
+        1139.786,
+        1470
+      ],
+      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "status": "provisional-m5",
+      "pickup_slot": 315,
+      "object_id": 499,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c01",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-C01",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2897.0,
+        507.893,
+        2195.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 322,
+      "object_id": 526,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c02",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-C02",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2940.0,
+        503.944,
+        2270.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 323,
+      "object_id": 525,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c03",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-C03",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        2983.0,
+        509.377,
+        2195.0
+      ],
+      "notes": "Close three-coin ring around shout pad",
+      "status": "provisional-m5",
+      "pickup_slot": 324,
+      "object_id": 524,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c04",
+      "map": 169,
+      "map_name": "Jungle Japes Lobby",
+      "world": 7,
+      "label": "IS-C04",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        778.787,
+        11.172,
+        261.213
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 325,
+      "object_id": 523,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c05",
+      "map": 169,
+      "map_name": "Jungle Japes Lobby",
+      "world": 7,
+      "label": "IS-C05",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        790.0,
+        15.05,
+        300.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 326,
+      "object_id": 522,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c06",
+      "map": 169,
+      "map_name": "Jungle Japes Lobby",
+      "world": 7,
+      "label": "IS-C06",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        790.0,
+        14.822,
+        360.0
+      ],
+      "notes": "Three coins beside the Kasplat approach wall",
+      "status": "provisional-m5",
+      "pickup_slot": 327,
+      "object_id": 521,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c07",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-C07",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3129.497,
+        524.612,
+        1899.497
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 328,
+      "object_id": 520,
+      "type": 6
+    },
+    {
+      "id": "assistant-draft1-is-c08",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-C08",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3110.0,
+        523.804,
+        1910.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 329,
+      "object_id": 519,
+      "type": 6
+    },
+    {
+      "id": "campaign-340",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "world": 7,
+      "label": "IS-S340",
+      "kind": "coin",
+      "quantity": 1,
+      "xyz": [
+        3080.0,
+        522.706,
+        1970.0
+      ],
+      "notes": "Three coins along the cage-side wall",
+      "status": "provisional-m5",
+      "pickup_slot": 340,
+      "object_id": 518,
+      "type": 6
+    }
+  ],
+  "save_contract": "K07.2; retain retired bits; new Castle singles330..339, ninth Isles coin340; no recruitment or medals",
+  "capacity_note": "Eight Forest pickups moved to Giant Mushroom: main map517/530, preserving13 spare native model2 slots. Original records unchanged."
+}

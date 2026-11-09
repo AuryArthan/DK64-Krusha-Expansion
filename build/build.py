@@ -27,9 +27,11 @@ from character_colors import write_identity_header
 write_identity_header()
 from m2_pickups import prepare as prepareM2, patch_setup as patchM2Setup, patch_paths as patchM2Paths
 prepareM2(ROMName)
+from m5_campaign import prepare as prepareM5, patch_scripts as patchM5Scripts
+prepareM5(ROMName)
 from krusha_victory import prepare as prepareVictory
 prepareVictory(ROMName)
-from m4_rewards import prepare as prepareM4, patch_japes as patchM4Japes, patch_cave as patchM4Cave
+from m4_rewards import prepare as prepareM4, patch_japes as patchM4Japes, patch_cave as patchM4Cave, patch_setup as patchM4Setup
 prepareM4(ROMName)
 if os.path.exists("obj"):
 	shutil.rmtree('obj')
@@ -70,7 +72,16 @@ shutil.copyfile(ROMName, newROMName)
 subprocess.run([ARMIPS, "asm/main.asm", "-strequ", "OUTPUT_ROM", newROMName,
                 "-sym", newROMName.replace(".z64", ".sym")], check=True)
 
-file_dict = [
+from campaign_data import maps as campaignMaps, balloons as campaignBalloons, area as campaignArea
+file_dict = []
+for mid in campaignMaps():
+    if mid==7:continue
+    file_dict.append({"name":f"M5 map{mid} pickups/rewards","pointer_table_index":9,"file_index":mid,"source_file":f"bin/M5Setup{mid}.bin","patcher":lambda name,mid=mid:(patchM2Setup(name,mid),patchM4Setup(name,mid))})
+    if campaignArea(mid):
+        file_dict.append({"name":f"M5 map{mid} cage script","pointer_table_index":10,"file_index":mid,"source_file":f"bin/M5Scripts{mid}.bin","patcher":lambda name,mid=mid:patchM5Scripts(name,mid)})
+    if campaignBalloons(mid):
+        file_dict.append({"name":f"M5 map{mid} balloon paths","pointer_table_index":15,"file_index":mid,"source_file":f"bin/M5Paths{mid}.bin","patcher":lambda name,mid=mid:patchM2Paths(name,mid),"do_not_compress":True})
+file_dict += [
 	{"name":"M4 cave reward", "pointer_table_index":9, "file_index":33,
 	 "source_file":"bin/M4CaveSetup.bin", "patcher":patchM4Cave},
 	{"name":"M2 Japes balloon paths", "pointer_table_index":15, "file_index":7,
@@ -414,9 +425,9 @@ if os.path.getsize(newROMName) > 64 * 1024 * 1024:
 	raise SystemExit("Unexpected ROM size; check assembler ROM/RDRAM address mappings")
 
 # Embed the supplied recording after all game pointer tables and resident code.
-appendBarrelAssets(newROMName)
 from scream_asset import appendScream
 appendScream(newROMName)
+appendBarrelAssets(newROMName)
 
 # Flashcart loader transfer padding (libdragon n64tool uses 16 KiB).
 # Append only: retain every existing code/asset byte and pointer address.

@@ -27,7 +27,7 @@
   "face_sha256": "3d27fd9539df91a6f09030bb7d065eb62b468efffc7de7057416f568b7236fca",
   "model_sha256": "c977ca11d17df38378457d84ffcfff0236ef16e401e6a27d8f059ef599e70cb9",
   "custom_table": 27,
-  "custom_rom": "0x2080000",
+  "custom_rom": "0x2120000",
   "texture_ids": [
     7001,
     7002

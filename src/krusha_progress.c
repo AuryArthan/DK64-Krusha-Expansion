@@ -122,6 +122,9 @@ int krushaProgressBananas(unsigned int file, unsigned int level) {
         weight = i < budget->bunches ? 5 : i < budget->bunches + budget->balloons ? 10 : 1;
         result += weight * krushaProgressRead(file, budget->first + i, 1);
     }
+    /* Castle originally reserved only five singles. Ten genuinely unused
+     * slots finish its50-CB set; retired flags are never reinterpreted. */
+    if (level==6) for (i=330;i<340;i++) result+=krushaProgressRead(file,i,1);
     return result;
 }
 

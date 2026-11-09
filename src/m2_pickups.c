@@ -10,8 +10,8 @@ s32 m2SetupHidden(s32 map, s32 object_id) {
     int private=m4SetupHidden(map,object_id);
     if (private>=0) return private;
     s32 (*nativeHidden)(s32,s32) = (void*)0x807315D4;
-    if (map == 7) for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
-        if (object_id != m2Pickups[i].object_id) continue;
+    for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
+        if (map!=m2Pickups[i].map || object_id != m2Pickups[i].object_id) continue;
         if (!krushaEnabled() || !DetectAdventure()) return 1;
         return krushaProgressRead(*(u8*)0x807467C8,m2Pickups[i].slot,1);
     }
@@ -21,17 +21,17 @@ s32 m2SetupHidden(s32 map, s32 object_id) {
 /* Native ownership/range/action tests run before this contact predicate. Native
  * suction/despawn run afterward. The original flag index is -1 for private types;
  * only this registry can award them, once, to the independent sixth wallet. */
-static s32 m2Award(u16 slot,u8 units,u8 coin) {
+static s32 m2Award(u16 slot,u8 units,u8 coin,u8 world) {
         u8 file=*(u8*)0x807467C8;
         if (krushaProgressRead(file,slot,1)) return 0;
-        s32 before=krushaProgressBananas(file,0);
+        s32 before=krushaProgressBananas(file,world);
         krushaProgressWrite(file,slot,1,1);
         if (coin) {
             if (MovesBase[5].coins < 255) MovesBase[5].coins++;
             playSong(23,1.0f);
         } else {
             s32 total=before+units;
-            MovesBase[5].cb_count[0]=total-MovesBase[5].tns_cb_count[0];
+            MovesBase[5].cb_count[world]=total-MovesBase[5].tns_cb_count[world];
             playSound(0x2A0,0x7FFF,63.0f,1.0f,0,0);
             if (before<50 && total>=50) playSong(172,1.0f);
         }
@@ -47,11 +47,11 @@ s32 m2PickupAllowed(s16 object_id,u8 player,u16 type) {
     m2ContactTrace[3]++;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     object_id=setupId(object_id);
-    if (!krushaEnabled() || !DetectAdventure() || Character != 5 || player || CurrentMap != 7) return 0;
+    if (!krushaEnabled() || !DetectAdventure() || Character != 5 || player) return 0;
     for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
-        if (object_id != m2Pickups[i].object_id || type != m2Pickups[i].type) continue;
+        if (CurrentMap!=m2Pickups[i].map || object_id != m2Pickups[i].object_id || type != m2Pickups[i].type) continue;
         m2ContactTrace[4]++;
-        if (!m2Award(m2Pickups[i].slot,m2Pickups[i].units,m2Pickups[i].coin)) return 0;
+        if (!m2Award(m2Pickups[i].slot,m2Pickups[i].units,m2Pickups[i].coin,m2Pickups[i].world)) return 0;
         m2ContactTrace[5]++;
         return 1;
     }
@@ -88,7 +88,7 @@ void* m2HUDSprite(u32 item) {
  * Native logic remains in charge of every original item and menu/MP context. */
 void m2PickupOpacity(s16 type,u8* opaque,s16* alpha) {
     void (*nativeOpacity)(s16,u8*,s16*)=(void*)0x806392BC;
-    if (CurrentMap == 7 && krushaEnabled() && DetectAdventure() &&
+    if (krushaEnabled() && DetectAdventure() &&
         (type == 2 || type == 4 || type == 6 || type == 7)) {
         u8* changes=*(u8**)0x807FC924;
         u8 viewport=*(u8*)0x807FC929;
@@ -116,11 +116,11 @@ static const M2BalloonSprite m2_balloon_sprite = {
 };
 
 static s32 balloonIndex(u8* actor) {
-    if (CurrentMap != 7 || !actor || *(u32*)(actor+0x58) != 147) return -1;
+    if (!actor || *(u32*)(actor+0x58) != 147) return -1;
     s16 (*spawnerId)(void*)=(void*)0x80688E68;
     s32 id=spawnerId(actor);
     for (s32 i=0;i<sizeof(m2Balloons)/sizeof(m2Balloons[0]);i++)
-        if (id == m2Balloons[i].spawner_id) return i;
+        if (CurrentMap==m2Balloons[i].map && id == m2Balloons[i].spawner_id) return i;
     return -1;
 }
 
@@ -189,7 +189,7 @@ s32 m2Balloon(void* sprite) {
         void (*pop)(void*)=(void*)0x80686CF8;
         pop(actor);
         playSound(0x2BF,0x7FFF,63.0f,1.0f,5,0);
-        m2Award(m2Balloons[index].slot,10,0);
+        m2Award(m2Balloons[index].slot,10,0,m2Balloons[index].world);
         krushaNativeActorDelete(actor);
     }
     return 1;

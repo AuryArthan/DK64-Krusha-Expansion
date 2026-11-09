@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/m5_campaign.h"
 
 extern void m4NativeDamage(void*,void*);
 extern s32 m4NativePlayerDamage(u8,s8);
@@ -8,9 +9,6 @@ extern void krushaNativeActorDelete(void*);
 
 #define ENCOUNTER_TRIGGER 250
 #define ENCOUNTER_HITS 8
-#define PAD_X 1835.0f
-#define PAD_Y 286.0f
-#define PAD_Z 1490.0f
 
 s32 m4EncounterPickupID=-1;
 volatile u32 m4EncounterTrace[16]={0};
@@ -28,7 +26,7 @@ static s16 hurt_action;
 
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static u32 frame(void) {return *(u32*)0x8076A064;}
-static int won(void) {return krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1);}
+static int won(void) {const M5Area* area=m5Area(CurrentMap);return !area || krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5,1);}
 
 /* Adventure player damage is a separate native path: its hurt initializers
  * normally request one slice regardless of actor+136. Associate an accepted
@@ -37,7 +35,7 @@ static int won(void) {return krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1
 void m4EncounterActionResult(s16 action,void* source,u8 player,u8 accepted) {
     if (!accepted || player) return;
     hurt_source=0;
-    if (CurrentMap!=7 || !krushaEnabled() || !DetectAdventure() || !valid(source,0x180)) return;
+    if (!m5Area(CurrentMap) || !krushaEnabled() || !DetectAdventure() || !valid(source,0x180)) return;
     if (*(u32*)((u8*)source+0x58)!=50) return;
     u8* node=*(u8**)0x807FC400;
     for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
@@ -58,7 +56,7 @@ s32 m4EncounterPlayerDamage(u8 player,s8 amount) {
         u8* cc=*(u8**)0x807FC924;
         u32 gap=frame()-hurt_frame;
         m4EncounterHurtTrace[3]++;
-        if (amount==-1 && hurt_source && gap<=4 && CurrentMap==7 &&
+        if (amount==-1 && hurt_source && gap<=4 && m5Area(CurrentMap) &&
             krushaEnabled() && DetectAdventure() && valid(cc,0x2B4) &&
             *(s16*)(cc+0x29C)==hurt_action && *(u32*)(cc+0x2A4)==hurt_uid &&
             (!*(void**)(cc+0x2A0) || *(void**)(cc+0x2A0)==hurt_source)) {
@@ -76,7 +74,7 @@ s32 m4EncounterPlayerDamage(u8 player,s8 amount) {
 
 int m4EncounterKlump(void* pointer) {
     u8* actor=pointer;
-    if (CurrentMap!=7 || !valid(actor,0x180) || *(u32*)(actor+0x58)!=187) return 0;
+    if (!m5Area(CurrentMap) || !valid(actor,0x180) || *(u32*)(actor+0x58)!=187) return 0;
     /* Klump has an extra module at+178. The common enemy AI at+174 owns
      * the reliable spawner link; do not copy Kasplat's module offsets. */
     u8* ai=*(u8**)(actor+0x174);
@@ -87,8 +85,9 @@ int m4EncounterKlump(void* pointer) {
 }
 
 void m4EncounterShout(void) {
-    if (CurrentMap!=7 || !krushaEnabled() || !Player || won() || pending || dropped) return;
-    f32 dx=Player->xPos-PAD_X,dz=Player->zPos-PAD_Z,dy=Player->yPos-PAD_Y;
+    if (!m5Area(CurrentMap) || !krushaEnabled() || !Player || won() || pending || dropped) return;
+    const M5Area* area=m5Area(CurrentMap);
+    f32 dx=Player->xPos-area->pad[0],dz=Player->zPos-area->pad[2],dy=Player->yPos-area->pad[1];
     if (dx*dx+dz*dz>70*70 || dy < -20 || dy>35) return;
     s32 existing=m4EncounterFindPickup(-1);
     if (existing>=0) {m4EncounterPickupID=existing;dropped=1;return;}
@@ -177,7 +176,7 @@ int m4EncounterDrop(void* enemy) {
 void m4EncounterGrenadeUpdate(void) {
     u8* actor=*(u8**)0x807FBB40;
     void (*native)(void)=(void*)0x80693EC0;
-    if (CurrentMap==7 && krushaEnabled() && DetectAdventure()) {
+    if (m5Area(CurrentMap) && krushaEnabled() && DetectAdventure()) {
         u8* node=*(u8**)0x807FC400;
         for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
             if (*(void**)(node+0x44)!=actor) continue;
@@ -197,7 +196,7 @@ void m4EncounterTick(void) {
     }
     previous_map=CurrentMap;previous_frame=frame();
     if (hurt_source && frame()-hurt_frame>4) hurt_source=0;
-    if (CurrentMap!=7 || !krushaEnabled() || !DetectAdventure()) return;
+    if (!m5Area(CurrentMap) || !krushaEnabled() || !DetectAdventure()) return;
     /* Resolve queued native grenade nodes by pointer AND native spawner ID;
      * never follow a freed parent or retain an unvalidated actor address. */
     for (int i=0;i<24;i++) if (grenades[i].pointer) {

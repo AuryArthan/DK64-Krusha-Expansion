@@ -16,23 +16,36 @@ def plan_pins():
         pins[int(slot)]=dict(pins[int(slot)],xyz=change['xyz'],notes=change['note'])
     return pins
 
-def registry_rows():
+def registry_rows(mid=7):
+    if mid is None:
+        from campaign_data import ground
+        return registry_rows(7)+ground_non_japes()
+    if mid!=7:
+        from campaign_data import ground
+        return ground(mid)
     pins=plan_pins()
     rom=(ROOT/'rom/dk64.z64').read_bytes();setup=read_file(rom,9,7);n=struct.unpack_from('>I',setup)[0]
     used={struct.unpack_from('>H',setup,4+i*48+42)[0] for i in range(n)}
     script=read_file(rom,10,7);refs=set(struct.unpack('>%dH'%(len(script)//2),script[:len(script)//2*2]))
     free=[i for i in range(505,530) if i not in used and i not in refs]+[i for i in range(505) if i not in used and i not in refs]
     assert len(free)>=len(GROUND_SLOTS)
-    return [dict(pins[slot],object_id=free[i],type=KINDS[pins[slot]['kind']][0]) for i,slot in enumerate(GROUND_SLOTS)]
+    return [dict(pins[slot],world=0,object_id=free[i],type=KINDS[pins[slot]['kind']][0]) for i,slot in enumerate(GROUND_SLOTS)]
 
-def rows():
+def ground_non_japes():
+    from campaign_data import ground
+    return [p for p in ground() if p['map']!=7]
+
+def rows(mid=7):
     retired=json.loads(POLISH.read_text())['retired_slots']
-    return [p for p in registry_rows() if p['pickup_slot'] not in retired]
+    return [p for p in registry_rows(mid) if p['pickup_slot'] not in retired]
 
-def balloons():
+def balloons(mid=7):
+    if mid!=7:
+        from campaign_data import balloons as campaign_balloons
+        return campaign_balloons(mid)
     pins=plan_pins()
     # Japes has paths0..21. Native path lookup has only26 entries.
-    return [dict(pins[slot],spawner_id=600+i,path_id=22+i) for i,slot in enumerate(BALLOON_SLOTS)]
+    return [dict(pins[slot],world=0,spawner_id=600+i,path_id=22+i) for i,slot in enumerate(BALLOON_SLOTS)]
 
 def prepare(rom_path):
     rom=Path(rom_path).read_bytes();setup=read_file(rom,9,7)
@@ -66,45 +79,48 @@ def prepare(rom_path):
     words=struct.unpack('>235I',defs)
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
     header+='const u32 m2CollectDefs[235] = {\n'+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
-    header+='static const struct { u16 slot, object_id, type; u8 units, coin; } m2Pickups[] = {\n'
-    for p in registry_rows():header+='    {%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin')
+    header+='static const struct { u16 slot, object_id, type, map; u8 units, coin, world; } m2Pickups[] = {\n'
+    for p in registry_rows(None):header+='    {%d,%d,%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],p['map'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin',p['world'])
     header+='};\n'
-    header+='static const struct { u16 slot, spawner_id; } m2Balloons[] = {\n'+''.join('    {%d,%d},\n'%(p['pickup_slot'],p['spawner_id']) for p in balloons())+'};\n'
+    header+='static const struct { u16 slot, spawner_id, map; u8 world; } m2Balloons[] = {\n'+''.join('    {%d,%d,%d,%d},\n'%(p['pickup_slot'],p['spawner_id'],p['map'],p['world']) for p in balloons(None))+'};\n'
     (ROOT/'include/m2_pickups.generated.h').write_text(header)
 
-def patch_setup(filename):
+def patch_setup(filename,mid=7):
     path=Path(filename);data=path.read_bytes();n=struct.unpack_from('>I',data)[0];original=data[4:4+n*48];extra=bytearray()
-    for p in rows():
+    for p in rows(mid):
         kind=p['kind'];source=KINDS[kind][1]
-        template=next(original[i*48:(i+1)*48] for i in range(n) if struct.unpack_from('>H',original,i*48+40)[0]==source)
+        native=read_file((ROOT/'rom/dk64.z64').read_bytes(),9,7)
+        template=next(native[4+i*48:4+(i+1)*48] for i in range(struct.unpack_from('>I',native)[0]) if struct.unpack_from('>H',native,4+i*48+40)[0]==source)
         rec=bytearray(template);struct.pack_into('>3f',rec,0,*p['xyz']);struct.pack_into('>HH',rec,40,p['type'],p['object_id']);extra+=rec
     tail=data[4+n*48:];conveyors=struct.unpack_from('>I',tail)[0];offset=4+conveyors*36
     actors=struct.unpack_from('>I',tail,offset)[0];actor_data=tail[offset+4:offset+4+actors*56]
     actor_ids={struct.unpack_from('>H',actor_data,i*56+52)[0] for i in range(actors)}
-    template=next(actor_data[i*56:(i+1)*56] for i in range(actors) if struct.unpack_from('>H',actor_data,i*56+50)[0]+16==91)
+    native=read_file((ROOT/'rom/dk64.z64').read_bytes(),9,7)
+    off=4+struct.unpack_from('>I',native)[0]*48;off+=4+struct.unpack_from('>I',native,off)[0]*36
+    template=next(native[off+4+i*56:off+4+(i+1)*56] for i in range(struct.unpack_from('>I',native,off)[0]) if struct.unpack_from('>H',native,off+4+i*56+50)[0]+16==91)
     additions=bytearray()
-    for p in balloons():
+    for p in balloons(mid):
         assert p['spawner_id'] not in actor_ids
         rec=bytearray(template);struct.pack_into('>3f',rec,0,*p['xyz']);struct.pack_into('>II',rec,16,p['path_id'],3)
         # K.Rool balloon147 is excluded from native permanent-flag allocation.
         # Only the explicitly identified Japes instances use the private handler.
         struct.pack_into('>HH',rec,50,147-16,p['spawner_id']);additions+=rec
-    path.write_bytes(struct.pack('>I',n+len(rows()))+original+extra+tail[:offset]+struct.pack('>I',actors+len(balloons()))+actor_data+additions+tail[offset+4+actors*56:])
+    path.write_bytes(struct.pack('>I',n+len(rows(mid)))+original+extra+tail[:offset]+struct.pack('>I',actors+len(balloons(mid)))+actor_data+additions+tail[offset+4+actors*56:])
 
-def patch_paths(filename):
+def patch_paths(filename,mid=7):
     path=Path(filename);data=path.read_bytes();count=struct.unpack_from('>H',data)[0]
-    assert count==22
+    if mid==7:assert count==22
     offset=2;ids=set()
     for i in range(count):
         ident,num,_=struct.unpack_from('>3H',data,offset);ids.add(ident);offset+=6+num*10
     assert offset==len(data)
     extra=bytearray()
-    for p in balloons():
+    for p in balloons(mid):
         assert p['path_id']<26 and p['path_id'] not in ids
         extra+=struct.pack('>3H',p['path_id'],4,0)
         for dx,dz in [(-45,-25),(45,-25),(45,25),(-45,25)]:
             x,y,z=p['xyz'];extra+=struct.pack('>4hBB',0,round(x+dx),round(y),round(z+dz),1,0)
-    path.write_bytes(struct.pack('>H',count+len(balloons()))+data[2:]+extra)
+    path.write_bytes(struct.pack('>H',count+len(balloons(mid)))+data[2:]+extra)
 
 def payloads(rom):
     result=[]

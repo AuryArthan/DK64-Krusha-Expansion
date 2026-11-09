@@ -36,13 +36,20 @@ def legacy_rows():
                 result.append(row)
     return result
 
-def rows():
+def rows(mid=7):
     # Keep the reserved five-bit stride. Only gate1, encounter0 and Snide4
     # belong to the new three-reward design; retired2/3 remain stored only.
-    return [r for r in legacy_rows() if r['reward_id']==1]
+    if mid==7:return [r for r in legacy_rows() if r['reward_id']==1]
+    from campaign_data import worlds
+    extra=[dict(map=w['map'],world=w['world'],object_id=w['reward_id'],reward_id=w['world']*5+1,type=TYPE,xyz=[w['cage'][0],round(w['cage'][1]-2.27,3),w['cage'][2]]) for w in worlds() if w['map']!=7 and (mid is None or w['map']==mid)]
+    return rows(7)+extra if mid is None else extra
 
-def props():
+def props(mid=7):
     """Private script identities, disjoint from native and all new pickups."""
+    if mid!=7:
+        from campaign_data import area
+        w=area(mid);assert w
+        return dict(gate=w['gate_id'],switch=w['switch_id'],pad=w['pad_id'])
     rom=(ROOT/'rom/dk64.z64').read_bytes();data=read_file(rom,9,7)
     used={struct.unpack_from('>H',data,4+i*48+42)[0] for i in range(struct.unpack_from('>I',data)[0])}
     script=read_file(rom,10,7);used.update(struct.unpack('>%dH'%(len(script)//2),script[:len(script)//2*2]))
@@ -68,26 +75,28 @@ def prepare(rom_path):
                 assert struct.unpack_from('>I',data,pos+i*56+24)[0]!=2,'Unused bonus entry has a native placement'
     h='/* Generated M4 stable reward slots; no native permanent flags added. */\n'
     h+='static const struct { u16 map,object_id; u8 reward; } m4Rewards[] = {\n'
-    h+=''.join('    {%d,%d,%d},\n'%(p['map'],p['object_id'],p['reward_id']) for p in rows())+'};\n'
+    h+=''.join('    {%d,%d,%d},\n'%(p['map'],p['object_id'],p['reward_id']) for p in rows(None))+'};\n'
     h+='#define M4_GATE_ID %d\n#define M4_SWITCH_ID %d\n#define M4_PAD_ID %d\n'%(props()['gate'],props()['switch'],props()['pad'])
     (ROOT/'include/m4_rewards.generated.h').write_text(h)
 
 def patch_setup(filename,mid):
     path=Path(filename);data=path.read_bytes();n=struct.unpack_from('>I',data)[0];extra=bytearray()
-    template=next(data[4+i*48:4+(i+1)*48] for i in range(n) if struct.unpack_from('>H',data,4+i*48+40)[0]==0x74)
-    for p in rows():
+    native=read_file((ROOT/'rom/dk64.z64').read_bytes(),9,7)
+    template=next(native[4+i*48:4+(i+1)*48] for i in range(struct.unpack_from('>I',native)[0]) if struct.unpack_from('>H',native,4+i*48+40)[0]==0x74)
+    from campaign_data import area
+    w=area(mid)
+    for p in rows(mid):
         if p['map']!=mid:continue
         rec=bytearray(template);struct.pack_into('>4f',rec,0,*p['xyz'],0.25);struct.pack_into('>HH',rec,40,TYPE,p['object_id']);extra+=rec
-    if mid==7:
+    if w:
         factory=read_file((ROOT/'rom/dk64.z64').read_bytes(),9,26)
         factory_count=struct.unpack_from('>I',factory)[0]
         cage=next(factory[4+i*48:4+(i+1)*48] for i in range(factory_count) if struct.unpack_from('>HH',factory,4+i*48+40)==(0xD3,33))
-        switch=next(data[4+i*48:4+(i+1)*48] for i in range(n) if struct.unpack_from('>H',data,4+i*48+42)[0]==291)
-        for source,typ,ident,xyz,scale,rotation in [(cage,CAGE_TYPE,props()['gate'],CAGE_XYZ,.33,0)]:
+        for source,typ,ident,xyz,scale,rotation in [(cage,CAGE_TYPE,props(mid)['gate'],w['cage'],.33,0)]:
             rec=bytearray(source)
             struct.pack_into('>4f',rec,0,*xyz,scale);struct.pack_into('>3f',rec,24,0,rotation,0);struct.pack_into('>HH',rec,40,typ,ident);extra+=rec
     tail=data[4+n*48:]
-    if mid==7:
+    if w:
         from m4_encounter import PAD_TYPE,PAD_XYZ
         original=(ROOT/'rom/dk64.z64').read_bytes()
         pad=None
@@ -99,9 +108,9 @@ def patch_setup(filename,mid):
                     pad=bytearray(native[4+i*48:4+(i+1)*48]);break
             if pad:break
         assert pad is not None
-        struct.pack_into('>4f',pad,0,*PAD_XYZ,.25)
+        struct.pack_into('>4f',pad,0,*w['pad'],.25)
         struct.pack_into('>3f',pad,24,0,0,0)
-        struct.pack_into('>HH',pad,40,PAD_TYPE,props()['pad'])
+        struct.pack_into('>HH',pad,40,PAD_TYPE,props(mid)['pad'])
         extra+=pad
     path.write_bytes(struct.pack('>I',n+len(extra)//48)+data[4:4+n*48]+extra+tail)
 
@@ -153,9 +162,9 @@ def cage_model(rom):
     assert removed==24,removed
     return bytes(model)
 
-def patched_scripts(data):
+def patched_scripts(data,mid=7):
     """Native projectile button and static disappearing cage; no native flags."""
-    ids=props()
+    ids=props(mid)
     def script(ident,blocks):
         # Private condition only for these two scripts: preserve live records
         # for native cached-script restore, hide them through native controls.
@@ -171,7 +180,8 @@ def patched_scripts(data):
         ([(1,1,0,0),(0x7FFE,0x4D35,0,0)],[(1,10,0,0)]),
         ([(1,10,0,0)],[(69,1,0,255),(70,0,0,0),(71,0,0,0),(1,11,0,0),(38,2,0,0)]),
     ])
-    switch=script(ids['switch'],[
+    # Retired switch bytecode is retained only as source history.
+    switch=script(0 if ids['switch']==65535 else ids['switch'],[
         ([(1,0,0,0)],[(1,1,0,0)]),
         ([(1,1,0,0),(24,171,1,0)],[(17,1,1,0),(5,ids['gate'],10,0),(84,ids['gate'],1,0),(1,2,0,0)]),
         ([(1,2,0,0)],[(15,140,0,0),(38,2,0,0),(1,3,0,0)]),

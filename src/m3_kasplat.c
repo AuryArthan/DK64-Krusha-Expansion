@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/m3_kasplat.h"
+#include "../include/m5_campaign.h"
 
 extern void m3NativeKasplatInit(u8);
 extern void m3NativeEnemyDrop(void*);
@@ -19,6 +20,7 @@ static int previous_map=-1;
 static u32 previous_frame;
 volatile u32 m3KasplatTrace[8]={0};
 static unsigned int file(void) { return *(u8*)0x807467C8; }
+static int blueprintBit(void) {const M5Kasplat* k=m5Kasplat(CurrentMap);return k ? KRUSHA_BLUEPRINT_BIT+k->world : KRUSHA_SAVE_BITS;}
 
 void m3KasplatTick(void) {
     u32 frame=*(u32*)0x8076A064;
@@ -57,14 +59,15 @@ void m3KasplatTick(void) {
 }
 
 int m3GrayKasplat(void* actor) {
-    if (!actor || CurrentMap!=7 || ((actorData*)actor)->actorType!=241) return 0;
+    const M5Kasplat* k=m5Kasplat(CurrentMap);
+    if (!actor || !k || ((actorData*)actor)->actorType!=241) return 0;
     /* Enemy spawners are table16 records, unlike setup-actor IDs returned
      * by 80688E68. Check the tied native record and its live actor link. */
     /* Enemy actor module layout: +178 is EnemySpawner, +17C is AI state.
      * The generic actorData +180 label is not this actor's module layout. */
     u8* spawner=*(u8**)((u8*)actor+0x178);
     return (u32)spawner>=0x80000000 && (u32)spawner<0x807FFFB8 &&
-        spawner[0]==61 && spawner[19]==3 && *(void**)(spawner+0x18)==actor;
+        spawner[0]==61 && spawner[19]==k->spawner_id && *(void**)(spawner+0x18)==actor;
 }
 
 void m3KasplatInit(u8 color) {
@@ -86,7 +89,7 @@ void m3KasplatInit(u8 color) {
         m3NativeKasplatInit(color);return;
     }
     if (!krushaEnabled() || !DetectAdventure()) { krushaNativeActorDelete(actor); return; }
-    int uncollected=!krushaProgressRead(file(),KRUSHA_BLUEPRINT_BIT,1);
+    int uncollected=!krushaProgressRead(file(),blueprintBit(),1);
     if (!(*(u32*)(actor+0x60)&0x10) || actor[0x15F]!=uncollected) {
         void (*hair)(u8)=(void*)0x806B1D78;
         hair(uncollected ? 6 : 5);
@@ -101,7 +104,7 @@ void m3EnemyDrop(void* enemy) {
     extern int m4EncounterDrop(void*);
     if (m4EncounterDrop(enemy)) return;
     if (!m3GrayKasplat(enemy)) { m3NativeEnemyDrop(enemy); return; }
-    if (!krushaEnabled() || pending_spawner || m3DroppedBlueprint || physical_id>=0 || krushaProgressRead(file(),KRUSHA_BLUEPRINT_BIT,1)) return;
+    if (!krushaEnabled() || pending_spawner || m3DroppedBlueprint || physical_id>=0 || krushaProgressRead(file(),blueprintBit(),1)) return;
     u8* before=*(u8**)0x807FC400;
     m3NativeEnemyDrop(enemy);
     u8* after=*(u8**)0x807FC400;
@@ -121,7 +124,7 @@ void m3Blueprint(void) {
     u8* actor=*(u8**)0x807FBB40;
     m3KasplatTick();
     if (actor!=m3DroppedBlueprint || *(u32*)(actor+0x54)!=m3DroppedBlueprintID) { m3NativeBlueprint();return; }
-    if (CurrentMap!=7 || !krushaEnabled() || krushaProgressRead(file(),KRUSHA_BLUEPRINT_BIT,1)) {
+    if (!m5Kasplat(CurrentMap) || !krushaEnabled() || krushaProgressRead(file(),blueprintBit(),1)) {
         m3DroppedBlueprint=0;krushaNativeActorDelete(actor);return;
     }
     /* Native actor bounce/lifetime and owner opacity. The collector's scoped
@@ -164,8 +167,8 @@ int m3BlueprintAllowed(s16 object_id,u8 player,u16 type) {
     m3KasplatTrace[2]++;
     m3KasplatTrace[5]=object_id;m3KasplatTrace[6]=physical_id;
     if (!krushaEnabled() || Character!=5 || player || !DetectAdventure() ||
-        CurrentMap!=7 || object_id!=physical_id || krushaProgressRead(file(),KRUSHA_BLUEPRINT_BIT,1)) return 0;
-    krushaProgressWrite(file(),KRUSHA_BLUEPRINT_BIT,1,1);
+        !m5Kasplat(CurrentMap) || object_id!=physical_id || krushaProgressRead(file(),blueprintBit(),1)) return 0;
+    krushaProgressWrite(file(),blueprintBit(),1,1);
     m3KasplatTrace[3]++;
     playSong(69,1.0f);
     void (*change)(int,u8,s16)=(void*)0x806F91B4;

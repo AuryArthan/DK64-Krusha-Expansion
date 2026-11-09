@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/m5_campaign.h"
 
 /* Keep the native 0x40-byte barrel data layout. Its five actor pointers are
  * followed immediately by the spotlight pointer; the sixth actor lives here,
@@ -42,6 +43,8 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * barrel and all five original faces remain byte-for-byte available when OFF.
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
+    s32 campaign=m5FileAlias(table,index);
+    if (campaign>=0) {table=27;index=campaign;}
     if (table==5 && index==0xED) { table=27;index=69; }
     if (table==4 && index==42) { table=27;index=70; }
     if (table==25 && index>=7420 && index<7436) { table=27;index-=7349; }
@@ -116,7 +119,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87)) {
+    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || (index>=123 && index<131))) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */

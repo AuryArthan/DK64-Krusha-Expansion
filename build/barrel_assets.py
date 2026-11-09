@@ -14,7 +14,10 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / 'assets/krusha/barrel'
 TABLE_BASE = 0x101C50
-CUSTOM_ROM = 0x02080000
+# M5's expanded native pointer tables reach beyond the former02080000 bank.
+# Keep the approved scream bytes/address at02100000; place table27 after its
+# DMA-padded end instead. All consumers resolve these files through the table.
+CUSTOM_ROM = 0x02120000
 CUSTOM_TABLE = 27
 TEXTURE_IDS = (7001, 7002)
 SCALE = 1.15
@@ -218,7 +221,10 @@ def appendBarrelAssets(rom_path):
     from krusha_ammo import payloads as ammo_payloads
     assert len(payloads)==89
     payloads += ammo_payloads(Path(rom_path).read_bytes())
-    assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02100000
+    assert len(payloads)==123
+    from m5_campaign import payloads as campaign_payloads
+    payloads += campaign_payloads(Path(rom_path).read_bytes())
+    assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)
         end = stream.tell()

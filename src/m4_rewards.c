@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/m5_campaign.h"
 #include "../include/m4_rewards.generated.h"
 
 extern void m4NativeCollectEffect(s16,u8);
@@ -66,24 +67,25 @@ static int reward(u16 map,u16 id) {
  * type74 and registered static rewards (including the locked cage) are excluded.
  * runtime<0 asks whether an unclaimed drop already blocks another summon. */
 s32 m4EncounterFindPickup(s16 runtime) {
-    if (CurrentMap!=7) return -1;
+    if (!m5Area(CurrentMap)) return -1;
     ModelTwoData* objects=ObjectModel2Pointer;
     for (int i=0;i<ObjectModel2Count_Dupe;i++) {
         if ((runtime<0 || objects[i].runtime_id==runtime) &&
             objects[i].object_type==9 && objects[i].unk_86==1 &&
-            reward(7,objects[i].object_id)<0) return objects[i].runtime_id;
+            reward(CurrentMap,objects[i].object_id)<0) return objects[i].runtime_id;
     }
     return -1;
 }
 
 int m4SetupHidden(s32 map,s32 id) {
-    if (map==7 && (id==M4_GATE_ID || id==M4_SWITCH_ID))
+    const M5Area* area=m5Area(map);
+    if (area && id==area->gate_id)
         /* Native cached-script restore assumes every scripted prop exists.
          * Keep these records alive; their scripts hide/disable them instead. */
         return 0;
-    if (map==7 && id==M4_PAD_ID)
+    if (area && id==area->pad_id)
         return !krushaEnabled() || !DetectAdventure() ||
-            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT,1);
+            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5,1);
     int slot=reward(map,id);
     if (slot<0) return -1;
     return !krushaEnabled() || !DetectAdventure() ||
@@ -98,14 +100,16 @@ int m4SetupHidden(s32 map,s32 id) {
  * margin admits the projectile radius; the ground280 and removed chain are
  * outside this envelope. Nearby enemies/explosions cannot satisfy it. */
 static int cageProjectile(void) {
+    const M5Area* area=m5Area(CurrentMap);
+    if (!area) return 0;
     u8* node=*(u8**)0x807FC400;
     for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
         u8* actor=*(u8**)(node+0x44);
         if (!actor || *(u32*)(actor+0x58)!=171 || actor[0x154]!=1 ||
             (!actor[0xFD] && !(*(u16*)(actor+0x6A)&1))) continue;
-        f32 x=*(f32*)(actor+0x7C)-1680;
-        f32 y=*(f32*)(actor+0x80)-286.27f;
-        f32 z=*(f32*)(actor+0x84)-4245;
+        f32 x=*(f32*)(actor+0x7C)-area->cage[0];
+        f32 y=*(f32*)(actor+0x80)-area->cage[1];
+        f32 z=*(f32*)(actor+0x84)-area->cage[2];
         if (x>=-21 && x<=21 && z>=-21 && z<=21 && y>=-2 && y<=28) {
             m4RewardTrace[13]++;m4RewardTrace[14]=*(u32*)(actor+0x54);
             return 1;
@@ -115,13 +119,14 @@ static int cageProjectile(void) {
 }
 
 int m4ScriptCondition(u16* instruction,s16 runtime) {
-    if ((instruction[0]&0x7FFF)!=0x7FFE || (instruction[1]!=0x4D34 && instruction[1]!=0x4D35) || CurrentMap!=7) return -1;
+    if ((instruction[0]&0x7FFF)!=0x7FFE || (instruction[1]!=0x4D34 && instruction[1]!=0x4D35) || !m5Area(CurrentMap)) return -1;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     s16 id=setupId(runtime);
-    if (id!=M4_GATE_ID && id!=M4_SWITCH_ID) return -1;
-    if (instruction[1]==0x4D35) return id==M4_GATE_ID && krushaEnabled() && DetectAdventure() && cageProjectile();
+    const M5Area* area=m5Area(CurrentMap);
+    if (id!=area->gate_id) return -1;
+    if (instruction[1]==0x4D35) return id==area->gate_id && krushaEnabled() && DetectAdventure() && cageProjectile();
     int disabled=!krushaEnabled() || !DetectAdventure() ||
-        krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
+        krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5+1,1);
     return (instruction[0]&0x8000) ? !disabled : disabled;
 }
 
@@ -147,14 +152,15 @@ void m4RewardsTick(void) {
     m4EncounterTick();
     presentation();
     cage_open=0;
-    if (CurrentMap==7 && frame()>1) {
+    const M5Area* area=m5Area(CurrentMap);
+    if (area && frame()>1) {
         int disabled=!krushaEnabled() || !DetectAdventure() ||
-            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
-        const s16 ids[2]={M4_GATE_ID,M4_SWITCH_ID};
+            krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5+1,1);
+        const s16 ids[1]={area->gate_id};
         s16 (*indexOf)(s16)=(void*)0x80659470;
         void (*runState)(void*,s8,s16)=(void*)0x8064199C;
         ModelTwoData* objects=ObjectModel2Pointer;
-        for (int i=0;i<2;i++) {
+        for (int i=0;i<1;i++) {
             s16 runtime=*(s16*)(0x807F6240+2*ids[i]);
             s16 index=runtime>=0 ? indexOf(runtime) : -1;
             if (index<0 || index>=ObjectModel2Count_Dupe || objects[index].object_id!=ids[i]) continue;
@@ -164,7 +170,7 @@ void m4RewardsTick(void) {
              * Wake only until native script operations have hidden it. */
             if (disabled && (script[0x60]!=1 || *(u16*)(script+0x62) || script[0x70] || script[0x71]))
                 runState(script,1,0);
-            if (!disabled && ids[i]==M4_GATE_ID) {
+            if (!disabled && ids[i]==area->gate_id) {
                 if (script[0x48]>=10) cage_open=1;
                 else {
                     /* Native one-frame world sprite: no extra actor or collision. */
@@ -174,7 +180,7 @@ void m4RewardsTick(void) {
                     void (*draw)(const void*,f32,f32,f32,f32)=(void*)0x80714CC0;
                     begin(1);mode(2);layer(4);
                     /* Small hint on the south face, just outside its bars. */
-                    draw(krushaAmmoSprite(),0.35f,1680,299,4226);
+                    draw(krushaAmmoSprite(),0.35f,area->cage[0],area->cage[1]+12.73f,area->cage[2]-19);
                 }
             }
         }
@@ -191,16 +197,17 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
     if (type!=9) return -1;
     if (!krushaEnabled() || !DetectAdventure() || Character!=5 || player || !Player) return 0;
     s16 (*setupId)(s16)=(void*)0x8063D990;
-    int slot=(CurrentMap==7 && (object_id==m4BonusPhysicalID || object_id==m4EncounterPickupID)) ? 0 : reward(CurrentMap,setupId(object_id));
+    const M5Area* area=m5Area(CurrentMap);
+    int slot=(area && (object_id==m4BonusPhysicalID || object_id==m4EncounterPickupID)) ? area->world*5 : reward(CurrentMap,setupId(object_id));
     if (slot<0 && m4EncounterFindPickup(object_id)>=0) {
-        m4EncounterPickupID=object_id;slot=0;
+        m4EncounterPickupID=object_id;slot=area->world*5;
     }
     if (slot<0) return 0;
-    if (slot==1 && !cage_open) return 0;
+    if (slot%5==1 && !cage_open) return 0;
     u8 file=*(u8*)0x807467C8;
     if (krushaProgressRead(file,KRUSHA_GB_BIT+slot,1)) return 0;
     krushaProgressWrite(file,KRUSHA_GB_BIT+slot,1,1);
-    MovesBase[5].gb_count[0]=krushaProgressGoldenBananas(file,0);
+    MovesBase[5].gb_count[slot/5]=krushaProgressGoldenBananas(file,slot/5);
     reward_map=CurrentMap;owner=Player;started=frame();effect_at=0;
     pickup_map=CurrentMap;pickup_owner=Player;pickup_frame=frame();
     m4RewardTrace[0]++;m4RewardTrace[1]=slot;m4RewardTrace[2]=object_id;

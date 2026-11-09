@@ -19,6 +19,7 @@
 .importobj "obj/src_m4_bonus.o"
 .importobj "obj/src_m4_encounter.o"
 .importobj "obj/src_m4_rewards.o"
+.importobj "obj/src_m5_campaign.o"
 .importobj "obj/src_main.o"
 .importobj "obj/src_taganywhere.o"
 .importobj "obj/src_widescreen.o"
