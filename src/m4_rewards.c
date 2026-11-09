@@ -90,18 +90,23 @@ int m4SetupHidden(s32 map,s32 id) {
         krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+slot,1);
 }
 
-/* Native cage collision has no gun-switch hit group. Test only actual live
- * bazooka actors at its body (including the native impact/explosion frame).
- * No player proximity, generic explosion or thrown-orange activation. */
+/* Native cage collision has no gun-switch hit group. Wait for a type171's
+ * FIRST native explosion frame plus a solid wall/floor contact at the cage.
+ * A flying round inside a generous box used to open it before hitting
+ * anything. Keep native collision, explosion/sound and deletion in control.
+ * The private .33-scale body is +/-17.16XZ, roof312.67. A small contact
+ * margin admits the projectile radius; the ground280 and removed chain are
+ * outside this envelope. Nearby enemies/explosions cannot satisfy it. */
 static int cageProjectile(void) {
     u8* node=*(u8**)0x807FC400;
     for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
         u8* actor=*(u8**)(node+0x44);
-        if (!actor || *(u32*)(actor+0x58)!=171) continue;
+        if (!actor || *(u32*)(actor+0x58)!=171 || actor[0x154]!=1 ||
+            (!actor[0xFD] && !(*(u16*)(actor+0x6A)&1))) continue;
         f32 x=*(f32*)(actor+0x7C)-1680;
         f32 y=*(f32*)(actor+0x80)-286.27f;
         f32 z=*(f32*)(actor+0x84)-4245;
-        if (x>=-26 && x<=26 && z>=-26 && z<=26 && y>=-8 && y<=60) {
+        if (x>=-21 && x<=21 && z>=-21 && z<=21 && y>=-2 && y<=28) {
             m4RewardTrace[13]++;m4RewardTrace[14]=*(u32*)(actor+0x54);
             return 1;
         }

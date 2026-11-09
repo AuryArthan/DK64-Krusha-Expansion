@@ -207,8 +207,9 @@ def write_placement_draft(out):
             from m2_pickups import rows,balloons
             historical=json.loads((polish.parent/'japes-polish-v1.json').read_text())
             drafts.append(historical)
+            drafts.append(json.loads((polish.parent/'japes-50-v1.json').read_text()))
             current=json.loads((polish.parent/'three-japes-implemented.json').read_text())
-            current.update(draft_id='japes-50-v1',title='Implemented 50-banana Japes pilot',scope='implemented-japes-pilot')
+            current.update(draft_id='japes-paths-v1',title='Japes pilot — connected trails and riverbed singles',scope='implemented-japes-pilot')
             current.pop('rom_sha256',None) # Source layout, not a binary certification.
             current['pins']=[p for p in current['pins'] if p.get('label')!='JP-SW01']
             for pin in current['pins']:

@@ -33,7 +33,10 @@ s32 krushaCompletionPercentage(void) {
     /* Native weights, truncation and the 201-GB/exact-100 special cases stay
      * native. Its call to the totals collector now includes all six. */
     s32 ordinary = vanillaCompletionPercentage();
-    return krushaProgressFullSet() ? 120 : ordinary;
+    /* Planned225 GBs contribute90%;40 native medals8%,20 fairies4%,
+     * ten crowns5%,eight keys2%,two company coins1%: native maximum110.
+     * Reserve111 for the complete permanent-category predicate. */
+    return krushaProgressFullSet() ? 111 : ordinary;
 }
 
 void krushaFileSummaryInit(void* actor, s32 input) {

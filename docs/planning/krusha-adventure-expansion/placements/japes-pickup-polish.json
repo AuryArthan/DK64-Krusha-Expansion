@@ -45,59 +45,59 @@
     },
     "13": {
       "xyz": [
-        2390,
+        2370,
         284.0,
-        1450
+        1420
       ],
-      "note": "Spread single trail approaching shout pad"
+      "note": "Natural bend from the eastern shore approach toward shout pad, clear of walls"
     },
     "14": {
       "xyz": [
-        2270,
+        2255,
         284.0,
-        1400
+        1425
       ],
-      "note": "Spread single trail approaching shout pad"
+      "note": "Natural bend from the eastern shore approach toward shout pad, clear of walls"
     },
     "15": {
       "xyz": [
-        2150,
-        284.0,
-        1380
+        2140,
+        287.396,
+        1435
       ],
-      "note": "Spread single trail approaching shout pad"
+      "note": "Natural bend from the eastern shore approach toward shout pad, clear of walls"
     },
     "16": {
       "xyz": [
-        2030,
-        284.0,
-        1390
+        2025,
+        286.554,
+        1450
       ],
-      "note": "Spread single trail approaching shout pad"
+      "note": "Natural bend from the eastern shore approach toward shout pad, clear of walls"
     },
     "17": {
       "xyz": [
         1910,
-        284.143,
-        1410
+        290.311,
+        1470
       ],
-      "note": "Spread single trail approaching shout pad"
+      "note": "Natural bend from the eastern shore approach toward shout pad, clear of walls"
     },
     "18": {
       "xyz": [
-        1490,
+        1695,
         284.0,
-        3590
+        3615
       ],
-      "note": "Spread single trail approaching cage"
+      "note": "Continue the native yellow approach trail, pass west of Cranky, then reach cage"
     },
     "19": {
       "xyz": [
-        1510,
+        1605,
         284.0,
-        3720
+        3730
       ],
-      "note": "Spread single trail approaching cage"
+      "note": "Continue the native yellow approach trail, pass west of Cranky, then reach cage"
     },
     "20": {
       "xyz": [
@@ -105,7 +105,7 @@
         284.0,
         3850
       ],
-      "note": "Spread single trail approaching cage"
+      "note": "Continue the native yellow approach trail, pass west of Cranky, then reach cage"
     },
     "21": {
       "xyz": [
@@ -113,7 +113,7 @@
         284.0,
         3990
       ],
-      "note": "Spread single trail approaching cage"
+      "note": "Continue the native yellow approach trail, pass west of Cranky, then reach cage"
     },
     "22": {
       "xyz": [
@@ -121,71 +121,71 @@
         284.0,
         4120
       ],
-      "note": "Spread single trail approaching cage"
+      "note": "Continue the native yellow approach trail, pass west of Cranky, then reach cage"
     },
     "23": {
       "xyz": [
         1350,
-        210,
+        164.0,
         1810
       ],
-      "note": "Five-single underwater path, apart from native trails"
+      "note": "Single just above riverbed, following the bottom underwater"
     },
     "24": {
       "xyz": [
         1460,
-        210,
+        164.0,
         1830
       ],
-      "note": "Five-single underwater path, apart from native trails"
+      "note": "Single just above riverbed, following the bottom underwater"
     },
     "25": {
       "xyz": [
         1570,
-        210,
+        164.0,
         1850
       ],
-      "note": "Five-single underwater path, apart from native trails"
+      "note": "Single just above riverbed, following the bottom underwater"
     },
     "26": {
       "xyz": [
         1680,
-        210,
+        164.0,
         1870
       ],
-      "note": "Five-single underwater path, apart from native trails"
+      "note": "Single just above riverbed, following the bottom underwater"
     },
     "27": {
       "xyz": [
         1790,
-        210,
+        164.0,
         1890
       ],
-      "note": "Five-single underwater path, apart from native trails"
+      "note": "Single just above riverbed, following the bottom underwater"
     },
     "231": {
       "xyz": [
-        1775,
-        287.819,
-        1460
+        1794,
+        287.877,
+        1469
       ],
-      "note": "Coin triangle surrounding shout pad"
+      "note": "Three coins close around the shout pad, radius46-53"
     },
     "232": {
       "xyz": [
-        1850,
-        291.081,
-        1560
+        1844,
+        290.826,
+        1537
       ],
-      "note": "Coin triangle surrounding shout pad"
+      "note": "Three coins close around the shout pad, radius46-53"
     },
     "233": {
       "xyz": [
-        1895,
-        286.482,
-        1440
+        1876,
+        286.971,
+        1456
       ],
-      "note": "Coin triangle surrounding shout pad"
+      "note": "Three coins close around the shout pad, radius46-53"
     },
     "234": {
       "xyz": [
