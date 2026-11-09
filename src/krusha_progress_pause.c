@@ -33,7 +33,6 @@ s16 krushaPauseFractionTotal(s16 value, s16 total) {
         s8 kind = slot < 8 ? *(s8*)(0x807FC818 + slot) : -1;
         /* Native pause caps GBs at200; the file score counts Rareware too. */
         if (kind == 0 && total == 200) total = 225;
-        if (kind == 3 && total == 40) total = 47;
         if (kind == 7 && total == 40) total = 48;
         krushaPauseFractionTrace[5] = kind;
         krushaPauseFractionTrace[6] = value;
@@ -55,7 +54,6 @@ static int privateFlag(int base, int level) {
     if (level < 0 || level > 7) return -1;
     if (base == 0x1D5) return KRUSHA_BLUEPRINT_BIT + level;
     if (base == 0x1FD) return KRUSHA_GB_BIT + level * 5 + 4;
-    if (base == 0x225 && level < 7) return KRUSHA_MEDAL_BIT + level;
     return -1;
 }
 
@@ -194,16 +192,14 @@ const void* krushaPauseIcon(const void* sprite) {
     return sprite;
 }
 
-/* There is no eighth Krusha medal. Hide the personal Helm medal and keep its
- * team page as the original five gold medals, evenly spaced. */
+/* Krusha now has50 CB/world and no medals. Keep all medal displays five-wide. */
 int krushaPauseMedalLayout(void* menu, const void* sprite, s32* x, s32 mode) {
     u8* data = menu;
     int bank = data[0x15];
     int area;
     if (!krushaEnabled() || !DetectAdventure() || bank > 1) return 0;
     area = ((s16*)(data+8))[bank];
-    if (area < 0 || area > 8 ||
-        ((u8*)0x80750560)[area] != 8) return 0;
+    if (area < 0 || area > 8) return 0;
     if (data[0x12] == 1 && data[0x14] == 5 && (u32)sprite == 10) return 1;
     if (data[0x12] == 2 && (mode == 3 || mode == 14)) {
         for (int i = 0; i < 6; i++) if (*x == krushaPauseAngles[i]) {

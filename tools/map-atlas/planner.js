@@ -13,6 +13,7 @@ window.createKrushaPlanner = function (host) {
   const requestedDraft = new URL(location).searchParams.get('draft');
   const draft = (window.KRUSHA_DRAFTS || []).find(d => d.draft_id === requestedDraft) || window.KRUSHA_DRAFT;
   const pilot = draft?.scope === 'implemented-japes-pilot';
+  const bananaTarget = draft?.draft_id === 'japes-50-v1' ? 50 : 100;
   const draftMode = !!draft && new URL(location).searchParams.get('draft') === draft.draft_id;
   // Draft edits have their own namespace. Original user plans are never seeded
   // over, silently merged, replaced or written by opening the draft URL.
@@ -20,7 +21,7 @@ window.createKrushaPlanner = function (host) {
   if (draft) {
     $('draft-notice').hidden = false;
     $('draft-title').textContent = draftMode ? (draft.title || 'Assistant draft') + ' · review/edit' : 'Japes pilot / placement draft available';
-    $('draft-description').textContent = draftMode ? (pilot ? 'Current Japes source layout: 100 bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current Japes pilot to inspect its trails, coin clusters and rewards without replacing your own plan.';
+    $('draft-description').textContent = draftMode ? (pilot ? 'Japes source layout: ' + bananaTarget + ' bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current Japes pilot to inspect its trails, coin clusters and rewards without replacing your own plan.';
     const u = new URL(location); u.searchParams.set('draft',draft.draft_id); $('open-assistant-draft').href = u;
     u.searchParams.delete('draft'); $('open-original-plan').href = u;
   }
@@ -113,8 +114,8 @@ window.createKrushaPlanner = function (host) {
     const totals = $('plan-totals'); totals.replaceChildren();
     const title = document.createElement('strong'); title.textContent = 'Draft totals · ' + group; totals.append(title);
     const counts = document.createElement('p');
-    counts.textContent = `${bananas}${targets ? '/' + (main ? 100 : 0) : ''} bananas · ${rewards}${targets ? '/' + rewardTarget : ''} GB reward sites · ${sum('blueprint')}${targets ? '/1' : ''} blueprints · ${sum('coin')} coins`;
-    if (targets && (bananas > (main ? 100 : 0) || rewards > rewardTarget || sum('blueprint') > 1)) counts.className = 'over-budget';
+    counts.textContent = `${bananas}${targets ? '/' + (main ? bananaTarget : 0) : ''} bananas · ${rewards}${targets ? '/' + rewardTarget : ''} GB reward sites · ${sum('blueprint')}${targets ? '/1' : ''} blueprints · ${sum('coin')} coins`;
+    if (targets && (bananas > (main ? bananaTarget : 0) || rewards > rewardTarget || sum('blueprint') > 1)) counts.className = 'over-budget';
     totals.append(counts);
     const help = document.createElement('p'); help.className = 'small';
     help.textContent = 'A bunch counts as 5 bananas; a balloon as 10. GB reward sites include bonus barrels and blueprint hand-ins: mark each reward once. These are proposed totals, not ROM edits.';
@@ -123,8 +124,8 @@ window.createKrushaPlanner = function (host) {
     const n = kind => pins.filter(p => p.kind===kind).reduce((s,p)=>s+p.quantity,0);
     const objects=n('single')+n('bunch')+n('balloon')+n('coin');
     const units=n('single')+5*n('bunch')+10*n('balloon');
-    global.textContent=pilot ? `Japes pilot: ${units}/100 bananas · ${n('coin')}/9 coins · ${objects} active colored objects · ${n('gb')+n('bonus')+n('blueprint')}/3 GB sites` : `Campaign: ${units}/700 bananas · ${n('coin')}/99 coins · ${objects}/384 colored objects · ${n('gb')+n('bonus')+n('blueprint')}/40 GB sites · ${n('blueprint')}/8 blueprints`;
-    if(units>(pilot?100:700)||n('coin')>(pilot?9:99)||objects>384)global.classList.add('over-budget');
+    global.textContent=pilot ? `Japes pilot: ${units}/${bananaTarget} bananas · ${n('coin')}/9 coins · ${objects} active colored objects · ${n('gb')+n('bonus')+n('blueprint')}/3 GB sites` : `Campaign: ${units}/700 bananas · ${n('coin')}/99 coins · ${objects}/384 colored objects · ${n('gb')+n('bonus')+n('blueprint')}/40 GB sites · ${n('blueprint')}/8 blueprints`;
+    if(units>(pilot?bananaTarget:700)||n('coin')>(pilot?9:99)||objects>384)global.classList.add('over-budget');
     totals.append(global);
     const scope = $('list-scope').value;
     const list = $('pins'); list.replaceChildren();

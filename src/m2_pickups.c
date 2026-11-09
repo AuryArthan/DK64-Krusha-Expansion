@@ -33,12 +33,7 @@ static s32 m2Award(u16 slot,u8 units,u8 coin) {
             s32 total=before+units;
             MovesBase[5].cb_count[0]=total-MovesBase[5].tns_cb_count[0];
             playSound(0x2A0,0x7FFF,63.0f,1.0f,0,0);
-            if (total>=75 && !krushaProgressRead(file,KRUSHA_MEDAL_BIT,1)) {
-                krushaProgressWrite(file,KRUSHA_MEDAL_BIT,1,1);
-                void (*medal)(void)=(void*)0x80687C48;
-                medal();
-            }
-            if (before<100 && total>=100) playSong(172,1.0f);
+            if (before<50 && total>=50) playSong(172,1.0f);
         }
         void (*refresh)(s32,u8,s32)=(void*)0x806F8BC4;
         if (Character == 5) refresh(coin ? 1 : 0,0,0);
@@ -69,10 +64,12 @@ s32 m2PickupAllowed(s16 object_id,u8 player,u16 type) {
 extern void* m2NativeHUDSprite(u32 item);
 extern const void* krushaPauseIcon(const void*);
 extern const void* krushaOwnedIcon(int);
+extern const void* krushaAmmoSprite(void);
 void* m2HUDSprite(u32 item) {
     if (krushaEnabled() && DetectAdventure() && item==13 && *(u32*)0x80754288==5)
         return (void*)krushaOwnedIcon(0);
     if (krushaEnabled() && DetectAdventure() && Character == 5) {
+        if (item == 2 || item == 3) return (void*)krushaAmmoSprite();
         if (item == 0) return (void*)krushaPauseIcon((void*)0);
         if (item == 1) return (void*)krushaPauseIcon((void*)1);
         if (item == 14) return (void*)krushaOwnedIcon(1);

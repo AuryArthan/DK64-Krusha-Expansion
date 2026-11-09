@@ -1,282 +1,239 @@
 {
   "format": "krusha-japes-pickup-overlay-v1",
   "map": 7,
-  "notes": "Japes pilot only: nine coins in three clusters, four trails of five singles. Original stable pickup slots and object IDs retained. Slot240 retired, never reused. Other worlds remain design drafts; nine coins per main world is the later target.",
+  "notes": "Japes50-CB pilot:3 bunches,2 balloons,15 singles; nine coins in three groups. Preserve all reserved pickup IDs and flags. No Krusha medals. Retired flags stored but excluded from counts.",
   "retired_slots": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12,
+    28,
+    29,
+    30,
+    31,
+    32,
     240
   ],
   "overrides": {
-    "13": {
-      "xyz": [
-        1450,
-        285.379,
-        1460
-      ],
-      "note": "Five-single trail leading to bunch slot 1"
-    },
-    "14": {
-      "xyz": [
-        1484,
-        286.798,
-        1477
-      ],
-      "note": "Five-single trail leading to bunch slot 1"
-    },
-    "15": {
-      "xyz": [
-        1518,
-        288.252,
-        1494
-      ],
-      "note": "Five-single trail leading to bunch slot 1"
-    },
-    "16": {
-      "xyz": [
-        1552,
-        286.849,
-        1511
-      ],
-      "note": "Five-single trail leading to bunch slot 1"
-    },
-    "17": {
-      "xyz": [
-        1586,
-        286.224,
-        1528
-      ],
-      "note": "Five-single trail leading to bunch slot 1"
-    },
-    "1": {
-      "xyz": [
-        1620,
-        287.44,
-        1545
-      ],
-      "note": "Bunch at the end of the five-single trail"
-    },
-    "18": {
-      "xyz": [
-        1510,
-        284.0,
-        3670
-      ],
-      "note": "Five-single trail leading to bunch slot 2"
-    },
-    "19": {
-      "xyz": [
-        1510,
-        284.0,
-        3730
-      ],
-      "note": "Five-single trail leading to bunch slot 2"
-    },
-    "20": {
-      "xyz": [
-        1510,
-        284.0,
-        3790
-      ],
-      "note": "Five-single trail leading to bunch slot 2"
-    },
-    "21": {
-      "xyz": [
-        1510,
-        284.0,
-        3850
-      ],
-      "note": "Five-single trail leading to bunch slot 2"
-    },
-    "22": {
-      "xyz": [
-        1510,
-        284.0,
-        3910
-      ],
-      "note": "Five-single trail leading to bunch slot 2"
-    },
-    "2": {
-      "xyz": [
-        1510,
-        284.0,
-        3970
-      ],
-      "note": "Bunch at the end of the five-single trail"
-    },
-    "23": {
-      "xyz": [
-        1990,
-        684.0,
-        2350
-      ],
-      "note": "Five-single trail leading to bunch slot 8"
-    },
-    "24": {
-      "xyz": [
-        1990,
-        684.0,
-        2382
-      ],
-      "note": "Five-single trail leading to bunch slot 8"
-    },
-    "25": {
-      "xyz": [
-        1990,
-        684.0,
-        2414
-      ],
-      "note": "Five-single trail leading to bunch slot 8"
-    },
-    "26": {
-      "xyz": [
-        1990,
-        684.0,
-        2446
-      ],
-      "note": "Five-single trail leading to bunch slot 8"
-    },
-    "27": {
-      "xyz": [
-        1990,
-        684.0,
-        2478
-      ],
-      "note": "Five-single trail leading to bunch slot 8"
-    },
-    "8": {
-      "xyz": [
-        1990,
-        684.0,
-        2510
-      ],
-      "note": "Bunch at the end of the five-single trail"
-    },
-    "28": {
-      "xyz": [
-        2535,
-        543.333,
-        2990
-      ],
-      "note": "Five-single trail leading to bunch slot 9"
-    },
-    "29": {
-      "xyz": [
-        2551,
-        543.333,
-        3022
-      ],
-      "note": "Five-single trail leading to bunch slot 9"
-    },
-    "30": {
-      "xyz": [
-        2567,
-        543.333,
-        3054
-      ],
-      "note": "Five-single trail leading to bunch slot 9"
-    },
-    "31": {
-      "xyz": [
-        2583,
-        543.333,
-        3086
-      ],
-      "note": "Five-single trail leading to bunch slot 9"
-    },
-    "32": {
-      "xyz": [
-        2599,
-        543.333,
-        3118
-      ],
-      "note": "Five-single trail leading to bunch slot 9"
-    },
-    "9": {
-      "xyz": [
-        2615,
-        543.333,
-        3150
-      ],
-      "note": "Bunch at the end of the five-single trail"
-    },
     "0": {
       "xyz": [
         1835,
         294,
         1490
       ],
-      "note": "Isolated bunch above the native shout pad"
+      "note": "Bunch above Krusha shout pad"
     },
-    "231": {
+    "1": {
       "xyz": [
-        1551,
-        284.0,
-        1395
+        1680,
+        316.67,
+        4245
       ],
-      "note": "Three-coin cluster 1"
+      "note": "Bunch four units above measured cage roof312.67; normal jump remains possible when cage opens"
     },
-    "232": {
+    "2": {
       "xyz": [
-        1575,
-        284.0,
-        1415
+        2267,
+        493,
+        1523
       ],
-      "note": "Three-coin cluster 1"
+      "note": "Bunch on vacant palm120 canopy east of shout pad"
     },
-    "233": {
+    "13": {
       "xyz": [
-        1599,
+        2390,
         284.0,
-        1395
+        1450
       ],
-      "note": "Three-coin cluster 1"
+      "note": "Spread single trail approaching shout pad"
     },
-    "234": {
+    "14": {
       "xyz": [
-        1506,
+        2270,
         284.0,
-        4100
+        1400
       ],
-      "note": "Three-coin cluster 2"
+      "note": "Spread single trail approaching shout pad"
     },
-    "235": {
+    "15": {
       "xyz": [
-        1530,
+        2150,
+        284.0,
+        1380
+      ],
+      "note": "Spread single trail approaching shout pad"
+    },
+    "16": {
+      "xyz": [
+        2030,
+        284.0,
+        1390
+      ],
+      "note": "Spread single trail approaching shout pad"
+    },
+    "17": {
+      "xyz": [
+        1910,
+        284.143,
+        1410
+      ],
+      "note": "Spread single trail approaching shout pad"
+    },
+    "18": {
+      "xyz": [
+        1490,
+        284.0,
+        3590
+      ],
+      "note": "Spread single trail approaching cage"
+    },
+    "19": {
+      "xyz": [
+        1510,
+        284.0,
+        3720
+      ],
+      "note": "Spread single trail approaching cage"
+    },
+    "20": {
+      "xyz": [
+        1550,
+        284.0,
+        3850
+      ],
+      "note": "Spread single trail approaching cage"
+    },
+    "21": {
+      "xyz": [
+        1580,
+        284.0,
+        3990
+      ],
+      "note": "Spread single trail approaching cage"
+    },
+    "22": {
+      "xyz": [
+        1615,
         284.0,
         4120
       ],
-      "note": "Three-coin cluster 2"
+      "note": "Spread single trail approaching cage"
+    },
+    "23": {
+      "xyz": [
+        1350,
+        210,
+        1810
+      ],
+      "note": "Five-single underwater path, apart from native trails"
+    },
+    "24": {
+      "xyz": [
+        1460,
+        210,
+        1830
+      ],
+      "note": "Five-single underwater path, apart from native trails"
+    },
+    "25": {
+      "xyz": [
+        1570,
+        210,
+        1850
+      ],
+      "note": "Five-single underwater path, apart from native trails"
+    },
+    "26": {
+      "xyz": [
+        1680,
+        210,
+        1870
+      ],
+      "note": "Five-single underwater path, apart from native trails"
+    },
+    "27": {
+      "xyz": [
+        1790,
+        210,
+        1890
+      ],
+      "note": "Five-single underwater path, apart from native trails"
+    },
+    "231": {
+      "xyz": [
+        1775,
+        287.819,
+        1460
+      ],
+      "note": "Coin triangle surrounding shout pad"
+    },
+    "232": {
+      "xyz": [
+        1850,
+        291.081,
+        1560
+      ],
+      "note": "Coin triangle surrounding shout pad"
+    },
+    "233": {
+      "xyz": [
+        1895,
+        286.482,
+        1440
+      ],
+      "note": "Coin triangle surrounding shout pad"
+    },
+    "234": {
+      "xyz": [
+        1308,
+        284.0,
+        4125
+      ],
+      "note": "Three coins along west wall near cage"
+    },
+    "235": {
+      "xyz": [
+        1319,
+        284.0,
+        4160
+      ],
+      "note": "Three coins along west wall near cage"
     },
     "236": {
       "xyz": [
-        1554,
+        1329,
         284.0,
-        4100
+        4195
       ],
-      "note": "Three-coin cluster 2"
+      "note": "Three coins along west wall near cage"
     },
     "237": {
       "xyz": [
-        1916,
+        1897,
         524.0,
-        2115
+        2230
       ],
-      "note": "Three-coin cluster 3"
+      "note": "Three coins along wall near gray Kasplat"
     },
     "238": {
       "xyz": [
-        1940,
+        1924,
         524.0,
-        2135
+        2252
       ],
-      "note": "Three-coin cluster 3"
+      "note": "Three coins along wall near gray Kasplat"
     },
     "239": {
       "xyz": [
-        1964,
+        1951,
         524.0,
-        2115
+        2274
       ],
-      "note": "Three-coin cluster 3"
+      "note": "Three coins along wall near gray Kasplat"
     }
   }
 }

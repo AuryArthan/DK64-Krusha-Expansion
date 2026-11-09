@@ -37,8 +37,8 @@ def spawners(rom):
     assert template is not None
     assert len(template)==22
     record=bytearray(template);struct.pack_into('>3h',record,4,*BOSS_XYZ)
-    # Ordinary world Klumps use size50 (24 of29 native instances);100 is2x.
-    fence_id=max(ids)+1;record[14]=fence_id;record[15]=100
+    # Ordinary world Klumps use size50 (24 of29 native instances);80 is1.6x (20% below the prior2x).
+    fence_id=max(ids)+1;record[14]=fence_id;record[15]=80
     record[18]=0;record[19]=TRIGGER;record[20]=0
     points=[(x,286,z) for x,z in [(1780,1360),(2270,1360),(2270,1550),(1780,1550),(1780,1360)]]
     fence=struct.pack('>H',5)+b''.join(struct.pack('>3h',*v) for v in points)+struct.pack('>3H',0,fence_id,1)

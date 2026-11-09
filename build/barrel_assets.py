@@ -215,6 +215,9 @@ def appendBarrelAssets(rom_path):
     from m4_rewards import cage_model
     assert len(payloads)==88
     payloads += [cage_model(Path(rom_path).read_bytes())]
+    from krusha_ammo import payloads as ammo_payloads
+    assert len(payloads)==89
+    payloads += ammo_payloads(Path(rom_path).read_bytes())
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02100000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)

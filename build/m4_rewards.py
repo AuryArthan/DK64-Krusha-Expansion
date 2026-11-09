@@ -83,7 +83,7 @@ def patch_setup(filename,mid):
         factory_count=struct.unpack_from('>I',factory)[0]
         cage=next(factory[4+i*48:4+(i+1)*48] for i in range(factory_count) if struct.unpack_from('>HH',factory,4+i*48+40)==(0xD3,33))
         switch=next(data[4+i*48:4+(i+1)*48] for i in range(n) if struct.unpack_from('>H',data,4+i*48+42)[0]==291)
-        for source,typ,ident,xyz,scale,rotation in [(cage,CAGE_TYPE,props()['gate'],CAGE_XYZ,.33,0),(switch,33,props()['switch'],SWITCH_XYZ,1.0,180)]:
+        for source,typ,ident,xyz,scale,rotation in [(cage,CAGE_TYPE,props()['gate'],CAGE_XYZ,.33,0)]:
             rec=bytearray(source)
             struct.pack_into('>4f',rec,0,*xyz,scale);struct.pack_into('>3f',rec,24,0,rotation,0);struct.pack_into('>HH',rec,40,typ,ident);extra+=rec
     tail=data[4+n*48:]
@@ -167,11 +167,12 @@ def patched_scripts(data):
             result+=struct.pack('>H',len(executions))+b''.join(struct.pack('>4h',*e) for e in executions)
         return result
     gate=script(ids['gate'],[
-        ([(1,0,0,0)],[(1,1,0,0),(38,2,0,0)]),
+        ([(1,0,0,0)],[(1,1,0,0)]),
+        ([(1,1,0,0),(0x7FFE,0x4D35,0,0)],[(1,10,0,0)]),
         ([(1,10,0,0)],[(69,1,0,255),(70,0,0,0),(71,0,0,0),(1,11,0,0),(38,2,0,0)]),
     ])
     switch=script(ids['switch'],[
-        ([(1,0,0,0)],[(20,1,10,0),(22,1,1,0),(1,1,0,0)]),
+        ([(1,0,0,0)],[(1,1,0,0)]),
         ([(1,1,0,0),(24,171,1,0)],[(17,1,1,0),(5,ids['gate'],10,0),(84,ids['gate'],1,0),(1,2,0,0)]),
         ([(1,2,0,0)],[(15,140,0,0),(38,2,0,0),(1,3,0,0)]),
     ])
@@ -182,11 +183,13 @@ def patched_scripts(data):
             count=struct.unpack_from('>H',data,offset)[0];offset+=2+count*8
             count=struct.unpack_from('>H',data,offset)[0];offset+=2+count*8
     assert not any(data[offset:]),'Nonzero native script trailer'
-    return struct.pack('>H',struct.unpack_from('>H',data)[0]+2)+data[2:offset]+gate+switch+data[offset:]
+    return struct.pack('>H',struct.unpack_from('>H',data)[0]+1)+data[2:offset]+gate+data[offset:]
 
 def patch_code(fh,symbols):
     from m4_encounter import patch_code as encounter_patch
     encounter_patch(fh,symbols)
+    from krusha_ammo import patch_code as ammo_patch
+    ammo_patch(fh,symbols)
     # These two Model2 unload paths turn a live texture pointer back into a
     # file ID for a later table25 reload. Preserve the external alias; the
     # native reference/free path must continue to see its real table27 key.

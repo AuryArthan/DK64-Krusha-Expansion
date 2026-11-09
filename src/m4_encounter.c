@@ -7,6 +7,7 @@ extern s32 m4EncounterFindPickup(s16);
 extern void krushaNativeActorDelete(void*);
 
 #define ENCOUNTER_TRIGGER 250
+#define ENCOUNTER_HITS 8
 #define PAD_X 1835.0f
 #define PAD_Y 286.0f
 #define PAD_Z 1490.0f
@@ -17,7 +18,7 @@ volatile u32 m4EncounterHurtTrace[12]={0};
 static s32 previous_map=-1;
 static u32 previous_frame,pending_at;
 static u8 pending,dropped;
-static u32 hit_ids[5];
+static u32 hit_ids[ENCOUNTER_HITS];
 static u8 hits;
 static struct {u8* pointer;u16 id;} grenades[24];
 static void* hurt_source;
@@ -112,17 +113,17 @@ void m4EncounterDamage(void* target,void* source) {
     int seen=0;
     for (int i=0;i<hits;i++) if (hit_ids[i]==uid) seen=1;
     m4EncounterTrace[13]=uid;m4EncounterTrace[14]=seen;m4EncounterTrace[15]++;
-    if (!krushaEnabled() || type!=171 || seen || hits>=5 || *(s16*)(actor+0x134)<=0) {
+    if (!krushaEnabled() || type!=171 || seen || hits>=ENCOUNTER_HITS || *(s16*)(actor+0x134)<=0) {
         /* One native explosion can test several collision shapes. Preserve
          * the accepted hurt/death result on its second contact; clearing it
-         * here would leave a zero-health Klump alive after the fifth hit. */
-        context[0x200]=hits>=5 ? 9 : (type==171 && seen ? 4 : 0);
+         * here would leave a zero-health Klump alive after the eighth hit. */
+        context[0x200]=hits>=ENCOUNTER_HITS ? 9 : (type==171 && seen ? 4 : 0);
         return;
     }
     hit_ids[hits++]=uid;
-    *(s16*)(actor+0x134)=5-hits;
-    context[0x200]=hits==5 ? 9 : 4;
-    m4EncounterTrace[1]=hits;m4EncounterTrace[2]=5-hits;
+    *(s16*)(actor+0x134)=ENCOUNTER_HITS-hits;
+    context[0x200]=hits==ENCOUNTER_HITS ? 9 : 4;
+    m4EncounterTrace[1]=hits;m4EncounterTrace[2]=ENCOUNTER_HITS-hits;
 }
 
 void m4EncounterKlumpUpdate(void) {
@@ -132,9 +133,9 @@ void m4EncounterKlumpUpdate(void) {
     if (!krushaEnabled() || !DetectAdventure() || won()) {krushaNativeActorDelete(actor);return;}
     u8* context=(void*)0x807FBB70;
     /* Shouts use the spawner's native instrument-immunity bit. Other instant
-     * kill flags (shockwave/slam) must not bypass the five-projectile fight. */
+     * kill flags (shockwave/slam) must not bypass the eight-projectile fight. */
     context[0x15]=0;
-    if (hits<5 && context[0x200]==9) context[0x200]=0;
+    if (hits<ENCOUNTER_HITS && context[0x200]==9) context[0x200]=0;
     native();
     m4EncounterTrace[8]=*(u16*)(actor+0x136);
     m4EncounterTrace[9]=*(u16*)(actor+0x134);
@@ -157,7 +158,7 @@ void m4EncounterThrow(s16 type,s16 model,f32 scale,s16 angle,f32 forward,f32 ver
 
 int m4EncounterDrop(void* enemy) {
     if (!m4EncounterKlump(enemy)) return 0;
-    if (dropped || won() || hits!=5) return 1;
+    if (dropped || won() || hits!=ENCOUNTER_HITS) return 1;
     u8* actor=enemy;
     f32 x=*(f32*)(actor+0x7C),y=*(f32*)(actor+0x80)+30,z=*(f32*)(actor+0x84);
     int (*floor)(f32,f32,f32*)=(void*)0x80667110;
@@ -167,6 +168,7 @@ int m4EncounterDrop(void* enemy) {
     m4EncounterPickupID=spawn(9,x,y,z,0,0);
     if (m4EncounterPickupID>=0) {
         collect(m4EncounterPickupID,9,0,1,0,0);
+        playSong(20,1.0f); /* Native short GB-appearance cue, once per drop. */
         dropped=1;m4EncounterTrace[4]++;m4EncounterTrace[5]=m4EncounterPickupID;
     }
     return 1;
@@ -223,9 +225,9 @@ void m4EncounterTick(void) {
         void (*init)(void*,void*)=(void*)0x80726744;
         init(actor,record);
         *(u16*)(record+0x46)|=0x44; /* native: force loaded, instrument immune */
-        *(s16*)(actor+0x134)=5;
+        *(s16*)(actor+0x134)=ENCOUNTER_HITS;
         *(s16*)(actor+0x136)=2 * *(s16*)(0x8074D0C4+187*4+2);
-        pending=0;hits=0;m4EncounterTrace[0]++;m4EncounterTrace[2]=5;
+        pending=0;hits=0;m4EncounterTrace[0]++;m4EncounterTrace[2]=ENCOUNTER_HITS;
         m4EncounterTrace[11]=*(u32*)(actor+0x54);
         m4EncounterTrace[12]=frame();return;
     }

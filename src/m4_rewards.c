@@ -7,6 +7,7 @@ extern void m4BonusTick(void);
 extern s32 m4BonusPhysicalID;
 extern s32 m4EncounterPickupID;
 extern void m4EncounterTick(void);
+extern const void* krushaAmmoSprite(void);
 
 static s32 reward_map=-1;
 static u32 started,effect_at;
@@ -89,11 +90,31 @@ int m4SetupHidden(s32 map,s32 id) {
         krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+slot,1);
 }
 
+/* Native cage collision has no gun-switch hit group. Test only actual live
+ * bazooka actors at its body (including the native impact/explosion frame).
+ * No player proximity, generic explosion or thrown-orange activation. */
+static int cageProjectile(void) {
+    u8* node=*(u8**)0x807FC400;
+    for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
+        u8* actor=*(u8**)(node+0x44);
+        if (!actor || *(u32*)(actor+0x58)!=171) continue;
+        f32 x=*(f32*)(actor+0x7C)-1680;
+        f32 y=*(f32*)(actor+0x80)-286.27f;
+        f32 z=*(f32*)(actor+0x84)-4245;
+        if (x>=-26 && x<=26 && z>=-26 && z<=26 && y>=-8 && y<=60) {
+            m4RewardTrace[13]++;m4RewardTrace[14]=*(u32*)(actor+0x54);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int m4ScriptCondition(u16* instruction,s16 runtime) {
-    if ((instruction[0]&0x7FFF)!=0x7FFE || instruction[1]!=0x4D34 || CurrentMap!=7) return -1;
+    if ((instruction[0]&0x7FFF)!=0x7FFE || (instruction[1]!=0x4D34 && instruction[1]!=0x4D35) || CurrentMap!=7) return -1;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     s16 id=setupId(runtime);
     if (id!=M4_GATE_ID && id!=M4_SWITCH_ID) return -1;
+    if (instruction[1]==0x4D35) return id==M4_GATE_ID && krushaEnabled() && DetectAdventure() && cageProjectile();
     int disabled=!krushaEnabled() || !DetectAdventure() ||
         krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+1,1);
     return (instruction[0]&0x8000) ? !disabled : disabled;
@@ -138,7 +159,18 @@ void m4RewardsTick(void) {
              * Wake only until native script operations have hidden it. */
             if (disabled && (script[0x60]!=1 || *(u16*)(script+0x62) || script[0x70] || script[0x71]))
                 runState(script,1,0);
-            if (!disabled && ids[i]==M4_SWITCH_ID && script[0x48]>=2) cage_open=1;
+            if (!disabled && ids[i]==M4_GATE_ID) {
+                if (script[0x48]>=10) cage_open=1;
+                else {
+                    /* Native one-frame world sprite: no extra actor or collision. */
+                    void (*begin)(s32)=(void*)0x807149B8;
+                    void (*mode)(s32)=(void*)0x80714998;
+                    void (*layer)(s32)=(void*)0x80714A28;
+                    void (*draw)(const void*,f32,f32,f32,f32)=(void*)0x80714CC0;
+                    begin(1);mode(2);layer(4);
+                    draw(krushaAmmoSprite(),0.65f,1680,354,4245);
+                }
+            }
         }
     }
     if (reward_map<0) return;

@@ -1,4 +1,5 @@
 .importobj "obj/src_krusha.o"
+.importobj "obj/src_krusha_ammo.o"
 .importobj "obj/src_krusha_barrel.o"
 .importobj "obj/src_krusha_colors.o"
 .importobj "obj/src_krusha_options.o"

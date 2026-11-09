@@ -1,6 +1,6 @@
 """Prepare Krusha's private Tiny victory bytecode from the verified USA ROM.
 
-Tiny's opening two thirds lead into Disco Chunky's moving pointing stance.
+Tiny's opening two thirds lead into Disco Chunky's opening pointing/breathing stance.
 Original script/resource tables are untouched; the scoped interpreter adapter
 uses this resident copy and Krusha's own voice cues.
 """
@@ -24,19 +24,18 @@ def make_script(rom):
         assert script.count(needle)==1
         pos=script.index(needle)
         script[pos+1:pos+3]=struct.pack('>H',0x275)
-    # Native boot-time Rap observation: Chunky actor200 changes raw2C9
-    # (enter pointing pose) to2CA (animated/breathing hold). Use the latter,
-    # not a frozen keyframe or the disco costume/model. Tiny's124-frame
-    # victory keeps its first83 frames, followed by41 frames of the hold.
+    # Native Rap raw2C9 is the initial sustained pointing pose;2CA adds
+    # the later looking-around motion the user rejected. Keep the actual
+    # animated2C9 channel, not a frozen frame, for the last41 game frames.
     cut=script.index(bytes.fromhex('0a429c0000'))  # original frame78 cue
     wait=lambda f:b'\x0a'+struct.pack('>f',f)
     cue=bytes.fromhex('39027500')
-    script=script[:cut]+wait(78)+cue+wait(83)+bytes.fromhex('1502ca40000000')+wait(8)+cue+wait(41)+bytes.fromhex('4b0040002900')
+    script=script[:cut]+wait(78)+cue+wait(83)+bytes.fromhex('1502c940000000')+wait(8)+cue+wait(41)+bytes.fromhex('4b0040002900')
     return script
 
 def prepare(rom_path):
     script=make_script(Path(rom_path).read_bytes())
-    text='/* Private Tiny opening + moving Disco Chunky ending, Krusha voices. */\n'
+    text='/* Private Tiny opening + initial Disco Chunky pose, Krusha voices. */\n'
     text+='static const u8 krushaVictoryScript[] = {\n'
     text+=''.join('0x%02X,%s'%(v,'\n' if i%12==11 else ' ') for i,v in enumerate(script))+'\n};\n'
     (ROOT/'include/krusha_victory.generated.h').write_text(text)

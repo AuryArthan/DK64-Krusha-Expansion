@@ -94,10 +94,9 @@ void krushaProgressWrite(unsigned int file, unsigned int bit, unsigned int width
     writeBits(value, extensionBit(file, bit), width);
 }
 
-/* Working counts follow Lanky's native 700-unit mix, as requested: first the
- * bunches, then balloons, then singles in each area. This defines identities
- * and weights, not XYZ placements. 231 banana objects + 99 coins leaves 54
- * spare slots. Final annotations may revise the registry with a format bump. */
+/* Preserve K07.2 identities and weights. Each world now counts only the
+ * first3 bunches, first2 balloons and first15 singles (50 CB). Retired flags
+ * remain stored, never reassigned; existing100-CB saves naturally read50. */
 typedef struct BananaBudget {
     u16 first;
     u8 bunches;
@@ -117,6 +116,9 @@ int krushaProgressBananas(unsigned int file, unsigned int level) {
     if (level >= 7) return 0;
     budget = &banana_budget[level];
     for (i = 0; i < budget->bunches + budget->balloons + budget->singles; i++) {
+        if (i < budget->bunches && i >= 3) continue;
+        if (i >= budget->bunches && i < budget->bunches+budget->balloons && i-budget->bunches >= 2) continue;
+        if (i >= budget->bunches+budget->balloons && i-budget->bunches-budget->balloons >= 15) continue;
         weight = i < budget->bunches ? 5 : i < budget->bunches + budget->balloons ? 10 : 1;
         result += weight * krushaProgressRead(file, budget->first + i, 1);
     }
@@ -152,7 +154,6 @@ void krushaCollectTotals(void) {
     for (level = 0; level < 8; level++) {
         totals[0] += MovesBase[5].gb_count[level];
         totals[7] += krushaProgressRead(file, KRUSHA_GB_BIT + level * 5 + 4, 1);
-        if (level < 7) totals[3] += krushaProgressRead(file, KRUSHA_MEDAL_BIT + level, 1);
     }
 }
 
@@ -162,7 +163,7 @@ int krushaProgressFullSet(void) {
      * returned-blueprint aggregates come from permanent flags. No coin-wallet
      * or all-CB requirement. The Rareware GB's own permanent flag is required. */
     return totals[0] == 225 && totals[1] == 10 && totals[2] == 8 &&
-           totals[3] == 47 && totals[4] == 1 && totals[5] == 20 &&
+           totals[3] == 40 && totals[4] == 1 && totals[5] == 20 &&
            totals[6] == 1 && totals[7] == 48 && checkFlag(0x12D, 0);
 }
 
@@ -192,7 +193,7 @@ static void storeLiveProgress(u8 file) {
     for (level = 0; level < 7; level++) {
         fed = MovesBase[5].tns_cb_count[level];
         if (fed < 0) fed = 0;
-        if (fed > 100) fed = 100;
+        if (fed > 50) fed = 50;
         krushaProgressWrite(file, KRUSHA_FED_BIT + level * 7, 7, fed);
     }
     /* Gun/shout/story bits are independent saved ownership. The baseline's
@@ -202,7 +203,7 @@ static void storeLiveProgress(u8 file) {
 void krushaSavePackedWrite(int type, u8 character, u8 level, u8 file, u32 value) {
     if (character == 5 && type >= 1 && type <= 11) {
         if (type == 9) krushaProgressWrite(file, KRUSHA_WALLET_BIT, 8, value > 255 ? 255 : value);
-        else if (type == 2 && level < 7) krushaProgressWrite(file, KRUSHA_FED_BIT + level * 7, 7, value > 100 ? 100 : value);
+        else if (type == 2 && level < 7) krushaProgressWrite(file, KRUSHA_FED_BIT + level * 7, 7, value > 50 ? 50 : value);
         return;
     }
     /* The native save routine writes its sequence field after its gameplay
@@ -243,11 +244,6 @@ void krushaSaveLoadGame(u8 file, int refill) {
 int krushaShopMedals(int base, int width, int type) {
     int (*native)(int,int,int) = (void*)0x80731AA8;
     int count = native(base,width,type);
-    if (base == 0x225 && width == 40 && type == 0) {
-        unsigned int file = *(volatile u8*)0x807467C8;
-        for (int level = 0; level < 7; level++)
-            count += krushaProgressRead(file,KRUSHA_MEDAL_BIT+level,1);
-    }
     return count;
 }
 

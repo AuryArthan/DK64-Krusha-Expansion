@@ -205,15 +205,17 @@ def write_placement_draft(out):
         polish=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
         if polish.exists():
             from m2_pickups import rows,balloons
-            from m4_rewards import SWITCH_XYZ
+            historical=json.loads((polish.parent/'japes-polish-v1.json').read_text())
+            drafts.append(historical)
             current=json.loads((polish.parent/'three-japes-implemented.json').read_text())
-            current.update(draft_id='japes-polish-v1',title='Implemented Japes pilot',scope='implemented-japes-pilot')
+            current.update(draft_id='japes-50-v1',title='Implemented 50-banana Japes pilot',scope='implemented-japes-pilot')
             current.pop('rom_sha256',None) # Source layout, not a binary certification.
+            current['pins']=[p for p in current['pins'] if p.get('label')!='JP-SW01']
             for pin in current['pins']:
-                if pin.get('label')=='JP-SW01':pin['xyz']=list(SWITCH_XYZ)
+                pin['notes']=pin.get('notes','').replace('2x','1.6x').replace('five','eight').replace('twice ordinary size','1.6 times ordinary size')
             current['pins']=rows()+balloons()+current['pins']
             drafts.append(current)
-            (out/'japes-polish-implemented.json').write_text(json.dumps(current,indent=2)+'\n')
+            (out/'japes-50-implemented.json').write_text(json.dumps(current,indent=2)+'\n')
             draft=current
         (out/'draft-seed.js').write_text('window.KRUSHA_DRAFTS='+json.dumps(drafts,separators=(',',':'))+';\nwindow.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')
     else:
@@ -234,7 +236,7 @@ def main():
             raise SystemExit('Refresh requires an existing matching USA atlas.')
         backup = out / 'ui-history' / str(time.time_ns())
         backup.mkdir(parents=True)
-        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json', 'japes-polish-implemented.json'):
+        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json', 'japes-50-implemented.json'):
             if (out / name).exists():
                 shutil.copyfile(out / name, backup / name)
         for name in UI_FILES:

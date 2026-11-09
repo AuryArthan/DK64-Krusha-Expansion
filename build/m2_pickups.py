@@ -7,7 +7,7 @@ PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v
 POLISH=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
 # Japes pilot registry; the three-object contact proof is preserved under runtime/.
 GROUND_SLOTS=tuple(range(10))+tuple(range(13,33))+tuple(range(231,241))
-BALLOON_SLOTS=(10,11,12)
+BALLOON_SLOTS=(10,11)
 KINDS={'single':(2,13,7100,8),'bunch':(4,43,7201,12),'coin':(6,29,7108,8)}
 
 def plan_pins():
