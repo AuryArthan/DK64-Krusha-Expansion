@@ -26,15 +26,15 @@ def make_script(rom):
         script[pos+1:pos+3]=struct.pack('>H',0x275)
     # Native Rap raw2C9 is the initial sustained pointing pose;2CA adds
     # the later looking-around motion the user rejected. Keep the actual
-    # animated2C9 channel, not a frozen frame. Start ten native animation
-    # frames (one third second) earlier.73+51 keeps the same script budget;
+    # animated2C9 channel, not a frozen frame. Start another six native
+    # animation frames (one fifth second) earlier.67+57 keeps the script budget;
     # live traces show the native ending completes at raw2C9's first30-frame
     # wrap, so actual control returns sooner (as with the former41 wait).
     # Move the first cue before the cut; retain the second at absolute91.
     cut=script.index(bytes.fromhex('0a429c0000'))  # original frame78 cue
     wait=lambda f:b'\x0a'+struct.pack('>f',f)
     cue=bytes.fromhex('39027500')
-    script=script[:cut]+wait(68)+cue+wait(73)+bytes.fromhex('1502c940000000')+wait(18)+cue+wait(51)+bytes.fromhex('4b0040002900')
+    script=script[:cut]+wait(62)+cue+wait(67)+bytes.fromhex('1502c940000000')+wait(24)+cue+wait(57)+bytes.fromhex('4b0040002900')
     return script
 
 def prepare(rom_path):

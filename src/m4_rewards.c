@@ -173,7 +173,8 @@ void m4RewardsTick(void) {
                     void (*layer)(s32)=(void*)0x80714A28;
                     void (*draw)(const void*,f32,f32,f32,f32)=(void*)0x80714CC0;
                     begin(1);mode(2);layer(4);
-                    draw(krushaAmmoSprite(),0.65f,1680,354,4245);
+                    /* Small hint on the south face, just outside its bars. */
+                    draw(krushaAmmoSprite(),0.35f,1680,299,4226);
                 }
             }
         }
