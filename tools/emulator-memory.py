@@ -132,7 +132,10 @@ class Memory:
         p = self.u32(0x807FBB4C)
         for i in range(min(count, 256)):
             zone = base + i * 0x3A
-            if self.read(zone + 0x10, 'u16') in (9, 16):
+            # Type12 is an ordinary map exit too (all five Giant Mushroom
+            # doors use it). Reuse its live record for this explicit travel
+            # fixture; native map loading and record restoration stay intact.
+            if self.read(zone + 0x10, 'u16') in (9, 12, 16):
                 for n, off in enumerate((0x7C, 0x80, 0x84)):
                     coordinate = self.read(p + off, 'f32')
                     value = math.floor(coordinate) - 10 if n == 1 else round(coordinate)
