@@ -11,6 +11,7 @@ def patchStaticCode(filename):
 		symbols = dict(line.split()[:2][::-1] for line in
 			Path(rom.replace('.z64', '.sym')).read_text().splitlines() if len(line.split()) >= 2)
 		for address, name, prologue in [
+			(0x80713764, 'krushaintrotitle', '3c0e807485ce4490'),
 			(0x8060B7F0, 'krushasavelayoutinit', '27bdffd8afb1001c'),
 			(0x8060C648, 'krushasavepackedwrite', '27bdffd8afbf001c'),
 			(0x8060C6B8, 'krushasavepackedread', '27bdffd8afbf001c'),
@@ -35,6 +36,10 @@ def patchStaticCode(filename):
 		# Clear only its unreachable body, retaining offsets and overlay slot size.
 		fh.seek(0x8060B7F8 - 0x805FB300)
 		fh.write(bytes(0x8060B84C - 0x8060B7F8))
+		# Title renderer is also replaced completely. Retain its entry hook and
+		# all overlay offsets, freeing compression headroom only in dead code.
+		fh.seek(0x8071376C - 0x805FB300)
+		fh.write(bytes(0x807138A4 - 0x8071376C))
 
 		# Native EEPROM writer: desired data was already snapshotted by the
 		# preceding memcpy. Replace ONLY its local old-device comparison copy.

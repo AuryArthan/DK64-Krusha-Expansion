@@ -6,7 +6,7 @@ extern Gfx* widescreenNativeCameraMask(Gfx*);
 extern Gfx* widescreenNativeWater(Gfx*);
 extern Gfx* widescreenNativeSniperMask(Gfx*, void*);
 extern Gfx* widescreenNativeShutterMask(Gfx*, void*);
-extern Gfx* widescreenNativeLogo(Gfx*);
+extern Gfx* krushaIntroCredits(Gfx*);
 extern void widescreenNativeQueue(void*, void*, u8);
 extern Gfx* widescreenNativeCounter(Gfx*, s16, s16, s16*, s16, u8*);
 extern Gfx* widescreenNativeText(Gfx*, u8, s16, s16, char*);
@@ -313,7 +313,7 @@ Gfx* widescreenText(Gfx* dl, u8 font, s16 x, s16 y, char* text) {
 Gfx* widescreenLogo(Gfx* dl) {
     Gfx* first = dl;
     rect_scope++;
-    dl = widescreenNativeLogo(dl);
+    dl = krushaIntroCredits(dl);
     rect_scope--;
     if (active()) textureRects(first, dl);
     return dl;

@@ -28,6 +28,8 @@ print()
 print("[1 / 8] - Compiling C Code")
 from character_colors import write_identity_header
 write_identity_header()
+from intro_assets import prepare as prepareIntro
+prepareIntro(ROMName)
 from m2_pickups import prepare as prepareM2, patch_setup as patchM2Setup, patch_paths as patchM2Paths
 prepareM2(ROMName)
 from m5_campaign import prepare as prepareM5, patch_scripts as patchM5Scripts
@@ -120,8 +122,8 @@ file_dict += [
 		"name": "Dolby Logo",
 		"pointer_table_index": 14,
 		"file_index": 176,
-		"source_file": "bin/Dolby.png",
-		"texture_format": "i4",
+		"source_file": "bin/Arthan.png",
+		"texture_format": "rgba5551",
 	},
 	{
 		"name": "Dolby Text",
@@ -134,7 +136,7 @@ file_dict += [
 		"name": "Title Screen",
 		"pointer_table_index": 14,
 		"file_index": 44,
-		"source_file": "bin/Title.png",
+		"source_file": "bin/ExpansionTitle.png",
 		"texture_format": "rgba5551",
 		"use_zlib": True,
 	},

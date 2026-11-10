@@ -1,3 +1,4 @@
+.importobj "obj/src_intro.o"
 .importobj "obj/src_krusha.o"
 .importobj "obj/src_krusha_ammo.o"
 .importobj "obj/src_krusha_barrel.o"
