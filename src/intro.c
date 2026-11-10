@@ -54,8 +54,8 @@ Gfx* krushaIntroCredits(Gfx* dl) {
     gDPSetCombineLERP(dl++, 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0,
                               0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0);
     s16 center = *(s16*)0x80744490 * 2;
-    dl = print(dl, center, 168 * 4 * scale, .38f * scale, text(13, 0, 1));
-    return print(dl, center, 181 * 4 * scale, .38f * scale, text(13, 1, 1));
+    dl = print(dl, center, 174 * 4 * scale, .38f * scale, text(13, 0, 1));
+    return print(dl, center, 187 * 4 * scale, .38f * scale, text(13, 1, 1));
 }
 
 /* Keep native fade and entrance offset, at the original vanilla title anchor.
