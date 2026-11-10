@@ -12,13 +12,13 @@
       "code": "JP",
       "pad": [
         1600.47,
-        286.0,
+        280,
         4149.621
       ],
       "boss": [
-        1820.979,
-        286.0,
-        4315.157
+        1685.954,
+        286,
+        4317.63
       ],
       "cage": [
         721.864,
@@ -39,31 +39,34 @@
       "trigger": 250,
       "fence": [
         [
-          1700.979,
+          1565.954,
           286.0,
-          4225.157
+          4227.63
         ],
         [
-          1940.979,
+          1805.954,
           286.0,
-          4225.157
+          4227.63
         ],
         [
-          1940.979,
+          1805.954,
           286.0,
-          4335.157
+          4337.63
         ],
         [
-          1700.979,
+          1565.954,
           286.0,
-          4335.157
+          4337.63
         ],
         [
-          1700.979,
+          1565.954,
           286.0,
-          4225.157
+          4227.63
         ]
-      ]
+      ],
+      "placement_notes": {
+        "pad": "Pad grounded at Y280 following user floating-pad report; bunch follows its top."
+      }
     },
     {
       "world": 1,
@@ -497,7 +500,7 @@
       "notes": "User layout: bunch on the relocated shout pad in Cranky clearing.",
       "xyz": [
         1600.298,
-        294.0,
+        288,
         4147.91
       ],
       "status": "proposal",
@@ -838,9 +841,9 @@
       "quantity": 1,
       "notes": "User-reviewed coin triple near Funky.",
       "xyz": [
-        1924.575,
+        1927.316,
         524,
-        2278.117
+        2268.959
       ],
       "status": "proposal",
       "pickup_slot": 231,
@@ -857,9 +860,9 @@
       "quantity": 1,
       "notes": "User coin group near Funky; moved ten units inward from steep lip so all three are walkable.",
       "xyz": [
-        1894.23,
+        1900.749,
         524,
-        2255.24
+        2252.278
       ],
       "status": "proposal",
       "pickup_slot": 232,
@@ -952,9 +955,9 @@
       "quantity": 1,
       "notes": "User-reviewed coin triple near the relocated gray Kasplat.",
       "xyz": [
-        1873.258,
+        1874.921,
         543.333,
-        3309.902
+        3311.06
       ],
       "status": "proposal",
       "pickup_slot": 237,
@@ -1007,11 +1010,11 @@
       "label": "JP-A01",
       "kind": "balloon",
       "quantity": 1,
-      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
+      "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units. PU THIS BALLON SLIGHTLY LOWER, NOT QUITE AS LOW AS THE DK BALLON NEARBY, BUT CLOSE Implemented at Y758, about19 units above nearby DK balloon path738\u2013740.",
       "xyz": [
-        2049.663,
-        806,
-        2297.82
+        2020.777,
+        758,
+        2331.575
       ],
       "status": "proposal",
       "pickup_slot": 10,
@@ -1028,9 +1031,9 @@
       "quantity": 1,
       "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 11. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
-        1976.184,
-        806,
-        2513.244
+        2427.221,
+        639.333,
+        2915.597
       ],
       "status": "proposal",
       "pickup_slot": 11,
