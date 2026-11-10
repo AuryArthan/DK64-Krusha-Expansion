@@ -8,8 +8,9 @@ def patchDolbyText(filename):
 	# The new second line is longer than the old fixed 33-byte field.
 	import struct
 	from pathlib import Path
-	lines = [b" ", b"WITH HELP FROM TOOLS DEVELOPED FOR",
-	         b"TAG-ANYWHERE BY ISOTARGE AND THE DK CREW"]
+	lines = [b"WITH THE HELP FROM: TAG-ANYWHERE TOOLS,",
+	         b"DK64 DECOMPILATION AND RANDOMIZER, DK64 RECOMPILED,",
+	         b"DK64 REVERSE ENGINEERED AND DONKVIEWER"]
 	header = bytearray([len(lines)])
 	offset = 0
 	for line in lines:

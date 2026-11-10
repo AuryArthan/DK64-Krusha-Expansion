@@ -26,11 +26,10 @@ def prepare(rom):
                        ((value >> 1) & 31) * 255 // 31, 255 * (value & 1)))
     vanilla = Image.new('RGBA', (224, 128))
     vanilla.putdata(pixels)
-    title = Image.new('RGBA', (224, 168))
-    title.alpha_composite(vanilla.resize((196, 112), Image.Resampling.LANCZOS), (14, 0))
+    title = vanilla.copy()
     expansion = Image.open(assets / 'expansion-source.png').convert('RGBA')
     assert expansion.size == (2172, 724)
-    title.alpha_composite(expansion.resize((168, 56), Image.Resampling.LANCZOS), (28, 112))
+    title.alpha_composite(expansion.resize((96, 32), Image.Resampling.LANCZOS), (24, 96))
     # The ROM's RGBA5551 has binary alpha. Explicit coverage threshold avoids
     # turning faint resampling fringes into opaque dark speckles.
     title.putalpha(title.getchannel('A').point(lambda a: 255 if a >= 128 else 0))
