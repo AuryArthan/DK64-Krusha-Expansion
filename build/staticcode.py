@@ -1,5 +1,7 @@
 def patchStaticCode(filename):
 	with open(filename, "r+b") as fh:
+		from mirror import validate_code
+		validate_code(fh)
 		# Experimental M1 save foundation. Install before native EEPROM startup.
 		# All original layout users derive sizes from 807ECEA0; adding a reserved
 		# 512-bit region retains native records, CRCs, spare-slot rotation and globals.

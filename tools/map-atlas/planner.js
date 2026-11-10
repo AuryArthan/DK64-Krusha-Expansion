@@ -92,6 +92,7 @@ window.createKrushaPlanner = function (host) {
   }
   function changed() { persist(); render(); host.change(); }
   function controls() {
+    $('map').style.cursor = host.style() === 'A' && (moving || $('place').checked) ? 'crosshair' : 'grab';
     $('undo').disabled = !undo.length; $('redo').disabled = !redo.length;
     $('move-proposal').disabled = host.style() !== 'A';
   }
@@ -102,6 +103,7 @@ window.createKrushaPlanner = function (host) {
       (p.xyz[1] < lo || p.xyz[1] > hi ? ' · outside the current height band' : '');
   }
   function fillEditor() {
+    controls();
     const p = current(); $('proposal-editor').hidden = !p;
     if (!p) return;
     $('edit-label').value = p.label; $('edit-kind').value = p.kind; $('edit-quantity').value = p.quantity;
@@ -215,14 +217,15 @@ window.createKrushaPlanner = function (host) {
       remember(); pins = pins.map(q => q.id === p.id ? candidate : q); changed(); fillEditor(); message(candidate.label + ' updated.');
     } catch (e) { message(e.message); }
   };
-  $('move-proposal').onclick = () => { if (!current() || host.style() !== 'A') return; moving = true; $('place').checked = false; message('Click map A to move ' + current().label + '. Height follows the palette settings. Escape cancels.'); };
+  $('move-proposal').onclick = () => { if (!current() || host.style() !== 'A') return; moving = true; $('place').checked = false; controls(); message('Click the crosshair center on map A to move ' + current().label + '. Height follows the palette settings. Escape cancels.'); };
   $('delete-proposal').onclick = () => { if (moveOnly || !current()) return; remember(); pins = pins.filter(p => p.id !== selectedId); selectedId = null; moving = false; changed(); fillEditor(); message('Proposal deleted. Undo can restore it.'); };
   $('close-editor').onclick = () => select(null);
   $('list-scope').onchange = render;
   for (const [id, from, to] of [['undo',undo,redo], ['redo',redo,undo]]) $(id).onclick = () => {
     if (!from.length) return; to.push(clone(pins)); pins = from.pop(); moving = false; if (!current()) selectedId = null; changed(); fillEditor(); message(id === 'undo' ? 'Last change undone.' : 'Change restored.');
   };
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { moving = false; $('place').checked = false; message('Placement cancelled. Existing proposals kept.'); } });
+  $('place').addEventListener('change', controls);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { moving = false; $('place').checked = false; controls(); message('Placement cancelled. Existing proposals kept.'); } });
   $('export').onclick = () => {
     host.download(new Blob([JSON.stringify({format:'krusha-atlas-notes-v2', source_sha1:host.sourceSha1, ...(moveOnly ? {mode:'move-only', draft_id:draft.draft_id} : {}), pins},null,2)], {type:'application/json'}), draftMode ? 'krusha-assistant-draft-edited.json' : 'krusha-placement-plan.json');
     $('storage-status').textContent = 'Plan export requested. Keep the downloaded JSON to reopen or share the plan.';

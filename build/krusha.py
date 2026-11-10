@@ -18,6 +18,7 @@ def patchKrushaShop(filename):
             (0x800291CC, 'krushafilesummarydraw', '27bdff10f7b40038'),
             (0x80025FB4, 'krushafindpurchase', '27bdffd0afb30020'),
             (0x8002D8AC, 'krushaoptionsinput', '27bdffd0afbf0024'),
+            (0x8002DEE8, 'krushaoptionsinit', '27bdffd0afbf0024'),
             (0x8002DBDC, 'krushaoptionsdraw', '3c0280802442bb60'),
             (0x8003292C, 'widescreenlogo', '27bdff18afb00020'),
         ]:

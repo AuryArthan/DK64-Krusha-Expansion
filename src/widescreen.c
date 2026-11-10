@@ -97,6 +97,8 @@ void widescreenPerspective(Mtx* matrix, u16* norm, f32 fov, f32 aspect,
         if (native_scale > 0.5f && native_scale < 2.0f)
             aspect *= (4.0f / 3.0f) / native_scale;
     }
+    extern s32 mirrorEnabled(void);
+    if (mirrorEnabled() && CurrentMap != 80) aspect = -aspect;
     widescreenNativePerspective(matrix, norm, fov, aspect, near, far, scale);
 }
 

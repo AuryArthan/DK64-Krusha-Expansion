@@ -21,6 +21,7 @@
 .importobj "obj/src_m4_rewards.o"
 .importobj "obj/src_m5_campaign.o"
 .importobj "obj/src_main.o"
+.importobj "obj/src_mirror.o"
 .importobj "obj/src_taganywhere.o"
 .importobj "obj/src_widescreen.o"
 .importobj "obj/src_z_texture_identity.o"

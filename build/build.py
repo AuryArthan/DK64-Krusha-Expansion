@@ -12,8 +12,11 @@ ARMIPS = os.environ.get("ARMIPS", "build/armips.exe" if os.name == "nt" else "ar
 GZIP = os.environ.get("N64_GZIP", "./build/gzip.exe" if os.name == "nt" else "gzip")
 ROMName = "./rom/dk64.z64"
 with open(ROMName, "rb") as base:
-	if hashlib.sha1(base.read()).hexdigest() != "cf806ff2603640a748fca5026ded28802f1f4a50":
+	base_bytes = base.read()
+	if hashlib.sha1(base_bytes).hexdigest() != "cf806ff2603640a748fca5026ded28802f1f4a50":
 		raise SystemExit("Expected the original USA DK64 ROM (SHA-1 CF806FF2603640A748FCA5026DED28802F1F4A50)")
+from mirror import validate_data
+validate_data(base_bytes)
 
 # Measure how long this takes
 import time
@@ -428,6 +431,8 @@ if os.path.getsize(newROMName) > 64 * 1024 * 1024:
 from scream_asset import appendScream
 appendScream(newROMName)
 appendBarrelAssets(newROMName)
+from mirror_assets import appendMirrorAssets
+appendMirrorAssets(newROMName)
 
 # Flashcart loader transfer padding (libdragon n64tool uses 16 KiB).
 # Append only: retain every existing code/asset byte and pointer address.

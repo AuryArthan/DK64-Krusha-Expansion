@@ -25,6 +25,8 @@ void cFuncLoop(void) {
 	// *(u32 *)(0x8061963C) = 0x00000000;
 
 	widescreenTick();
+	extern void gameOptionsTick(void);
+	gameOptionsTick();
 	krushaAdventure();
 	tagAnywhere();
 }

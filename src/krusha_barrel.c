@@ -43,6 +43,7 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * barrel and all five original faces remain byte-for-byte available when OFF.
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
+    s32 format = table;
     s32 campaign=m5FileAlias(table,index);
     if (campaign>=0) {table=27;index=campaign;}
     if (table==5 && index==0xED) { table=27;index=69; }
@@ -98,6 +99,10 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table==4 && index==7) { table=27; index=62; }
     if (table==7 && index>=7500 && index<=7507) { table=27; index-=7474; }
     if (table==25 && (index==7600 || index==7601)) { table=27; index-=7537; }
+    extern s32 mirrorFileIndex(s32, s32, s32);
+    extern void* mirrorFile(s32, s32, u8, u8);
+    s32 mirrored = mirrorFileIndex(format, table, index);
+    if (mirrored >= 0) return mirrorFile(format, mirrored, synchronous, unique);
     if (table == 27) {
         /* Native tables4/7/14/25 cache shared files; the originally empty
          * table27 has no cache. World pickups can request each model/frame

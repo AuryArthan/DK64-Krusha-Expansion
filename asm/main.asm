@@ -5,6 +5,7 @@
 
 ; Patch boot routine to DMA our code from ROM to RAM and run it
 .definelabel bootStart, 0x01FED020
+.definelabel residentBytes, 0x18000 ; Ends at805F2E00, below native static805FB300
 
 .orga 0x3154 ; ROM
 .headersize (0x80002554 - 0x3154) ; RDRAM-to-ROM mapping
@@ -15,7 +16,7 @@ NOP ; CRC Patch ; TODO: Can this be removed if correct gzip footers are written 
 
 modifiedBootCode:
 	LI a0, bootStart ; Start of ROM copy
-	LI a1, (bootStart + 0x11FE0) ; End of ROM copy
+	LI a1, (bootStart + residentBytes) ; End of ROM copy
 	LUI a2, 0x805D
 	JAL dmaFileTransfer
 	ORI a2, a2, 0xAE00 ; RAM location to copy to
@@ -25,7 +26,7 @@ resumeVanillaBootCode:
 
 .orga bootStart ; ROM
 .headersize (0x805DAE00 - bootStart) ; RDRAM-to-ROM mapping
-.area 0x11FE0 ; Must fit the reserved boot DMA region
+.area residentBytes ; Must fit the reserved boot DMA region
 
 displacedVanillaBootCode:
 	LUI v0, 0x8001

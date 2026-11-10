@@ -229,7 +229,6 @@ static const u16 kong_unlocked_flags[] = {
 static s32 inBadMapIndex = 0;
 static s32 inBadMapCache = 0;
 static u16 parentMapCache = 0;
-static s32 storySkipLoaded = 0;
 
 s32 inBadMap(void) {
 	if (inBadMapIndex == CurrentMap) {
@@ -301,14 +300,6 @@ void tagAnywhere(void) {
 
 	// Main Menu
 	if (CurrentMap == 80) {
-		// Remember Story Skip option through resets
-		if (!storySkipLoaded) {
-			StorySkip = checkFlag(35, 1);
-			storySkipLoaded = 1;
-		} else {
-			setFlag(35, StorySkip, 1);
-		}
-
 		if (StorySkip) {
 			// Start the player in DK Isles instead of Training Grounds
 			*(s8 *)(0x80714547) = 34;
@@ -428,6 +419,8 @@ void tagAnywhere(void) {
 	}
 
 	extern int m4RewardBusy(void);
+	extern int gameOptionsMode(void);
+	if (!gameOptionsMode()) return;
 	if (m4RewardBusy()) { tagDenied(); return; }
 	// Map is loading
 	if (LZFadeoutProgress > 0) {
