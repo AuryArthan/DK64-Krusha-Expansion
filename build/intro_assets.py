@@ -26,10 +26,17 @@ def prepare(rom):
                        ((value >> 1) & 31) * 255 // 31, 255 * (value & 1)))
     vanilla = Image.new('RGBA', (224, 128))
     vanilla.putdata(pixels)
-    title = vanilla.copy()
+    # Eight transparent rows above and below keep the vanilla screen anchor.
+    title = Image.new('RGBA', (224, 144))
+    title.paste(vanilla, (0, 8))
     expansion = Image.open(assets / 'expansion-source.png').convert('RGBA')
     assert expansion.size == (2172, 724)
-    title.alpha_composite(expansion.resize((96, 32), Image.Resampling.LANCZOS), (24, 96))
+    # Exact 1.36 enlargement about the old (72,112) midpoint, now(72,120)
+    # after padding. A25x local grid represents130.56x43.52 exactly while
+    # retaining LANCZOS filtering and whole native texel output.
+    patch = Image.new('RGBA', (132*25, 46*25))
+    patch.alpha_composite(expansion.resize((3264, 1088), Image.Resampling.LANCZOS), (18, 31))
+    title.alpha_composite(patch.resize((132, 46), Image.Resampling.LANCZOS), (6, 97))
     # The ROM's RGBA5551 has binary alpha. Explicit coverage threshold avoids
     # turning faint resampling fringes into opaque dark speckles.
     title.putalpha(title.getchannel('A').point(lambda a: 255 if a >= 128 else 0))
