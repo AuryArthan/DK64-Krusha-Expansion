@@ -25,7 +25,7 @@ def verify_ground_in_rom(path):
             assert row and struct.unpack_from('>H',row,40)[0]==pin['type'] and all(abs(x-y)<.002 for x,y in zip(struct.unpack_from('>3f',row),pin['xyz'])), f'ROM/placement-plan mismatch at {pin["label"]}; use its matching plan/build'
     return hashlib.sha256(PLAN.read_bytes()).hexdigest()
 def aliases():
-    # Keep all123 M4 resources and aliases stable. Japes retains67/87.
+    # Keep all123 M4 resources and aliases stable. Japes retains its legacy Kasplat61/encounter87 aliases.
     result=[];index=123
     for mid in sorted({w['map'] for w in worlds()}|{w['kasplat_map'] for w in worlds()}):
         if mid!=7:result.append(dict(table=16,map=mid,index=index));index+=1

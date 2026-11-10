@@ -1,7 +1,5 @@
 """Japes pilot enemy and isolated Kasplat palettes. Original tables stay intact."""
 import struct
-import json
-from pathlib import Path
 from character_colors import identity_color
 
 GRAY_SPAWNER_ID=3
@@ -24,10 +22,10 @@ def spawners(native):
     assert len(template)==22 and template[17]==0
     fence_id=max(fence_ids)+1
     assert fence_id<256
-    plan=Path(__file__).resolve().parent.parent/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
-    pin=next(p for p in json.loads(plan.read_text())['pins'] if p['id']=='assistant-draft1-jp-bp01')
-    assert pin['map']==MAP
-    xyz=tuple(round(n) for n in pin['xyz'])
+    from campaign_data import kasplat
+    placement=kasplat(MAP)
+    assert placement['kasplat_id']==GRAY_SPAWNER_ID
+    xyz=tuple(round(n) for n in placement['kasplat'])
     points=[(xyz[0]+x,xyz[1],xyz[2]+z) for x,z in [(-70,-70),(70,-70),(70,70),(-70,70),(-70,-70)]]
     fence=struct.pack('>H',len(points))+b''.join(struct.pack('>3h',*p) for p in points)+struct.pack('>3H',0,fence_id,1)
     extra=bytearray(template)

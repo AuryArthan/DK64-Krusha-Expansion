@@ -11,24 +11,24 @@
       "name": "Jungle Japes",
       "code": "JP",
       "pad": [
-        1835,
-        286,
-        1490
+        1600.47,
+        286.0,
+        4149.621
       ],
       "boss": [
-        2110,
-        286,
-        1450
+        1820.979,
+        286.0,
+        4315.157
       ],
       "cage": [
-        1680,
-        286.27,
-        4245
+        721.864,
+        294.27,
+        2099.173
       ],
       "kasplat": [
-        2151.559,
-        525.0,
-        2053.359
+        2001.826,
+        544.333,
+        3259.921
       ],
       "kasplat_map": 7,
       "gate_id": 498,
@@ -39,29 +39,29 @@
       "trigger": 250,
       "fence": [
         [
-          1780,
-          286,
-          1360
+          1700.979,
+          286.0,
+          4225.157
         ],
         [
-          2270,
-          286,
-          1360
+          1940.979,
+          286.0,
+          4225.157
         ],
         [
-          2270,
-          286,
-          1550
+          1940.979,
+          286.0,
+          4335.157
         ],
         [
-          1780,
-          286,
-          1550
+          1700.979,
+          286.0,
+          4335.157
         ],
         [
-          1780,
-          286,
-          1360
+          1700.979,
+          286.0,
+          4225.157
         ]
       ]
     },
@@ -494,11 +494,11 @@
       "label": "JP-B01",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "Bunch above Krusha shout pad",
+      "notes": "User layout: bunch on the relocated shout pad in Cranky clearing.",
       "xyz": [
-        1835,
-        294,
-        1490
+        1600.298,
+        294.0,
+        4147.91
       ],
       "status": "proposal",
       "pickup_slot": 0,
@@ -513,11 +513,11 @@
       "label": "JP-B02",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "Bunch four units above measured cage roof312.67; normal jump remains possible when cage opens",
+      "notes": "On the free entrance palm canopy. Native climbing confirmed the leaning trunk; canopy offset follows the previously tested palm, scaled and rotated for prop0.",
       "xyz": [
-        1680,
-        316.67,
-        4245
+        919.607,
+        480.15,
+        811.873
       ],
       "status": "proposal",
       "pickup_slot": 1,
@@ -532,11 +532,11 @@
       "label": "JP-B03",
       "kind": "bunch",
       "quantity": 1,
-      "notes": "Bunch on vacant palm120 canopy east of shout pad",
+      "notes": "User layout: bunch above the cage roof; reachable by an ordinary ground jump after the cage breaks.",
       "xyz": [
-        2267,
-        493,
-        1523
+        722.799,
+        324.67,
+        2096.898
       ],
       "status": "proposal",
       "pickup_slot": 2,
@@ -551,11 +551,11 @@
       "label": "JP-S01",
       "kind": "single",
       "quantity": 1,
-      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "notes": "User-reviewed Japes trail leading to the cage.",
       "xyz": [
-        2370,
-        284.0,
-        1420
+        845.295,
+        292,
+        2050.156
       ],
       "status": "proposal",
       "pickup_slot": 13,
@@ -570,11 +570,11 @@
       "label": "JP-S02",
       "kind": "single",
       "quantity": 1,
-      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "notes": "User-reviewed Japes trail leading to the cage.",
       "xyz": [
-        2255,
-        284.0,
-        1425
+        932.332,
+        292,
+        1976.014
       ],
       "status": "proposal",
       "pickup_slot": 14,
@@ -589,11 +589,11 @@
       "label": "JP-S03",
       "kind": "single",
       "quantity": 1,
-      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "notes": "User-reviewed Japes trail leading to the cage.",
       "xyz": [
-        2140,
-        287.396,
-        1435
+        1004.863,
+        292,
+        1880.918
       ],
       "status": "proposal",
       "pickup_slot": 15,
@@ -608,11 +608,11 @@
       "label": "JP-S04",
       "kind": "single",
       "quantity": 1,
-      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "notes": "User-reviewed Japes trail leading to the cage.",
       "xyz": [
-        2025,
-        286.554,
-        1450
+        1053.216,
+        292,
+        1790.657
       ],
       "status": "proposal",
       "pickup_slot": 16,
@@ -627,11 +627,11 @@
       "label": "JP-S05",
       "kind": "single",
       "quantity": 1,
-      "notes": "Natural bend from the eastern shore approach toward shout pad, clear of walls",
+      "notes": "User-reviewed Japes trail leading to the cage.",
       "xyz": [
-        1910,
-        290.311,
-        1470
+        1104.794,
+        292,
+        1702.009
       ],
       "status": "proposal",
       "pickup_slot": 17,
@@ -646,11 +646,11 @@
       "label": "JP-S06",
       "kind": "single",
       "quantity": 1,
-      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "notes": "User-reviewed Japes trail leading to the shout pad.",
       "xyz": [
-        1695,
-        284.0,
-        3615
+        1663.903,
+        284,
+        3593.636
       ],
       "status": "proposal",
       "pickup_slot": 18,
@@ -665,11 +665,11 @@
       "label": "JP-S07",
       "kind": "single",
       "quantity": 1,
-      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "notes": "User-reviewed Japes trail leading to the shout pad.",
       "xyz": [
-        1605,
-        284.0,
-        3730
+        1587.577,
+        284,
+        3693.587
       ],
       "status": "proposal",
       "pickup_slot": 19,
@@ -684,11 +684,11 @@
       "label": "JP-S08",
       "kind": "single",
       "quantity": 1,
-      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "notes": "User-reviewed Japes trail leading to the shout pad.",
       "xyz": [
-        1550,
-        284.0,
-        3850
+        1542.144,
+        284,
+        3802.624
       ],
       "status": "proposal",
       "pickup_slot": 20,
@@ -703,11 +703,11 @@
       "label": "JP-S09",
       "kind": "single",
       "quantity": 1,
-      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "notes": "User-reviewed Japes trail leading to the shout pad.",
       "xyz": [
-        1580,
-        284.0,
-        3990
+        1527.606,
+        284,
+        3929.835
       ],
       "status": "proposal",
       "pickup_slot": 21,
@@ -722,11 +722,11 @@
       "label": "JP-S10",
       "kind": "single",
       "quantity": 1,
-      "notes": "Continue the native yellow approach trail, pass west of Cranky, then reach cage",
+      "notes": "User-reviewed Japes trail leading to the shout pad.",
       "xyz": [
-        1615,
-        284.0,
-        4120
+        1551.231,
+        284,
+        4049.776
       ],
       "status": "proposal",
       "pickup_slot": 22,
@@ -741,11 +741,11 @@
       "label": "JP-S11",
       "kind": "single",
       "quantity": 1,
-      "notes": "Single just above riverbed, following the bottom underwater",
+      "notes": "User-reviewed Japes trail; underwater along the riverbed.",
       "xyz": [
-        1350,
-        164.0,
-        1810
+        1604.915,
+        164,
+        2092.948
       ],
       "status": "proposal",
       "pickup_slot": 23,
@@ -760,11 +760,11 @@
       "label": "JP-S12",
       "kind": "single",
       "quantity": 1,
-      "notes": "Single just above riverbed, following the bottom underwater",
+      "notes": "User-reviewed Japes trail; underwater along the riverbed.",
       "xyz": [
-        1460,
-        164.0,
-        1830
+        1611.255,
+        164,
+        2001.66
       ],
       "status": "proposal",
       "pickup_slot": 24,
@@ -779,11 +779,11 @@
       "label": "JP-S13",
       "kind": "single",
       "quantity": 1,
-      "notes": "Single just above riverbed, following the bottom underwater",
+      "notes": "User-reviewed Japes trail; underwater along the riverbed.",
       "xyz": [
-        1570,
-        164.0,
-        1850
+        1630.273,
+        164,
+        1916.712
       ],
       "status": "proposal",
       "pickup_slot": 25,
@@ -798,11 +798,11 @@
       "label": "JP-S14",
       "kind": "single",
       "quantity": 1,
-      "notes": "Single just above riverbed, following the bottom underwater",
+      "notes": "User-reviewed Japes trail; underwater along the riverbed.",
       "xyz": [
-        1680,
-        164.0,
-        1870
+        1663.238,
+        164,
+        1836.836
       ],
       "status": "proposal",
       "pickup_slot": 26,
@@ -817,11 +817,11 @@
       "label": "JP-S15",
       "kind": "single",
       "quantity": 1,
-      "notes": "Single just above riverbed, following the bottom underwater",
+      "notes": "User-reviewed Japes trail; underwater along the riverbed.",
       "xyz": [
-        1790,
-        164.0,
-        1890
+        1715.221,
+        164,
+        1748.084
       ],
       "status": "proposal",
       "pickup_slot": 27,
@@ -836,11 +836,11 @@
       "label": "JP-C01",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins close around the shout pad, radius46-53",
+      "notes": "User-reviewed coin triple near Funky.",
       "xyz": [
-        1794,
-        287.877,
-        1469
+        1924.575,
+        524,
+        2278.117
       ],
       "status": "proposal",
       "pickup_slot": 231,
@@ -855,11 +855,11 @@
       "label": "JP-C02",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins close around the shout pad, radius46-53",
+      "notes": "User coin group near Funky; moved ten units inward from steep lip so all three are walkable.",
       "xyz": [
-        1844,
-        290.826,
-        1537
+        1894.23,
+        524,
+        2255.24
       ],
       "status": "proposal",
       "pickup_slot": 232,
@@ -874,11 +874,11 @@
       "label": "JP-C03",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins close around the shout pad, radius46-53",
+      "notes": "User-reviewed coin triple near Funky.",
       "xyz": [
-        1876,
-        286.971,
-        1456
+        1955.628,
+        524,
+        2285.723
       ],
       "status": "proposal",
       "pickup_slot": 233,
@@ -893,11 +893,11 @@
       "label": "JP-C04",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along west wall near cage",
+      "notes": "User-reviewed coin triple around the shout pad.",
       "xyz": [
-        1308,
-        284.0,
-        4125
+        1581.525,
+        284,
+        4137.996
       ],
       "status": "proposal",
       "pickup_slot": 234,
@@ -912,11 +912,11 @@
       "label": "JP-C05",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along west wall near cage",
+      "notes": "User-reviewed coin triple around the shout pad.",
       "xyz": [
-        1319,
-        284.0,
-        4160
+        1621.137,
+        284,
+        4137.566
       ],
       "status": "proposal",
       "pickup_slot": 235,
@@ -931,11 +931,11 @@
       "label": "JP-C06",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along west wall near cage",
+      "notes": "User-reviewed coin triple around the shout pad.",
       "xyz": [
-        1329,
-        284.0,
-        4195
+        1599.609,
+        284,
+        4170.289
       ],
       "status": "proposal",
       "pickup_slot": 236,
@@ -950,11 +950,11 @@
       "label": "JP-C07",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along wall near gray Kasplat",
+      "notes": "User-reviewed coin triple near the relocated gray Kasplat.",
       "xyz": [
-        1897,
-        524.0,
-        2230
+        1873.258,
+        543.333,
+        3309.902
       ],
       "status": "proposal",
       "pickup_slot": 237,
@@ -969,11 +969,11 @@
       "label": "JP-C08",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along wall near gray Kasplat",
+      "notes": "User-reviewed coin triple near the relocated gray Kasplat.",
       "xyz": [
-        1924,
-        524.0,
-        2252
+        1870.527,
+        543.333,
+        3265.294
       ],
       "status": "proposal",
       "pickup_slot": 238,
@@ -988,11 +988,11 @@
       "label": "JP-C09",
       "kind": "coin",
       "quantity": 1,
-      "notes": "Three coins along wall near gray Kasplat",
+      "notes": "User-reviewed coin triple near the relocated gray Kasplat.",
       "xyz": [
-        1951,
-        524.0,
-        2274
+        1869.743,
+        543.333,
+        3215.083
       ],
       "status": "proposal",
       "pickup_slot": 239,
@@ -1010,7 +1010,7 @@
       "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Funky approach. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-082 (Funky's Armory). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 10. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
         2049.663,
-        806.0,
+        806,
         2297.82
       ],
       "status": "proposal",
@@ -1029,7 +1029,7 @@
       "notes": "M2 v0.8.0-dev.1 PILOT \u2014 installed provisionally in development ROM; editable, not approved final placement. Region: Snide ridge. Ordinary walk/run/jump/climb/swim route; no recruitment or personal potion move. Bazooka required; mark only initial anchor. Route and standing line of fire remain to be designed/tested.  Anchor: 007-model2-083 (Snide's HQ). Floor sampled; walls/props/entrance/ceiling and approach still need gameplay verification. K07.2 pickup slot 11. 2026-11-07 pickup polish: balloon anchor/route lowered 14 units.",
       "xyz": [
         1976.184,
-        806.0,
+        806,
         2513.244
       ],
       "status": "proposal",

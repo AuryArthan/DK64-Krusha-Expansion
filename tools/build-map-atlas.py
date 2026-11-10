@@ -227,12 +227,12 @@ def write_placement_draft(out):
             for w in data['worlds']:
                 for name,kind,key,notes in [
                     ('PAD','switch','pad','Shout here to summon the rare Klump. One paid shout; eight bazooka hits.'),
-                    ('KLUMP','gb','boss','Rare Klump drops one GB at its death location. 1.6 times native size, eight hits, triple grenades.'),
-                    ('CAGE','gb','cage','Hit the compact cage with a bazooka projectile. Small lime hint on its south side.'),
+                    ('KLUMP','gb','boss','Rare Klump drops one GB at its death location. About 1.47 times native size, eight hits, triple grenades.'),
+                    ('CAGE','gb','cage','Hit the compact cage with a bazooka projectile. Lime projectile hint on its roof.'),
                     ('BP','blueprint','kasplat','Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black.')]:
                     mid=w['kasplat_map'] if key=='kasplat' else w['map']
                     draft['pins'].append(dict(id='m5-'+w['code']+'-'+name,map=mid,map_name=w['name'],
-                        label=w['code']+'-'+name,kind=kind,quantity=1,xyz=w[key],notes=notes,status='campaign-draft'))
+                        label=w['code']+'-'+name,kind=kind,quantity=1,xyz=w[key],notes=w.get('placement_notes',{}).get(key,notes),status='campaign-draft'))
             drafts.append(draft)
             (out/'campaign-m5-v1.json').write_text(json.dumps(draft,indent=2)+'\n')
         (out/'draft-seed.js').write_text('window.KRUSHA_DRAFTS='+json.dumps(drafts,separators=(',',':'))+';\nwindow.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')

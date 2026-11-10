@@ -24,6 +24,8 @@ def parse_spawners(data):
     return fence_end,ids,records
 
 def spawners(rom):
+    from campaign_data import area
+    placement=area(7)
     from m3_kasplat import spawners as m3_spawners
     data=m3_spawners(read_file(rom,16,7));end,ids,records=parse_spawners(data)
     assert not any(r[19]==TRIGGER for r in records)
@@ -36,12 +38,12 @@ def spawners(rom):
         if template:break
     assert template is not None
     assert len(template)==22
-    record=bytearray(template);struct.pack_into('>3h',record,4,*BOSS_XYZ)
+    record=bytearray(template);struct.pack_into('>3h',record,4,*(round(v) for v in placement['boss']))
     # Ordinary world Klumps use size50 (24 of29 native instances);80 is1.6x (20% below the prior2x).
     fence_id=max(ids)+1;record[14]=fence_id;record[15]=80
     record[18]=0;record[19]=TRIGGER;record[20]=0
-    points=[(x,286,z) for x,z in [(1780,1360),(2270,1360),(2270,1550),(1780,1550),(1780,1360)]]
-    fence=struct.pack('>H',5)+b''.join(struct.pack('>3h',*v) for v in points)+struct.pack('>3H',0,fence_id,1)
+    points=placement['fence']
+    fence=struct.pack('>H',len(points))+b''.join(struct.pack('>3h',*(round(x) for x in v)) for v in points)+struct.pack('>3H',0,fence_id,1)
     return struct.pack('>H',len(ids)+1)+data[2:end]+fence+struct.pack('>H',len(records)+1)+b''.join(records)+record
 
 def remap_model(data,mapping):

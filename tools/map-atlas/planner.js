@@ -24,7 +24,7 @@ window.createKrushaPlanner = function (host) {
   if (draft) {
     $('draft-notice').hidden = false;
     $('draft-title').textContent = draftMode ? (draft.title || 'Assistant draft') + (moveOnly ? ' · move existing placements' : ' · review/edit') : 'Current campaign placement draft available';
-    $('draft-description').textContent = draftMode ? (campaign ? 'Current ROM placements: select a Krusha marker, then Move on map A or edit X/Y/Z. Types, counts and areas are fixed; original Kong collectibles remain visible references. Save plan JSON to share your moves. This does not change the ROM.' : pilot ? 'Japes source layout: ' + bananaTarget + ' bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current campaign draft to inspect its trails, coin clusters and rewards without replacing your own plan.';
+    $('draft-description').textContent = draftMode ? (campaign ? 'Current ROM placements: select a Krusha marker, then Move on map A or edit X/Y/Z and Challenge / access notes. Apply edits, then Save plan JSON to share your positions and instructions. Types, counts and areas are fixed; original Kong collectibles remain visible references. This does not change the ROM.' : pilot ? 'Japes source layout: ' + bananaTarget + ' bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current campaign draft to inspect its trails, coin clusters and rewards without replacing your own plan.';
     const u = new URL(location); u.searchParams.set('draft',draft.draft_id); $('open-assistant-draft').href = u;
     u.searchParams.set('draft','original'); $('open-original-plan').href = u;
     if (moveOnly) $('open-original-plan').hidden = true;
@@ -59,12 +59,14 @@ window.createKrushaPlanner = function (host) {
     const data = saved !== null ? JSON.parse(saved) : draftMode ? draft.pins : JSON.parse(localStorage.getItem('krusha-atlas-pins-v1') ?? '[]');
     if (!Array.isArray(data)) throw Error('Unexpected autosave format.');
     if (moveOnly) {
-      // Only matching positions migrate. Never import additions/deletions or
+      // Matching positions and notes migrate. Never import additions/deletions or
       // changed kinds/maps/quantities from an older free-form draft.
       const positions = new Map(data.map(p => [p.id, p]));
       pins = draft.pins.map(p => {
         const old = positions.get(p.id);
-        return normalize({...p, xyz: old && old.map === p.map && Array.isArray(old.xyz) && old.xyz.length === 3 && old.xyz.every(Number.isFinite) ? old.xyz : p.xyz});
+        return normalize({...p,
+          xyz: old && old.map === p.map && Array.isArray(old.xyz) && old.xyz.length === 3 && old.xyz.every(Number.isFinite) ? old.xyz : p.xyz,
+          notes: old && old.map === p.map && typeof old.notes === 'string' ? old.notes : p.notes});
       });
     } else pins = data.map(p => normalize(p, legacy));
     if (draftMode && saved === null) storageNotice = 'Loaded ' + (draft.title || 'assistant draft') + '; edits are separate from your original plan. ';
@@ -116,7 +118,7 @@ window.createKrushaPlanner = function (host) {
     selectedId = id; moving = false; fillEditor(); host.change();
     if (current()) {
       $('height-offset').value = types[current().kind][2];
-      message(current().label + (moveOnly ? ' selected. Move on map A or edit X/Y/Z.' : ' selected. Edit its fields, or move/delete it.'));
+      message(current().label + (moveOnly ? ' selected. Move on map A or edit X/Y/Z and notes, then Apply edits.' : ' selected. Edit its fields, or move/delete it.'));
     }
     if (focus && current()) host.focus(current().xyz);
   }
@@ -212,7 +214,7 @@ window.createKrushaPlanner = function (host) {
       const candidate = normalize({...p, label: $('edit-label').value, kind: $('edit-kind').value,
         quantity: Number($('edit-quantity').value), notes: $('edit-notes').value,
         xyz: ['x','y','z'].map(a => Number($('edit-' + a).value))});
-      if (moveOnly) Object.assign(candidate, normalize({...canonical.get(p.id), xyz: candidate.xyz}));
+      if (moveOnly) Object.assign(candidate, normalize({...canonical.get(p.id), xyz: candidate.xyz, notes: candidate.notes}));
       if (!candidate.label.trim()) throw Error('Enter a label.');
       remember(); pins = pins.map(q => q.id === p.id ? candidate : q); changed(); fillEditor(); message(candidate.label + ' updated.');
     } catch (e) { message(e.message); }
@@ -240,10 +242,10 @@ window.createKrushaPlanner = function (host) {
       if (moveOnly && (loaded.length !== canonical.size || loaded.some(p => {
         const c = canonical.get(p.id);
         return !c || p.map !== c.map || p.kind !== c.kind || p.quantity !== c.quantity;
-      }))) throw Error('Move-only plans must contain the same markers, areas, types and quantities. Only positions can change.');
+      }))) throw Error('Move-only plans must contain the same markers, areas, types and quantities. Only positions and notes can change.');
       const merged = new Map(pins.map(p => [p.id,p])); let added = 0, replaced = 0, kept = 0;
       for (let p of loaded) {
-        if (moveOnly) p = normalize({...canonical.get(p.id), xyz:p.xyz});
+        if (moveOnly) p = normalize({...canonical.get(p.id), xyz:p.xyz, notes:p.notes});
         if (!merged.has(p.id)) { merged.set(p.id,p); added++; }
         else if ($('import-policy').value === 'replace') { merged.set(p.id,p); replaced++; }
         else kept++;
@@ -258,8 +260,8 @@ window.createKrushaPlanner = function (host) {
       $(id).disabled = true;
       (id === 'delete-proposal' ? $(id) : $(id).closest('label')).hidden = true;
     }
-    for (const id of ['edit-label','edit-kind','edit-quantity','edit-notes']) $(id).disabled = true;
-    message('Select a Krusha marker, then Move on map A or edit its X/Y/Z. No additions or deletions.');
+    for (const id of ['edit-label','edit-kind','edit-quantity']) $(id).disabled = true;
+    message('Select a Krusha marker, then Move on map A or edit its X/Y/Z and notes. Apply edits to save. No additions or deletions.');
   }
   $('storage-status').textContent = storageNotice + 'Autosave stays in this browser; save plan JSON for a portable backup.';
   return {

@@ -37,13 +37,23 @@ def ground_non_japes():
 
 def rows(mid=7):
     retired=json.loads(POLISH.read_text())['retired_slots']
-    return [p for p in registry_rows(mid) if p['pickup_slot'] not in retired]
+    result=[p for p in registry_rows(mid) if p['pickup_slot'] not in retired]
+    if mid==7 or mid is None:
+        from campaign_data import ground
+        current={p['pickup_slot']:p for p in ground(7)}
+        for p in result:
+            if p['map']!=7:continue
+            reviewed=current[p['pickup_slot']]
+            assert all(p[k]==reviewed[k] for k in ('object_id','type','kind'))
+            p.update(xyz=reviewed['xyz'],notes=reviewed['notes'])
+    return result
 
 def balloons(mid=7):
     if mid!=7:
         from campaign_data import balloons as campaign_balloons
         return campaign_balloons(mid)
-    pins=plan_pins()
+    from campaign_data import balloons as campaign_balloons
+    pins={p['pickup_slot']:p for p in campaign_balloons(7)}
     # Japes has paths0..21. Native path lookup has only26 entries.
     return [dict(pins[slot],world=0,spawner_id=600+i,path_id=22+i) for i,slot in enumerate(BALLOON_SLOTS)]
 

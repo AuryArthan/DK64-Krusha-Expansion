@@ -39,7 +39,11 @@ def legacy_rows():
 def rows(mid=7):
     # Keep the reserved five-bit stride. Only gate1, encounter0 and Snide4
     # belong to the new three-reward design; retired2/3 remain stored only.
-    if mid==7:return [r for r in legacy_rows() if r['reward_id']==1]
+    if mid==7:
+        from campaign_data import area
+        cage=area(7)['cage']
+        return [dict(r,xyz=[cage[0],round(cage[1]-2.27,3),cage[2]])
+                for r in legacy_rows() if r['reward_id']==1]
     from campaign_data import worlds
     extra=[dict(map=w['map'],world=w['world'],object_id=w['reward_id'],reward_id=w['world']*5+1,type=TYPE,xyz=[w['cage'][0],round(w['cage'][1]-2.27,3),w['cage'][2]]) for w in worlds() if w['map']!=7 and (mid is None or w['map']==mid)]
     return rows(7)+extra if mid is None else extra
