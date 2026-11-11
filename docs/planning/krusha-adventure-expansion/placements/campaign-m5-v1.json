@@ -3069,11 +3069,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        4190.298,
-        202.534,
-        2998.82
+        4175.366,
+        207.338,
+        2950.501
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is198.534; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: revised outdoor cage-side trail, exact requested XYZ retained (native floor+4).",
       "status": "provisional-m5",
       "pickup_slot": 154,
       "object_id": 516,
@@ -3088,11 +3088,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        4043.109,
-        180.182,
-        3066.493
+        4025.258,
+        182.578,
+        2995.846
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is176.182; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: revised outdoor cage-side trail, exact requested XYZ retained (native floor+4).",
       "status": "provisional-m5",
       "pickup_slot": 155,
       "object_id": 515,
@@ -3107,11 +3107,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3873.926,
-        154.053,
-        3083.412
+        3875.15,
+        157.942,
+        3030.246
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is150.053; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: revised outdoor cage-side trail, exact requested XYZ retained (native floor+4).",
       "status": "provisional-m5",
       "pickup_slot": 156,
       "object_id": 514,
@@ -3221,11 +3221,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        136.378,
-        983.167,
-        698.871
+        183.811,
+        1615.342,
+        288.16
       ],
-      "notes": "Giant Mushroom ground-floor arc. ALL OF THESE 5 BANANAS I TRIED TO SET THE Y MANUALLY; BUT NOT SO ACCURATELY - SET THEM ON THE FIRST GROUND BELOW THEM Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: single on upper Mushroom walkway, floor1611.342+4. Exact requested XYZ retained.",
       "status": "provisional-m5",
       "pickup_slot": 162,
       "object_id": 525,
@@ -3392,11 +3392,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        547.568,
+        656.209,
         1843.167,
-        881.966
+        539.239
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: coin triple on Mushroom upper platform, floor1839.167+4. Exact requested XYZ retained.",
       "status": "provisional-m5",
       "pickup_slot": 285,
       "object_id": 524,
@@ -3411,11 +3411,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        572.946,
+        677.53,
         1843.167,
-        867.995
+        550.8
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: coin triple on Mushroom upper platform, floor1839.167+4. Exact requested XYZ retained.",
       "status": "provisional-m5",
       "pickup_slot": 286,
       "object_id": 523,
@@ -3430,11 +3430,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        548.974,
+        677.227,
         1843.167,
-        854.196
+        526.064
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall. THESE 3 COINS I ALSO TRIED SETTING Y MANUALLY, BUT NOT SO ACCURATELY; SO SET THEM ON THE FIRST GROUND BELOW Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "User Forest export2: coin triple on Mushroom upper platform, floor1839.167+4. Exact requested XYZ retained.",
       "status": "provisional-m5",
       "pickup_slot": 287,
       "object_id": 522,
