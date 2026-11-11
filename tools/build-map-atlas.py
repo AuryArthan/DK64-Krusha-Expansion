@@ -103,7 +103,7 @@ def classify(name, source):
     if name == 'Bonus Barrel': return 'bonus', 1
     if name in ('Crystal Coconut', 'Ammo Crate', 'Homing Ammo Crate', 'Orange',
                 'Watermelon Slice', 'Film', 'Headphones'): return 'supply', 1
-    if name.startswith(('Tag Barrel', 'Bananaport', 'Cranky', 'Funky', 'Candy', "Snide")):
+    if name.startswith(('Tag Barrel', 'Bananaport', 'Warp ', 'Cranky', 'Funky', 'Candy', "Snide", "Troff'n'Scoff Portal")):
         return 'landmark', 0
     return None, 0
 

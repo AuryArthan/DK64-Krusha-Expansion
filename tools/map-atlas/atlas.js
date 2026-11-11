@@ -2,7 +2,7 @@
 (() => {
 const $=id=>document.getElementById(id);
 const colors={DK:'#e2bb18',Diddy:'#dd4c3e',Lanky:'#448bdd',Tiny:'#aa5ac8',Chunky:'#56a64f',Shared:'#f2f0df',Unknown:'#7c8583',Krusha:'#d0d0d0'};
-const kinds={single:['Single banana','●'],bunch:['Banana bunch ×5','◆'],balloon:['Balloon ×10 (anchor)','○'],coin:['Colored coin','○'],gb:['Golden Banana','★'],blueprint:['Kasplat / blueprint','■'],medal:['Helm medal','⬟'],fairy:['Fairy (anchor)','✧'],rainbow:['Rainbow coin / dirt patch','⊕'],crown:['Crown / pad','♛'],quest:['Key / company coin / bean / pearl','⬟'],bonus:['Bonus barrel (reward site)','B'],supply:['Shared supplies','+'],landmark:['Shops / warps / tag barrels','T'],exit:['Area entrance / exit','↗']};
+const kinds={single:['Single banana','●'],bunch:['Banana bunch ×5','◆'],balloon:['Balloon ×10 (anchor)','○'],coin:['Colored coin','○'],gb:['Golden Banana','★'],blueprint:['Kasplat / blueprint','■'],medal:['Helm medal','⬟'],fairy:['Fairy (anchor)','✧'],rainbow:['Rainbow coin / dirt patch','⊕'],crown:['Crown / pad','♛'],quest:['Key / company coin / bean / pearl','⬟'],bonus:['Bonus barrel (reward site)','B'],supply:['Shared supplies','+'],landmark:['Shops / warps / tag barrels / boss portals','T'],exit:['Area entrance / exit','↗']};
 const canvas=$('map'),ctx=canvas.getContext('2d'),catalog=window.ATLAS_CATALOG.maps;
 let map=null,style='A',zoom=1,pan=[0,0],bounds=null,view=null,hit=[],request=0,selected=null,drag=null,planner=null,yaw=45,cosYaw=Math.SQRT1_2,sinYaw=Math.SQRT1_2,terrainCache=null;
 const filteredOwners=new Set(Object.keys(colors));
