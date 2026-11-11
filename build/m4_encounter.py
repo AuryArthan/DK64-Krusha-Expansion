@@ -42,6 +42,8 @@ def spawners(rom):
     # Ordinary world Klumps use size50 (24 of29 native instances);80 is1.6x (20% below the prior2x).
     fence_id=max(ids)+1;record[14]=fence_id;record[15]=80
     record[18]=0;record[19]=TRIGGER;record[20]=0
+    # This is the fight area's boundary, independent of the spawn point.
+    # Keep it fixed when moving Klump within the same clearing.
     points=placement['fence']
     fence=struct.pack('>H',len(points))+b''.join(struct.pack('>3h',*(round(x) for x in v)) for v in points)+struct.pack('>3H',0,fence_id,1)
     return struct.pack('>H',len(ids)+1)+data[2:end]+fence+struct.pack('>H',len(records)+1)+b''.join(records)+record
