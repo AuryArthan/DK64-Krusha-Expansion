@@ -375,24 +375,24 @@
       "name": "Gloomy Galleon",
       "code": "GA",
       "pad": [
-        2200.0,
-        1621.953,
-        3150.0
+        3238.484,
+        1683.213,
+        3220.847
       ],
       "boss": [
-        2400.0,
+        2400,
         1624.375,
-        3200.0
+        3200
       ],
       "cage": [
-        3390.0,
+        3390,
         1682.918,
-        2640.0
+        2640
       ],
       "kasplat": [
-        2910.0,
-        1684.782,
-        3250.0
+        2540,
+        1616.375,
+        3400
       ],
       "kasplat_map": 30,
       "fence": [
@@ -427,7 +427,13 @@
       "gate_id": 527,
       "pad_id": 526,
       "reward_id": 525,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "User Galleon pad grounded on native floor1683.213, correcting exported floor+20 marker.",
+        "boss": "Rare Klump drops one GB at its death location. 1.6 times native size, eight hits, triple grenades.",
+        "cage": "Hit the compact cage with a bazooka projectile. Small lime hint on its south side.",
+        "kasplat": "User approved moving beside tag barrel. Adjacent southern ground floor1610.375+6; spawn171 units from barrel, patrol stays outside its activation area; native clearance to be verified."
+      }
     },
     {
       "world": 4,
@@ -2333,11 +2339,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        2200.0,
-        1629.953,
-        3150.0
+        3238.484,
+        1691.213,
+        3221.767
       ],
-      "notes": "Bunch above shout pad",
+      "notes": "Bunch above shout pad Implementation: Bunch eight units above grounded shout pad; requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 103,
       "object_id": 524,
@@ -2352,9 +2358,9 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        3390.0,
+        3390,
         1713.318,
-        2640.0
+        2640
       ],
       "notes": "Bunch just above compact cage roof; reachable after opening",
       "status": "provisional-m5",
@@ -2375,7 +2381,7 @@
         1616.421,
         4220.399
       ],
-      "notes": "Distinctive native warp pad",
+      "notes": "Distinctive native warp pad. I MISTAKENLY SHIFTED THIS ONE BY JUST A BIT, KEEP YOUR ORIGINAL PLACEMENT Implementation: User explicitly requested original placement because exported slight shift was accidental; retain exact XYZ on native Warp1.",
       "status": "provisional-m5",
       "pickup_slot": 105,
       "object_id": 522,
@@ -2390,9 +2396,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2430.0,
-        1623.562,
-        3310.0
+        2872.582,
+        1681.052,
+        3228.242
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2409,9 +2415,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2340.0,
-        1623.562,
-        3310.0
+        2958.244,
+        1692.529,
+        3219.016
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2428,9 +2434,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2250.0,
-        1621.51,
-        3290.0
+        3042.587,
+        1694,
+        3191.341
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2447,9 +2453,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2180.0,
-        1621.935,
-        3230.0
+        3103.209,
+        1689.431,
+        3134.673
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2466,9 +2472,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2170.0,
-        1615.637,
-        3160.0
+        3161.196,
+        1678.134,
+        3060.872
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2485,9 +2491,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3210.0,
+        3210,
         1676.64,
-        2980.0
+        2980
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2504,9 +2510,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3270.0,
+        3270,
         1679.406,
-        2880.0
+        2880
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2523,9 +2529,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3330.0,
-        1674.0,
-        2800.0
+        3330,
+        1674,
+        2800
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2542,9 +2548,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3380.0,
-        1679.035,
-        2720.0
+        3370.031,
+        1678.106,
+        2736.816
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2561,9 +2567,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3390.0,
+        3390,
         1680.509,
-        2670.0
+        2670
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2580,9 +2586,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2830.0,
-        567.746,
-        1600.0
+        2728.654,
+        615.101,
+        2359.461
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2599,9 +2605,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2870.0,
-        581.264,
-        1730.0
+        2603.984,
+        608.361,
+        2397.24
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2618,9 +2624,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2900.0,
-        597.89,
-        1860.0
+        2467.98,
+        628.552,
+        2404.795
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2637,9 +2643,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2930.0,
-        611.069,
-        1990.0
+        2311.198,
+        632.737,
+        2399.128
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2656,9 +2662,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2970.0,
-        618.711,
-        2120.0
+        2163.861,
+        641.255,
+        2361.35
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2675,11 +2681,11 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        2280,
-        1745,
-        3230
+        1724.169,
+        1710.421,
+        4175.08
       ],
-      "notes": "Short rectangular route above dry aiming approach",
+      "notes": "Short rectangular route above dry aiming approach Implementation: Retain requested X/Z by lighthouse, raise balloon100 above nearby dry Warp1 landing1610.421. Exported685.973 is underwater; native Krusha and DK cannot equip/fire guns underwater.",
       "status": "provisional-m5",
       "pickup_slot": 113,
       "spawner_id": 600,
@@ -2694,9 +2700,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        3050,
-        1810,
-        3180
+        3244,
+        1782.17,
+        3118.789
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -2713,9 +2719,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2157.0,
-        1617.503,
-        3125.0
+        3256.872,
+        1687.715,
+        3194.183
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2732,9 +2738,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2200.0,
-        1614.558,
-        3200.0
+        3254.094,
+        1681.677,
+        3248.91
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2751,9 +2757,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2243.0,
-        1623.807,
-        3145.0
+        3208.05,
+        1691.192,
+        3221.124
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2770,11 +2776,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3010.0,
-        1694.0,
-        3190.0
+        2600,
+        587.392,
+        2540
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implementation: User requested all three on clear seabed, away from props; line along bottom near relocated underwater trail, floor+4. Native clearance to be verified.",
       "status": "provisional-m5",
       "pickup_slot": 270,
       "object_id": 497,
@@ -2789,11 +2795,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3010.0,
-        1685.387,
-        3250.0
+        2635,
+        603.86,
+        2540
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implementation: User requested all three on clear seabed, away from props; line along bottom near relocated underwater trail, floor+4. Native clearance to be verified.",
       "status": "provisional-m5",
       "pickup_slot": 271,
       "object_id": 496,
@@ -2808,11 +2814,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3010.0,
-        1674.0,
-        3310.0
+        2670,
+        620.328,
+        2540
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall. PU THESE THREE COINS SOMEWHERE ON THE BOTTOM OF THE SEA; SO THEY DONT INTERSECT OTHER OBJECTS Implementation: User requested all three on clear seabed, away from props; line along bottom near relocated underwater trail, floor+4. Native clearance to be verified.",
       "status": "provisional-m5",
       "pickup_slot": 272,
       "object_id": 495,
@@ -2827,9 +2833,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3300.0,
-        1676.161,
-        2580.0
+        3169.424,
+        1674,
+        2593.293
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
@@ -2846,9 +2852,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3300.0,
-        1680.203,
-        2640.0
+        3190.626,
+        1682.063,
+        2628.358
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
@@ -2865,9 +2871,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3300.0,
-        1680.248,
-        2700.0
+        3153.93,
+        1674,
+        2553.335
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
