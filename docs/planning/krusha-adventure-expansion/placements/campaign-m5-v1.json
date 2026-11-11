@@ -442,51 +442,51 @@
       "name": "Fungi Forest",
       "code": "FU",
       "pad": [
-        3150.0,
-        214.372,
-        500.0
+        2492.059,
+        216.644,
+        772.217
       ],
       "boss": [
-        3370.0,
-        201.833,
-        500.0
+        2527.626,
+        219.176,
+        645.478
       ],
       "cage": [
-        3850.0,
-        190.731,
-        3350.0
+        3871.184,
+        181.58,
+        2849.598
       ],
       "kasplat": [
-        3290.0,
+        3290,
         250.939,
-        3550.0
+        3550
       ],
       "kasplat_map": 48,
       "fence": [
         [
-          3250,
-          202,
-          400
+          2407.626,
+          219.176,
+          545.478
         ],
         [
-          3490,
-          202,
-          400
+          2647.626,
+          219.176,
+          545.478
         ],
         [
-          3490,
-          202,
-          600
+          2647.626,
+          219.176,
+          745.478
         ],
         [
-          3250,
-          202,
-          600
+          2407.626,
+          219.176,
+          745.478
         ],
         [
-          3250,
-          202,
-          400
+          2407.626,
+          219.176,
+          545.478
         ]
       ],
       "kasplat_id": 3,
@@ -494,7 +494,14 @@
       "gate_id": 529,
       "pad_id": 528,
       "reward_id": 527,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "Retain requested X/Z; native terrain below exported marker is216.644, with established 0 base/spawn offset. Native support to be checked.",
+        "boss": "Retain requested X/Z; native terrain below exported marker is205.176, with established 14 base/spawn offset. Native support to be checked.",
+        "cage": "Retain requested X/Z; native terrain below exported marker is175.310, with established 6.27 base/spawn offset. Native support to be checked.",
+        "kasplat": "Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black.",
+        "fence": "Translate established240x200 private patrol area around new spawn; original native enemy fences preserved."
+      }
     },
     {
       "world": 5,
@@ -2891,11 +2898,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        3150.0,
-        222.372,
-        500.0
+        2491.527,
+        224.644,
+        772.488
       ],
-      "notes": "Bunch above shout pad",
+      "notes": "Bunch above shout pad Implementation: Bunch eight units above relocated grounded shout pad; requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 136,
       "object_id": 526,
@@ -2910,11 +2917,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        3850.0,
-        221.131,
-        3350.0
+        3870.812,
+        211.98,
+        2847.95
       ],
-      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "notes": "Bunch just above compact cage roof; reachable after opening Implementation: Bunch four units above compact cage roof (base+26.4+4); requested near-centered X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 137,
       "object_id": 525,
@@ -2933,7 +2940,7 @@
         219.333,
         2916.875
       ],
-      "notes": "Native stump top along the woodland path",
+      "notes": "Native stump top along the woodland path. I MOVED THIS BY MISTAKE, IF IT WAS ON A SPECIAL PLACE PLEASE PLACE IT BACK Implementation: User explicitly marked the move accidental; restore exact original stump-top placement.",
       "status": "provisional-m5",
       "pickup_slot": 138,
       "object_id": 524,
@@ -2948,11 +2955,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3440.0,
-        200.334,
-        920.0
+        3094.741,
+        202.458,
+        1098.89
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is198.458; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 148,
       "object_id": 523,
@@ -2967,11 +2974,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3400.0,
-        207.099,
-        810.0
+        3010.504,
+        206.942,
+        998.774
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is202.942; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 149,
       "object_id": 522,
@@ -2986,11 +2993,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3330.0,
-        225.125,
-        700.0
+        2894.364,
+        206.174,
+        914.895
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is202.174; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 150,
       "object_id": 521,
@@ -3005,11 +3012,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3250.0,
-        231.247,
-        610.0
+        2779.564,
+        203.139,
+        846.882
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is199.139; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 151,
       "object_id": 519,
@@ -3024,11 +3031,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3180.0,
-        219.748,
-        540.0
+        2632.684,
+        197.547,
+        791.563
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is193.547; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 152,
       "object_id": 518,
@@ -3043,11 +3050,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        4060.0,
-        189.943,
-        3000.0
+        4317.185,
+        214.377,
+        2897.311
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is210.377; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 153,
       "object_id": 517,
@@ -3062,11 +3069,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        4030.0,
-        171.886,
-        3090.0
+        4190.298,
+        202.534,
+        2998.82
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is198.534; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 154,
       "object_id": 516,
@@ -3081,11 +3088,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3990.0,
-        165.787,
-        3170.0
+        4043.109,
+        180.182,
+        3066.493
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is176.182; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 155,
       "object_id": 515,
@@ -3100,11 +3107,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3940.0,
-        177.37,
-        3250.0
+        3873.926,
+        154.053,
+        3083.412
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is150.053; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 156,
       "object_id": 514,
@@ -3119,11 +3126,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3890.0,
-        187.711,
-        3320.0
+        3704.743,
+        158.277,
+        3068.185
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: First walkable terrain below exported Y1050 is154.277; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 157,
       "object_id": 513,
@@ -3138,11 +3145,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        700,
-        4.0,
-        400
+        138.701,
+        1005.347,
+        355.642
       ],
-      "notes": "Giant Mushroom ground-floor arc",
+      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is1001.347; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 158,
       "object_id": 529,
@@ -3157,11 +3164,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        700,
-        4.0,
-        500
+        112.202,
+        994.579,
+        438.083
       ],
-      "notes": "Giant Mushroom ground-floor arc",
+      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is990.579; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 159,
       "object_id": 528,
@@ -3176,11 +3183,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        670,
-        4.0,
-        600
+        101.897,
+        983.167,
+        529.636
       ],
-      "notes": "Giant Mushroom ground-floor arc",
+      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 160,
       "object_id": 527,
@@ -3195,11 +3202,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        630,
-        4.0,
-        680
+        108.239,
+        983.167,
+        621.586
       ],
-      "notes": "Giant Mushroom ground-floor arc",
+      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 161,
       "object_id": 526,
@@ -3214,11 +3221,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        560,
-        4.0,
-        730
+        136.378,
+        983.167,
+        698.871
       ],
-      "notes": "Giant Mushroom ground-floor arc",
+      "notes": "Giant Mushroom ground-floor arc. ALL OF THESE 5 BANANAS I TRIED TO SET THE Y MANUALLY; BUT NOT SO ACCURATELY - SET THEM ON THE FIRST GROUND BELOW THEM Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 162,
       "object_id": 525,
@@ -3233,11 +3240,11 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        3330,
-        340,
-        700
+        3033.049,
+        289.355,
+        346.526
       ],
-      "notes": "Short rectangular route above dry aiming approach",
+      "notes": "Short rectangular route above dry aiming approach Implementation: Balloon100 units above local dry ground below exported1050 marker; requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 146,
       "spawner_id": 600,
@@ -3252,11 +3259,11 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        3980,
-        300,
-        3230
+        3487.449,
+        304.801,
+        3326.654
       ],
-      "notes": "Short rectangular route above dry aiming approach",
+      "notes": "Short rectangular route above dry aiming approach Implementation: Balloon100 units above local dry ground below exported1050 marker; requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 147,
       "spawner_id": 601,
@@ -3271,11 +3278,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3107.0,
-        209.331,
-        475.0
+        2469.783,
+        225.064,
+        760.03
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implementation: First walkable terrain below exported Y1050 is221.064; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 279,
       "object_id": 507,
@@ -3290,11 +3297,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3150.0,
-        224.017,
-        550.0
+        2493.737,
+        220.903,
+        796.548
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implementation: First walkable terrain below exported Y1050 is216.903; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 280,
       "object_id": 506,
@@ -3309,11 +3316,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3193.0,
-        205.713,
-        475.0
+        2516.11,
+        215.144,
+        756.557
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implementation: First walkable terrain below exported Y1050 is211.144; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 281,
       "object_id": 505,
@@ -3328,11 +3335,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3390.0,
-        228.67,
-        3490.0
+        3382.943,
+        242.539,
+        3611.487
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implementation: First walkable terrain below exported Y1050 is238.539; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 282,
       "object_id": 504,
@@ -3347,11 +3354,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3390.0,
-        236.022,
-        3550.0
+        3393.608,
+        242.374,
+        3660.904
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implementation: First walkable terrain below exported Y1050 is238.374; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 283,
       "object_id": 503,
@@ -3366,11 +3373,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3390.0,
-        241.384,
-        3610.0
+        3402.496,
+        242.03,
+        3707.121
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implementation: First walkable terrain below exported Y1050 is238.030; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 284,
       "object_id": 502,
@@ -3385,11 +3392,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        145,
-        4.0,
-        480
+        547.568,
+        1843.167,
+        881.966
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 285,
       "object_id": 524,
@@ -3404,11 +3411,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        145,
-        7.274,
-        540
+        572.946,
+        1843.167,
+        867.995
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 286,
       "object_id": 523,
@@ -3423,11 +3430,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        145,
-        20.688,
-        600
+        548.974,
+        1843.167,
+        854.196
       ],
-      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall",
+      "notes": "Three coins beside the Giant Mushroom ground-floor outer wall. THESE 3 COINS I ALSO TRIED SETTING Y MANUALLY, BUT NOT SO ACCURATELY; SO SET THEM ON THE FIRST GROUND BELOW Implementation: First walkable terrain below exported Y1850 is1839.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
       "status": "provisional-m5",
       "pickup_slot": 287,
       "object_id": 522,
