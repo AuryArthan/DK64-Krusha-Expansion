@@ -2644,10 +2644,10 @@
       "quantity": 1,
       "xyz": [
         2311.198,
-        632.737,
+        754.402,
         2399.128
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: native broken-wreck surface is746.402 here, above terrain628.737. Keep X/Z and put banana eight units above visible planks, Y754.402; terrain-only height buries it in the wreck.",
       "status": "provisional-m5",
       "pickup_slot": 129,
       "object_id": 506,
