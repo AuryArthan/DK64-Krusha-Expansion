@@ -304,14 +304,14 @@
         1163.026
       ],
       "cage": [
-        1596.113,
-        1119.437,
-        732.925
+        1035.341,
+        12.77,
+        569.778
       ],
       "kasplat": [
-        427.502,
+        449.28,
         170.5,
-        637.993
+        805.657
       ],
       "kasplat_map": 26,
       "fence": [
@@ -365,7 +365,7 @@
       "placement_notes": {
         "pad": "User Factory placement: shout pad grounded on upper R&D room floor1026.712.",
         "boss": "User Factory placement: rare Klump six units above floor1026.731; native patrol fence follows upper room and includes pad.",
-        "cage": "User Factory placement: compact cage base on upper Funky landing floor1113.167 plus6.27; roof lime hint and no shop-door obstruction.",
+        "cage": "User edit2: lower Lanky banana room, floor6.5 plus6.27; native compact cage and roof hint unchanged.",
         "kasplat": "Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black."
       }
     },
@@ -1801,11 +1801,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        1594.942,
-        1149.837,
-        730.584
+        1034.259,
+        43.17,
+        566.533
       ],
-      "notes": "Bunch four units above compact cage roof; reachable after opening, user horizontal placement retained.",
+      "notes": "Bunch four units above compact cage roof; reachable after opening, user horizontal placement retained. Implementation: Bunch four units above relocated compact cage roof (base12.77+26.4+4). User X/Z retained; ground pickup remains possible after cage opens.",
       "status": "provisional-m5",
       "pickup_slot": 71,
       "object_id": 525,
@@ -1820,11 +1820,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        1435.859,
+        1435.392,
         846.667,
-        2163.981
+        2173.301
       ],
-      "notes": "Bunch on an otherwise unoccupied native warp pad; original Kong bunches preserved",
+      "notes": "Bunch on an otherwise unoccupied native warp pad; original Kong bunches preserved. THIS BANANA BUNCH SHOULD BE EXACTLY ON TOP OF THE BANANAPORT 3 (closeby) Implementation: Centered exactly on native destination Warp3 model2index64, floor842.667 plus4, as requested.",
       "status": "provisional-m5",
       "pickup_slot": 72,
       "object_id": 524,
@@ -1935,10 +1935,10 @@
       "quantity": 1,
       "xyz": [
         1291.842,
-        969.667,
+        10.5,
         879.734
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THESE BANANAS GO IN THE ROOM WITH LANKY'S BANANA, AND THE CAGED BANANA WITH ITS COLORED BANANA BUNCH TOO Implementation: Use lower storage floor Y6.5 plus4, per explicit note that all five singles belong in Lanky banana room; exported upper-layer height superseded by note.",
       "status": "provisional-m5",
       "pickup_slot": 88,
       "object_id": 518,
@@ -1953,11 +1953,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1307.055,
-        1127.349,
-        793.138
+        1275.443,
+        10.5,
+        803.391
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THESE BANANAS GO IN THE ROOM WITH LANKY'S BANANA, AND THE CAGED BANANA WITH ITS COLORED BANANA BUNCH TOO Implementation: Use lower storage floor Y6.5 plus4, per explicit note that all five singles belong in Lanky banana room; exported upper-layer height superseded by note.",
       "status": "provisional-m5",
       "pickup_slot": 89,
       "object_id": 517,
@@ -1972,11 +1972,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1395,
-        1117.167,
-        705
+        1233.263,
+        10.5,
+        729.846
       ],
-      "notes": "Moved about47 units onto upper Funky landing from gap at user marker; follows upper stair trail rather than lower storage floor. User explicitly approved moving onto upper stair/landing.",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THESE BANANAS GO IN THE ROOM WITH LANKY'S BANANA, AND THE CAGED BANANA WITH ITS COLORED BANANA BUNCH TOO",
       "status": "provisional-m5",
       "pickup_slot": 90,
       "object_id": 516,
@@ -1991,11 +1991,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1443.97,
-        1117.167,
-        707.712
+        1182.43,
+        10.5,
+        671.443
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THESE BANANAS GO IN THE ROOM WITH LANKY'S BANANA, AND THE CAGED BANANA WITH ITS COLORED BANANA BUNCH TOO",
       "status": "provisional-m5",
       "pickup_slot": 91,
       "object_id": 515,
@@ -2010,11 +2010,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1523.545,
-        1117.167,
-        713.563
+        1114.293,
+        10.5,
+        618.447
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THESE BANANAS GO IN THE ROOM WITH LANKY'S BANANA, AND THE CAGED BANANA WITH ITS COLORED BANANA BUNCH TOO",
       "status": "provisional-m5",
       "pickup_slot": 92,
       "object_id": 514,
@@ -2086,9 +2086,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1727.14,
-        1030.119,
-        1921.637
+        1732.344,
+        1030.12,
+        1921.71
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2143,9 +2143,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        1135.849,
+        1461.468,
         106.5,
-        747.625
+        813.125
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -2276,9 +2276,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1188.759,
-        10.5,
-        601.639
+        1605.184,
+        130.5,
+        830.045
       ],
       "notes": "User approved shifting the exported three-coin line 120 units into clear lower storage floor, away from native Troff n Scoff portal; spacing retained.",
       "status": "provisional-m5",
@@ -2295,9 +2295,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1161.785,
-        10.5,
-        601.639
+        1604.77,
+        130.5,
+        864.416
       ],
       "notes": "User approved shifting the exported three-coin line 120 units into clear lower storage floor, away from native Troff n Scoff portal; spacing retained.",
       "status": "provisional-m5",
@@ -2314,9 +2314,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1131.715,
-        10.5,
-        601.785
+        1603.941,
+        130.5,
+        899.616
       ],
       "notes": "User approved shifting the exported three-coin line 120 units into clear lower storage floor, away from native Troff n Scoff portal; spacing retained.",
       "status": "provisional-m5",
