@@ -149,51 +149,131 @@
       "name": "Angry Aztec",
       "code": "AZ",
       "pad": [
-        2540.0,
-        126.0,
-        720.0
+        2297.072,
+        120,
+        1218.554
       ],
       "boss": [
-        2700.0,
-        130.592,
-        900.0
+        2386.497,
+        140.05,
+        1376.902
       ],
       "cage": [
-        3770,
+        4070,
         126.27,
-        2500
+        4400
       ],
       "kasplat": [
-        2290.0,
-        117.0,
-        3900.0
+        4089.552,
+        125,
+        2288.182
       ],
       "kasplat_map": 38,
       "fence": [
         [
-          2580,
-          131,
-          800
+          2200,
+          116,
+          1090
+        ],
+        [
+          2160,
+          126,
+          970
+        ],
+        [
+          2180,
+          126,
+          820
+        ],
+        [
+          2300,
+          126,
+          700
+        ],
+        [
+          2480,
+          126,
+          690
+        ],
+        [
+          2620,
+          126,
+          780
+        ],
+        [
+          2730,
+          149,
+          760
+        ],
+        [
+          2800,
+          152,
+          870
+        ],
+        [
+          2880,
+          154,
+          970
         ],
         [
           2820,
           131,
-          800
+          1060
         ],
         [
-          2820,
-          131,
-          1000
+          2800,
+          126,
+          1170
         ],
         [
-          2580,
-          131,
-          1000
+          2740,
+          126,
+          1320
         ],
         [
-          2580,
-          131,
-          800
+          2630,
+          126,
+          1430
+        ],
+        [
+          2510,
+          126,
+          1420
+        ],
+        [
+          2450,
+          133,
+          1460
+        ],
+        [
+          2380,
+          150,
+          1420
+        ],
+        [
+          2310,
+          148,
+          1330
+        ],
+        [
+          2250,
+          146,
+          1300
+        ],
+        [
+          2260,
+          126,
+          1220
+        ],
+        [
+          2220,
+          116,
+          1140
+        ],
+        [
+          2200,
+          116,
+          1090
         ]
       ],
       "kasplat_id": 3,
@@ -201,7 +281,12 @@
       "gate_id": 529,
       "pad_id": 528,
       "reward_id": 527,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "Grounded at measured floor120; bunch128 above its surface.",
+        "boss": "User spawn grounded at floor134.05+6. Fence follows the starting clearing and includes the relocated shout pad.",
+        "cage": "User approved clearance move beside Snide:4070/126.27/4400, floor120; bunch156.67 above roof. Shop entry must remain accessible."
+      }
     },
     {
       "world": 2,
@@ -1125,9 +1210,9 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        2540.0,
-        134.0,
-        720.0
+        2296.475,
+        128,
+        1219.747
       ],
       "notes": "Bunch above shout pad",
       "status": "provisional-m5",
@@ -1144,11 +1229,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        3770,
+        4070,
         156.67,
-        2500
+        4400
       ],
-      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "notes": "User approved shifting the cage out of Snide hut onto clear ground beside it; bunch remains above the cage roof.",
       "status": "provisional-m5",
       "pickup_slot": 34,
       "object_id": 516,
@@ -1163,11 +1248,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        2778.521,
-        126.0,
-        4752.402
+        3056.953,
+        332.394,
+        4213.086
       ],
-      "notes": "Distinctive native warp pad",
+      "notes": "User requested a free palm top. Vacant native palm167/type6C east of the ground marker; native climbing/jumping confirms this canopy placement.",
       "status": "provisional-m5",
       "pickup_slot": 35,
       "object_id": 515,
@@ -1182,9 +1267,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2630.0,
-        124.0,
-        1400.0
+        2440.369,
+        124,
+        1267.778
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1201,9 +1286,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2540.0,
-        124.0,
-        1270.0
+        2561.924,
+        124,
+        1256.728
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1220,9 +1305,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2500.0,
-        114.0,
-        1130.0
+        2668.286,
+        124,
+        1194.568
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1239,9 +1324,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2510.0,
-        119.5,
-        1000.0
+        2745.639,
+        124,
+        1095.114
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1258,9 +1343,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2540.0,
-        114.0,
-        850.0
+        2773.757,
+        132.04,
+        975.757
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1277,9 +1362,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3750,
-        124.0,
-        2110
+        2720.75,
+        137.136,
+        857.841
       ],
       "notes": "Open east-side cage approach alongside the native purple route",
       "status": "provisional-m5",
@@ -1296,9 +1381,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3750,
-        124.0,
-        2190
+        2624.058,
+        124,
+        784.631
       ],
       "notes": "Open east-side cage approach alongside the native purple route",
       "status": "provisional-m5",
@@ -1315,9 +1400,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3750,
-        124.0,
-        2270
+        2502.503,
+        124,
+        748.717
       ],
       "notes": "Open east-side cage approach alongside the native purple route",
       "status": "provisional-m5",
@@ -1334,9 +1419,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3750,
-        124.0,
-        2350
+        2358.846,
+        124,
+        761.149
       ],
       "notes": "Open east-side cage approach alongside the native purple route",
       "status": "provisional-m5",
@@ -1353,9 +1438,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3760,
-        124.0,
-        2430
+        2199.038,
+        124,
+        833.833
       ],
       "notes": "Open east-side cage approach alongside the native purple route",
       "status": "provisional-m5",
@@ -1372,9 +1457,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3260.0,
-        73.889,
-        3650.0
+        3703.158,
+        124,
+        4020.374
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1391,9 +1476,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3160.0,
-        72.117,
-        3720.0
+        3607.847,
+        120.275,
+        4081.152
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1410,9 +1495,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3060.0,
-        74.903,
-        3790.0
+        3533.256,
+        117.225,
+        4162.649
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1429,9 +1514,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2960.0,
-        84.0,
-        3860.0
+        3495.961,
+        124,
+        4266.248
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1448,9 +1533,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2860.0,
-        121.603,
-        3930.0
+        3483.529,
+        124,
+        4387.804
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1467,9 +1552,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        2500,
-        260,
-        1020
+        2436.225,
+        215.5,
+        863.053
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -1486,9 +1571,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        3060,
-        260,
-        3830
+        3105.078,
+        168.644,
+        3886.902
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -1505,9 +1590,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2497.0,
-        124.0,
-        695.0
+        2300.65,
+        128.183,
+        1247.774
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -1524,9 +1609,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2540.0,
-        124.0,
-        770.0
+        2268.448,
+        124,
+        1210.205
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -1543,9 +1628,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2579.173,
-        124.0,
-        704.239
+        2321.521,
+        124,
+        1198.875
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -1562,9 +1647,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2390.0,
-        124.0,
-        3840.0
+        4201.818,
+        124,
+        4536.437
       ],
       "notes": "Three coins beside the Kasplat approach wall",
       "status": "provisional-m5",
@@ -1581,9 +1666,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2390.0,
-        124.0,
-        3900.0
+        4184.544,
+        124,
+        4551.588
       ],
       "notes": "Three coins beside the Kasplat approach wall",
       "status": "provisional-m5",
@@ -1600,9 +1685,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        2390.0,
-        124.0,
-        3960.0
+        4167.969,
+        124,
+        4568.699
       ],
       "notes": "Three coins beside the Kasplat approach wall",
       "status": "provisional-m5",
@@ -1619,9 +1704,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3890,
-        124.0,
-        2300
+        3923.436,
+        124,
+        2336.637
       ],
       "notes": "Three coins along the outer edge of the east-side clearing",
       "status": "provisional-m5",
@@ -1638,9 +1723,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3890,
-        124.0,
-        2360
+        3925.989,
+        124,
+        2409.406
       ],
       "notes": "Three coins along the outer edge of the east-side clearing",
       "status": "provisional-m5",
@@ -1657,11 +1742,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        3890,
-        124.0,
-        2420
+        3924.712,
+        124,
+        2482.174
       ],
-      "notes": "Three coins along the outer edge of the east-side clearing",
+      "notes": "User coin triple on the ground beside the temple; choose lower floor120 rather than roof516.514.",
       "status": "provisional-m5",
       "pickup_slot": 249,
       "object_id": 484,
