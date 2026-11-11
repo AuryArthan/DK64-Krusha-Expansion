@@ -380,14 +380,14 @@
         3220.847
       ],
       "boss": [
-        2400,
-        1624.375,
-        3200
+        3133.017,
+        1702.601,
+        3157.201
       ],
       "cage": [
-        3390,
-        1682.918,
-        2640
+        3240.141,
+        1684.219,
+        2607.054
       ],
       "kasplat": [
         2540,
@@ -397,29 +397,29 @@
       "kasplat_map": 30,
       "fence": [
         [
-          2280,
-          1624,
-          3100
+          3013.017,
+          1702.601,
+          3057.201
         ],
         [
-          2520,
-          1624,
-          3100
+          3253.017,
+          1702.601,
+          3057.201
         ],
         [
-          2520,
-          1624,
-          3300
+          3253.017,
+          1702.601,
+          3257.201
         ],
         [
-          2280,
-          1624,
-          3300
+          3013.017,
+          1702.601,
+          3257.201
         ],
         [
-          2280,
-          1624,
-          3100
+          3013.017,
+          1702.601,
+          3057.201
         ]
       ],
       "kasplat_id": 3,
@@ -430,9 +430,10 @@
       "switch_id": 65535,
       "placement_notes": {
         "pad": "User Galleon pad grounded on native floor1683.213, correcting exported floor+20 marker.",
-        "boss": "Rare Klump drops one GB at its death location. 1.6 times native size, eight hits, triple grenades.",
-        "cage": "Hit the compact cage with a bazooka projectile. Small lime hint on its south side.",
-        "kasplat": "User approved moving beside tag barrel. Adjacent southern ground floor1610.375+6; spawn171 units from barrel, patrol stays outside its activation area; native clearance to be verified."
+        "boss": "Requested X/Z on clearing ground1688.601+14, preserving established spawn clearance; native actor settles at its floor offset.",
+        "cage": "New requested X/Z on ground1677.949+6.27, preserving compact cage base offset; exported floor+20 is a planner marker.",
+        "kasplat": "User approved moving beside tag barrel. Adjacent southern ground floor1610.375+6; spawn171 units from barrel, patrol stays outside its activation area; native clearance to be verified.",
+        "fence": "Relocated patrol rectangle with native 240x200 extent around requested spawn, within pad clearing; original native fences untouched. Preserves the earlier patrol extent while moving its center with the enemy."
       }
     },
     {
@@ -2358,11 +2359,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        3390,
-        1713.318,
-        2640
+        3240.141,
+        1714.619,
+        2607.054
       ],
-      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "notes": "Bunch just above compact cage roof; reachable after opening Implementation: Bunch four units above relocated cage roof: base1684.219+26.4+4; X/Z matches cage. Exported ground+4 was below cage roof.",
       "status": "provisional-m5",
       "pickup_slot": 104,
       "object_id": 523,
@@ -2415,9 +2416,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2958.244,
-        1692.529,
-        3219.016
+        2956.857,
+        1693.917,
+        3196.404
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2434,9 +2435,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3042.587,
-        1694,
-        3191.341
+        3037.246,
+        1692.414,
+        3150.12
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2453,9 +2454,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3103.209,
-        1689.431,
-        3134.673
+        3098.146,
+        1685.329,
+        3101.4
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2472,9 +2473,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3161.196,
-        1678.134,
-        3060.872
+        3157.828,
+        1675.631,
+        3040.5
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2491,11 +2492,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3210,
-        1676.64,
-        2980
+        3210.202,
+        1676.901,
+        2977.164
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: Ground route support at Y1672.901+4, preserving requested X/Z; export selected upper surface Y1895+4 between ground trail points. Ground assumed for a continuous trail between its neighboring singles; user clarification requested.",
       "status": "provisional-m5",
       "pickup_slot": 121,
       "object_id": 515,
@@ -2510,9 +2511,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3270,
-        1679.406,
-        2880
+        3241.87,
+        1680.65,
+        2901.647
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2529,9 +2530,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3330,
-        1674,
-        2800
+        3263.794,
+        1683.839,
+        2827.349
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2548,9 +2549,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3370.031,
-        1678.106,
-        2736.816
+        3268.666,
+        1674,
+        2749.397
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2567,9 +2568,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3390,
-        1680.509,
-        2670
+        3258.922,
+        1686.226,
+        2673.881
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2644,10 +2645,10 @@
       "quantity": 1,
       "xyz": [
         2311.198,
-        754.402,
+        632.737,
         2399.128
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: native broken-wreck surface is746.402 here, above terrain628.737. Keep X/Z and put banana eight units above visible planks, Y754.402; terrain-only height buries it in the wreck.",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom. THIS ONE ENDED ON TOP OF A SUNKEN SHIP THAT MAKES A TUNNEL - FIX IT SO IT IS IN THE TUNNEL, SO BELOW THE SUNKEN SHIP, ON THE SEA FLOOR Implementation: User explicitly requests seabed INSIDE the wreck tunnel rather than roof. Restore terrain628.737+4; approach through the native tunnel entrance rather than over its roof.",
       "status": "provisional-m5",
       "pickup_slot": 129,
       "object_id": 506,
@@ -2700,9 +2701,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        3244,
-        1782.17,
-        3118.789
+        3269.372,
+        1778.585,
+        3095.196
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
