@@ -294,51 +294,66 @@
       "name": "Frantic Factory",
       "code": "FA",
       "pad": [
-        350,
-        171.5,
-        730
+        2202.68,
+        1026.712,
+        1068.345
       ],
       "boss": [
-        500,
-        171.5,
-        730
+        2122.757,
+        1032.731,
+        1163.026
       ],
       "cage": [
-        1420.0,
-        12.77,
-        700.0
+        1596.113,
+        1119.437,
+        732.925
       ],
       "kasplat": [
-        1700.0,
-        841.869,
-        2330.0
+        427.502,
+        170.5,
+        637.993
       ],
       "kasplat_map": 26,
       "fence": [
         [
-          420,
-          172,
-          680
+          2050,
+          1032.695,
+          1035
         ],
         [
-          580,
-          172,
-          680
+          2640,
+          1032.667,
+          1035
         ],
         [
-          580,
-          172,
-          780
+          2740,
+          1032.676,
+          1150
         ],
         [
-          420,
-          172,
-          780
+          2740,
+          1032.696,
+          1540
         ],
         [
-          420,
-          172,
-          680
+          2090,
+          1032.667,
+          1540
+        ],
+        [
+          1990,
+          1032.882,
+          1430
+        ],
+        [
+          1990,
+          1033.039,
+          1140
+        ],
+        [
+          2050,
+          1032.695,
+          1035
         ]
       ],
       "kasplat_id": 3,
@@ -346,7 +361,13 @@
       "gate_id": 529,
       "pad_id": 528,
       "reward_id": 527,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "User Factory placement: shout pad grounded on upper R&D room floor1026.712.",
+        "boss": "User Factory placement: rare Klump six units above floor1026.731; native patrol fence follows upper room and includes pad.",
+        "cage": "User Factory placement: compact cage base on upper Funky landing floor1113.167 plus6.27; roof lime hint and no shop-door obstruction.",
+        "kasplat": "Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black."
+      }
     },
     {
       "world": 3,
@@ -1761,11 +1782,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        350,
-        179.5,
-        730
+        2202.77,
+        1034.712,
+        1069.068
       ],
-      "notes": "Bunch above shout pad",
+      "notes": "Bunch eight units above grounded shout pad; user horizontal placement retained.",
       "status": "provisional-m5",
       "pickup_slot": 70,
       "object_id": 526,
@@ -1780,11 +1801,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        1420.0,
-        43.17,
-        700.0
+        1594.942,
+        1149.837,
+        730.584
       ],
-      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "notes": "Bunch four units above compact cage roof; reachable after opening, user horizontal placement retained.",
       "status": "provisional-m5",
       "pickup_slot": 71,
       "object_id": 525,
@@ -1799,9 +1820,9 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        1435.392,
-        848.667,
-        2173.301
+        1435.859,
+        846.667,
+        2163.981
       ],
       "notes": "Bunch on an otherwise unoccupied native warp pad; original Kong bunches preserved",
       "status": "provisional-m5",
@@ -1818,9 +1839,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        875,
-        170.333,
-        740
+        2225.756,
+        1030.722,
+        1517.605
       ],
       "notes": "Five-single trail from the corridor into the broad shop-floor arena",
       "status": "provisional-m5",
@@ -1837,9 +1858,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        775,
-        170.118,
-        710
+        2197.671,
+        1030.719,
+        1433.349
       ],
       "notes": "Five-single trail from the corridor into the broad shop-floor arena",
       "status": "provisional-m5",
@@ -1856,9 +1877,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        675,
-        170.333,
-        740
+        2187.139,
+        1030.714,
+        1338.562
       ],
       "notes": "Five-single trail from the corridor into the broad shop-floor arena",
       "status": "provisional-m5",
@@ -1875,9 +1896,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        575,
-        169.5,
-        740
+        2191.564,
+        1030.751,
+        1150.001
       ],
       "notes": "Five-single trail from the corridor into the broad shop-floor arena",
       "status": "provisional-m5",
@@ -1894,9 +1915,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        450,
-        169.5,
-        740
+        2182.458,
+        1030.745,
+        1251.965
       ],
       "notes": "Five-single trail from the corridor into the broad shop-floor arena",
       "status": "provisional-m5",
@@ -1913,9 +1934,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1120.0,
-        10.5,
-        610.0
+        1291.842,
+        969.667,
+        879.734
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1932,9 +1953,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1200.0,
-        10.5,
-        620.0
+        1307.055,
+        1127.349,
+        793.138
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1951,11 +1972,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1270.0,
-        10.5,
-        640.0
+        1395,
+        1117.167,
+        705
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Moved about47 units onto upper Funky landing from gap at user marker; follows upper stair trail rather than lower storage floor. User explicitly approved moving onto upper stair/landing.",
       "status": "provisional-m5",
       "pickup_slot": 90,
       "object_id": 516,
@@ -1970,9 +1991,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1330.0,
-        10.5,
-        660.0
+        1443.97,
+        1117.167,
+        707.712
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -1989,9 +2010,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1380.0,
-        10.5,
-        680.0
+        1523.545,
+        1117.167,
+        713.563
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2008,9 +2029,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1570,
-        814.667,
-        2200
+        1570.331,
+        1029.49,
+        1991.85
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2027,9 +2048,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1620.0,
-        814.667,
-        2180.0
+        1627.671,
+        1029.66,
+        1919.296
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2046,9 +2067,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1720.0,
-        814.667,
-        2190.0
+        1828.838,
+        1030.137,
+        1922.675
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2065,9 +2086,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1770.0,
-        814.667,
-        2250.0
+        1727.14,
+        1030.119,
+        1921.637
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2084,9 +2105,9 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1710.0,
-        840.994,
-        2290.0
+        1923.634,
+        1030.143,
+        1924.311
       ],
       "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
       "status": "provisional-m5",
@@ -2103,9 +2124,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        690,
-        270,
-        730
+        2679.755,
+        1126.726,
+        1510.089
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -2122,9 +2143,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        1360,
-        130,
-        700
+        1135.849,
+        106.5,
+        747.625
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -2141,9 +2162,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        307,
+        532.269,
         169.5,
-        705
+        615.622
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2160,9 +2181,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        350,
+        564.096,
         169.5,
-        780
+        645.934
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2179,9 +2200,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        393,
+        500.947,
         169.5,
-        705
+        586.321
       ],
       "notes": "Close three-coin ring around shout pad",
       "status": "provisional-m5",
@@ -2198,9 +2219,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1685,
-        840.691,
-        2310
+        1741.806,
+        814.667,
+        2265.157
       ],
       "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
       "status": "provisional-m5",
@@ -2217,9 +2238,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1685,
-        840.638,
-        2350
+        1679.269,
+        814.667,
+        2266.133
       ],
       "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
       "status": "provisional-m5",
@@ -2236,9 +2257,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1685,
-        840.811,
-        2390
+        1711.289,
+        814.667,
+        2266.435
       ],
       "notes": "Three close coins along the outer walkway boundary near the gray Kasplat, clear of Snide roof and door",
       "status": "provisional-m5",
@@ -2255,9 +2276,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1330.0,
+        1188.759,
         10.5,
-        640.0
+        481.639
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
@@ -2274,9 +2295,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1330.0,
+        1161.785,
         10.5,
-        700.0
+        481.639
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
@@ -2293,9 +2314,9 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1330.0,
+        1131.715,
         10.5,
-        760.0
+        481.785
       ],
       "notes": "Three coins along the cage-side wall",
       "status": "provisional-m5",
