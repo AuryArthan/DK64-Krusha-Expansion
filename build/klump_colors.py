@@ -49,3 +49,25 @@ def grenade_payloads(rom,read_file):
     if grenade_choice()=='original':return []
     assert all(not read_file(rom,25,i) for i in range(7732,7748))
     return [grenade_texture(read_file(rom,25,i)) for i in range(0x14F6,0x1506)]
+
+def recolor_model_skin(raw):
+    """The pink prelit skin is vertex RGB; keep geometry and other materials.
+
+    Texture recoloring alone misses these untextured body panels. The native
+    vertex block starts at0x28; its end follows the model's display-list header.
+    Pink hue selection excludes brown gear, red mouth, teeth and purple eyes.
+    """
+    color=skin_multiplier()
+    if color is None:return raw
+    data=bytearray(raw);base,endptr=struct.unpack_from('>II',raw)
+    end=0x28+endptr-base;start=0x28+struct.unpack_from('>I',raw,end)[0]-base
+    assert start>=0x28 and (start-0x28)%16==0
+    count=0
+    for offset in range(0x28,start,16):
+        r,g,b,a=data[offset+12:offset+16];h,s,v=colorsys.rgb_to_hsv(r/255,g/255,b/255)
+        if .87<h<.995 and r>g*1.35 and b>g*1.25:
+            light=max(r,g,b)*.8
+            data[offset+12:offset+15]=bytes(max(0,min(255,round(light*c))) for c in color)
+            count+=1
+    assert count>200,count
+    return bytes(data)

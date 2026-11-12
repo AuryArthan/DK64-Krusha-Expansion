@@ -90,7 +90,8 @@ def payloads(rom):
     for mid in range(struct.unpack_from('>I',original,0x101C50+(32+9)*4)[0]):
         s=read_file(original,9,mid)
         if s:assert all(struct.unpack_from('>H',s,4+i*48+40)[0]!=PAD_TYPE for i in range(struct.unpack_from('>I',s)[0]))
-    model=remap_model(read_file(rom,5,57),{i:7420+n for n,i in enumerate(TINT_IDS)})
+    from klump_colors import recolor_model_skin
+    model=recolor_model_skin(remap_model(read_file(rom,5,57),{i:7420+n for n,i in enumerate(TINT_IDS)}))
     # Reuse the native base files directly; only the two portrait halves are
     # private. Model2 texture streaming must restore their external IDs on
     # unload (see z_texture_identity.c), rather than table27's storage IDs.
@@ -113,4 +114,3 @@ def patch_code(fh,symbols):
     if grenade_choice()!='original':
         patch(0x80694014,'0c1c5272','m4grenadecolor',True)
         patch(0x8069403C,'0c1c5302','m4grenadesprite',True)
-        patch(0x80694164,'0c1a4318','m4grenadetrail',True)

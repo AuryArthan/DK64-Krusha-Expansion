@@ -2,7 +2,7 @@
 #include "../include/klump_colors.generated.h"
 
 /* Compiles to no runtime change in the accepted/default appearance. Preview
- * hooks are only at the native orange actor's three visual callsites. The
+ * hooks are only at the native orange actor's two initializer callsites. The
  * existing validated rare-grenade ownership loop scopes them for one update;
  * ordinary player/enemy oranges and the lime bazooka retain their own sprites.
  */
@@ -27,9 +27,7 @@ void* m4GrenadeSprite(const void* sprite,f32 scale,void* actor,s32 bone,u8 mode)
     if (m4GrenadeVisualScope) sprite=&grenade;
     return native(sprite,scale,actor,bone,mode);
 }
-void m4GrenadeTrail(u16 kind,void* actor,const void* sprite,u8 mode) {
-    void (*native)(u16,void*,const void*,u8)=(void*)0x80690C60;
-    if (m4GrenadeVisualScope) sprite=&grenade;
-    native(kind,actor,sprite,mode);
-}
+/* Keep the native grenade's80690C60 call and NULL argument untouched. A
+ * non-NULL sprite there enters player-only homing/camera logic; enemy actors
+ * do not have that player data. Recoloring needs no trail/homing change. */
 #endif
