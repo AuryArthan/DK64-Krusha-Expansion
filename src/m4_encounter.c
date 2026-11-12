@@ -4,6 +4,7 @@
 #include "../include/klump_colors.generated.h"
 #if M4_GRENADE_PREVIEW
 extern u8 m4GrenadeVisualScope;
+extern void m4EncounterIdleParticle(void*);
 #endif
 
 extern void m4NativeDamage(void*,void*);
@@ -278,4 +279,9 @@ void m4EncounterInstall(void) {
     functions[50]=m4EncounterGrenadeUpdate;
     osWritebackDCache(functions+187,4);
     osWritebackDCache(functions+50,4);
+#if M4_GRENADE_PREVIEW
+    void (**idle_functions)(void*)=(void*)0x80746D64;
+    idle_functions[0x27]=m4EncounterIdleParticle;
+    osWritebackDCache(idle_functions+0x27,4);
+#endif
 }

@@ -119,3 +119,6 @@ def patch_code(fh,symbols):
     if grenade_choice()!='original':
         patch(0x80694014,'0c1c5272','m4grenadecolor',True)
         patch(0x8069403C,'0c1c5302','m4grenadesprite',True)
+        # Native idle snack particle: same scoped sprite as the thrown round.
+        patch(0x806193EC,'0c1c5272','m4grenadecolor',True)
+        patch(0x806194B8,'0c1c5302','m4grenadesprite',True)
