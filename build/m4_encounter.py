@@ -61,7 +61,7 @@ def tint(data,kind):
     for (v,) in struct.iter_unpack('>H',data):
         r,g,b=(v>>11&31),(v>>6&31),(v>>1&31)
         light=.2126*r+.7152*g+.0722*b
-        color=(.73,.87,1.0) if kind=='skin' else (.37,.56,1.0) if kind=='armor' else (.92,.48,.90)
+        color=(.73,.87,1.0) if kind=='skin' else (.37,.56,1.0) if kind in ('armor','gear') else (.92,.48,.90)
         if kind in ('skin','helmet') and skin_multiplier() is not None:
             color=skin_multiplier()
         elif kind=='gear' and gear_multiplier() is not None:
