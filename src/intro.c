@@ -55,7 +55,33 @@ Gfx* krushaIntroCredits(Gfx* dl) {
                               0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0);
     s16 center = *(s16*)0x80744490 * 2;
     dl = print(dl, center, 174 * 4 * scale, .38f * scale, text(13, 0, 1));
-    return print(dl, center, 187 * 4 * scale, .38f * scale, text(13, 1, 1));
+    /* Font 1 has comma/period glyphs but no semicolon. Compose it here,
+     * rather than changing the shared font or silently drawing a blank. */
+    char line[128];
+    char* source = text(13, 1, 1);
+    s32 mark = -1;
+    s32 length = 0;
+    while (length < sizeof(line) - 1 && source[length]) {
+        line[length] = source[length];
+        if (line[length] == ';') {
+            mark = length;
+            line[length] = ',';
+        }
+        length++;
+    }
+    line[length] = 0;
+    dl = print(dl, center, 187 * 4 * scale, .38f * scale, line);
+    if (mark >= 0) {
+        s32 (*width)(s16, char*) = (void*)0x806FBD5C;
+        s32 total = width(1, line);
+        line[mark] = 0;
+        s32 prefix = width(1, line);
+        s32 comma = width(1, ",");
+        s16 x = center + (2 * prefix + comma - total) * .76f * scale;
+        /* Same native font/color; lift a period eight unscaled font units. */
+        dl = print(dl, x, (187 * 4 - 12) * scale, .38f * scale, ".");
+    }
+    return dl;
 }
 
 /* Keep native fade and entrance offset, at the original vanilla title anchor.
