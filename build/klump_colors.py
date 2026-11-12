@@ -1,8 +1,10 @@
-"""Explicit rare-Klump appearance previews; defaults preserve the accepted skin.
+"""Rare-Klump appearance palettes, including the selected warmer B revision.
 
-DK64_KLUMP_SKIN=original/ochre/umber/olive and
-DK64_KLUMP_GRENADES=original/navy/crimson. Build choices are recorded separately
-from the user's selection; original remains the default until approved.
+DK64_KLUMP_SKIN=original/ochre/umber/olive/umber-red,
+DK64_KLUMP_GEAR=original/light-blue and
+DK64_KLUMP_GRENADES=original/navy/crimson. Grenades default to original.
+The selected umber-red skin defaults to lighter blue gear; older palettes
+retain their original gear unless explicitly overridden.
 """
 from pathlib import Path
 import colorsys,json,os,struct
@@ -13,23 +15,28 @@ SKINS={
     'ochre':(1.00,.78,.26),
     'umber':(1.00,.58,.18),
     'olive':(.86,.76,.26),
+    'umber-red':(1.00,.51,.22),
 }
+GEAR={'original':None,'light-blue':(.48,.69,1.12)}
 GRENADES={'original':None,'navy':(.625,.72),'crimson':(.99,.85)}
 
-def choice(key,choices):
-    value=os.environ.get(key,'original')
+def choice(key,choices,default='original'):
+    value=os.environ.get(key,default)
     if value not in choices:raise ValueError(f'{key} must be one of {tuple(choices)}')
     return value
 
-def skin_multiplier():return SKINS[choice('DK64_KLUMP_SKIN',SKINS)]
+def skin_choice():return choice('DK64_KLUMP_SKIN',SKINS,'umber-red')
+def skin_multiplier():return SKINS[skin_choice()]
+def gear_choice():return choice('DK64_KLUMP_GEAR',GEAR,'light-blue' if skin_choice()=='umber-red' else 'original')
+def gear_multiplier():return GEAR[gear_choice()]
 def grenade_choice():return choice('DK64_KLUMP_GRENADES',GRENADES)
 
 def prepare():
-    skin=choice('DK64_KLUMP_SKIN',SKINS);grenade=grenade_choice()
+    skin=skin_choice();gear=gear_choice();grenade=grenade_choice()
     (ROOT/'include/klump_colors.generated.h').write_text(
-        '/* Preview choices: '+skin+' / '+grenade+'; original defaults unchanged. */\n'
+        '/* Appearance: '+skin+' / '+gear+' / '+grenade+'. */\n'
         '#define M4_GRENADE_PREVIEW '+str(int(grenade!='original'))+'\n')
-    print('Rare Klump appearance:',skin,'/',grenade)
+    print('Rare Klump appearance:',skin,'/',gear,'/',grenade)
 
 def grenade_texture(raw,held=False):
     """Rehue peel while retaining native alpha, fuse/pin and mip geometry."""
