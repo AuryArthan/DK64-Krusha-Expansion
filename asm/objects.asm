@@ -25,4 +25,5 @@
 .importobj "obj/src_mirror.o"
 .importobj "obj/src_taganywhere.o"
 .importobj "obj/src_widescreen.o"
+.importobj "obj/src_z_klump_colors.o"
 .importobj "obj/src_z_texture_identity.o"
