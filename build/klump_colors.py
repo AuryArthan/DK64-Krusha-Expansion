@@ -1,6 +1,6 @@
-"""Rare-Klump appearance palettes, including reddish orange and pale blue.
+"""Rare-Klump appearance palettes, including royal blue and orange grenades.
 
-The red-orange default uses pale-blue clothing and grenades. Explicit older
+The red-orange default uses royal-blue clothing and red-orange grenades. Explicit older
 skin presets retain their previous clothing and original grenades unless
 overridden. These are build selectors, not gameplay options.
 """
@@ -16,9 +16,9 @@ SKINS={
     'umber-red':(1.00,.51,.22),
     'red-orange':(1.28,.48,.12),
 }
-GEAR={'original':None,'light-blue':(.48,.69,1.12),'pale-blue':(.80,1.03,1.40)}
+GEAR={'original':None,'light-blue':(.48,.69,1.12),'pale-blue':(.80,1.03,1.40),'royal-blue':(.44,.71,1.52)}
 # Optional third component caps saturation for a lighter, less vivid blue.
-GRENADES={'original':None,'navy':(.625,.72),'crimson':(.99,.85),'pale-blue':(.605,1.10,.45)}
+GRENADES={'original':None,'navy':(.625,.72),'crimson':(.99,.85),'pale-blue':(.605,1.10,.45),'red-orange':(.045,1.10,.95)}
 
 def choice(key,choices,default='original'):
     value=os.environ.get(key,default)
@@ -27,9 +27,9 @@ def choice(key,choices,default='original'):
 
 def skin_choice():return choice('DK64_KLUMP_SKIN',SKINS,'red-orange')
 def skin_multiplier():return SKINS[skin_choice()]
-def gear_choice():return choice('DK64_KLUMP_GEAR',GEAR,'pale-blue' if skin_choice()=='red-orange' else 'light-blue' if skin_choice()=='umber-red' else 'original')
+def gear_choice():return choice('DK64_KLUMP_GEAR',GEAR,'royal-blue' if skin_choice()=='red-orange' else 'light-blue' if skin_choice()=='umber-red' else 'original')
 def gear_multiplier():return GEAR[gear_choice()]
-def grenade_choice():return choice('DK64_KLUMP_GRENADES',GRENADES,'pale-blue' if skin_choice()=='red-orange' else 'original')
+def grenade_choice():return choice('DK64_KLUMP_GRENADES',GRENADES,'red-orange' if skin_choice()=='red-orange' else 'original')
 
 def prepare():
     skin=skin_choice();gear=gear_choice();grenade=grenade_choice()
