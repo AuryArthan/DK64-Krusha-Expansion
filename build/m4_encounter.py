@@ -56,11 +56,14 @@ def remap_model(data,mapping):
     return bytes(out)
 
 def tint(data,kind):
+    from klump_colors import skin_multiplier
     result=bytearray()
     for (v,) in struct.iter_unpack('>H',data):
         r,g,b=(v>>11&31),(v>>6&31),(v>>1&31)
         light=.2126*r+.7152*g+.0722*b
         color=(.73,.87,1.0) if kind=='skin' else (.37,.56,1.0) if kind=='armor' else (.92,.48,.90)
+        if kind in ('skin','helmet') and skin_multiplier() is not None:
+            color=skin_multiplier()
         a=[max(0,min(31,round(light*k))) for k in color]
         result+=struct.pack('>H',a[0]<<11|a[1]<<6|a[2]<<1|v&1)
     return bytes(result)
@@ -92,7 +95,8 @@ def payloads(rom):
     # private. Model2 texture streaming must restore their external IDs on
     # unload (see z_texture_identity.c), rather than table27's storage IDs.
     pad=remap_model(read_file(rom,4,171),{i:7430+n for n,i in enumerate(PAD_TEXTURES) if n>=4})
-    textures=[tint(read_file(rom,25,i),'skin' if i in (0x104D,0x1058) else 'helmet' if i==0x1059 else 'armor') for i in TINT_IDS]
+    from klump_colors import grenade_choice, grenade_texture
+    textures=[grenade_texture(read_file(rom,25,i),held=True) if i==0x1053 and grenade_choice()!='original' else tint(read_file(rom,25,i),'skin' if i in (0x104D,0x1058) else 'helmet' if i==0x1059 else 'armor') for i in TINT_IDS]
     result=[model,pad]+textures+pad_images(rom)+[spawners(rom)]
     assert len(result)==19
     return result
@@ -105,3 +109,8 @@ def patch_code(fh,symbols):
         if not call:fh.write(bytes(4))
     patch(0x80675DD0,'848e013484af0136','m4encounterdamage')
     patch(0x806AF384,'0c1a4213','m4encounterthrow',True)
+    from klump_colors import grenade_choice
+    if grenade_choice()!='original':
+        patch(0x80694014,'0c1c5272','m4grenadecolor',True)
+        patch(0x8069403C,'0c1c5302','m4grenadesprite',True)
+        patch(0x80694164,'0c1a4318','m4grenadetrail',True)

@@ -28,6 +28,8 @@ print()
 print("[1 / 8] - Compiling C Code")
 from character_colors import write_identity_header
 write_identity_header()
+from klump_colors import prepare as prepareKlumpColors
+prepareKlumpColors()
 from intro_assets import prepare as prepareIntro
 prepareIntro(ROMName)
 from m2_pickups import prepare as prepareM2, patch_setup as patchM2Setup, patch_paths as patchM2Paths

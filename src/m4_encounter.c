@@ -1,6 +1,10 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/m5_campaign.h"
+#include "../include/klump_colors.generated.h"
+#if M4_GRENADE_PREVIEW
+extern u8 m4GrenadeVisualScope;
+#endif
 
 extern void m4NativeDamage(void*,void*);
 extern s32 m4NativePlayerDamage(u8,s8);
@@ -192,16 +196,26 @@ int m4EncounterDrop(void* enemy) {
 void m4EncounterGrenadeUpdate(void) {
     u8* actor=*(u8**)0x807FBB40;
     void (*native)(void)=(void*)0x80693EC0;
+#if M4_GRENADE_PREVIEW
+    m4GrenadeVisualScope=0;
+#endif
     if (m5Area(CurrentMap) && krushaEnabled() && DetectAdventure()) {
         u8* node=*(u8**)0x807FC400;
         for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
             if (*(void**)(node+0x44)!=actor) continue;
-            for (int i=0;i<24;i++) if (grenades[i].pointer==node && grenades[i].id==*(u16*)(node+0x5A))
+            for (int i=0;i<24;i++) if (grenades[i].pointer==node && grenades[i].id==*(u16*)(node+0x5A)) {
                 *(s16*)(actor+0x136)=2 * *(s16*)(0x8074D0C4+50*4+2);
+#if M4_GRENADE_PREVIEW
+                m4GrenadeVisualScope=1;
+#endif
+            }
             break;
         }
     }
     native();
+#if M4_GRENADE_PREVIEW
+    m4GrenadeVisualScope=0;
+#endif
 }
 
 void m4EncounterTick(void) {

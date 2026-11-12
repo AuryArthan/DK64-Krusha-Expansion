@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/klump_colors.generated.h"
 #include "../include/m5_campaign.h"
 
 /* Keep the native 0x40-byte barrel data layout. Its five actor pointers are
@@ -44,6 +45,9 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     s32 format = table;
+#if M4_GRENADE_PREVIEW
+    if ((table==25 || table==7) && index>=7732 && index<7748) {table=27;index-=7601;}
+#endif
     s32 campaign=m5FileAlias(table,index);
     if (campaign>=0) {table=27;index=campaign;}
     if (table==5 && index==0xED) { table=27;index=69; }

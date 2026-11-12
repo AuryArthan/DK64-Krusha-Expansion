@@ -9,7 +9,7 @@ def patchDolbyText(filename):
 	import struct
 	from pathlib import Path
 	lines = [b"WITH HELP FROM: TAG-ANYWHERE, DONKVIEWER,",
-	         b"DK64 DECOMP, RECOMP, RANDOMIZER, AND CODEX"]
+	         b"DK64 DECOMP, RECOMP, RANDOMIZER; AND CODEX"]
 	header = bytearray([len(lines)])
 	offset = 0
 	for line in lines:

@@ -224,6 +224,9 @@ def appendBarrelAssets(rom_path):
     assert len(payloads)==123
     from m5_campaign import payloads as campaign_payloads
     payloads += campaign_payloads(Path(rom_path).read_bytes())
+    # Preview-only grenade images follow every established resource index.
+    from klump_colors import grenade_payloads
+    payloads += grenade_payloads(Path(rom_path).read_bytes(),read_file)
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)
