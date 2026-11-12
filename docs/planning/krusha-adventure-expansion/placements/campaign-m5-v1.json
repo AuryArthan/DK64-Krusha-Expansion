@@ -1302,11 +1302,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2440.369,
+        2451.041,
         124,
-        1267.778
+        1253.755
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 45,
       "object_id": 508,
@@ -1321,11 +1321,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2561.924,
+        2577.058,
         124,
-        1256.728
+        1232.857
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 46,
       "object_id": 507,
@@ -1340,11 +1340,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2668.286,
+        2670.932,
         124,
-        1194.568
+        1166.128
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 47,
       "object_id": 506,
@@ -1359,11 +1359,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2745.639,
+        2736.531,
         124,
-        1095.114
+        1062.075
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 48,
       "object_id": 505,
@@ -1378,11 +1378,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2773.757,
-        132.04,
-        975.757
+        2746.71,
+        130.793,
+        947.842
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 49,
       "object_id": 504,
@@ -1397,11 +1397,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2720.75,
-        137.136,
-        857.841
+        2692.421,
+        133.142,
+        847.182
       ],
-      "notes": "Open east-side cage approach alongside the native purple route",
+      "notes": "Open east-side cage approach alongside the native purple route Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 50,
       "object_id": 503,
@@ -1416,11 +1416,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2624.058,
+        2579.32,
         124,
-        784.631
+        777.06
       ],
-      "notes": "Open east-side cage approach alongside the native purple route",
+      "notes": "Open east-side cage approach alongside the native purple route Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 51,
       "object_id": 502,
@@ -1435,11 +1435,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2502.503,
+        2456.04,
         124,
-        748.717
+        752.178
       ],
-      "notes": "Open east-side cage approach alongside the native purple route",
+      "notes": "Open east-side cage approach alongside the native purple route Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 52,
       "object_id": 501,
@@ -1454,11 +1454,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2358.846,
+        2322.581,
         124,
-        761.149
+        777.06
       ],
-      "notes": "Open east-side cage approach alongside the native purple route",
+      "notes": "Open east-side cage approach alongside the native purple route Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 53,
       "object_id": 499,
@@ -1473,11 +1473,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2199.038,
+        2177.811,
         124,
-        833.833
+        843.789
       ],
-      "notes": "Open east-side cage approach alongside the native purple route",
+      "notes": "Open east-side cage approach alongside the native purple route Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 54,
       "object_id": 498,
@@ -1511,11 +1511,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3607.847,
-        120.275,
-        4081.152
+        3661.477,
+        124,
+        4125.035
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 56,
       "object_id": 496,
@@ -1530,11 +1530,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3533.256,
-        117.225,
-        4162.649
+        3605.303,
+        124,
+        4215.316
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 57,
       "object_id": 495,
@@ -1549,11 +1549,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3495.961,
+        3525.053,
         124,
-        4266.248
+        4286.537
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: User Aztec export2; exact requested XYZ, checked against native ground+4.",
       "status": "provisional-m5",
       "pickup_slot": 58,
       "object_id": 494,
