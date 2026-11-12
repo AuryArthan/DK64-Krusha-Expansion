@@ -586,51 +586,76 @@
       "name": "Creepy Castle",
       "code": "CC",
       "pad": [
-        1050.0,
-        679.5,
-        490.0
+        745.135,
+        517.744,
+        2015.004
       ],
       "boss": [
-        1150,
-        679.5,
-        560
+        643.874,
+        529.667,
+        1890.891
       ],
       "cage": [
-        515,
-        1141.94,
-        1430
+        161.197,
+        376.945,
+        1699.756
       ],
       "kasplat": [
-        977.0,
-        1784.839,
-        1279.0
+        1475.168,
+        1736.167,
+        1483.56
       ],
       "kasplat_map": 87,
       "fence": [
         [
-          1060,
-          680,
-          510
+          500,
+          530,
+          1780
         ],
         [
-          1240,
-          680,
-          510
+          760,
+          529,
+          1770
         ],
         [
-          1240,
-          680,
-          610
+          805,
+          522,
+          1870
         ],
         [
-          1060,
-          680,
-          610
+          785,
+          522,
+          1970
         ],
         [
-          1060,
-          680,
-          510
+          765,
+          522,
+          2040
+        ],
+        [
+          715,
+          522,
+          2020
+        ],
+        [
+          610,
+          523,
+          1970
+        ],
+        [
+          535,
+          524,
+          1910
+        ],
+        [
+          500,
+          526,
+          1840
+        ],
+        [
+          500,
+          530,
+          1780
         ]
       ],
       "kasplat_id": 17,
@@ -638,7 +663,14 @@
       "gate_id": 529,
       "pad_id": 528,
       "reward_id": 527,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "Castle user X/Z retained; native ground517.744 +0.",
+        "boss": "Castle user X/Z retained; native ground523.667 +6.",
+        "cage": "Castle user X/Z retained; native ground370.675 +6.27.",
+        "kasplat": "Castle user X/Z retained; native ground1731.167 +5.",
+        "fence": "Private arena follows native upper ledge around new spawn and pad; cliff/low-floor corners excluded. Original enemy fences unchanged."
+      }
     },
     {
       "world": 7,
@@ -4017,11 +4049,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        1050.0,
-        687.5,
-        490.0
+        744.14,
+        525.744,
+        2014.004
       ],
-      "notes": "Bunch above shout pad",
+      "notes": "Eight units above grounded shout pad; user X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 211,
       "object_id": 526,
@@ -4036,11 +4068,11 @@
       "kind": "bunch",
       "quantity": 1,
       "xyz": [
-        515,
-        1172.34,
-        1430
+        161.272,
+        407.345,
+        1698.597
       ],
-      "notes": "Bunch just above compact cage roof; reachable after opening",
+      "notes": "Four units above compact cage roof; user X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 212,
       "object_id": 525,
@@ -4074,11 +4106,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        715.307,
-        677.5,
-        613.045
+        694.868,
+        523.685,
+        1974.36
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor519.685 +4.",
       "status": "provisional-m5",
       "pickup_slot": 226,
       "object_id": 523,
@@ -4093,11 +4125,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        780.0,
-        677.5,
-        600.0
+        640.348,
+        525.357,
+        1934.806
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor521.357 +4.",
       "status": "provisional-m5",
       "pickup_slot": 227,
       "object_id": 522,
@@ -4112,11 +4144,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        860.0,
-        677.5,
-        550.0
+        579.413,
+        527.407,
+        1883.493
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor523.407 +4.",
       "status": "provisional-m5",
       "pickup_slot": 228,
       "object_id": 521,
@@ -4131,11 +4163,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        940.0,
-        677.5,
-        500.0
+        519.548,
+        526.435,
+        1826.834
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor522.435 +4.",
       "status": "provisional-m5",
       "pickup_slot": 229,
       "object_id": 520,
@@ -4150,11 +4182,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1010.0,
-        677.5,
-        490.0
+        448.992,
+        525.4,
+        1758.417
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor521.400 +4.",
       "status": "provisional-m5",
       "pickup_slot": 230,
       "object_id": 519,
@@ -4169,11 +4201,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        700,
-        1123.327,
-        1140
+        667.841,
+        370.333,
+        2095.508
       ],
-      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff Implemented on native floor366.333 +4.",
       "status": "provisional-m5",
       "pickup_slot": 330,
       "object_id": 518,
@@ -4188,11 +4220,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        620,
-        1129.36,
-        1200
+        514.274,
+        370.333,
+        2043.866
       ],
-      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff Implemented on native floor366.333 +4.",
       "status": "provisional-m5",
       "pickup_slot": 331,
       "object_id": 517,
@@ -4207,11 +4239,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        560,
-        1139.158,
-        1270
+        406.913,
+        370.333,
+        1928.351
       ],
-      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff Implemented on native floor366.333 +4.",
       "status": "provisional-m5",
       "pickup_slot": 332,
       "object_id": 516,
@@ -4226,11 +4258,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        500,
-        1140.41,
-        1330
+        310.424,
+        370.333,
+        1830.503
       ],
-      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff Implemented on native floor366.333 +4.",
       "status": "provisional-m5",
       "pickup_slot": 333,
       "object_id": 515,
@@ -4245,11 +4277,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        500,
-        1139.685,
-        1400
+        205.781,
+        370.333,
+        1770.707
       ],
-      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff",
+      "notes": "Follow the Cranky-side ledge toward the cage; no trail through the building or over a cliff Implemented on native floor366.333 +4.",
       "status": "provisional-m5",
       "pickup_slot": 334,
       "object_id": 514,
@@ -4264,11 +4296,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        700.0,
-        1798.167,
-        1390.0
+        1130.347,
+        1749.788,
+        1341.472
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor1745.788 +4.",
       "status": "provisional-m5",
       "pickup_slot": 335,
       "object_id": 513,
@@ -4283,11 +4315,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        780.0,
-        1798.167,
-        1430.0
+        1203.041,
+        1735.167,
+        1330.781
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 336,
       "object_id": 512,
@@ -4302,11 +4334,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        850.0,
-        1798.167,
-        1400.0
+        1267.183,
+        1735.167,
+        1283.744
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 337,
       "object_id": 511,
@@ -4321,11 +4353,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        920.0,
-        1797.675,
-        1350.0
+        1314.22,
+        1735.167,
+        1227.086
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 338,
       "object_id": 510,
@@ -4340,11 +4372,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        970.0,
-        1785.681,
-        1300.0
+        1338.808,
+        1735.167,
+        1160.806
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 339,
       "object_id": 509,
@@ -4359,9 +4391,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        1100,
-        810,
-        520
+        922.385,
+        773.5,
+        586.999
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -4378,9 +4410,9 @@
       "kind": "balloon",
       "quantity": 1,
       "xyz": [
-        515,
-        1270,
-        1430
+        479.083,
+        1648.983,
+        1435.856
       ],
       "notes": "Short rectangular route above dry aiming approach",
       "status": "provisional-m5",
@@ -4397,11 +4429,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1007.0,
-        677.5,
-        465.0
+        712.759,
+        520.341,
+        2019.726
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implemented on native floor516.341 +4.",
       "status": "provisional-m5",
       "pickup_slot": 307,
       "object_id": 508,
@@ -4416,11 +4448,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1050.0,
-        677.5,
-        540.0
+        762.56,
+        519.809,
+        2041.293
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implemented on native floor515.808 +4.",
       "status": "provisional-m5",
       "pickup_slot": 308,
       "object_id": 507,
@@ -4435,11 +4467,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1093.0,
-        677.5,
-        465.0
+        754.57,
+        521.66,
+        1989.166
       ],
-      "notes": "Close three-coin ring around shout pad",
+      "notes": "Close three-coin ring around shout pad Implemented on native floor517.660 +4.",
       "status": "provisional-m5",
       "pickup_slot": 309,
       "object_id": 506,
@@ -4454,11 +4486,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1077,
-        1761.587,
-        1309
+        1662.723,
+        1735.167,
+        1316.884
       ],
-      "notes": "Middle of the three coins along the Kasplat-side wall; keep clear of the northern ledge",
+      "notes": "Middle of the three coins along the Kasplat-side wall; keep clear of the northern ledge Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 310,
       "object_id": 505,
@@ -4473,11 +4505,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1077.0,
-        1761.223,
-        1279.0
+        1664.291,
+        1735.167,
+        1345.284
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 311,
       "object_id": 504,
@@ -4492,11 +4524,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1077.0,
-        1762.011,
-        1339.0
+        1661.252,
+        1735.167,
+        1289.308
       ],
-      "notes": "Three coins beside the Kasplat approach wall",
+      "notes": "Three coins beside the Kasplat approach wall Implemented on native floor1731.167 +4.",
       "status": "provisional-m5",
       "pickup_slot": 312,
       "object_id": 503,
@@ -4511,11 +4543,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        535,
-        1140.791,
-        1350
+        1504.955,
+        475.5,
+        297.896
       ],
-      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "notes": "Three coins following the inner edge of the Cranky-side ledge Implemented on native floor471.500 +4.",
       "status": "provisional-m5",
       "pickup_slot": 313,
       "object_id": 502,
@@ -4530,11 +4562,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        535,
-        1140.036,
-        1410
+        1534.723,
+        475.5,
+        283.343
       ],
-      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "notes": "Three coins following the inner edge of the Cranky-side ledge Implemented on native floor471.500 +4.",
       "status": "provisional-m5",
       "pickup_slot": 314,
       "object_id": 501,
@@ -4549,11 +4581,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        535,
-        1139.786,
-        1470
+        1507.578,
+        475.5,
+        267.351
       ],
-      "notes": "Three coins following the inner edge of the Cranky-side ledge",
+      "notes": "Three coins following the inner edge of the Cranky-side ledge Implemented on native floor471.500 +4.",
       "status": "provisional-m5",
       "pickup_slot": 315,
       "object_id": 499,
