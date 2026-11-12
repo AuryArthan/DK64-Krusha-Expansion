@@ -3145,11 +3145,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        138.701,
-        1005.347,
-        355.642
+        155.24,
+        1193.167,
+        499.713
       ],
-      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is1001.347; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "Giant Mushroom ground-floor arc Implementation: Per shared note for all five singles, first walkable floor below exported Y1193 is1189.167; banana four units above it at1193.167. Requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 158,
       "object_id": 529,
@@ -3164,11 +3164,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        112.202,
-        994.579,
-        438.083
+        190.757,
+        1193.167,
+        527.173
       ],
-      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is990.579; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "Giant Mushroom ground-floor arc Implementation: Per shared note for all five singles, first walkable floor below exported Y1193 is1189.167; banana four units above it at1193.167. Requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 159,
       "object_id": 528,
@@ -3183,11 +3183,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        101.897,
-        983.167,
-        529.636
+        169.691,
+        1193.167,
+        565.837
       ],
-      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "Giant Mushroom ground-floor arc Implementation: Per shared note for all five singles, first walkable floor below exported Y1193 is1189.167; banana four units above it at1193.167. Requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 160,
       "object_id": 527,
@@ -3202,11 +3202,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        108.239,
-        983.167,
-        621.586
+        128.532,
+        1193.167,
+        564.032
       ],
-      "notes": "Giant Mushroom ground-floor arc Implementation: First walkable terrain below exported Y1050 is979.167; collectible four units above it. Retain requested X/Z; native support/traversal to be checked.",
+      "notes": "Giant Mushroom ground-floor arc Implementation: Per shared note for all five singles, first walkable floor below exported Y1193 is1189.167; banana four units above it at1193.167. Requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 161,
       "object_id": 526,
@@ -3221,11 +3221,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        183.811,
-        1615.342,
-        288.16
+        117.699,
+        1193.167,
+        521.447
       ],
-      "notes": "User Forest export2: single on upper Mushroom walkway, floor1611.342+4. Exact requested XYZ retained.",
+      "notes": "Giant Mushroom ground-floor arc. ALL OF THESE 5 BANANAS I TRIED TO SET THE Y MANUALLY; BUT NOT SO ACCURATELY - SET THEM ON THE FIRST GROUND BELOW THEM Implementation: Per shared note for all five singles, first walkable floor below exported Y1193 is1189.167; banana four units above it at1193.167. Requested X/Z retained.",
       "status": "provisional-m5",
       "pickup_slot": 162,
       "object_id": 525,
