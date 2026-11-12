@@ -2,8 +2,8 @@
 #include "../include/klump_colors.generated.h"
 
 /* Compiled out when original grenades are selected. Recolor hooks are only
- * at the native orange actor's two initializer callsites. The
- * existing validated rare-grenade ownership loop scopes them for one update;
+ * at the native thrown-orange and idle-snack initializer callsites. The
+ * validated rare-grenade loop or rare-parent constructor scopes each call;
  * ordinary player/enemy oranges and the lime bazooka retain their own sprites.
  */
 #if M4_GRENADE_PREVIEW
