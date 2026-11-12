@@ -3744,7 +3744,7 @@
         100.546,
         853.589
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: Lower surface96.546+4 keeps the five-single ground trail continuous; export clicked upper platform288.053. Optional user question pending; using lower trail as a stated assumption.",
+      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: Lower surface96.546+4 keeps the five-single ground trail continuous; export clicked upper platform288.053. User explicitly confirmed: use the lower ground to connect the trail.",
       "status": "provisional-m5",
       "pickup_slot": 203,
       "object_id": 511,
