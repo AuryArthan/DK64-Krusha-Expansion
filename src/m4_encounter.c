@@ -159,11 +159,14 @@ void m4EncounterThrow(s16 type,s16 model,f32 scale,s16 angle,f32 forward,f32 ver
      * At this scale that lateral offset is conspicuous. Aim the middle round
      * from the actual release point to the player, retaining native speeds. */
     f32 x=*(f32*)0x807FC7B0,y=*(f32*)0x807FC7B4,z=*(f32*)0x807FC7B8;
+    /* The enlarged body needs clearance above the low crouched hand pose.
+     * Keep native launch speeds/angles and leave ordinary enemies alone. */
+    f32 release_y=y+32.0f;
     s16 (*toward)(f32,f32,f32,f32)=(void*)0x80665DE0;
     void (*origin)(f32,f32,f32)=(void*)0x806907F0;
     if (Player) angle=toward(Player->xPos,Player->zPos,x,z);
     for (int n=-1;n<=1;n++) {
-        origin(x,y,z);
+        origin(x,release_y,z);
         native(type,model,scale,(angle+n*170)&4095,forward,vertical,parent);
         u8* node=*(u8**)0x807FC400;
         if (node) {
@@ -172,6 +175,8 @@ void m4EncounterThrow(s16 type,s16 model,f32 scale,s16 angle,f32 forward,f32 ver
             }
         }
     }
+    /* The native origin is shared scratch state, not owned by this enemy. */
+    origin(x,y,z);
     m4EncounterTrace[3]++;
 }
 

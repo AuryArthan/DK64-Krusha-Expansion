@@ -1,10 +1,8 @@
-"""Rare-Klump appearance palettes, including the selected warmer B revision.
+"""Rare-Klump appearance palettes, including reddish orange and pale blue.
 
-DK64_KLUMP_SKIN=original/ochre/umber/olive/umber-red,
-DK64_KLUMP_GEAR=original/light-blue and
-DK64_KLUMP_GRENADES=original/navy/crimson. Grenades default to original.
-The selected umber-red skin defaults to lighter blue gear; older palettes
-retain their original gear unless explicitly overridden.
+The red-orange default uses pale-blue clothing and grenades. Explicit older
+skin presets retain their previous clothing and original grenades unless
+overridden. These are build selectors, not gameplay options.
 """
 from pathlib import Path
 import colorsys,json,os,struct
@@ -16,20 +14,22 @@ SKINS={
     'umber':(1.00,.58,.18),
     'olive':(.86,.76,.26),
     'umber-red':(1.00,.51,.22),
+    'red-orange':(1.28,.48,.12),
 }
-GEAR={'original':None,'light-blue':(.48,.69,1.12)}
-GRENADES={'original':None,'navy':(.625,.72),'crimson':(.99,.85)}
+GEAR={'original':None,'light-blue':(.48,.69,1.12),'pale-blue':(.80,1.03,1.40)}
+# Optional third component caps saturation for a lighter, less vivid blue.
+GRENADES={'original':None,'navy':(.625,.72),'crimson':(.99,.85),'pale-blue':(.605,1.10,.45)}
 
 def choice(key,choices,default='original'):
     value=os.environ.get(key,default)
     if value not in choices:raise ValueError(f'{key} must be one of {tuple(choices)}')
     return value
 
-def skin_choice():return choice('DK64_KLUMP_SKIN',SKINS,'umber-red')
+def skin_choice():return choice('DK64_KLUMP_SKIN',SKINS,'red-orange')
 def skin_multiplier():return SKINS[skin_choice()]
-def gear_choice():return choice('DK64_KLUMP_GEAR',GEAR,'light-blue' if skin_choice()=='umber-red' else 'original')
+def gear_choice():return choice('DK64_KLUMP_GEAR',GEAR,'pale-blue' if skin_choice()=='red-orange' else 'light-blue' if skin_choice()=='umber-red' else 'original')
 def gear_multiplier():return GEAR[gear_choice()]
-def grenade_choice():return choice('DK64_KLUMP_GRENADES',GRENADES)
+def grenade_choice():return choice('DK64_KLUMP_GRENADES',GRENADES,'pale-blue' if skin_choice()=='red-orange' else 'original')
 
 def prepare():
     skin=skin_choice();gear=gear_choice();grenade=grenade_choice()
@@ -42,12 +42,12 @@ def grenade_texture(raw,held=False):
     """Rehue peel while retaining native alpha, fuse/pin and mip geometry."""
     selected=GRENADES[grenade_choice()]
     if selected is None:return raw
-    hue,value_scale=selected;out=bytearray()
+    hue,value_scale=selected[:2];saturation_cap=selected[2] if len(selected)>2 else 1.0;out=bytearray()
     for (v,) in struct.iter_unpack('>H',raw):
         rgb=[(v>>shift&31)/31 for shift in (11,6,1)]
         h,s,l=colorsys.rgb_to_hsv(*rgb)
         if s>.25 and (held or h<.18 or h>.96):
-            rgb=colorsys.hsv_to_rgb(hue,min(1,s*1.1),l*value_scale)
+            rgb=colorsys.hsv_to_rgb(hue,min(saturation_cap,s*1.1),min(1,l*value_scale))
         r,g,b=[max(0,min(31,round(c*31))) for c in rgb]
         out+=struct.pack('>H',r<<11|g<<6|b<<1|v&1)
     return bytes(out)
