@@ -514,9 +514,9 @@
         2030
       ],
       "boss": [
-        3330,
-        125.111,
-        1850
+        3152.607,
+        126.727,
+        2182.287
       ],
       "cage": [
         2851.623,
@@ -531,29 +531,39 @@
       "kasplat_map": 72,
       "fence": [
         [
-          3210,
-          125,
-          1750
+          3033,
+          139,
+          2100
         ],
         [
-          3450,
-          125,
-          1750
+          3160,
+          103,
+          1970
         ],
         [
-          3450,
-          125,
-          1950
+          3370,
+          122,
+          1970
         ],
         [
-          3210,
-          125,
-          1950
+          3370,
+          119,
+          2145
         ],
         [
-          3210,
-          125,
-          1750
+          3220,
+          123,
+          2220
+        ],
+        [
+          3060,
+          139,
+          2250
+        ],
+        [
+          3033,
+          139,
+          2100
         ]
       ],
       "kasplat_id": 11,
@@ -564,9 +574,10 @@
       "switch_id": 65535,
       "placement_notes": {
         "pad": "Requested X/Z; pad base on native floor109.304 instead of six units above it.",
-        "boss": "Rare Klump drops one GB at its death location. 1.6 times native size, eight hits, triple grenades.",
+        "boss": "Caves export2 X/Z retained; native floor120.727 +6 spawn height.",
         "cage": "Requested X/Z on floor280; established compact-cage base offset6.27. Preserve all cage scale/material/rotation logic.",
-        "kasplat": "User X/Z/Y retained: native floor96.251 +5; private70-unit patrol square follows new spawn. Native enemy records/fences unchanged."
+        "kasplat": "User X/Z/Y retained: native floor96.251 +5; private70-unit patrol square follows new spawn. Native enemy records/fences unchanged.",
+        "fence": "Private six-sided arena covers relocated spawn and unchanged pad, following walkable clearing away from the river and cave walls. Ten-unit edge probes pass; original native fences unchanged."
       }
     },
     {
@@ -3512,11 +3523,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3206.202,
+        3198.369,
         116.833,
-        2117.33
+        2082.873
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor112.833 +4.",
       "status": "provisional-m5",
       "pickup_slot": 191,
       "object_id": 523,
@@ -3531,11 +3542,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3103.791,
-        128.237,
-        2172.924
+        3110.002,
+        125.744,
+        2142.837
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor121.744 +4.",
       "status": "provisional-m5",
       "pickup_slot": 192,
       "object_id": 522,
@@ -3550,11 +3561,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        3002.356,
-        141.747,
-        2205.11
+        3010.867,
+        138.651,
+        2189.056
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor134.651 +4.",
       "status": "provisional-m5",
       "pickup_slot": 193,
       "object_id": 521,
@@ -3569,11 +3580,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        2903.847,
-        156.838,
-        2223.642
+        2904.436,
+        156.59,
+        2222.255
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor152.590 +4.",
       "status": "provisional-m5",
       "pickup_slot": 194,
       "object_id": 520,
@@ -3702,11 +3713,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1481.111,
-        102.77,
-        812.358
+        1495.851,
+        102.901,
+        822.663
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor98.901 +4.",
       "status": "provisional-m5",
       "pickup_slot": 201,
       "object_id": 513,
@@ -3721,11 +3732,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1599.649,
-        102.802,
-        834.446
+        1600.329,
+        103.03,
+        845.121
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor99.030 +4.",
       "status": "provisional-m5",
       "pickup_slot": 202,
       "object_id": 512,
@@ -3740,11 +3751,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1708.616,
-        100.546,
-        853.589
+        1717.501,
+        101.276,
+        845.121
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom Implementation: Lower surface96.546+4 keeps the five-single ground trail continuous; export clicked upper platform288.053. User explicitly confirmed: use the lower ground to connect the trail.",
+      "notes": "Caves export2: user XYZ retained, native floor97.276 +4. Continues the lower-ground trail, as previously confirmed by user.",
       "status": "provisional-m5",
       "pickup_slot": 203,
       "object_id": 511,
@@ -3759,11 +3770,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1811.692,
-        89.207,
-        858.006
+        1811.238,
+        92.277,
+        816.804
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor88.277 +4.",
       "status": "provisional-m5",
       "pickup_slot": 204,
       "object_id": 510,
@@ -3778,11 +3789,11 @@
       "kind": "single",
       "quantity": 1,
       "xyz": [
-        1931.703,
-        3.833,
-        843.281
+        1884.471,
+        82.5,
+        747.477
       ],
-      "notes": "Five-single approach to pad/cage, or separate connected path; underwater singles follow bottom",
+      "notes": "Caves export2: user XYZ retained, native floor78.500 +4. Moved from shallow river onto dry ground.",
       "status": "provisional-m5",
       "pickup_slot": 205,
       "object_id": 509,
