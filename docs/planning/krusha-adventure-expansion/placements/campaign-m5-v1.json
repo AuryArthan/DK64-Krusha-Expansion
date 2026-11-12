@@ -4488,9 +4488,9 @@
       "xyz": [
         1692.723,
         1735.167,
-        1316.884
+        1356.884
       ],
-      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
+      "notes": "User-approved outward Tower line, resolved as +30X/+40Z to clear angled bars; spacing retained. Native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 310,
       "object_id": 505,
@@ -4507,9 +4507,9 @@
       "xyz": [
         1694.291,
         1735.167,
-        1345.284
+        1385.284
       ],
-      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
+      "notes": "User-approved outward Tower line, resolved as +30X/+40Z to clear angled bars; spacing retained. Native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 311,
       "object_id": 504,
@@ -4526,9 +4526,9 @@
       "xyz": [
         1691.252,
         1735.167,
-        1289.308
+        1329.308
       ],
-      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
+      "notes": "User-approved outward Tower line, resolved as +30X/+40Z to clear angled bars; spacing retained. Native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 312,
       "object_id": 503,
