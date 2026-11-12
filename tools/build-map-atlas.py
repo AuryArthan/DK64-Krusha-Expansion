@@ -23,6 +23,7 @@ from map_names import maps
 from model2_names import model2_names
 from actor_names import actor_names
 from character_spawner_names import character_spawner_names
+from native_pickup_adjustments import removed_ids
 
 BASE = 0x101C50
 KONGS = ['DK', 'Diddy', 'Lanky', 'Tiny', 'Chunky']
@@ -117,6 +118,7 @@ def point_record(map_id, source, index, kind, name, xyz, object_id=None, quantit
 
 def objects(rom, map_id, reward_owners):
     out = []
+    omitted = removed_ids(map_id)
     b = rom.file(9, map_id)
     if b:
         n = unpack('I', b)[0]
@@ -124,6 +126,8 @@ def objects(rom, map_id, reward_owners):
             p = 4 + i * 48
             xyz = unpack('3f', b, p)
             typ, obj = unpack('HH', b, p + 40)
+            if obj in omitted:
+                continue
             name = model2_names[typ] if typ < len(model2_names) else f'Model2 {typ}'
             kind, quantity = classify(name, 'model2')
             if kind:
@@ -245,7 +249,7 @@ def main():
     ap.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
     ap.add_argument('--out', type=Path, default=ROOT / 'runtime/map-atlas/atlas')
     ap.add_argument('--refresh-ui', action='store_true',
-                    help='Back up and refresh only UI files of an existing atlas; keep geometry and exported plans.')
+                    help='Back up and refresh UI, seeds and implemented native pickup omissions; keep geometry and exported plans.')
     args = ap.parse_args()
     out = args.out.resolve()
     if args.refresh_ui:
@@ -259,6 +263,29 @@ def main():
                 shutil.copyfile(out / name, backup / name)
         for name in UI_FILES:
             shutil.copyfile(ROOT / 'tools/map-atlas' / name, out / name)
+        # Keep original collision/other reference points; omit only reviewed
+        # native pickups that the ROM builder now removes. Preserve originals
+        # beside the UI backup before touching generated reference metadata.
+        for record in metadata['maps']:
+            omitted = removed_ids(record['id'])
+            if not omitted:
+                continue
+            path = out / 'data' / f'{record["id"]:03d}.js'
+            text = path.read_text()
+            detail = json.loads(text.split('=', 1)[1].strip().rstrip(';'))
+            points = [p for p in detail['points'] if not
+                      (p['source'] == 'model2' and p.get('object_id') in omitted)]
+            if points == detail['points']:
+                continue
+            for original in (path, out / 'coverage.json', out / 'catalog.js'):
+                saved = backup / original.name
+                if not saved.exists():
+                    shutil.copyfile(original, saved)
+            record.update(points=len(points), counts=dict(collections.Counter(p['kind'] for p in points)))
+            detail.update(meta=record, points=points)
+            path.write_text('window.ATLAS_MAP=' + json.dumps(detail, separators=(',', ':')) + ';\n')
+        (out / 'coverage.json').write_text(json.dumps(metadata, indent=2) + '\n')
+        (out / 'catalog.js').write_text('window.ATLAS_CATALOG=' + json.dumps(metadata, separators=(',', ':')) + ';\n')
         write_placement_draft(out)
         print(f'Updated interface; previous UI preserved in {backup}')
         print(out / 'index.html')
