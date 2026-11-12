@@ -146,7 +146,7 @@ window.createKrushaPlanner = function (host) {
     const n = kind => pins.filter(p => p.kind===kind).reduce((s,p)=>s+p.quantity,0);
     const objects=n('single')+n('bunch')+n('balloon')+n('coin');
     const units=n('single')+5*n('bunch')+10*n('balloon');
-    const campaignBananas=campaign ? 350 : 700, campaignCoins=campaign ? 72 : 99;
+    const campaignBananas=campaign ? 350 : 700, campaignCoins=campaign ? (draft.coin_target ?? 72) : 99;
     global.textContent=pilot ? `Japes pilot: ${units}/${bananaTarget} bananas · ${n('coin')}/9 coins · ${objects} active colored objects · ${n('gb')+n('bonus')+n('blueprint')}/3 GB sites` : `Campaign: ${units}/${campaignBananas} bananas · ${n('coin')}/${campaignCoins} coins · ${objects}/384 colored objects · ${n('gb')+n('bonus')+n('blueprint')}/${campaign?24:40} GB sites · ${n('blueprint')}/8 blueprints`;
     if(units>(pilot?bananaTarget:campaignBananas)||n('coin')>(pilot?9:campaignCoins)||objects>384)global.classList.add('over-budget');
     totals.append(global);

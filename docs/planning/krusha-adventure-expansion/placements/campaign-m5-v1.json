@@ -678,51 +678,61 @@
       "name": "DK Isles",
       "code": "IS",
       "pad": [
-        2940.0,
-        511.848,
-        2220.0
+        3238.698,
+        500.0,
+        885.941
       ],
       "boss": [
-        3090.0,
-        509.307,
-        2160.0
+        3151.872,
+        506.0,
+        831.98
       ],
       "cage": [
-        3170.0,
-        528.328,
-        1910.0
+        2694.081,
+        1016.692,
+        1805.21
       ],
       "kasplat": [
-        700.0,
-        9.359,
-        300.0
+        240,
+        5,
+        450
       ],
-      "kasplat_map": 169,
+      "kasplat_map": 178,
       "fence": [
         [
-          2970,
-          509,
-          2060
+          3000,
+          506,
+          800
         ],
         [
-          3210,
-          509,
-          2060
+          3220,
+          506,
+          800
         ],
         [
-          3210,
-          509,
-          2260
+          3340,
+          503,
+          860
         ],
         [
-          2970,
-          509,
-          2260
+          3360,
+          506,
+          980
         ],
         [
-          2970,
-          509,
-          2060
+          3270,
+          506,
+          1020
+        ],
+        [
+          3020,
+          506,
+          990
+        ],
+        [
+          3000,
+          506,
+          800
         ]
       ],
       "kasplat_id": 3,
@@ -730,7 +740,14 @@
       "gate_id": 529,
       "pad_id": 528,
       "reward_id": 527,
-      "switch_id": 65535
+      "switch_id": 65535,
+      "placement_notes": {
+        "pad": "User X/Z, grounded on native500 surface.",
+        "boss": "User X/Z, native ground500+6.",
+        "cage": "User X/Z and approximate height resolved to native1010.422 floor+6.27.",
+        "kasplat": "Moved to clear Fungi Forest Lobby floor0 per user note; native Japes lobby restored.",
+        "fence": "Private arena around new Isle pad/spawn on native500 surface; original fences unchanged."
+      }
     }
   ],
   "pins": [
@@ -4590,179 +4607,21 @@
       "pickup_slot": 315,
       "object_id": 499,
       "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c01",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-C01",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        2897.0,
-        507.893,
-        2195.0
-      ],
-      "notes": "Close three-coin ring around shout pad",
-      "status": "provisional-m5",
-      "pickup_slot": 322,
-      "object_id": 526,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c02",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-C02",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        2940.0,
-        503.944,
-        2270.0
-      ],
-      "notes": "Close three-coin ring around shout pad",
-      "status": "provisional-m5",
-      "pickup_slot": 323,
-      "object_id": 525,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c03",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-C03",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        2983.0,
-        509.377,
-        2195.0
-      ],
-      "notes": "Close three-coin ring around shout pad",
-      "status": "provisional-m5",
-      "pickup_slot": 324,
-      "object_id": 524,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c04",
-      "map": 169,
-      "map_name": "Jungle Japes Lobby",
-      "world": 7,
-      "label": "IS-C04",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        778.787,
-        11.172,
-        261.213
-      ],
-      "notes": "Three coins beside the Kasplat approach wall",
-      "status": "provisional-m5",
-      "pickup_slot": 325,
-      "object_id": 523,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c05",
-      "map": 169,
-      "map_name": "Jungle Japes Lobby",
-      "world": 7,
-      "label": "IS-C05",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        790.0,
-        15.05,
-        300.0
-      ],
-      "notes": "Three coins beside the Kasplat approach wall",
-      "status": "provisional-m5",
-      "pickup_slot": 326,
-      "object_id": 522,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c06",
-      "map": 169,
-      "map_name": "Jungle Japes Lobby",
-      "world": 7,
-      "label": "IS-C06",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        790.0,
-        14.822,
-        360.0
-      ],
-      "notes": "Three coins beside the Kasplat approach wall",
-      "status": "provisional-m5",
-      "pickup_slot": 327,
-      "object_id": 521,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c07",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-C07",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        3129.497,
-        524.612,
-        1899.497
-      ],
-      "notes": "Three coins along the cage-side wall",
-      "status": "provisional-m5",
-      "pickup_slot": 328,
-      "object_id": 520,
-      "type": 6
-    },
-    {
-      "id": "assistant-draft1-is-c08",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-C08",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        3110.0,
-        523.804,
-        1910.0
-      ],
-      "notes": "Three coins along the cage-side wall",
-      "status": "provisional-m5",
-      "pickup_slot": 329,
-      "object_id": 519,
-      "type": 6
-    },
-    {
-      "id": "campaign-340",
-      "map": 34,
-      "map_name": "DK Isles Overworld",
-      "world": 7,
-      "label": "IS-S340",
-      "kind": "coin",
-      "quantity": 1,
-      "xyz": [
-        3080.0,
-        522.706,
-        1970.0
-      ],
-      "notes": "Three coins along the cage-side wall",
-      "status": "provisional-m5",
-      "pickup_slot": 340,
-      "object_id": 518,
-      "type": 6
     }
   ],
   "save_contract": "K07.2; retain retired bits; new Castle singles330..339, ninth Isles coin340; no recruitment or medals",
-  "capacity_note": "Eight Forest pickups moved to Giant Mushroom: main map517/530, preserving13 spare native model2 slots. Original records unchanged."
+  "capacity_note": "Eight Forest pickups moved to Giant Mushroom: main map517/530, preserving13 spare native model2 slots. Original records unchanged.",
+  "retired_pickup_slots": [
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    340
+  ],
+  "coin_target": 63,
+  "retirement_note": "Isles/lobby nine private coins removed after native audit. Slots322\u2013329 and340 remain reserved, never reassign. Existing earned wallets/progress are preserved; no save migration/reset."
 }

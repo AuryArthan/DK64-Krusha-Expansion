@@ -6,10 +6,15 @@ from barrel_assets import read_file
 
 def prepare(rom_path):
     rom=Path(rom_path).read_bytes();pins=ground()+balloons();slots=[p['pickup_slot'] for p in pins]
-    assert len(slots)==len(set(slots))==212 and max(slots)<384
+    # Removed Isles coins keep their old EEPROM bits reserved. Never compact
+    # or reassign identities when retiring a placed object.
+    from campaign_data import plan
+    retired=plan().get('retired_pickup_slots',[])
+    assert len(slots)==len(set(slots))==203 and max(slots)<384
+    assert retired==list(range(322,330))+[340] and not set(slots)&set(retired)
     for w in worlds():
         ps=[p for p in pins if p['world']==w['world']]
-        assert sum(p['kind']=='coin' for p in ps)==9
+        assert sum(p['kind']=='coin' for p in ps)==(9 if w['world']<7 else 0)
         assert sum({'single':1,'bunch':5,'balloon':10,'coin':0}[p['kind']] for p in ps)==(50 if w['world']<7 else 0)
     text='/* Generated campaign identities: original save/actor IDs are never reused. */\n'
     text+='static const M5Area m5Areas[8] = {\n'

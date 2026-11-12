@@ -227,7 +227,7 @@ def write_placement_draft(out):
             data=json.loads(campaign.read_text())
             draft=dict(format='krusha-atlas-notes-v2',source_sha1=data['source_sha1'],
                        draft_id=data['draft_id'],title=data['title'],scope='implemented-campaign',
-                       banana_target=50,coin_target=72,reward_target=3,pins=list(data['pins']))
+                       banana_target=50,coin_target=data.get('coin_target',72),reward_target=3,pins=list(data['pins']))
             for w in data['worlds']:
                 for name,kind,key,notes in [
                     ('PAD','switch','pad','Shout here to summon the rare Klump. One paid shout; eight bazooka hits.'),
