@@ -65,7 +65,7 @@ def recolor_model_skin(raw):
     count=0
     for offset in range(0x28,start,16):
         r,g,b,a=data[offset+12:offset+16];h,s,v=colorsys.rgb_to_hsv(r/255,g/255,b/255)
-        if .87<h<.995 and r>g*1.35 and b>g*1.25:
+        if .87<h<.995 and r>g*1.35 and (b>g*1.25 or (r,g,b)==(230,107,120)):
             light=max(r,g,b)*.8
             data[offset+12:offset+15]=bytes(max(0,min(255,round(light*c))) for c in color)
             count+=1
