@@ -4609,7 +4609,7 @@
       "type": 6
     }
   ],
-  "save_contract": "K07.2; retain retired bits; new Castle singles330..339, ninth Isles coin340; no recruitment or medals",
+  "save_contract": "K07.2; retain all retired bits including Isles coin slots322..329 and340; active Castle singles330..339; no recruitment or medals",
   "capacity_note": "Eight Forest pickups moved to Giant Mushroom: main map517/530, preserving13 spare native model2 slots. Original records unchanged.",
   "retired_pickup_slots": [
     322,
