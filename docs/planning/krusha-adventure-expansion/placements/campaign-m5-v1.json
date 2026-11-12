@@ -4486,11 +4486,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1662.723,
+        1692.723,
         1735.167,
         1316.884
       ],
-      "notes": "Middle of the three coins along the Kasplat-side wall; keep clear of the northern ledge Implemented on native floor1731.167 +4.",
+      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 310,
       "object_id": 505,
@@ -4505,11 +4505,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1664.291,
+        1694.291,
         1735.167,
         1345.284
       ],
-      "notes": "Three coins beside the Kasplat approach wall Implemented on native floor1731.167 +4.",
+      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 311,
       "object_id": 504,
@@ -4524,11 +4524,11 @@
       "kind": "coin",
       "quantity": 1,
       "xyz": [
-        1661.252,
+        1691.252,
         1735.167,
         1289.308
       ],
-      "notes": "Three coins beside the Kasplat approach wall Implemented on native floor1731.167 +4.",
+      "notes": "User-approved30-unit outward X shift from Tower wall, preserving coin spacing; native floor1731.167+4.",
       "status": "provisional-m5",
       "pickup_slot": 312,
       "object_id": 503,
