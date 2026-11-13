@@ -52,7 +52,10 @@ static void presentation(void) {
         u8* model=*(u8**)((u8*)&objects[i]+0x20);
         if (!model) continue;
         *(s16*)(model+0xB4)=0x74;
-        if (!visible(objects[i].runtime_id)) continue;
+        /* Native 805FC668 returns scene bit2 to select paused sprite updates.
+         * Those freeze world-sprite animation/expiry unless flag1 is set.
+         * Keep model bookkeeping, but do not add glitter to that frozen list. */
+        if ((TBVoidByte & 2) || !visible(objects[i].runtime_id)) continue;
         f32 x=*(f32*)model,y=*(f32*)(model+4),z=*(f32*)(model+8);
         f32 dx=*(f32*)(changes+0x21C)-x;
         f32 dy=*(f32*)(changes+0x220)-y;
@@ -184,7 +187,10 @@ void m4RewardsTick(void) {
                 runState(script,1,0);
             if (!disabled && ids[i]==area->gate_id) {
                 if (script[0x48]>=10) cage_open=1;
-                else {
+                else if (!(TBVoidByte & 2)) {
+                    /* Match the native world-sprite clock. A new one-frame
+                     * decal every paused frame cannot expire and exhausts
+                     * the heap, even with the cage outside the camera view. */
                     /* Native one-frame world sprite: no extra actor or collision. */
                     void (*begin)(s32)=(void*)0x807149B8;
                     void (*mode)(s32)=(void*)0x80714998;
