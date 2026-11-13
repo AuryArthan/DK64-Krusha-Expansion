@@ -1,0 +1,89 @@
+{
+  "format": "krusha-atlas-notes-v2",
+  "source_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
+  "draft_id": "recruitment-keys-v1",
+  "scope": "recruitment-keys",
+  "title": "Five recruitment keys \u2014 DK Isles proposals",
+  "pins": [
+    {
+      "id": "RK-DK",
+      "map": 34,
+      "map_name": "DK Isles",
+      "owner": "DK",
+      "label": "DK recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "xyz": [
+        2850,
+        512.0,
+        2180
+      ],
+      "notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions.",
+      "status": "proposal"
+    },
+    {
+      "id": "RK-DIDDY",
+      "map": 34,
+      "map_name": "DK Isles",
+      "owner": "Diddy",
+      "label": "Diddy recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "xyz": [
+        3300,
+        1023.036,
+        1740
+      ],
+      "notes": "Upper approach near Aztec; proposed ledge location, flight requirement undecided. Initial ground estimate only; not gameplay tested. Move freely and add access instructions.",
+      "status": "proposal"
+    },
+    {
+      "id": "RK-LANKY",
+      "map": 34,
+      "map_name": "DK Isles",
+      "owner": "Lanky",
+      "label": "Lanky recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "xyz": [
+        2090,
+        470.667,
+        3210
+      ],
+      "notes": "Shore/tunnel approach on mechanical island; check water level and swimming access. Initial ground estimate only; not gameplay tested. Move freely and add access instructions.",
+      "status": "proposal"
+    },
+    {
+      "id": "RK-TINY",
+      "map": 34,
+      "map_name": "DK Isles",
+      "owner": "Tiny",
+      "label": "Tiny recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "xyz": [
+        1050,
+        492.896,
+        2710
+      ],
+      "notes": "Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions.",
+      "status": "proposal"
+    },
+    {
+      "id": "RK-CHUNKY",
+      "map": 34,
+      "map_name": "DK Isles",
+      "owner": "Chunky",
+      "label": "Chunky recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "xyz": [
+        3400,
+        512.0,
+        3100
+      ],
+      "notes": "Prison-island perimeter; keep clear of K. Lumsy entrance and new prison footprint. Initial ground estimate only; not gameplay tested. Move freely and add access instructions.",
+      "status": "proposal"
+    }
+  ]
+}

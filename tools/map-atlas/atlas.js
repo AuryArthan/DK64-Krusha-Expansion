@@ -95,7 +95,7 @@ function draw(){
   if(p.map!==map.meta.id||p.xyz[1]<lo||p.xyz[1]>hi)continue;
   const [x,y]=xy(p.xyz),chosen=planner.current()?.id===p.id;
   ctx.beginPath();ctx.arc(x,y,chosen?13:10,0,Math.PI*2);ctx.fillStyle=chosen?'#e9c55e':'#ffffffcc';ctx.fill();
-  symbol({...p,owner:'Krusha'},x,y,7);hit.push({p,x,y,r:12,proposal:true});
+  symbol({...p,kind:p.kind==='key'?'quest':p.kind,owner:p.owner||'Krusha'},x,y,7);hit.push({p,x,y,r:12,proposal:true});
   ctx.font='bold 10px system-ui';ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#fff';
   if(chosen||$('labels').checked||!['single','coin'].includes(p.kind)){
   const text=p.label+(p.quantity>1?' ×'+p.quantity:'');ctx.strokeText(text,x+13,y);ctx.fillStyle='#263c31';ctx.fillText(text,x+13,y);
@@ -125,7 +125,7 @@ function nearest(x,y,proposalsOnly=false){let best=null,distance=Infinity;for(co
 canvas.onpointerdown=e=>{drag={x:e.offsetX,y:e.offsetY,pan:[...pan],moved:false};canvas.setPointerCapture(e.pointerId);};
 canvas.onpointermove=e=>{
  if(drag){const dx=e.offsetX-drag.x,dy=e.offsetY-drag.y;drag.moved||=Math.hypot(dx,dy)>4;if(drag.moved){pan=[drag.pan[0]+dx,drag.pan[1]+dy];draw();}return;}
- const h=nearest(e.offsetX,e.offsetY),tip=$('tooltip');tip.hidden=!h;if(h){tip.textContent=h.proposal?`Krusha · ${h.p.label} · ${planner.types[h.p.kind][0]} · Y ${h.p.xyz[1]}`:`${h.p.owner||'—'} · ${h.p.name} · Y ${h.p.xyz[1]}`;tip.style.left=Math.min(e.offsetX+15,view.w-220)+'px';tip.style.top=Math.max(0,e.offsetY-35)+'px';}
+ const h=nearest(e.offsetX,e.offsetY),tip=$('tooltip');tip.hidden=!h;if(h){tip.textContent=h.proposal?`${h.p.owner||'Krusha'} · ${h.p.label} · ${planner.types[h.p.kind][0]} · Y ${h.p.xyz[1]}`:`${h.p.owner||'—'} · ${h.p.name} · Y ${h.p.xyz[1]}`;tip.style.left=Math.min(e.offsetX+15,view.w-220)+'px';tip.style.top=Math.max(0,e.offsetY-35)+'px';}
  if(style!=='C'&&view){const x=(e.offsetX-view.w/2-pan[0])/view.s+view.cx,z=(e.offsetY-view.h/2-pan[1])/view.s+view.cy;$('coords').textContent=`X ${Math.round(x)} · Z ${Math.round(z)} · height selected separately`;}
 };
 canvas.onpointerleave=()=>{$('tooltip').hidden=true;};

@@ -14,9 +14,10 @@ window.createKrushaPlanner = function (host) {
   const draft = (window.KRUSHA_DRAFTS || []).find(d => d.draft_id === requestedDraft) || window.KRUSHA_DRAFT;
   const pilot = draft?.scope === 'implemented-japes-pilot';
   const campaign = draft?.scope === 'implemented-campaign';
+  const recruitment = draft?.scope === 'recruitment-keys';
   const bananaTarget = draft?.banana_target ?? (['japes-50-v1','japes-paths-v1'].includes(draft?.draft_id) ? 50 : 100);
-  const draftMode = !!draft && (requestedDraft === draft.draft_id || (!requestedDraft && campaign));
-  const moveOnly = draftMode && campaign;
+  const draftMode = !!draft && (requestedDraft === draft.draft_id || (!requestedDraft && (campaign || recruitment)));
+  const moveOnly = draftMode && (campaign || recruitment);
   const canonical = new Map((draft?.pins || []).map(p => [p.id, p]));
   // Draft edits have their own namespace. Original user plans are never seeded
   // over, silently merged, replaced or written by opening the draft URL.
@@ -24,7 +25,7 @@ window.createKrushaPlanner = function (host) {
   if (draft) {
     $('draft-notice').hidden = false;
     $('draft-title').textContent = draftMode ? (draft.title || 'Assistant draft') + (moveOnly ? ' · move existing placements' : ' · review/edit') : 'Current campaign placement draft available';
-    $('draft-description').textContent = draftMode ? (campaign ? 'Current ROM placements: select a Krusha marker, then Move on map A or edit X/Y/Z and Challenge / access notes. Apply edits, then Save plan JSON to share your positions and instructions. Types, counts and areas are fixed; original Kong collectibles remain visible references. This does not change the ROM.' : pilot ? 'Japes source layout: ' + bananaTarget + ' bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current campaign draft to inspect its trails, coin clusters and rewards without replacing your own plan.';
+    $('draft-description').textContent = draftMode ? (recruitment ? 'Five proposed recruitment keys on DK Isles. Move positions and edit Challenge / access notes, then Save plan JSON. Colors identify the owning Kong. Existing collectibles are read-only references. These keys are not in the ROM yet.' : campaign ? 'Current ROM placements: select a Krusha marker, then Move on map A or edit X/Y/Z and Challenge / access notes. Apply edits, then Save plan JSON to share your positions and instructions. Types, counts and areas are fixed; original Kong collectibles remain visible references. This does not change the ROM.' : pilot ? 'Japes source layout: ' + bananaTarget + ' bananas, nine coins and three GB rewards. Edits here remain proposals; they do not change the ROM. Earlier drafts and your original plan stay separate.' : 'Historical campaign draft, before the three-reward revision. Saved edits remain separate from the implemented Japes pilot and original plan.') : 'Open the current campaign draft to inspect its trails, coin clusters and rewards without replacing your own plan.';
     const u = new URL(location); u.searchParams.set('draft',draft.draft_id); $('open-assistant-draft').href = u;
     u.searchParams.set('draft','original'); $('open-original-plan').href = u;
     if (moveOnly) $('open-original-plan').hidden = true;
@@ -47,6 +48,7 @@ window.createKrushaPlanner = function (host) {
         (!legacy && typeof p.notes !== 'string')) throw Error('Invalid proposal type, quantity or notes.');
     return {id: p.id, map: p.map, map_name: host.catalog.find(m => m.id === p.map).name,
       label: p.label.slice(0, 500), kind, quantity, notes: legacy ? '' : p.notes.slice(0, 5000),
+      ...(recruitment ? {owner: canonical.get(p.id)?.owner} : {}),
       ...(canonical.get(p.id)?.pickup_slot !== undefined ? {pickup_slot: canonical.get(p.id).pickup_slot} : {}),
       ...(canonical.get(p.id)?.object_id !== undefined ? {object_id: canonical.get(p.id).object_id} : {}),
       xyz: [...p.xyz], status: 'proposal'};
@@ -150,6 +152,7 @@ window.createKrushaPlanner = function (host) {
     global.textContent=pilot ? `Japes pilot: ${units}/${bananaTarget} bananas · ${n('coin')}/9 coins · ${objects} active colored objects · ${n('gb')+n('bonus')+n('blueprint')}/3 GB sites` : `Campaign: ${units}/${campaignBananas} bananas · ${n('coin')}/${campaignCoins} coins · ${objects}/384 colored objects · ${n('gb')+n('bonus')+n('blueprint')}/${campaign?24:40} GB sites · ${n('blueprint')}/8 blueprints`;
     if(units>(pilot?bananaTarget:campaignBananas)||n('coin')>(pilot?9:campaignCoins)||objects>384)global.classList.add('over-budget');
     totals.append(global);
+    if (recruitment) { counts.textContent = `${pins.length}/5 recruitment keys · one per original Kong`; counts.className=''; help.textContent='Planning proposals only. Edit positions and notes; owner, count and map stay fixed.'; global.textContent='Original and current Krusha collectibles are reference markers. Floor heights and routes need in-game verification.'; }
     const scope = $('list-scope').value;
     const list = $('pins'); list.replaceChildren();
     const included = pins.filter(p => scope === 'all' || (scope === 'world' ? world.includes(p) : p.map === map.meta.id));
@@ -229,7 +232,7 @@ window.createKrushaPlanner = function (host) {
   $('place').addEventListener('change', controls);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { moving = false; $('place').checked = false; controls(); message('Placement cancelled. Existing proposals kept.'); } });
   $('export').onclick = () => {
-    host.download(new Blob([JSON.stringify({format:'krusha-atlas-notes-v2', source_sha1:host.sourceSha1, ...(moveOnly ? {mode:'move-only', draft_id:draft.draft_id} : {}), pins},null,2)], {type:'application/json'}), draftMode ? 'krusha-assistant-draft-edited.json' : 'krusha-placement-plan.json');
+    host.download(new Blob([JSON.stringify({format:'krusha-atlas-notes-v2', source_sha1:host.sourceSha1, ...(moveOnly ? {mode:'move-only', draft_id:draft.draft_id} : {}), pins},null,2)], {type:'application/json'}), recruitment ? 'krusha-recruitment-keys-edited.json' : draftMode ? 'krusha-assistant-draft-edited.json' : 'krusha-placement-plan.json');
     $('storage-status').textContent = 'Plan export requested. Keep the downloaded JSON to reopen or share the plan.';
   };
   $('import').onchange = async e => {
