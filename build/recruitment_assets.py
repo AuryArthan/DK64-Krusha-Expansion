@@ -19,11 +19,13 @@ ORIGIN=(3359.333333333,500.0,3409.5)
 SCALE=1/4
 WALKWAY_TEXTURES=(0x10,0x24F)
 WALKWAY_BRIGHTNESS=0.60
+STONE_TINT=(0.24,0.30,0.60)
+METAL_BRIGHTNESS=0.45
 STONE_TEXTURES=(0x518,0x51A,0x51B,0x51C)
 
 def metal_pixel(r,g,b):
     # The mixed51A image includes gray plates surrounded by green stone.
-    # Preserve the low-chroma metal, including its native mip levels.
+    # Identify the low-chroma metal consistently at all native mip levels.
     return b*4>=g*3 and r*4>=g*3
 # Two large mouths of the native entrance tunnel, ordered along each arch.
 SEALED_ARCHES=(
@@ -127,16 +129,17 @@ def payloads(rom):
     textures=[]
     for i in SOURCE_TEXTURES:
         data=read_file(rom,25,i)
-        if i in STONE_TEXTURES:
-            # Preserve native gray519, mixed51A metal and underwater CI maps.
-            # Tint only green stone, retaining mip levels and alpha.
+        if i in STONE_TEXTURES or i==0x519:
+            # Darken gray519 and mixed51A metal independently of the stone.
+            # Retain native detail, mip layouts and alpha; CI base stays native.
             out=bytearray()
             for (v,) in struct.iter_unpack('>H',data):
                 r,g,b=(v>>11&31),(v>>6&31),(v>>1&31)
-                if i==0x51A and metal_pixel(r,g,b):
-                    out+=struct.pack('>H',v);continue
-                light=round(.2126*r+.7152*g+.0722*b)
-                rgb=[round(light*x) for x in (.18,.32,.95)]
+                if i==0x519 or (i==0x51A and metal_pixel(r,g,b)):
+                    rgb=[round(channel*METAL_BRIGHTNESS) for channel in (r,g,b)]
+                else:
+                    light=round(.2126*r+.7152*g+.0722*b)
+                    rgb=[round(light*x) for x in STONE_TINT]
                 out+=struct.pack('>H',rgb[0]<<11|rgb[1]<<6|rgb[2]<<1|v&1)
             data=bytes(out)
         textures.append(data)
