@@ -29,6 +29,26 @@ def with_collision(model,report):
         if length<1:continue
         if abs(n[1])<.90*length:add(walls,seen_w,verts)
         if n[1]>.55*length:add(floors,seen_f,verts)
+    # Rotating the asymmetric annulus leaves narrow seams between its inner
+    # edge and the unrotated dome. Bridge only the union of those two base
+    # footprints, not the outer landing: otherwise Mini can fall below the
+    # bottom of the shell before her capsule reaches its wall. This also gives
+    # the closed shell a solid base; it creates no walkable area past the rim.
+    from recruitment_assets import SOURCE_TEXTURES
+    base={(v[0],v[2]) for t in report['source_triangles']
+          if t['texture'] in SOURCE_TEXTURES for v in t['local_vertices'] if v[1]==0}
+    points=sorted(base|{(-x,-z) for x,z in base})
+    def cross(a,b,c):return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
+    def half(seq):
+        out=[]
+        for p in seq:
+            while len(out)>1 and cross(out[-2],out[-1],p)<=0:out.pop()
+            out.append(p)
+        return out
+    hull=half(points)[:-1]+half(points[::-1])[:-1]
+    for i in range(1,len(hull)-1):
+        tri=[(x,0,z) for x,z in (hull[0],hull[i+1],hull[i])]
+        add(floors,seen_f,tri)
     # A small supported staging area inside the aperture; no R03 interior yet.
     # The invisible backstop is twelve world units behind the visible arch. Mini
     # Tiny can occupy the entrance volume, but cannot wander into an unbuilt room.
