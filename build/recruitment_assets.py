@@ -165,9 +165,11 @@ def prepare(rom_path):
     for i in range(len(SOURCE_TEXTURES)):assert not read_file(rom,25,TEXTURE_TOKEN+i)
     _,report=model(rom)
     target=ROOT/'include/recruitment_assets.generated.h'
-    target.write_text('/* Generated R01 visual-only exterior identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in [('RECRUITMENT_MODEL_TYPE',MODEL_TYPE),('RECRUITMENT_OBJECT_ID',OBJECT_ID),('RECRUITMENT_MODEL_INDEX',MODEL_INDEX),('RECRUITMENT_MIRROR_INDEX',MIRROR_INDEX),('RECRUITMENT_TEXTURE_BASE',TEXTURE_BASE),('RECRUITMENT_TEXTURE_TOKEN',TEXTURE_TOKEN),('RECRUITMENT_TEXTURE_COUNT',len(SOURCE_TEXTURES))]))
+    target.write_text('/* Generated private recruitment exterior identities/collision. */\n'+''.join(f'#define {k} {v}\n' for k,v in [('RECRUITMENT_MODEL_TYPE',MODEL_TYPE),('RECRUITMENT_OBJECT_ID',OBJECT_ID),('RECRUITMENT_MODEL_INDEX',MODEL_INDEX),('RECRUITMENT_MIRROR_INDEX',MIRROR_INDEX),('RECRUITMENT_TEXTURE_BASE',TEXTURE_BASE),('RECRUITMENT_TEXTURE_TOKEN',TEXTURE_TOKEN),('RECRUITMENT_TEXTURE_COUNT',len(SOURCE_TEXTURES))]))
     from recruitment_collision import DOOR_CENTER,DOOR_TANGENT,DOOR_NORMAL
     door=[POSITION[i]+DOOR_CENTER[i]*SCALE for i in range(3)]
+    with target.open('a') as header:
+        header.write(f'#define RECRUITMENT_MODEL_X {POSITION[0]:.9f}f\n#define RECRUITMENT_MODEL_Z {POSITION[2]:.9f}f\n#define RECRUITMENT_COLLISION_WALLS {report["collision"]["walls"]}\n')
     values=dict(X=door[0],Y=door[1],Z=door[2],TX=DOOR_TANGENT[0],TZ=DOOR_TANGENT[1],NX=DOOR_NORMAL[0],NZ=DOOR_NORMAL[1],SAFE_X=door[0]+15*DOOR_NORMAL[0],SAFE_Z=door[2]+15*DOOR_NORMAL[1])
     with target.open('a') as header:
         for name,value in values.items():header.write(f'#define RECRUITMENT_DOOR_{name} {value:.9f}f\n')
@@ -180,7 +182,7 @@ def patch_setup(path,mid):
     assert OBJECT_ID not in [struct.unpack_from('>H',b,4+i*48+42)[0] for i in range(n)]
     original=read_file((ROOT/'rom/dk64.z64').read_bytes(),9,34)
     # Source the inert Rock placement record; only its explicit visual fields
-    # are copied, with native shell collisions absent from our private model.
+    # are copied; our private model supplies its own native wall/floor sections.
     donor=next(original[4+i*48:4+(i+1)*48] for i in range(u(original,0)) if struct.unpack_from('>H',original,4+i*48+42)[0]==52)
     rec=bytearray(donor);struct.pack_into('>4f',rec,0,*POSITION,SCALE);struct.pack_into('>3f',rec,24,0,0,0);struct.pack_into('>HH',rec,40,MODEL_TYPE,OBJECT_ID)
     path.write_bytes(struct.pack('>I',n+1)+b[4:4+n*48]+rec+b[4+n*48:])

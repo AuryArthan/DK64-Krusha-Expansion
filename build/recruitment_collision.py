@@ -27,7 +27,8 @@ def with_collision(model,report):
     for t in report['source_triangles']:
         verts=t['local_vertices'];n,length=normal(verts)
         if length<1:continue
-        if abs(n[1])<.90*length:add(walls,seen_w,verts)
+        if abs(n[1])<.90*length:
+            add(walls,seen_w,verts)
         if n[1]>.55*length:add(floors,seen_f,verts)
     # Rotating the asymmetric annulus leaves narrow seams between its inner
     # edge and the unrotated dome. Bridge only the union of those two base
