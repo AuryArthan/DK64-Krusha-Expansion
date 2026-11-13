@@ -13,7 +13,7 @@ static const MirrorPatch patches[] = {
     {0x80657F7C, 0x00C2082A, 0x0046082A},
     {0x8068BD0C, 0x46068201, 0x46103201}, /* sky projection */
     {0x80706A54, 0x03384023, 0x03194023}, /* sky scroll */
-    {0x8065DFBC, 0x35CE0602, 0x35CE0206}, /* generated water triangles */
+    {0x8065DFBC, 0x35CE0602, 0x35CE0206}, /* generated projected decals */
     {0x8065DFC4, 0x240F0406, 0x240F0604},
 };
 
