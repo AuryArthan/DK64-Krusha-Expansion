@@ -18,6 +18,13 @@ POSITION=(3630.0,500.0,3409.5)
 ORIGIN=(3359.333333333,500.0,3409.5)
 SCALE=1/4
 WALKWAY_TEXTURES=(0x10,0x24F)
+WALKWAY_BRIGHTNESS=0.60
+STONE_TEXTURES=(0x518,0x51A,0x51B,0x51C)
+
+def metal_pixel(r,g,b):
+    # The mixed51A image includes gray plates surrounded by green stone.
+    # Preserve the low-chroma metal, including its native mip levels.
+    return b*4>=g*3 and r*4>=g*3
 # Two large mouths of the native entrance tunnel, ordered along each arch.
 SEALED_ARCHES=(
  ((10054,1500,9938),(10066,1650,9944),(10099,1738,9973),(10190,1800,10001),(10262,1739,10051),(10309,1650,10057),(10326,1500,10065)),
@@ -40,10 +47,15 @@ def model(rom):
     def emit(raw,xyz,texture,source_command=None):
         command(0xD9FDFFFF,0) # map vertices are prelit RGBA, not normals
         command(0x01003006,0x08000000+len(vertices))
+        local_vertices=[]
         for data,pos in zip(raw,xyz):
             v=bytearray(data);local=[round(pos[i]/3-ORIGIN[i]) for i in range(3)]
+            if texture in WALKWAY_TEXTURES:
+                local[0]=-local[0];local[2]=-local[2] # turn only the annulus180 degrees
+                for channel in range(12,15):v[channel]=round(v[channel]*WALKWAY_BRIGHTNESS)
+            local_vertices.append(local)
             struct.pack_into('>3h',v,0,*local);vertices.extend(v)
-        command(0x05000204);triangles.append(dict(source_command=source_command,texture=texture,vertices=xyz))
+        command(0x05000204);triangles.append(dict(source_command=source_command,texture=texture,vertices=xyz,local_vertices=local_vertices))
     # Only map chunk1 contains this spatially isolated prison shell. Keep all
     # material changes pending until the next selected triangle; never emit
     # another part of the map's vertices, triangles, matrix or culling commands.
@@ -66,7 +78,7 @@ def model(rom):
                         raw=[cache[x//2] for x in ids];xyz=[struct.unpack_from('>3h',v) for v in raw]
                         if not selected(xyz,texture):continue
                         source_points.update(xyz)
-                        if texture==0x51A and cap_material is None:cap_material=list(state_history)
+                        if texture==0x51B and cap_material is None:cap_material=list(state_history)
                         material(materials);materials=[]
                         emit(raw,xyz,texture,p)
                 elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None;state_history=[]
@@ -93,7 +105,7 @@ def model(rom):
             uvx=round(((x-arch[0][0])*dx+(z-arch[0][2])*dz)/length/3*20)
             uvy=round((y-1500)/3*20)
             raw.append(struct.pack('>hhhHhh4B',x,y,z,0,uvx,uvy,170,170,170,255))
-        for j in range(1,len(arch)-1):emit([raw[0],raw[j],raw[j+1]],[arch[0],arch[j],arch[j+1]],0x51A)
+        for j in range(1,len(arch)-1):emit([raw[0],raw[j],raw[j+1]],[arch[0],arch[j],arch[j+1]],0x51B)
     assert len(triangles)==212
     command(0xDF000000)
     donor=read_file(rom,4,0x267);old_v_end=u(donor,0x4C)
@@ -105,7 +117,7 @@ def model(rom):
     struct.pack_into('>3I',new,0x40,0x78,0x78+len(dl),new_vs)
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
-    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10)
+    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
     return bytes(new),report
 
 def payloads(rom):
@@ -115,12 +127,14 @@ def payloads(rom):
     textures=[]
     for i in SOURCE_TEXTURES:
         data=read_file(rom,25,i)
-        if i in (0x518,0x519,0x51A,0x51B,0x51C):
-            # Tint only the stone RGBA16 mip levels. Metal palettes514/516
-            # and indexed images515/517 stay native gray. Retain alpha.
+        if i in STONE_TEXTURES:
+            # Preserve native gray519, mixed51A metal and underwater CI maps.
+            # Tint only green stone, retaining mip levels and alpha.
             out=bytearray()
             for (v,) in struct.iter_unpack('>H',data):
                 r,g,b=(v>>11&31),(v>>6&31),(v>>1&31)
+                if i==0x51A and metal_pixel(r,g,b):
+                    out+=struct.pack('>H',v);continue
                 light=round(.2126*r+.7152*g+.0722*b)
                 rgb=[round(light*x) for x in (.18,.32,.95)]
                 out+=struct.pack('>H',rgb[0]<<11|rgb[1]<<6|rgb[2]<<1|v&1)
