@@ -227,6 +227,12 @@ def appendBarrelAssets(rom_path):
     # Preview-only grenade images follow every established resource index.
     from klump_colors import grenade_payloads
     payloads += grenade_payloads(Path(rom_path).read_bytes(),read_file)
+    # Preserve preview slots131..146 even when previews are disabled.
+    assert len(payloads) in (131,147)
+    payloads += [b''] * (147-len(payloads))
+    from recruitment_assets import payloads as recruitment_payloads
+    payloads += recruitment_payloads(Path(rom_path).read_bytes())
+    assert len(payloads)==158
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)

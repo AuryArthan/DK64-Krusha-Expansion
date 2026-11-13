@@ -44,11 +44,10 @@ def appendMirrorAssets(path):
     assert struct.unpack_from('>I', original, BASE+(32+MIRROR_TABLE)*4)[0] == 0, 'Mirror table must be unused'
     for table,expected in [(1,221),(4,695),(5,236),(27,131)]:
         n=struct.unpack_from('>I',original,BASE+(32+table)*4)[0]
-        # Optional grenade previews append images only. Preserve the existing
-        # 1283 geometry slots and the runtime's fixed mirror-cache indexing.
-        from klump_colors import grenade_choice
-        extra=16 if table==27 and grenade_choice()!='original' else 0
-        assert n==expected+extra,(table,n)
+        # Preserve all1283 historical mirror slots. R01's normal/mirrored
+        # static models live directly in table27 at147/148; preview images
+        # retain their reserved131..146 interval in either build preset.
+        assert n==(158 if table==27 else expected),(table,n)
         for index in range(expected):
             kind=table if table!=27 else 5 if index in PRIVATE_ACTORS else 4 if index in PRIVATE_MODELS else 0
             source=read_file(original,table,index) if kind else b''

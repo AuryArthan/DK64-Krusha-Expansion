@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/klump_colors.generated.h"
 #include "../include/m5_campaign.h"
+#include "../include/recruitment_assets.generated.h"
 
 /* Keep the native 0x40-byte barrel data layout. Its five actor pointers are
  * followed immediately by the spotlight pointer; the sixth actor lives here,
@@ -45,6 +46,9 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
  * Reserved texture IDs belong to the six-face barrel and gray shockwave. */
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     s32 format = table;
+    extern s32 mirrorEnabled(void);
+    if (table==4 && index==RECRUITMENT_MODEL_TYPE) { table=27;index=mirrorEnabled()?RECRUITMENT_MIRROR_INDEX:RECRUITMENT_MODEL_INDEX; }
+    if (table==25 && index>=RECRUITMENT_TEXTURE_TOKEN && index<RECRUITMENT_TEXTURE_TOKEN+RECRUITMENT_TEXTURE_COUNT) { table=27;index+=RECRUITMENT_TEXTURE_BASE-RECRUITMENT_TEXTURE_TOKEN; }
 #if M4_GRENADE_PREVIEW
     if ((table==25 || table==7) && index>=7732 && index<7748) {table=27;index-=7601;}
 #endif

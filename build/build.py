@@ -36,6 +36,8 @@ from m2_pickups import prepare as prepareM2, patch_setup as patchM2Setup, patch_
 prepareM2(ROMName)
 from m5_campaign import prepare as prepareM5, patch_scripts as patchM5Scripts
 prepareM5(ROMName)
+from recruitment_assets import prepare as prepareRecruitment, patch_setup as patchRecruitmentSetup
+prepareRecruitment(ROMName)
 from krusha_victory import prepare as prepareVictory
 prepareVictory(ROMName)
 from m4_rewards import prepare as prepareM4, patch_japes as patchM4Japes, patch_cave as patchM4Cave, patch_setup as patchM4Setup
@@ -84,7 +86,7 @@ from native_pickup_adjustments import patch_setup as patchNativePickups
 file_dict = []
 for mid in campaignMaps():
     if mid==7:continue
-    file_dict.append({"name":f"M5 map{mid} pickups/rewards","pointer_table_index":9,"file_index":mid,"source_file":f"bin/M5Setup{mid}.bin","patcher":lambda name,mid=mid:(patchM2Setup(name,mid),patchM4Setup(name,mid),patchNativePickups(name,mid))})
+    file_dict.append({"name":f"M5 map{mid} pickups/rewards","pointer_table_index":9,"file_index":mid,"source_file":f"bin/M5Setup{mid}.bin","patcher":lambda name,mid=mid:(patchM2Setup(name,mid),patchM4Setup(name,mid),patchNativePickups(name,mid),patchRecruitmentSetup(name,mid))})
     if campaignArea(mid):
         file_dict.append({"name":f"M5 map{mid} cage script","pointer_table_index":10,"file_index":mid,"source_file":f"bin/M5Scripts{mid}.bin","patcher":lambda name,mid=mid:patchM5Scripts(name,mid)})
     if campaignBalloons(mid):

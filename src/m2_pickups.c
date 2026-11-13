@@ -2,11 +2,13 @@
 #include "../include/krusha_progress.h"
 #include "../include/m3_progress.h"
 #include "../include/m2_pickups.generated.h"
+#include "../include/recruitment_assets.generated.h"
 extern int m4SetupHidden(s32,s32);
 
 /* Only the setup constructor's permanent-object predicate calls this wrapper.
  * The original pickup ordering/counts are unchanged, as are cached map files. */
 s32 m2SetupHidden(s32 map, s32 object_id) {
+    if (map==34 && object_id==RECRUITMENT_OBJECT_ID) return !krushaEnabled() || !DetectAdventure();
     int private=m4SetupHidden(map,object_id);
     if (private>=0) return private;
     s32 (*nativeHidden)(s32,s32) = (void*)0x807315D4;
