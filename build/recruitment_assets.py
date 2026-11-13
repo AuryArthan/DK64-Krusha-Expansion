@@ -16,16 +16,34 @@ TEXTURE_TOKEN=7800
 SOURCE_TEXTURES=tuple(range(0x514,0x51D))
 POSITION=(3630.0,500.0,3409.5)
 ORIGIN=(3359.333333333,500.0,3409.5)
-SCALE=1/3
+SCALE=1/4
+WALKWAY_TEXTURES=(0x10,0x24F)
+# Two large mouths of the native entrance tunnel, ordered along each arch.
+SEALED_ARCHES=(
+ ((10054,1500,9938),(10066,1650,9944),(10099,1738,9973),(10190,1800,10001),(10262,1739,10051),(10309,1650,10057),(10326,1500,10065)),
+ ((10193,1500,9640),(10205,1650,9646),(10243,1738,9679),(10340,1800,9711),(10407,1739,9758),(10447,1650,9762),(10463,1500,9769)),
+)
 
 def u(b,p):return struct.unpack_from('>I',b,p)[0]
 def selected(vertices,texture):
-    return texture in SOURCE_TEXTURES and all(3050<=x/3<=3700 and 3000<=z/3<=3750 for x,y,z in vertices)
+    return texture in SOURCE_TEXTURES+WALKWAY_TEXTURES and all(3050<=x/3<=3700 and 3000<=z/3<=3750 for x,y,z in vertices)
 
 def model(rom):
     geo=read_file(rom,1,34);ds,vs=u(geo,0x34),u(geo,0x38);cs,ce=u(geo,0x68),u(geo,0x6C)
-    vertices=bytearray();commands=[];materials=[];triangles=[];used_textures=set()
+    vertices=bytearray();commands=[];materials=[];triangles=[];used_textures=set();cap_material=None;source_points=set()
     def command(a,b=0):commands.append(struct.pack('>II',a,b))
+    def material(values):
+        for ma,mb in values:
+            if ma>>24==0xFD and mb in SOURCE_TEXTURES:
+                used_textures.add(mb);mb=TEXTURE_TOKEN+SOURCE_TEXTURES.index(mb)
+            command(ma,mb)
+    def emit(raw,xyz,texture,source_command=None):
+        command(0xD9FDFFFF,0) # map vertices are prelit RGBA, not normals
+        command(0x01003006,0x08000000+len(vertices))
+        for data,pos in zip(raw,xyz):
+            v=bytearray(data);local=[round(pos[i]/3-ORIGIN[i]) for i in range(3)]
+            struct.pack_into('>3h',v,0,*local);vertices.extend(v)
+        command(0x05000204);triangles.append(dict(source_command=source_command,texture=texture,vertices=xyz))
     # Only map chunk1 contains this spatially isolated prison shell. Keep all
     # material changes pending until the next selected triangle; never emit
     # another part of the map's vertices, triangles, matrix or culling commands.
@@ -33,7 +51,7 @@ def model(rom):
         chunk=struct.unpack_from('>13I',geo,q)
         for start,size in [chunk[j:j+2] for j in (3,5,7,9)]:
             if not size:continue
-            cursor=loaded=0;cache={};texture=None;materials=[]
+            cursor=loaded=0;cache={};texture=None;materials=[];state_history=[]
             for p in range(ds+start,ds+start+size,8):
                 a,b=struct.unpack_from('>II',geo,p);op=a>>24
                 if op==1:
@@ -47,27 +65,36 @@ def model(rom):
                     for ids in groups:
                         raw=[cache[x//2] for x in ids];xyz=[struct.unpack_from('>3h',v) for v in raw]
                         if not selected(xyz,texture):continue
-                        for ma,mb in materials:
-                            if ma>>24==0xFD and mb in SOURCE_TEXTURES:
-                                used_textures.add(mb);mb=TEXTURE_TOKEN+SOURCE_TEXTURES.index(mb)
-                            command(ma,mb)
-                        materials=[]
-                        # Map vertices are prelit RGBA, not model-space normals.
-                        command(0xD9FDFFFF,0) # clear G_LIGHTING
-                        command(0x01003006,0x08000000+len(vertices))
-                        for data,pos in zip(raw,xyz):
-                            v=bytearray(data);local=[round(pos[i]/3-ORIGIN[i]) for i in range(3)]
-                            struct.pack_into('>3h',v,0,*local);vertices+=v
-                        command(0x05000204);triangles.append(dict(source_command=p,texture=texture,vertices=xyz))
-                elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None
+                        source_points.update(xyz)
+                        if texture==0x51A and cap_material is None:cap_material=list(state_history)
+                        material(materials);materials=[]
+                        emit(raw,xyz,texture,p)
+                elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None;state_history=[]
                 elif op in (0,3):pass
                 elif op in (0xDA,0xDE,2):
                     # These do not occur in the prison source ranges.
                     raise AssertionError(('unsupported map geometry command',hex(p),hex(op)))
                 else:
-                    materials.append((a,b))
+                    materials.append((a,b));state_history.append((a,b))
                     if op==0xFD:texture=b
-    assert len(triangles)==136,len(triangles)
+    assert len(triangles)==202,len(triangles)
+    assert sum(t['texture'] in WALKWAY_TEXTURES for t in triangles)==66
+    assert cap_material
+    material(cap_material)
+    # A double-sided stone infill follows the existing arches exactly. Seal
+    # both ends of the large tunnel; leave the five-vertex rear opening alone.
+    command(0xD9FFF9FF,0) # clear both cull flags for the infill
+    import math
+    for arch in SEALED_ARCHES:
+        assert set(arch)<=source_points, 'Entrance boundary moved in source ROM'
+        dx,dz=arch[-1][0]-arch[0][0],arch[-1][2]-arch[0][2];length=math.hypot(dx,dz)
+        raw=[]
+        for x,y,z in arch:
+            uvx=round(((x-arch[0][0])*dx+(z-arch[0][2])*dz)/length/3*20)
+            uvy=round((y-1500)/3*20)
+            raw.append(struct.pack('>hhhHhh4B',x,y,z,0,uvx,uvy,170,170,170,255))
+        for j in range(1,len(arch)-1):emit([raw[0],raw[j],raw[j+1]],[arch[0],arch[j],arch[j+1]],0x51A)
+    assert len(triangles)==212
     command(0xDF000000)
     donor=read_file(rom,4,0x267);old_v_end=u(donor,0x4C)
     dl=b''.join(commands);trans=struct.pack('>II',0xDF000000,0)
@@ -78,19 +105,19 @@ def model(rom):
     struct.pack_into('>3I',new,0x40,0x78,0x78+len(dl),new_vs)
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
-    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN)
+    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10)
     return bytes(new),report
 
 def payloads(rom):
     normal,report=model(rom)
     from mirror_assets import flip
-    mirrored,n=flip(normal,4);assert n==136
+    mirrored,n=flip(normal,4);assert n==report['triangles']
     textures=[]
     for i in SOURCE_TEXTURES:
         data=read_file(rom,25,i)
-        if i not in (0x515,0x517):
-            # CI palette entries and RGBA16 mip levels only; indexed image
-            # bytes515/517 stay exact. Preserve per-texel luminance and alpha.
+        if i in (0x518,0x519,0x51A,0x51B,0x51C):
+            # Tint only the stone RGBA16 mip levels. Metal palettes514/516
+            # and indexed images515/517 stay native gray. Retain alpha.
             out=bytearray()
             for (v,) in struct.iter_unpack('>H',data):
                 r,g,b=(v>>11&31),(v>>6&31),(v>>1&31)
