@@ -53,6 +53,45 @@ class Memory:
         """Read-only diagnostic; host word-swapped 8MiB RDRAM, never restored."""
         Path(path).write_bytes(os.pread(self.fd, 0x800000, self.base))
 
+    def sprite_stats(self):
+        """Read-only native sprite ownership/lifetime summary for leak checks."""
+        pointer = self.u32(0x807FDB04)
+        seen, counts, callbacks, samples = set(), {}, {}, []
+        while 0x80000000 <= pointer < 0x807FFC00 and pointer not in seen and len(seen) < 8192:
+            seen.add(pointer)
+            meta = self.u32(pointer + 0x330)
+            ident = 'invalid'
+            if 0x80000000 <= meta < 0x807FFFD0:
+                descriptor = self.u32(meta)
+                if 0x80000000 <= descriptor < 0x807FFFE0:
+                    ident = hex(self.u32(descriptor))
+            counts[ident] = counts.get(ident, 0) + 1
+            callback = hex(self.u32(pointer + 0x328))
+            callbacks[callback] = callbacks.get(callback, 0) + 1
+            if ident == '0x4b520141' and len(samples) < 3:
+                samples.append({'pointer': hex(pointer), 'callback': callback,
+                                'frame': self.read(pointer + 0x34E, 'u16'),
+                                'cycles': self.u32(pointer + 0x358),
+                                'flags': self.read(pointer + 0x38C, 'u16')})
+            pointer = self.u32(pointer + 0x39C)
+        return {'total': len(seen), 'descriptors': counts, 'callbacks': callbacks,
+                'cage_hint_samples': samples, 'terminated': pointer == 0,
+                'end_pointer': hex(pointer)}
+
+    def heap_stats(self):
+        """Read-only free lists for the USA allocator's two heap arenas."""
+        arenas = []
+        for address in (0x807F0988, 0x807F098C):
+            pointer, seen, sizes = self.u32(address), set(), []
+            while 0x80000000 <= pointer < 0x807FFFF0 and pointer not in seen and len(seen) < 8192:
+                seen.add(pointer)
+                sizes.append(self.u32(pointer + 4))
+                pointer = self.u32(pointer + 8)
+            arenas.append({'head': hex(self.u32(address)), 'blocks': len(sizes),
+                           'free_bytes': sum(sizes), 'largest_block': max(sizes, default=0),
+                           'terminated': pointer == 0})
+        return arenas
+
     def status(self):
         p = self.u32(0x807FBB4C)
         result = {'map': self.u32(0x8076A0A8), 'character': self.read(0x8074E77C, 'u8'),

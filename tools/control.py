@@ -94,7 +94,7 @@ def main():
                         visible = xdo('search', '--onlyvisible', '--class', '.').splitlines()
                         window = visible[-1]
                         xdo('windowfocus', '--sync', window)
-                    if any(k in cmd for k in ('status', 'read', 'write', 'position', 'scene', 'fixture_map', 'dump_rdram')):
+                    if any(k in cmd for k in ('status', 'read', 'write', 'position', 'scene', 'fixture_map', 'dump_rdram', 'sprite_stats', 'heap_stats')):
                         if memory is None:
                             spec = importlib.util.spec_from_file_location('emulator_memory', ROOT / 'tools/emulator-memory.py')
                             module = importlib.util.module_from_spec(spec)
@@ -108,6 +108,10 @@ def main():
                             memory.transition_fixture(cmd['fixture_map'], cmd.get('fixture_exit', 0))
                         if cmd.get('dump_rdram'):
                             memory.dump_rdram(RUN/'logs'/Path(str(cmd['dump_rdram'])).name)
+                        if cmd.get('sprite_stats'):
+                            print(json.dumps({'sprite_stats': memory.sprite_stats()}), flush=True)
+                        if cmd.get('heap_stats'):
+                            print(json.dumps({'heap_stats': memory.heap_stats()}), flush=True)
                         if cmd.get('scene'):
                             scene = memory.scene()
                             (RUN / 'logs' / (Path(str(cmd['scene'])).name + '.json')).write_text(json.dumps(scene, indent=2))
