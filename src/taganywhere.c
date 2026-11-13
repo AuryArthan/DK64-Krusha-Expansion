@@ -567,6 +567,9 @@ void tagAnywhere(void) {
 			playSound(182, 0x4FFF, 63.0f, 1.0f, 0, 0);
 		} else if (_dest_character == 4) {
 			playSound(198, 0x4FFF, 63.0f, 1.0f, 0, 0);
+		} else if (_dest_character == 5) {
+			// Krusha's native tag-barrel voice, at the same tag volume.
+			playSound(0x275, 0x4FFF, 63.0f, 1.0f, 0, 0);
 		}
 	}
 }
