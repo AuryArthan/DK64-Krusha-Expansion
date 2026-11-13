@@ -419,9 +419,10 @@ void tagAnywhere(void) {
 	}
 
 	extern int m4RewardBusy(void);
+	extern s32 krushaPrisonBusy(void);
 	extern int gameOptionsMode(void);
 	if (!gameOptionsMode()) return;
-	if (m4RewardBusy()) { tagDenied(); return; }
+	if (m4RewardBusy() || krushaPrisonBusy()) { tagDenied(); return; }
 	// Map is loading
 	if (LZFadeoutProgress > 0) {
 		tagDenied();

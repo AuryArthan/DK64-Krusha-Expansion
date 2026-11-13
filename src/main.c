@@ -28,5 +28,7 @@ void cFuncLoop(void) {
 	extern void gameOptionsTick(void);
 	gameOptionsTick();
 	krushaAdventure();
+	extern void krushaPrisonTick(void);
+	krushaPrisonTick();
 	tagAnywhere();
 }

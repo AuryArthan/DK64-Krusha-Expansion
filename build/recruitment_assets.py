@@ -1,7 +1,7 @@
 """R01 private static prison exterior; geometry derives from the original USA ROM.
 
 Render layout follows DonkViewer (Ballaam, MIT), license in tools/map-atlas/.
-No collision, entrance trigger, recruitment state or native resource replacement.
+R02 adds native private-model collision; original world resources stay intact.
 """
 from pathlib import Path
 import struct,json,hashlib,zlib
@@ -120,7 +120,8 @@ def model(rom):
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
     report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
-    return bytes(new),report
+    from recruitment_collision import with_collision
+    return with_collision(bytes(new),report)
 
 def payloads(rom):
     normal,report=model(rom)
@@ -165,6 +166,11 @@ def prepare(rom_path):
     _,report=model(rom)
     target=ROOT/'include/recruitment_assets.generated.h'
     target.write_text('/* Generated R01 visual-only exterior identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in [('RECRUITMENT_MODEL_TYPE',MODEL_TYPE),('RECRUITMENT_OBJECT_ID',OBJECT_ID),('RECRUITMENT_MODEL_INDEX',MODEL_INDEX),('RECRUITMENT_MIRROR_INDEX',MIRROR_INDEX),('RECRUITMENT_TEXTURE_BASE',TEXTURE_BASE),('RECRUITMENT_TEXTURE_TOKEN',TEXTURE_TOKEN),('RECRUITMENT_TEXTURE_COUNT',len(SOURCE_TEXTURES))]))
+    from recruitment_collision import DOOR_CENTER,DOOR_TANGENT,DOOR_NORMAL
+    door=[POSITION[i]+DOOR_CENTER[i]*SCALE for i in range(3)]
+    values=dict(X=door[0],Y=door[1],Z=door[2],TX=DOOR_TANGENT[0],TZ=DOOR_TANGENT[1],NX=DOOR_NORMAL[0],NZ=DOOR_NORMAL[1],SAFE_X=door[0]+15*DOOR_NORMAL[0],SAFE_Z=door[2]+15*DOOR_NORMAL[1])
+    with target.open('a') as header:
+        for name,value in values.items():header.write(f'#define RECRUITMENT_DOOR_{name} {value:.9f}f\n')
     (ROOT/'runtime/recruitment/r01').mkdir(parents=True,exist_ok=True)
     (ROOT/'runtime/recruitment/r01/extraction-latest.json').write_text(json.dumps(report,indent=2)+'\n')
 
