@@ -12,5 +12,14 @@ int krushaRecruitmentIntroSeen(unsigned int file);
 int krushaRecruitmentCollectKey(unsigned int file, unsigned int owner);
 int krushaRecruitmentOpenLock(unsigned int file, unsigned int owner);
 int krushaRecruitmentMarkIntro(unsigned int file);
+/* Availability is read-only and never treats a frontend Speed preview as a
+ * saved grant. The active Adventure tick/spawn owns the once-only bypass. */
+int krushaAvailable(unsigned int file);
+int krushaRecruitmentSpeedGrant(unsigned int file,int speed);
+int krushaNextCharacter(int current,int direction);
+int krushaRecruitmentContext(void);
+int krushaRecruitmentPlayable(void);
+int krushaOriginalKongUnlocked(unsigned int kong);
+void krushaRecruitmentTick(void);
 
 #endif

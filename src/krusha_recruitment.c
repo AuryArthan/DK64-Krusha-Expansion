@@ -50,3 +50,24 @@ int krushaRecruitmentMarkIntro(unsigned int file) {
     krushaProgressRequestSave();
     return 1;
 }
+
+int krushaAvailable(unsigned int file) {
+    return krushaEnabled() && krushaRecruitmentRecruited(file);
+}
+int krushaRecruitmentSpeedGrant(unsigned int file,int speed) {
+    if (!speed || !krushaRecruitmentContext() || !writable(file) ||
+        krushaRecruitmentRecruited(file)) return 0;
+    return commit(file,31,31);
+}
+int krushaNextCharacter(int current,int direction) {
+    int candidate=current;
+    if (current<0 || current>5 || (direction!=1 && direction!=-1)) return current;
+    for (int i=0;i<6;i++) {
+        candidate+=direction;
+        if (candidate<0) candidate=5;
+        if (candidate>5) candidate=0;
+        if (candidate==5 ? krushaRecruitmentPlayable() :
+            krushaOriginalKongUnlocked(candidate)) return candidate;
+    }
+    return current;
+}

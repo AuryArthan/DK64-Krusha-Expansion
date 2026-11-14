@@ -8,8 +8,13 @@
 static unsigned char bits[3][512];
 static unsigned int active, saves, words, single_writes;
 static int adventure=1, enabled=1;
+static int context=1,scene,speed;
+static unsigned int originals=31;
 int DetectAdventure(void){return adventure;}
 int krushaEnabled(void){return enabled;}
+int krushaRecruitmentContext(void){return context&&adventure;}
+int krushaRecruitmentPlayable(void){return krushaRecruitmentContext()&&!scene&&krushaAvailable(active);}
+int krushaOriginalKongUnlocked(unsigned int kong){assert(kong<5);return kong==0||speed||(originals&(1u<<kong));}
 unsigned int krushaProgressActiveFile(void){return active;}
 int krushaProgressRead(unsigned int file,unsigned int bit,unsigned int width){
     unsigned int i,value=0;assert(file<3 && bit+width<=512);
@@ -56,6 +61,44 @@ static void mixed_orders(unsigned int keys,unsigned int locks,unsigned int depth
         memcpy(bits[active],saved,sizeof(saved));saves=before_saves;words=before_words;
     }
 }
+static void availability_tests(void){
+    unsigned int f,mode,mask;int current,dir;unsigned long cases=0;
+    for(f=0;f<3;f++)for(mode=0;mode<64;mode++)for(mask=0;mask<32;mask++){
+        int roster[6],n=0,k;reset();active=f;
+        enabled=mode&1;speed=(mode>>1)&1;adventure=(mode>>2)&1;
+        context=(mode>>3)&1;scene=(mode>>4)&1;originals=mask;
+        if(mode&32){for(k=496;k<=506;k++)bits[f][k]=1;}
+        for(k=0;k<6;k++)if(k==5?krushaRecruitmentPlayable():krushaOriginalKongUnlocked(k))roster[n++]=k;
+        assert(n>0);
+        for(current=0;current<6;current++)for(dir=-1;dir<=1;dir+=2){
+            int expected=dir>0?roster[0]:roster[n-1];
+            if(dir>0){for(k=0;k<n;k++)if(roster[k]>current){expected=roster[k];break;}}
+            else{for(k=n-1;k>=0;k--)if(roster[k]<current){expected=roster[k];break;}}
+            assert(krushaNextCharacter(current,dir)==expected);cases++;
+        }
+        assert(krushaAvailable(f)==(enabled&&!!(mode&32)));
+        assert(!krushaAvailable(3)&&!krushaAvailable(255));
+        assert(!saves&&!words&&!single_writes);
+        assert(krushaNextCharacter(6,1)==6&&krushaNextCharacter(-1,-1)==-1&&krushaNextCharacter(2,0)==2);
+    }
+    for(f=0;f<3;f++)for(mode=0;mode<16;mode++){
+        unsigned char old[3][512];unsigned int g,i;
+        reset();active=f;enabled=mode&1;speed=(mode>>1)&1;adventure=(mode>>2)&1;context=(mode>>3)&1;
+        bits[f][496]=1;bits[f][501]=1;bits[f][509]=1;memcpy(old,bits,sizeof(bits));
+        assert(!krushaRecruitmentSpeedGrant((f+1)%3,1));
+        assert(!krushaRecruitmentSpeedGrant(3,1));
+        if(enabled&&speed&&adventure&&context){
+            assert(krushaRecruitmentSpeedGrant(f,speed));assert(krushaRecruitmentRecruited(f));
+            assert(saves==1&&words==1&&!single_writes);
+            for(i=0;i<100;i++)assert(!krushaRecruitmentSpeedGrant(f,speed));
+            assert(saves==1&&words==1);assert(krushaAvailable(f));
+            speed=0;assert(!krushaRecruitmentSpeedGrant(f,speed)&&krushaAvailable(f));
+            enabled=0;assert(!krushaAvailable(f));enabled=1;assert(krushaAvailable(f));
+        }else{assert(!krushaRecruitmentSpeedGrant(f,speed));assert(!memcmp(old,bits,sizeof(bits)));}
+        for(g=0;g<3;g++)for(i=0;i<512;i++)if(g!=f||i<496||i>506)assert(bits[g][i]==old[g][i]);
+    }
+    printf("PASS: %lu R05 roster cases, read-only availability, scene/option guards, once-only Speed grant and persistence semantics\n",cases);
+}
 int main(void){
     unsigned int f,i,j,k,order[5],before,keys,locks;
     unsigned char original[3][512];permute(0,0,order);assert(count==120);
@@ -99,6 +142,7 @@ int main(void){
     assert(!krushaRecruitmentRecruited(0)&&!krushaRecruitmentLocks(0));
     for(f=0;f<3;f++){reset();active=f;mixed_orders(0,0,0);}
     assert(interleavings==340200);
+    availability_tests();
     puts("PASS: 340,200 valid interleaved quest histories and 43,200 preservation cases across three files; guards, idempotence, final commit, neighbors and malformed reads");
     return 0;
 }

@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_recruitment.h"
 
 static const u8 bad_maps[] = {
 	1, // Funky's Store
@@ -218,13 +219,6 @@ static const u16 speedrun_mode_temporary_flags[] = {
 	102, // Aztec: Beetle FT Long Intro
 };
 
-static const u16 kong_unlocked_flags[] = {
-	385, // Kong Unlocked: DK
-	6, // Kong Unlocked: Diddy
-	70, // Kong Unlocked: Lanky
-	66, // Kong Unlocked: Tiny
-	117, // Kong Unlocked: Chunky
-};
 
 static s32 inBadMapIndex = 0;
 static s32 inBadMapCache = 0;
@@ -506,29 +500,7 @@ void tagAnywhere(void) {
 		return;
 	}
 
-	_dest_character = Character + tagDirection;
-	while (7) {
-		// Krusha follows Chunky in adventure mode.
-		if (_dest_character < 0) {
-			_dest_character = last_character;
-		}
-		if (_dest_character > last_character) {
-			_dest_character = 0;
-		}
-		// Any kong can be tagged in speed mode
-		if (StorySkip) {
-			break;
-		}
-		// DK can always be tagged
-		if (_dest_character == 0 || _dest_character == 5) {
-			break;
-		}
-		// Check whether kong has been unlocked before allowing tag to them
-		if (checkFlag(kong_unlocked_flags[_dest_character], 0)) {
-			break;
-		}
-		_dest_character += tagDirection;
-	}
+	_dest_character = krushaNextCharacter(Character,tagDirection);
 
 	// Without this, a choppy animation occurs if you tag DK -> DK
 	if (_dest_character == Character) {

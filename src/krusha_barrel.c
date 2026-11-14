@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_recruitment.h"
 #include "../include/klump_colors.generated.h"
 #include "../include/m5_campaign.h"
 #include "../include/recruitment_assets.generated.h"
@@ -27,6 +28,20 @@ static const BarrelCharacter characters[6] = {
 static const u32 music_masks[6] = {2, 0x48, 4, 0x20, 0x10, 0};
 static BarrelData* owner;
 static void* sixth;
+static s32 selecting_sixth;
+
+/* A narrow confirmation guard, before native deletion/mesh replacement.
+ * R07 will add locked artwork; capacity/layout/rotation remain unchanged. */
+s32 krushaBarrelSelectionBusy(void) {
+    s32 busy=((s32 (*)(void))0x8062919C)();
+    if (busy) return busy;
+    if (selecting_sixth && krushaEnabled() && DetectAdventure() &&
+        !krushaRecruitmentPlayable()) {
+        if (*(u16*)0x807FD63C&0xE000) playSound(152,0x2FFF,63.0f,1.0f,0,0);
+        return 1;
+    }
+    return 0;
+}
 
 extern void vanillaBarrelSpawn(BarrelData*);
 extern void vanillaBarrelLayout(BarrelData*);
@@ -250,7 +265,9 @@ void krushaBarrelControl(BarrelData* data) {
      * five; delete the real spotlight once here. No allocation layout changes. */
     void* spotlight = data->spotlight;
     data->spotlight = sixth;
+    selecting_sixth=data->selected==5;
     vanillaBarrelControl(data);
+    selecting_sixth=0;
     if ((*(u8**)0x807FBB40)[0x154] == 1) {
         data->spotlight = spotlight;
     } else {

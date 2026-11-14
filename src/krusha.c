@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/m3_progress.h"
 #include "../include/m3_kasplat.h"
+#include "../include/krusha_recruitment.h"
 
 /* Krusha is character 5 / actor 7 throughout adventure mode. Compatibility
  * decisions belong to the individual interaction, never a global ID swap. */
@@ -364,6 +365,7 @@ void krushaAdventure(void) {
     krushaRoarTick();
     *(const u32**)0x8074C7EC = enabled ? boulder_collisions : (const u32*)0x8074B00C;
     m3ProgressTick();
+    krushaRecruitmentTick();
     if (enabled && DetectAdventure()) {
         if (Character == 5 && Player && *(void**)Player) {
             void* model = *(void**)Player;

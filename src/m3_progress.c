@@ -52,6 +52,16 @@ static int capacity(void) {
     return n*5;
 }
 
+/* Safe before player spawn: only the existing private ownership bits, no
+ * actor/map scans or new grant policy. The recruitment save can include them. */
+void m3SpeedOwnership(void) {
+    if (!DetectAdventure() || Gamemode!=6 || CurrentMap==80 || !StorySkip || file()>=3) return;
+    if (!krushaProgressRead(file(),KRUSHA_GUN_BIT,1))
+        krushaProgressWrite(file(),KRUSHA_GUN_BIT,1,1);
+    if (!krushaProgressRead(file(),KRUSHA_SHOUT_BIT,1))
+        krushaProgressWrite(file(),KRUSHA_SHOUT_BIT,1,1);
+}
+
 void m3ProgressTick(void) {
     m3KasplatTick();
     if (CurrentMap!=25) lesson_scene=0;
@@ -63,11 +73,7 @@ void m3ProgressTick(void) {
     }
     if (StorySkip) {
         guns|=6;instruments|=14;
-        if (!krushaProgressRead(file(),KRUSHA_GUN_BIT,1))
-            krushaProgressWrite(file(),KRUSHA_GUN_BIT,1,1);
-        if (!krushaProgressRead(file(),KRUSHA_SHOUT_BIT,1)) {
-            krushaProgressWrite(file(),KRUSHA_SHOUT_BIT,1,1);
-        }
+        m3SpeedOwnership();
     }
     MovesBase[5].weapon_bitfield=(guns&6) | krushaProgressRead(file(),KRUSHA_GUN_BIT,1);
     MovesBase[5].instrument_bitfield=(instruments&14) | krushaProgressRead(file(),KRUSHA_SHOUT_BIT,1);

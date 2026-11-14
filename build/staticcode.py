@@ -16,6 +16,7 @@ def patchStaticCode(filename):
 			(0x8060C648, 'krushasavepackedwrite', '27bdffd8afbf001c'),
 			(0x8060C6B8, 'krushasavepackedread', '27bdffd8afbf001c'),
 			(0x8060DC3C, 'krushasaveloadgame', '27bdffb8afb00018'),
+			(0x806C850C, 'krusharecruitmentplayerspawn', '27bdffd0afb00014'),
 			(0x806ABE3C, 'krushacollecttotals', '27bdffd83c028080'),
 			(0x806AA304, 'krushapausebuild', '27bdff703c0e8075'),
 			(0x806AC07C, 'krushapausesprite', '27bdffa8afbf001c'),
@@ -60,6 +61,12 @@ def patchStaticCode(filename):
 
 		from recruitment_room import patch_code as patchRoom
 		patchRoom(fh,symbols)
+		# Only the barrel confirmation's native busy check. Keep native layout,
+		# rotation and cleanup; reject an unavailable sixth choice before swap.
+		fh.seek(0x806838A8 - 0x805FB300)
+		assert fh.read(8)==bytes.fromhex('0c18a46700000000')
+		fh.seek(0x806838A8 - 0x805FB300)
+		fh.write((0x0C000000|((int(symbols['krushabarrelselectionbusy'],16)&0x0FFFFFFF)>>2)).to_bytes(4,'big'))
 		from progress_pause import patchPause
 		patchPause(fh, symbols)
 		from m2_pickups import patch_code

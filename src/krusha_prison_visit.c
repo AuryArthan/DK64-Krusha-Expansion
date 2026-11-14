@@ -16,6 +16,16 @@ volatile u32 krushaPrisonVisitTrace[10];
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static int tiny(void) {return valid(Player,0x178) && Character==3 && *(u32*)((u8*)Player+0x58)==5;}
 static int ready(void) {return ObjectModel2Timer>5 && valid(Player,0x178) && LZFadeoutProgress<=0 && !IsAutowalking;}
+/* Halfway from the earlier neutral0.65 light to native warm(102,64,30)/255.
+ * Write a fixed blend, not a repeated average that would drift every frame. */
+static void roomLighting(void) {
+    s32 count=*(s32*)0x807F6C28;
+    if (count<=0 || count>255) return;
+    for (s32 i=0;i<3;i++)
+        if (!valid(*(void**)(0x8076A0B4+i*4),count*sizeof(f32))) return;
+    extern void krushaSetChunkLighting(f32,f32,f32,s16);
+    krushaSetChunkLighting(.525f,.4504902f,.3838235f,-1);
+}
 /* A manually restored persistent counter has no native barrel actor to end
  * its hold. Release ONLY our hold when Mini ends, through the native HUD
  * cleanup (including saved pause-group masks). Never retain a HUD pointer or
@@ -89,8 +99,7 @@ void krushaPrisonVisitTick(void) {
             transform();phase=STAGED;ticks=travel_ticks=0;
             krushaPrisonVisitTrace[6]=CollectableBase.Crystals;
         }
-        /* Keep the room's native warm lighting throughout entrance/staging.
-         * Native loading and pause own their light arrays/effects. */
+        if (phase==STAGED && !(TBVoidByte&3)) roomLighting();
         /* Native pause Exit Level also uses our landing, not Isles exit0. */
         if (LZFadeoutProgress>0 && phase!=ENTERING && DestMap==34) DestExit=RECRUITMENT_RETURN_EXIT;
         if (phase==STAGED && !(TBVoidByte&3) && !CutsceneActive && LZFadeoutProgress<=0) {
@@ -144,6 +153,7 @@ s32 krushaPrisonVisitCamera(void* display) {
     if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
         !DetectAdventure() || file!=*(u8*)0x807467C8 ||
         !tiny() || !valid(cc,0x284)) return 0;
+    if (phase==ENTERING && !(TBVoidByte&3)) roomLighting();
     /* Temporary renderer-only view. Native collision/input camera state is
      * restored before returning; no persistent camera ownership or flags. */
     f32* eye=(f32*)(cc+0x210);f32* target=(f32*)(cc+0x228);

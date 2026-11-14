@@ -306,6 +306,12 @@ saveNativeLoadGame:
     J 0x8060DC44
     NOP
 
+vanillaRecruitmentPlayerSpawn:
+    ADDIU sp, sp, -0x30
+    SW s0, 0x14(sp)
+    J 0x806C8514
+    NOP
+
 saveNativeCollectTotals:
     ADDIU sp, sp, -0x28
     LUI v0, 0x8080
