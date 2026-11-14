@@ -2,6 +2,7 @@
 #include "../include/klump_colors.generated.h"
 #include "../include/m5_campaign.h"
 #include "../include/recruitment_assets.generated.h"
+#include "../include/recruitment_room.generated.h"
 
 /* Keep the native 0x40-byte barrel data layout. Its five actor pointers are
  * followed immediately by the spotlight pointer; the sixth actor lives here,
@@ -47,11 +48,16 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     s32 format = table;
     extern s32 mirrorEnabled(void);
+    if (index==RECRUITMENT_ROOM_MAP) {
+        if (table==1) {table=27;index=mirrorEnabled()?RECRUITMENT_ROOM_MIRROR:RECRUITMENT_ROOM_GEOMETRY;}
+        else if (table==18) {table=27;index=RECRUITMENT_ROOM_ZONE;}
+    }
     if (table==4 && index==RECRUITMENT_MODEL_TYPE) { table=27;index=mirrorEnabled()?RECRUITMENT_MIRROR_INDEX:RECRUITMENT_MODEL_INDEX; }
     if (table==25 && index>=RECRUITMENT_TEXTURE_TOKEN && index<RECRUITMENT_TEXTURE_TOKEN+RECRUITMENT_TEXTURE_COUNT) { table=27;index+=RECRUITMENT_TEXTURE_BASE-RECRUITMENT_TEXTURE_TOKEN; }
 #if M4_GRENADE_PREVIEW
     if ((table==25 || table==7) && index>=7732 && index<7748) {table=27;index-=7601;}
 #endif
+    if (table==25 && index>=RECRUITMENT_ROOM_TEXTURE_TOKEN && index<RECRUITMENT_ROOM_TEXTURE_TOKEN+RECRUITMENT_ROOM_TEXTURE_COUNT) {table=27;index+=RECRUITMENT_ROOM_TEXTURE_INDEX-RECRUITMENT_ROOM_TEXTURE_TOKEN;}
     s32 campaign=m5FileAlias(table,index);
     if (campaign>=0) {table=27;index=campaign;}
     if (table==5 && index==0xED) { table=27;index=69; }
@@ -132,7 +138,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || (index>=123 && index<131))) {
+    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || (index>=123 && index<131))) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */

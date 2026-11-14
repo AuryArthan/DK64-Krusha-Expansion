@@ -14,9 +14,10 @@ MIRROR_INDEX=148
 TEXTURE_BASE=149
 TEXTURE_TOKEN=7800
 SOURCE_TEXTURES=tuple(range(0x514,0x51D))
-POSITION=(3630.0,500.0,3409.5)
+POSITION=(3630.0,498.0,3409.5)
 ORIGIN=(3359.333333333,500.0,3409.5)
-SCALE=1/4
+SCALE=.23 # user requested8% less than the reviewed quarter scale
+SAFE_DEPTH=24.0
 WALKWAY_TEXTURES=(0x10,0x24F)
 WALKWAY_BRIGHTNESS=0.60
 STONE_TINT=(0.24,0.30,0.60)
@@ -170,7 +171,7 @@ def prepare(rom_path):
     door=[POSITION[i]+DOOR_CENTER[i]*SCALE for i in range(3)]
     with target.open('a') as header:
         header.write(f'#define RECRUITMENT_MODEL_X {POSITION[0]:.9f}f\n#define RECRUITMENT_MODEL_Z {POSITION[2]:.9f}f\n#define RECRUITMENT_COLLISION_WALLS {report["collision"]["walls"]}\n')
-    values=dict(X=door[0],Y=door[1],Z=door[2],TX=DOOR_TANGENT[0],TZ=DOOR_TANGENT[1],NX=DOOR_NORMAL[0],NZ=DOOR_NORMAL[1],SAFE_X=door[0]+15*DOOR_NORMAL[0],SAFE_Z=door[2]+15*DOOR_NORMAL[1])
+    values=dict(X=door[0],Y=door[1],Z=door[2],TX=DOOR_TANGENT[0],TZ=DOOR_TANGENT[1],NX=DOOR_NORMAL[0],NZ=DOOR_NORMAL[1],SAFE_X=door[0]+SAFE_DEPTH*DOOR_NORMAL[0],SAFE_Z=door[2]+SAFE_DEPTH*DOOR_NORMAL[1])
     with target.open('a') as header:
         for name,value in values.items():header.write(f'#define RECRUITMENT_DOOR_{name} {value:.9f}f\n')
     (ROOT/'runtime/recruitment/r01').mkdir(parents=True,exist_ok=True)

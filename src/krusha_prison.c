@@ -1,14 +1,16 @@
 #include "../include/common.h"
 #include "../include/recruitment_assets.generated.h"
 
-/* R02: native collision owns the shell/landing. This is an entrance detector,
- * not a map transition. The inner readiness backstop stays until R03 exists.
+/* Native collision owns the shell/landing; R03 accepts a prepared native
+ * transition only for Mini Tiny. The inner wall remains a collision backstop.
  * Trace is transient diagnostic RAM, never a save/quest or unlock flag.
  * [0] accepted approaches, [1] safe recoveries, [2] armed, [3] eligible,
  * [4] latched, [5] frame, [6] character, [7] native transformation. */
 volatile u32 krushaPrisonTrace[8];
 volatile f32 krushaPrisonDistance[3]; /* side, outward depth, foot height */
 volatile u32 krushaPrisonWallFixes; /* diagnostic, cumulative cache corrections */
+extern s32 krushaPrisonVisitBegin(void);
+extern s32 krushaPrisonVisitBusy(void);
 static void* owner;
 static u32 owner_id;
 static u32 last_frame;
@@ -102,13 +104,15 @@ void krushaPrisonTick(void) {
      * Also require completed native small-scale interpolation and crystals. */
     int small=tiny && cc[0x2C0]==0 && *(f32*)(data+0x1CC)>.045f &&
         *(f32*)(data+0x1CC)<.055f && CollectableBase.Crystals>0;
-    int height=y>=RECRUITMENT_DOOR_Y-.5f && y<=RECRUITMENT_DOOR_Y+1.5f;
+    /* The lowered private deck is498; the untouched original prison annulus
+     * overlaps the connector at500. Both are legitimate native supports. */
+    int height=y>=RECRUITMENT_DOOR_Y-.5f && y<=RECRUITMENT_DOOR_Y+3.0f;
     int moving=p[0x154]==12 || p[0x154]==13 || p[0x154]==14;
     int eligible=small && height && moving;
     krushaPrisonTrace[3]=eligible;
     if (tiny && (!small || CollectableBase.Crystals<=0) && absolute(side)<6.8f &&
         depth<5.0f && depth>-14 && y>RECRUITMENT_DOOR_Y-5 && y<RECRUITMENT_DOOR_Y+15) {
-        recover(p);last_depth=15;return;
+        recover(p);last_depth=24;return;
     }
     if (depth>7 || absolute(side)>10 || !height) latched=0;
     if (!eligible) armed=0;
@@ -118,17 +122,17 @@ void krushaPrisonTick(void) {
         /* Native collision pads the actor beyond its visible mesh. Accept
          * inward capsule contact in the first4 world units of the aperture,
          * rather than requiring the feet to cross a blocked wall plane. */
-        krushaPrisonTrace[0]++;latched=1;armed=0;
+        if (krushaPrisonVisitBegin()) {krushaPrisonTrace[0]++;latched=1;armed=0;}
     }
     krushaPrisonTrace[2]=armed;krushaPrisonTrace[4]=latched;
     last_depth=depth;
 }
 
-/* Prevent changing identity inside the owned doorway between entry detection
- * and the future R03 transfer. Ordinary outdoor tagging is unchanged. */
+/* Prevent identity changes in the doorway and throughout the owned visit.
+ * Ordinary outdoor tagging is unchanged. */
 s32 krushaPrisonBusy(void) {
-    return krushaEnabled() && DetectAdventure() && CurrentMap==34 && Character==3 &&
+    return krushaPrisonVisitBusy() || (krushaEnabled() && DetectAdventure() && CurrentMap==34 && Character==3 &&
         owner && owner==Player && owner_id==*(u32*)((u8*)Player+0x54) && absolute(krushaPrisonDistance[0])<6.8f &&
         krushaPrisonDistance[1]<5 && krushaPrisonDistance[1]>-14 &&
-        krushaPrisonDistance[2]>-5 && krushaPrisonDistance[2]<15;
+        krushaPrisonDistance[2]>-5 && krushaPrisonDistance[2]<15);
 }

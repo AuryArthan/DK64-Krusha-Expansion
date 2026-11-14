@@ -117,6 +117,8 @@ void krushaRoarStageTick(u32 elapsed) {
  * Camera collision, following, input yaw and future frames retain their own
  * coordinates; never feed the rotated eye back into the camera controller. */
 void krushaRoarBuildCameraMatrices(void* display) {
+    extern s32 krushaPrisonVisitCamera(void*);
+    if (krushaPrisonVisitCamera(display)) return;
     if (!sameScene() || (void*)owner != Player || owner[0x154] != 0x67 ||
         camera_owner != *(u8**)0x807FC924 || CutsceneActive ||
         (orbit_angle == 0 && camera_drop == 0 && frame_blend == 0)) {

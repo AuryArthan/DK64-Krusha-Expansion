@@ -19,6 +19,8 @@ static const MirrorPatch patches[] = {
 
 void mirrorReadController(void* raw) {
     ((void (*)(void*))0x80007454)(raw);
+    extern void krushaPrisonVisitInput(void*);
+    krushaPrisonVisitInput(raw);
     if (!mirrorModeEnabled || CurrentMap == 80 || (TBVoidByte & 3) ||
         CutsceneActive == 3 || CutsceneActive == 4 ||
         (Player && ((u8*)Player)[0x154] == 0x42)) return;

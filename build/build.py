@@ -38,6 +38,8 @@ from m5_campaign import prepare as prepareM5, patch_scripts as patchM5Scripts
 prepareM5(ROMName)
 from recruitment_assets import prepare as prepareRecruitment, patch_setup as patchRecruitmentSetup
 prepareRecruitment(ROMName)
+from recruitment_room import prepare as prepareRecruitmentRoom, files as recruitmentRoomFiles, patch_data as patchRecruitmentData
+prepareRecruitmentRoom(ROMName)
 from krusha_victory import prepare as prepareVictory
 prepareVictory(ROMName)
 from m4_rewards import prepare as prepareM4, patch_japes as patchM4Japes, patch_cave as patchM4Cave, patch_setup as patchM4Setup
@@ -186,6 +188,9 @@ file_dict += [
 	# 	"use_zlib": True,
 	# },
 ]
+
+file_dict += recruitmentRoomFiles()
+file_dict.append(dict(name="Private R03 resident metadata",start=0xC29D4,compressed_size=0x949C,source_file="bin/RecruitmentData.bin",use_external_gzip=True,patcher=patchRecruitmentData))
 
 map_replacements = [
 	# {
@@ -438,6 +443,8 @@ if os.path.getsize(newROMName) > 64 * 1024 * 1024:
 from scream_asset import appendScream
 appendScream(newROMName)
 appendBarrelAssets(newROMName)
+from recruitment_room import patch_native_aliases
+patch_native_aliases(newROMName)
 from mirror_assets import appendMirrorAssets
 appendMirrorAssets(newROMName)
 

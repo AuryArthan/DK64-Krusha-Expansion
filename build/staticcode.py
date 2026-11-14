@@ -58,6 +58,8 @@ def patchStaticCode(filename):
 		fh.seek(0x806F54E0 - 0x805FB300 + matches[0])
 		fh.write((0x0C000000 | ((int(symbols['krusharainbowcredit'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
 
+		from recruitment_room import patch_code as patchRoom
+		patchRoom(fh,symbols)
 		from progress_pause import patchPause
 		patchPause(fh, symbols)
 		from m2_pickups import patch_code
