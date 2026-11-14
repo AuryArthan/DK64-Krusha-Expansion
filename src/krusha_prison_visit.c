@@ -7,7 +7,7 @@
  * return; native transformation owns Mini's flags, matrix and interpolation. */
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
-static u8 skip,restore_mini;
+static u8 skip,restore_mini,door_return;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
  * staged crystals, return crystals, staged frames, last native frame. */
 volatile u32 krushaPrisonVisitTrace[10];
@@ -22,13 +22,13 @@ static void transform(void) {
 static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
     else krushaPrisonVisitTrace[3]++;
-    phase=OUTSIDE;restore_mini=0;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
+    phase=OUTSIDE;restore_mini=door_return=0;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=OUTSIDE;
 }
 s32 krushaPrisonVisitBusy(void) {return phase!=OUTSIDE;}
 s32 krushaPrisonVisitBegin(void) {
     if (phase || cooldown || !DetectAdventure() || CurrentMap!=34 || !tiny() || *(u8*)0x807467C8>2) return 0;
-    phase=ENTERING;restore_mini=1;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
+    phase=ENTERING;restore_mini=1;door_return=0;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
     initiateTransition(RECRUITMENT_ROOM_MAP,0);
@@ -47,7 +47,7 @@ void krushaPrisonVisitTick(void) {
         /* An orphaned map load (e.g. interrupted state) has no story or
          * freeroam contract. Eject through the same authored safe exit. */
         if (CurrentMap==RECRUITMENT_ROOM_MAP && ObjectModel2Timer>5 && LZFadeoutProgress<=0) {
-            file=*(u8*)0x807467C8;phase=RETURNING;restore_mini=0;travel_ticks=0;
+            file=*(u8*)0x807467C8;phase=RETURNING;restore_mini=door_return=0;travel_ticks=0;
             initiateTransition(34,RECRUITMENT_RETURN_EXIT);
         }
         return;
@@ -72,8 +72,15 @@ void krushaPrisonVisitTick(void) {
     } else {
         /* A native door can interrupt the stage without using our timer's
          * transition helper. It still owns the same return/cleanup contract. */
-        if (phase==STAGED) {phase=RETURNING;travel_ticks=0;}
-        if (phase==RETURNING && ready()) {transform();end(1);}
+        if (phase==STAGED) {phase=RETURNING;door_return=1;travel_ticks=0;}
+        if (phase==RETURNING && ready()) {
+            /* Native door handling can carry its exit walking/momentum through
+             * the load. Reinitialize ONLY this interrupted return using the
+             * authored native exit: detach, reset motion/collision and camera.
+             * Never move a saved actor pointer or force an action/scale. */
+            if (door_return) ((void (*)(s32))0x806C92C4)(RECRUITMENT_RETURN_EXIT);
+            transform();end(1);
+        }
     }
     krushaPrisonVisitTrace[0]=phase;
 }
