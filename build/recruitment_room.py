@@ -14,7 +14,7 @@ STONE_PALETTES=(0x5BD,0x5BF,0x5C1)
 # Four neutral floor/metal palettes and the large warm-stone wall palette.
 SECONDARY_PALETTES=(0x10,0x90D,0x262,0x251,0x514)
 METAL_PALETTES=(0x90D,0x262,0x251)
-METAL_BRIGHTNESS=.65
+METAL_BRIGHTNESS=.4225 # another35% darker than the preceding0.65 treatment
 PALETTES=STONE_PALETTES+SECONDARY_PALETTES
 TOKEN=7820
 INDEX=158
