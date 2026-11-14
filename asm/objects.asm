@@ -11,6 +11,7 @@
 .importobj "obj/src_krusha_progress_menu.o"
 .importobj "obj/src_krusha_progress_pause.o"
 .importobj "obj/src_krusha_progress_snide.o"
+.importobj "obj/src_krusha_recruitment.o"
 .importobj "obj/src_krusha_roar.o"
 .importobj "obj/src_krusha_roar_framing.o"
 .importobj "obj/src_krusha_roar_stage.o"

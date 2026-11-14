@@ -18,6 +18,9 @@ static void transform(void) {
     u8* cc=*(u8**)0x807FC924;
     if (restore_mini && tiny() && valid(cc,0x2C4) && CollectableBase.Crystals>0 && cc[0x2C0]!=0)
         ((void (*)(void*,u8))0x806D0468)(Player,0);
+    if (restore_mini && tiny() && valid(cc,0x2C4) && cc[0x2C0]==0 &&
+        CurrentMap==34 && CollectableBase.Crystals>0)
+        ((void (*)(s32,u8,s32))0x806F8BC4)(5,1,0); /* native persistent Mini HUD */
 }
 static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
@@ -60,6 +63,14 @@ void krushaPrisonVisitTick(void) {
         if (phase==ENTERING && ready() && tiny()) {
             transform();phase=STAGED;ticks=travel_ticks=0;
             krushaPrisonVisitTrace[6]=CollectableBase.Crystals;
+        }
+        /* The native scene lighting is warm brown (102,64,30). Keep the
+         * isolated room's blue stone and gray metal legible instead. Native
+         * map loading owns/replaces these arrays on exit; retain no pointers.
+         * Use the same native current-chunk API as the shout spotlight. */
+        if (phase==STAGED && !(TBVoidByte&3)) {
+            extern void krushaSetChunkLighting(f32,f32,f32,s16);
+            krushaSetChunkLighting(.65f,.65f,.65f,-1);
         }
         /* Native pause Exit Level also uses our landing, not Isles exit0. */
         if (LZFadeoutProgress>0 && phase!=ENTERING && DestMap==34) DestExit=RECRUITMENT_RETURN_EXIT;
@@ -119,10 +130,22 @@ s32 krushaPrisonVisitCamera(void* display) {
     for (s32 i=0;i<3;i++) {saved[i]=eye[i];saved[i+3]=target[i];}
     saved[6]=*(f32*)(cc+0x27C);
     f32* pos=(f32*)((u8*)Player+0x7C);
-    eye[0]=pos[0]+55;eye[1]=pos[1]+8;eye[2]=pos[2]-100;
-    target[0]=pos[0];target[1]=pos[1]+5;target[2]=pos[2];
+    eye[0]=pos[0]+55;eye[1]=pos[1]+18;eye[2]=pos[2]-100;
+    target[0]=pos[0];target[1]=pos[1]+15;target[2]=pos[2];
     *(f32*)(cc+0x27C)=50;
     vanillaBuildCameraMatrices(display);
     for (s32 i=0;i<3;i++) {eye[i]=saved[i];target[i]=saved[i+3];}
     *(f32*)(cc+0x27C)=saved[6];return 1;
+}
+
+/* Render-only fivefold Mini appearance; native form/movement/upkeep and
+ * collision remain untouched. Normalize the zero-budget normal form to the
+ * same visible size during the owned scene. Never carry a model pointer. */
+f32 krushaPrisonVisualScale(void* actor) {
+    if (!phase || !restore_mini || CurrentMap!=RECRUITMENT_ROOM_MAP ||
+        actor!=Player || !tiny()) return 1;
+    u8* data=*(u8**)((u8*)actor+0x174);
+    if (!valid(data,0x1D0)) return 1;
+    f32 scale=*(f32*)(data+0x1CC);
+    return scale>.045f && scale<.16f ? .25f/scale : 1;
 }

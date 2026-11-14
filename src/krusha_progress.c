@@ -7,7 +7,7 @@ extern void saveNativePackedWrite(int type, u8 character, u8 level, u8 file, u32
 extern void saveNativeLoadGame(u8 file, int refill);
 extern void saveNativeCollectTotals(void);
 
-static const char format_signature[] = "K07.2";
+const char krushaSaveFormatSignature[] = KRUSHA_SAVE_SIGNATURE;
 
 /* The native writer compares its desired snapshot to a RAM shadow of EEPROM.
  * Mupen states restore that shadow without restoring battery storage. Refresh
@@ -73,7 +73,7 @@ void krushaSaveLayoutInit(void) {
     int i;
     for (i = 0; i < 8; i++) total += counts[i];
     *(volatile s16*)0x807ECEA0 = total;
-    *(const char**)0x807467C0 = format_signature;
+    *(const char**)0x807467C0 = krushaSaveFormatSignature;
 }
 
 static u16 extensionBit(u8 file, u16 local) {
@@ -93,6 +93,23 @@ void krushaProgressWrite(unsigned int file, unsigned int bit, unsigned int width
     if (file >= 4 || !width || width > 8 || bit + width > KRUSHA_SAVE_BITS) return;
     writeBits(value, extensionBit(file, bit), width);
 }
+
+unsigned int krushaProgressActiveFile(void) { return *(volatile u8*)0x807467C8; }
+
+/* Keys496..500, locks501..505 and recruited506 occupy bits20..30 of
+ * ONE native packed word in every492-byte record. The native bit writer
+ * performs one aligned store: the IO thread cannot snapshot half a final
+ * lock/recruit update. Ownership507/508 and intro509 remain untouched. */
+void krushaProgressQuestWrite(unsigned int file, unsigned int value) {
+    void (*writeBits)(u32,u16,u8) = (void*)0x8060BB18;
+    u16 bit;
+    if (file>=3 || recordBits()!=3936) return;
+    bit=extensionBit(file,KRUSHA_KEYS_BIT);
+    if ((bit&31)!=20) return;
+    writeBits(value&0x7FF,bit,11);
+}
+
+void krushaProgressRequestSave(void) { ((void (*)(void))0x8060DEC8)(); }
 
 /* Preserve K07.2 identities and weights. Each world now counts only the
  * first3 bunches, first2 balloons and first15 singles (50 CB). Retired flags

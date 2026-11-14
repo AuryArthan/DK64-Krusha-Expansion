@@ -10,6 +10,8 @@ import sys
 GCC = os.environ.get("N64_GCC", "mips64-elf-gcc")
 ARMIPS = os.environ.get("ARMIPS", "build/armips.exe" if os.name == "nt" else "armips")
 GZIP = os.environ.get("N64_GZIP", "./build/gzip.exe" if os.name == "nt" else "gzip")
+# Explicit QA-only build; ordinary candidates never contain the test mailbox.
+RECRUITMENT_QA = os.environ.get("DK64_RECRUITMENT_QA") == "1"
 ROMName = "./rom/dk64.z64"
 with open(ROMName, "rb") as base:
 	base_bytes = base.read()
@@ -58,6 +60,9 @@ with open('./asm/objects.asm', 'w') as obj_asm:
 				obj_asm.write(".importobj \"obj/" + _o + "\"\n")
 				subprocess.run([GCC, "-Wall", "-O1", "-fno-common", "-mtune=vr4300", "-march=vr4300", "-mabi=32", "-fomit-frame-pointer", "-G0", "-c", os.path.join(root, file)], check=True)
 				shutil.move("./" + file.replace(".c", ".o"), "obj/" + _o)
+	if RECRUITMENT_QA:
+		subprocess.run([GCC, "-Wall", "-O1", "-fno-common", "-mtune=vr4300", "-march=vr4300", "-mabi=32", "-fomit-frame-pointer", "-G0", "-c", "tools/recruitment-qa-driver.c", "-o", "obj/recruitment_qa.o"], check=True)
+		obj_asm.write('.importobj "obj/recruitment_qa.o"\n')
 print()
 
 # Infrastructure for recomputing DK64 global pointer tables
@@ -80,7 +85,7 @@ if os.path.exists(newROMName):
 shutil.copyfile(ROMName, newROMName)
 
 # Resolve resident hook addresses before patching the compressed shop overlay.
-subprocess.run([ARMIPS, "asm/main.asm", "-strequ", "OUTPUT_ROM", newROMName,
+subprocess.run([ARMIPS, "asm/main.asm", "-definelabel", "RECRUITMENT_QA", str(int(RECRUITMENT_QA)), "-strequ", "OUTPUT_ROM", newROMName,
                 "-sym", newROMName.replace(".z64", ".sym")], check=True)
 
 from campaign_data import maps as campaignMaps, balloons as campaignBalloons, area as campaignArea
@@ -434,7 +439,7 @@ print("[8 / 8] - Generating BizHawk RAM watch")
 import generate_watch_file
 
 # Write custom ASM code to ROM
-subprocess.run([ARMIPS, "asm/main.asm", "-strequ", "OUTPUT_ROM", newROMName,
+subprocess.run([ARMIPS, "asm/main.asm", "-definelabel", "RECRUITMENT_QA", str(int(RECRUITMENT_QA)), "-strequ", "OUTPUT_ROM", newROMName,
                 "-sym", newROMName.replace(".z64", ".sym")], check=True)
 if os.path.getsize(newROMName) > 64 * 1024 * 1024:
 	raise SystemExit("Unexpected ROM size; check assembler ROM/RDRAM address mappings")

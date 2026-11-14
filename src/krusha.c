@@ -42,14 +42,17 @@ s32 krushaBuildActorBones(void* actor_ptr) {
     u32 type = *(u32*)(actor + 0x58);
     s32 enlarge = (type == 7 && actor_ptr == Player) ||
         (type == 316 && *(u16*)*(u8**)(actor + 0x174) == 7);
-    if (!enlarge || !krushaEnabled() || !DetectAdventure()) {
+    extern f32 krushaPrisonVisualScale(void*);
+    f32 factor=krushaPrisonVisualScale(actor_ptr);
+    if (factor==1 && enlarge && krushaEnabled() && DetectAdventure()) factor=1.1f;
+    if (factor==1) {
         return vanillaBuildActorBones(actor_ptr);
     }
     f32* matrix = (f32*)(actor + 0xC);
     f32 saved[3][3];
     for (s32 i = 0; i < 3; i++) for (s32 j = 0; j < 3; j++) {
         saved[i][j] = matrix[i * 4 + j];
-        matrix[i * 4 + j] *= 1.1f;
+        matrix[i * 4 + j] *= factor;
     }
     s32 result = vanillaBuildActorBones(actor_ptr);
     for (s32 i = 0; i < 3; i++) for (s32 j = 0; j < 3; j++) {

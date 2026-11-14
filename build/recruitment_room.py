@@ -10,28 +10,33 @@ from recruitment_assets import POSITION,SCALE,SAFE_DEPTH,STONE_TINT
 from recruitment_collision import DOOR_CENTER,DOOR_NORMAL
 ROOT=Path(__file__).resolve().parents[1]
 MAP=216
-PALETTES=(0x5BD,0x5BF,0x5C1)
+STONE_PALETTES=(0x5BD,0x5BF,0x5C1)
+# Four neutral floor/metal palettes and the large warm-stone wall palette.
+SECONDARY_PALETTES=(0x10,0x90D,0x262,0x251,0x514)
+PALETTES=STONE_PALETTES+SECONDARY_PALETTES
 TOKEN=7820
 INDEX=158
-ASSETS=ROOT/'runtime/recruitment/r03/assets'
+ASSETS=ROOT/'runtime/recruitment/room-assets'
+
+def palette(rom,ident,stone):
+    source=read_file(rom,25,ident);assert len(source)==32
+    out=bytearray()
+    for (v,) in struct.iter_unpack('>H',source):
+        rgb=(v>>11&31,v>>6&31,v>>1&31)
+        light=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]
+        if not stone:rgb=[round(light)]*3
+        elif max(rgb)-min(rgb)>3:rgb=[round(light*c) for c in STONE_TINT]
+        out+=struct.pack('>H',rgb[0]<<11|rgb[1]<<6|rgb[2]<<1|v&1)
+    return bytes(out)
 
 def payloads(rom):
-    result=[]
-    for ident in PALETTES:
-        source=read_file(rom,25,ident);assert len(source)==32
-        out=bytearray()
-        for (v,) in struct.iter_unpack('>H',source):
-            rgb=(v>>11&31,v>>6&31,v>>1&31)
-            # Keep neutral mortar/metal pixels and native alpha exactly.
-            if max(rgb)-min(rgb)>3:
-                light=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]
-                rgb=[round(light*c) for c in STONE_TINT]
-            out+=struct.pack('>H',rgb[0]<<11|rgb[1]<<6|rgb[2]<<1|v&1)
-        result.append(bytes(out))
+    # Preserve the established geometry/LZ/reference indices161..164.
+    result=[palette(rom,i,True) for i in STONE_PALETTES]
     g=geometry(rom)
     from mirror_assets import flip
     result += [g,flip(g,1)[0],loading_zone(rom),struct.pack('>H',97)]
-    return result
+    # Native513/514 is the large warm-stone wall, not a metal plate.
+    return result+[palette(rom,i,i==0x514) for i in SECONDARY_PALETTES]
 
 def geometry(rom):
     g=bytearray(read_file(rom,1,97));start,end=struct.unpack_from('>II',g,0x34);changed=0
@@ -39,7 +44,15 @@ def geometry(rom):
         a,b=struct.unpack_from('>II',g,p)
         if a>>24==0xFD and b in PALETTES:
             struct.pack_into('>I',g,p+4,TOKEN+PALETTES.index(b));changed+=1
-    assert changed>=3
+    assert changed>=len(PALETTES)
+    # Neutralize warm baked vertex illumination in this private copy only.
+    # Preserve luminance, shading variation, alpha, UVs and all native geometry.
+    start,end=struct.unpack_from('>I',g,0x38)[0],struct.unpack_from('>I',g,0x40)[0]
+    for p in range(start,end,16):
+        rgb=g[p+12:p+15]
+        if max(rgb)-min(rgb)>8:
+            light=round(.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2])
+            g[p+12:p+15]=bytes([light]*3)
     return bytes(g)
 
 def return_exit(rom):
@@ -61,7 +74,7 @@ def prepare(rom_path):
     files={(23,34):exits,(23,MAP):struct.pack('>3h4B',1000,60,1000,128,1,0,0)}
     for (table,mid),data in files.items():(ASSETS/f'{table}-{mid}.bin').write_bytes(data)
     h=ROOT/'include/recruitment_room.generated.h'
-    h.write_text('/* Generated isolated R03 room identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in dict(RECRUITMENT_ROOM_MAP=MAP,RECRUITMENT_ROOM_SOURCE=97,RECRUITMENT_ROOM_GEOMETRY=161,RECRUITMENT_ROOM_MIRROR=162,RECRUITMENT_ROOM_ZONE=163,RECRUITMENT_ROOM_TEXTURE_TOKEN=TOKEN,RECRUITMENT_ROOM_TEXTURE_INDEX=INDEX,RECRUITMENT_ROOM_TEXTURE_COUNT=len(PALETTES),RECRUITMENT_RETURN_EXIT=outside,RECRUITMENT_STAGE_TICKS=180).items()))
+    h.write_text('/* Generated isolated recruitment room identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in dict(RECRUITMENT_ROOM_MAP=MAP,RECRUITMENT_ROOM_SOURCE=97,RECRUITMENT_ROOM_GEOMETRY=161,RECRUITMENT_ROOM_MIRROR=162,RECRUITMENT_ROOM_ZONE=163,RECRUITMENT_ROOM_TEXTURE_TOKEN=TOKEN,RECRUITMENT_ROOM_TEXTURE_INDEX=INDEX,RECRUITMENT_ROOM_EXTRA_TEXTURE_INDEX=165,RECRUITMENT_ROOM_TEXTURE_COUNT=len(PALETTES),RECRUITMENT_RETURN_EXIT=outside,RECRUITMENT_STAGE_TICKS=180).items()))
     data=zlib.decompress(rom[0xC29D4:],47);base=0x80744460
     report=dict(map=MAP,source=97,original_room_preserved=True,empty_setup=True,empty_spawners=True,empty_cutscenes=True,
                 metadata=dict(level_mapping_capacity=224,map_properties_capacity=221,song_capacity=230,level=data[0x807445E0-base+MAP],properties=data[0x8074482C-base+12*MAP:0x8074482C-base+12*(MAP+1)].hex()),

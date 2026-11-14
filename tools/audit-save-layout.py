@@ -62,7 +62,9 @@ def audit(path):
                     record_crc_offset_bytes=bits // 8 - 4)
 
     native = layout(0, '7.2')
-    expanded = layout(512, 'K07.2')
+    header = (ROOT / 'include/krusha_progress.h').read_text()
+    signature = re.search(r'#define KRUSHA_SAVE_SIGNATURE "([^"]+)"', header)[1]
+    expanded = layout(512, signature)
     for address, expected in [(0x8060B7F0, '27bdffd8afb1001c'),
                               (0x8060C648, '27bdffd8afbf001c'),
                               (0x8060C6B8, '27bdffd8afbf001c'),
@@ -73,7 +75,7 @@ def audit(path):
         ('golden_bananas', 433, 40), ('blueprints_collected', 473, 8),
         ('medals', 481, 7), ('wallet', 488, 8), ('keys_collected', 496, 5),
         ('locks_open', 501, 5), ('recruited', 506, 1),
-        ('bazooka_owned', 507, 1), ('shout_learned', 508, 1), ('reserved', 509, 3),
+        ('bazooka_owned', 507, 1), ('shout_learned', 508, 1), ('introduction_seen', 509, 1), ('reserved', 510, 2),
     ]
     header = (ROOT / 'include/krusha_progress.h').read_text()
     assert int(re.search(r'#define KRUSHA_SAVE_BITS (\d+)', header)[1]) == 512
@@ -82,6 +84,11 @@ def audit(path):
     assert all(a[1] + a[2] == b[1] for a, b in zip(fields, fields[1:]))
     assert native['per_record_bytes'] == 428 and expanded['per_record_bytes'] == 492
     assert 0x320 + 5 * 0xA1 == 0x645
+    assert len(signature)==5 and expanded['signature_start']==2032
+    assert all(((slot*3936+2500+496)&31)==20 for slot in range(4))
+    assert all(((slot*3936+2500+506)&31)==30 for slot in range(4))
+    for name,bit in [('KEYS',496),('LOCKS',501),('RECRUITED',506),('GUN',507),('SHOUT',508),('INTRO',509)]:
+        assert int(re.search(r'#define KRUSHA_'+name+r'_BIT (\d+)',header)[1])==bit
     return dict(source_sha256=hashlib.sha256(rom).hexdigest(), eeprom_bytes=2048,
                 native_prop_flag_counts_by_level=counts, native_prop_flags=total,
                 native=native, experimental=expanded,
@@ -91,8 +98,8 @@ def audit(path):
                 schema=[dict(name=n, bit=b, width=w) for n, b, w in fields],
                 constraints=['384 separately tracked new colored pickups across the campaign, not 700 single-banana objects',
                              'Banana totals/GB counts/blueprint turn-ins derive from flags and a ROM-side item registry',
-                             'Working native Lanky mix: 231 banana objects plus 99 coins, with 54 spare; no world placements yet',
-                             'No old-format save import; native signature K07.2 distinguishes experimental saves',
+                             'Historical pickup identities retained, including retired slots; never reuse retired flags',
+                             f'No old-format save import; native signature {signature} rejects K07.2 progress',
                              'Only 10 bytes remain after the new signature; future schema growth requires redesign'],
                 per_map=per_map)
 

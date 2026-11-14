@@ -10,6 +10,10 @@ if [[ -n ${DK64_BUILD_ROM:-} && "$DK64_BUILD_ROM" != ./rom/dk64-krusha-dev.z64 &
   echo 'For a custom DK64_BUILD_ROM use build/build.py directly; this wrapper manages the default ROM and its manifest.' >&2
   exit 2
 fi
+if [[ ${DK64_RECRUITMENT_QA:-0} == 1 ]]; then
+  echo 'QA instrumentation requires build/build.py and a separate DK64_BUILD_ROM; it cannot become the default playable build.' >&2
+  exit 2
+fi
 mkdir -p "$ROOT/rom"
 if [[ ! -f "$ROOT/rom/dk64.z64" ]]; then
   echo "Place the original USA ROM at $ROOT/rom/dk64.z64" >&2

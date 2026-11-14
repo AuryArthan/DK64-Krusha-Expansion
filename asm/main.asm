@@ -59,6 +59,10 @@ mainASMFunction:
 	NOP
 	JAL cFuncLoop
 	NOP
+.if RECRUITMENT_QA
+	JAL recruitmentQATick
+	NOP
+.endif
 	J 0x805FC16C
 	NOP
 

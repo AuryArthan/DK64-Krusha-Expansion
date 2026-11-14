@@ -57,7 +57,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
 #if M4_GRENADE_PREVIEW
     if ((table==25 || table==7) && index>=7732 && index<7748) {table=27;index-=7601;}
 #endif
-    if (table==25 && index>=RECRUITMENT_ROOM_TEXTURE_TOKEN && index<RECRUITMENT_ROOM_TEXTURE_TOKEN+RECRUITMENT_ROOM_TEXTURE_COUNT) {table=27;index+=RECRUITMENT_ROOM_TEXTURE_INDEX-RECRUITMENT_ROOM_TEXTURE_TOKEN;}
+    if (table==25 && index>=RECRUITMENT_ROOM_TEXTURE_TOKEN && index<RECRUITMENT_ROOM_TEXTURE_TOKEN+RECRUITMENT_ROOM_TEXTURE_COUNT) {table=27;index-=RECRUITMENT_ROOM_TEXTURE_TOKEN;index=(index<3 ? RECRUITMENT_ROOM_TEXTURE_INDEX+index : RECRUITMENT_ROOM_EXTRA_TEXTURE_INDEX+index-3);}
     s32 campaign=m5FileAlias(table,index);
     if (campaign>=0) {table=27;index=campaign;}
     if (table==5 && index==0xED) { table=27;index=69; }

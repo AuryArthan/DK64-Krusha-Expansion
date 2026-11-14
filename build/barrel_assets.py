@@ -235,7 +235,7 @@ def appendBarrelAssets(rom_path):
     assert len(payloads)==158
     from recruitment_room import payloads as room_payloads
     payloads += room_payloads(Path(rom_path).read_bytes())
-    assert len(payloads)==165
+    assert len(payloads)==170
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)
