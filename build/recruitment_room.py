@@ -13,6 +13,8 @@ MAP=216
 STONE_PALETTES=(0x5BD,0x5BF,0x5C1)
 # Four neutral floor/metal palettes and the large warm-stone wall palette.
 SECONDARY_PALETTES=(0x10,0x90D,0x262,0x251,0x514)
+METAL_PALETTES=(0x90D,0x262,0x251)
+METAL_BRIGHTNESS=.65
 PALETTES=STONE_PALETTES+SECONDARY_PALETTES
 TOKEN=7820
 INDEX=158
@@ -24,7 +26,7 @@ def palette(rom,ident,stone):
     for (v,) in struct.iter_unpack('>H',source):
         rgb=(v>>11&31,v>>6&31,v>>1&31)
         light=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]
-        if not stone:rgb=[round(light)]*3
+        if not stone:rgb=[round(light*(METAL_BRIGHTNESS if ident in METAL_PALETTES else 1))]*3
         elif max(rgb)-min(rgb)>3:rgb=[round(light*c) for c in STONE_TINT]
         out+=struct.pack('>H',rgb[0]<<11|rgb[1]<<6|rgb[2]<<1|v&1)
     return bytes(out)

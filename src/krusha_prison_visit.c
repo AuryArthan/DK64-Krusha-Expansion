@@ -16,6 +16,17 @@ volatile u32 krushaPrisonVisitTrace[10];
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static int tiny(void) {return valid(Player,0x178) && Character==3 && *(u32*)((u8*)Player+0x58)==5;}
 static int ready(void) {return ObjectModel2Timer>5 && valid(Player,0x178) && LZFadeoutProgress<=0 && !IsAutowalking;}
+/* Render-time entry can precede STAGED by the native fade duration. Only
+ * touch the currently loaded room's validated light arrays, never old-map
+ * pointers during loading. Camera and light changes do not advance staging. */
+static void roomLighting(void) {
+    s32 count=*(s32*)0x807F6C28;
+    if (count<=0 || count>255) return;
+    for (s32 i=0;i<3;i++)
+        if (!valid(*(void**)(0x8076A0B4+i*4),count*sizeof(f32))) return;
+    extern void krushaSetChunkLighting(f32,f32,f32,s16);
+    krushaSetChunkLighting(.65f,.65f,.65f,-1);
+}
 /* A manually restored persistent counter has no native barrel actor to end
  * its hold. Release ONLY our hold when Mini ends, through the native HUD
  * cleanup (including saved pause-group masks). Never retain a HUD pointer or
@@ -94,8 +105,7 @@ void krushaPrisonVisitTick(void) {
          * map loading owns/replaces these arrays on exit; retain no pointers.
          * Use the same native current-chunk API as the shout spotlight. */
         if (phase==STAGED && !(TBVoidByte&3)) {
-            extern void krushaSetChunkLighting(f32,f32,f32,s16);
-            krushaSetChunkLighting(.65f,.65f,.65f,-1);
+            roomLighting();
         }
         /* Native pause Exit Level also uses our landing, not Isles exit0. */
         if (LZFadeoutProgress>0 && phase!=ENTERING && DestMap==34) DestExit=RECRUITMENT_RETURN_EXIT;
@@ -147,7 +157,10 @@ void krushaPrisonVisitInput(void* raw) {
 extern void vanillaBuildCameraMatrices(void*);
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
-    if (phase!=STAGED || CurrentMap!=RECRUITMENT_ROOM_MAP || !tiny() || !valid(cc,0x284)) return 0;
+    if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
+        !DetectAdventure() || file!=*(u8*)0x807467C8 ||
+        !tiny() || !valid(cc,0x284)) return 0;
+    if (phase==ENTERING && !(TBVoidByte&3)) roomLighting();
     /* Temporary renderer-only view. Native collision/input camera state is
      * restored before returning; no persistent camera ownership or flags. */
     f32* eye=(f32*)(cc+0x210);f32* target=(f32*)(cc+0x228);
@@ -163,7 +176,7 @@ s32 krushaPrisonVisitCamera(void* display) {
     *(f32*)(cc+0x27C)=saved[6];return 1;
 }
 
-/* Render-only fivefold Mini appearance; native form/movement/upkeep and
+/* Render-only sixfold Mini appearance; native form/movement/upkeep and
  * collision remain untouched. Normalize the zero-budget normal form to the
  * same visible size during the owned scene. Never carry a model pointer. */
 f32 krushaPrisonVisualScale(void* actor) {
@@ -172,5 +185,5 @@ f32 krushaPrisonVisualScale(void* actor) {
     u8* data=*(u8**)((u8*)actor+0x174);
     if (!valid(data,0x1D0)) return 1;
     f32 scale=*(f32*)(data+0x1CC);
-    return scale>.045f && scale<.16f ? .25f/scale : 1;
+    return scale>.045f && scale<.16f ? .30f/scale : 1;
 }
