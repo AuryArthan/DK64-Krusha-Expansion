@@ -42,6 +42,8 @@ from recruitment_assets import prepare as prepareRecruitment, patch_setup as pat
 prepareRecruitment(ROMName)
 from recruitment_room import prepare as prepareRecruitmentRoom, files as recruitmentRoomFiles, patch_data as patchRecruitmentData
 prepareRecruitmentRoom(ROMName)
+from recruitment_barrel import prepare as prepareRecruitmentBarrel
+prepareRecruitmentBarrel()
 from krusha_victory import prepare as prepareVictory
 prepareVictory(ROMName)
 from m4_rewards import prepare as prepareM4, patch_japes as patchM4Japes, patch_cave as patchM4Cave, patch_setup as patchM4Setup

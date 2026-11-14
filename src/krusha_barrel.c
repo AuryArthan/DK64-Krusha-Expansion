@@ -1,9 +1,11 @@
 #include "../include/common.h"
 #include "../include/krusha_recruitment.h"
+#include "../include/krusha_progress.h"
 #include "../include/klump_colors.generated.h"
 #include "../include/m5_campaign.h"
 #include "../include/recruitment_assets.generated.h"
 #include "../include/recruitment_room.generated.h"
+#include "../include/recruitment_barrel.generated.h"
 
 /* Keep the native 0x40-byte barrel data layout. Its five actor pointers are
  * followed immediately by the spotlight pointer; the sixth actor lives here,
@@ -29,9 +31,16 @@ static const u32 music_masks[6] = {2, 0x48, 4, 0x20, 0x10, 0};
 static BarrelData* owner;
 static void* sixth;
 static s32 selecting_sixth;
+static s32 owner_map = -1;
+static u8 owner_file = 255;
 
-/* A narrow confirmation guard, before native deletion/mesh replacement.
- * R07 will add locked artwork; capacity/layout/rotation remain unchanged. */
+static int owns(BarrelData* data) {
+    return data == owner && CurrentMap == owner_map &&
+        krushaProgressActiveFile() == owner_file;
+}
+
+/* Deny before native deletion/mesh replacement, including a stale/unavailable
+ * unlocked display. The native locked actor also has its own denial path. */
 s32 krushaBarrelSelectionBusy(void) {
     s32 busy=((s32 (*)(void))0x8062919C)();
     if (busy) return busy;
@@ -63,6 +72,14 @@ extern void* vanillaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique);
 void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     s32 format = table;
     extern s32 mirrorEnabled(void);
+    if (table == 5 && index == RECRUITMENT_BARREL_MODEL_TOKEN - 1) {
+        table = 27;
+        index = mirrorEnabled() ? RECRUITMENT_BARREL_MIRROR : RECRUITMENT_BARREL_MODEL;
+    }
+    if (table == 25 && index == RECRUITMENT_BARREL_TEXTURE_TOKEN) {
+        table = 27;
+        index = RECRUITMENT_BARREL_TEXTURE;
+    }
     if (index==RECRUITMENT_ROOM_MAP) {
         if (table==1) {table=27;index=mirrorEnabled()?RECRUITMENT_ROOM_MIRROR:RECRUITMENT_ROOM_GEOMETRY;}
         else if (table==18) {table=27;index=RECRUITMENT_ROOM_ZONE;}
@@ -153,7 +170,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || (index>=123 && index<131))) {
+    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || index==RECRUITMENT_BARREL_MODEL || index==RECRUITMENT_BARREL_MIRROR || (index>=123 && index<131))) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */
@@ -185,7 +202,8 @@ static void pointer(u32 hi, u32 lo, const void* target) {
 }
 
 static void* actor(BarrelData* data, s32 index) {
-    if (index == 5) return data == owner ? sixth : 0;
+    if (index == 5) return owns(data) ? sixth : 0;
+    if (index < 0 || index >= 5) return 0;
     return data->actors[index];
 }
 
@@ -213,7 +231,7 @@ void krushaBarrelAnimation(void* model, void* data, s32 action) {
 }
 
 void krushaBarrelLayout(BarrelData* data) {
-    if (!krushaEnabled() || !DetectAdventure()) {
+    if (!krushaEnabled() || !DetectAdventure() || !owns(data) || !sixth) {
         vanillaBarrelLayout(data);
         return;
     }
@@ -239,23 +257,47 @@ void krushaBarrelLayout(BarrelData* data) {
 void krushaBarrelSpawn(BarrelData* data) {
     owner = data;
     sixth = 0;
+    owner_map = CurrentMap;
+    owner_file = krushaProgressActiveFile();
     vanillaBarrelSpawn(data);
     if (!krushaEnabled() || !DetectAdventure()) return;
-    if (!spawnActor(316, 0xDB)) return;
+    int available = krushaRecruitmentPlayable();
+    if (!spawnActor(available ? 316 : 317,
+                    available ? 0xDB : RECRUITMENT_BARREL_MODEL_TOKEN)) return;
     u8* model = *(u8**)0x807FBB44;
     sixth = model;
     *(s16*)(model + 0xE6) = *(s16*)(*(u8**)0x807FBB40 + 0xE6);
     *(u32*)(model + 0x60) |= 0x40000000;
     void* data_model = *(void**)(model + 0x174);
-    *(u16*)data_model = 7;
-    krushaInitCharacterMesh(model, 7);
-    krushaBarrelAnimation(model, data_model, data->selected == 5 ? 0x8B : 0x8A);
+    if (available) {
+        *(u16*)data_model = 7;
+        krushaInitCharacterMesh(model, 7);
+        krushaBarrelAnimation(model, data_model, data->selected == 5 ? 0x8B : 0x8A);
+    } else {
+        /* The native locked callback has a FIVE-entry palette table. Slot
+         * identity lives in our sixth pointer, not that palette byte. */
+        *(u8*)data_model = 0;
+    }
     krushaBarrelLayout(data);
 }
 
 void krushaBarrelControl(BarrelData* data) {
-    if (!krushaEnabled() || !DetectAdventure() || data != owner || !sixth) {
+    if (!krushaEnabled() || !DetectAdventure()) {
         vanillaBarrelControl(data);
+        return;
+    }
+    if (!owns(data) || !sixth) {
+        /* Allocation failure must not expose actors[5] (the spotlight) as
+         * a selectable Kong. Temporarily restore the two native five bounds. */
+        patch(0x806837D4, 0x240C0004);
+        patch(0x806837EC, 0x28410005);
+        if (data->selected < 0 || data->selected >= 5) {
+            data->selected = data->previous = 0;
+            data->timer = 0;
+        }
+        vanillaBarrelControl(data);
+        patch(0x806837D4, 0x240C0005);
+        patch(0x806837EC, 0x28410006);
         return;
     }
     /* Native control indexes actors[selected]. During this synchronous call,
@@ -264,11 +306,19 @@ void krushaBarrelControl(BarrelData* data) {
      * On exit native cleanup deletes the aliased sixth actor and the original
      * five; delete the real spotlight once here. No allocation layout changes. */
     void* spotlight = data->spotlight;
+    u8* barrel = *(u8**)0x807FBB40;
     data->spotlight = sixth;
     selecting_sixth=data->selected==5;
+    /* Vanilla automatically rotates past locked originals. The agreed sixth
+     * question mark must remain highlightable: suppress only that idle skip,
+     * keeping s0=locked so native confirmation still refuses it. Horizontal
+     * rotation and the original five retain native rules. */
+    int locked_sixth = selecting_sixth && *(u32*)((u8*)sixth + 0x58) == 317;
+    if (locked_sixth) patch(0x80683768, 0x10000032);
     vanillaBarrelControl(data);
+    if (locked_sixth) patch(0x80683768, 0x16000032);
     selecting_sixth=0;
-    if ((*(u8**)0x807FBB40)[0x154] == 1) {
+    if (barrel[0x154] == 1) {
         data->spotlight = spotlight;
     } else {
         krushaNativeActorDelete(spotlight);
@@ -279,7 +329,11 @@ void krushaBarrelControl(BarrelData* data) {
 }
 
 char* krushaBarrelName(BarrelData* data, s32 index) {
-    if (index == 5 && data == owner && sixth) return "KRUSHA";
+    if (index == 5) {
+        if (!owns(data) || !sixth) return 0;
+        return *(u32*)((u8*)sixth + 0x58) == 316 ? "KRUSHA" : "???";
+    }
+    if (index < 0 || index >= 5) return 0;
     return vanillaBarrelName(data, index);
 }
 
@@ -300,6 +354,11 @@ void krushaBarrelInstall(void) {
 void krushaBarrelOption(void) {
     static s32 previous = -1;
     s32 count = krushaEnabled() && DetectAdventure() ? 6 : 5;
+    if (CurrentMap != owner_map || krushaProgressActiveFile() != owner_file) {
+        owner = 0;
+        sixth = 0;
+        selecting_sixth = 0;
+    }
     if (count == previous) return;
     patch(0x806837D4, 0x240C0000 | (count - 1));
     patch(0x806837EC, 0x28410000 | count);
