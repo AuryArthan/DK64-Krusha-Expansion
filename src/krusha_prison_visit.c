@@ -7,28 +7,28 @@
  * return; native transformation owns Mini's flags, matrix and interpolation. */
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
-static u8 skip;
+static u8 skip,restore_mini;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
  * staged crystals, return crystals, staged frames, last native frame. */
 volatile u32 krushaPrisonVisitTrace[10];
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static int tiny(void) {return valid(Player,0x178) && Character==3 && *(u32*)((u8*)Player+0x58)==5;}
-static int ready(void) {return ObjectModel2Timer>5 && tiny() && LZFadeoutProgress<=0 && !IsAutowalking;}
+static int ready(void) {return ObjectModel2Timer>5 && valid(Player,0x178) && LZFadeoutProgress<=0 && !IsAutowalking;}
 static void transform(void) {
     u8* cc=*(u8**)0x807FC924;
-    if (tiny() && valid(cc,0x2C4) && CollectableBase.Crystals>0 && cc[0x2C0]!=0)
+    if (restore_mini && tiny() && valid(cc,0x2C4) && CollectableBase.Crystals>0 && cc[0x2C0]!=0)
         ((void (*)(void*,u8))0x806D0468)(Player,0);
 }
 static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
     else krushaPrisonVisitTrace[3]++;
-    phase=OUTSIDE;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
+    phase=OUTSIDE;restore_mini=0;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=OUTSIDE;
 }
 s32 krushaPrisonVisitBusy(void) {return phase!=OUTSIDE;}
 s32 krushaPrisonVisitBegin(void) {
     if (phase || cooldown || !DetectAdventure() || CurrentMap!=34 || !tiny() || *(u8*)0x807467C8>2) return 0;
-    phase=ENTERING;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
+    phase=ENTERING;restore_mini=1;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
     initiateTransition(RECRUITMENT_ROOM_MAP,0);
@@ -37,16 +37,17 @@ s32 krushaPrisonVisitBegin(void) {
 void krushaPrisonVisitTick(void) {
     u32 frame=*(u32*)0x8076A064;
     krushaPrisonVisitTrace[9]=frame;
-    if (!DetectAdventure() || !krushaEnabled() || (phase && file!=*(u8*)0x807467C8)) {
+    if (!DetectAdventure() || (phase && file!=*(u8*)0x807467C8)) {
         if (phase) end(0);
         return;
     }
+    if (!krushaEnabled() && phase && phase!=RETURNING) end(0);
     if (!phase) {
         if (cooldown && !(TBVoidByte&3)) cooldown--;
         /* An orphaned map load (e.g. interrupted state) has no story or
          * freeroam contract. Eject through the same authored safe exit. */
         if (CurrentMap==RECRUITMENT_ROOM_MAP && ObjectModel2Timer>5 && LZFadeoutProgress<=0) {
-            file=*(u8*)0x807467C8;phase=RETURNING;
+            file=*(u8*)0x807467C8;phase=RETURNING;restore_mini=0;travel_ticks=0;
             initiateTransition(34,RECRUITMENT_RETURN_EXIT);
         }
         return;
@@ -55,8 +56,8 @@ void krushaPrisonVisitTick(void) {
     if (phase!=STAGED && !(TBVoidByte&3) && LZFadeoutProgress<=0 && ++travel_ticks>300) {end(0);return;}
     if (CurrentMap!=34 && CurrentMap!=RECRUITMENT_ROOM_MAP) {end(0);return;}
     if (CurrentMap==RECRUITMENT_ROOM_MAP) {
-        if (!tiny() && ObjectModel2Timer>10) {phase=RETURNING;travel_ticks=0;initiateTransition(34,RECRUITMENT_RETURN_EXIT);}
-        if (phase==ENTERING && ready()) {
+        if (!tiny() && ObjectModel2Timer>10 && phase!=RETURNING) {phase=RETURNING;travel_ticks=0;initiateTransition(34,RECRUITMENT_RETURN_EXIT);}
+        if (phase==ENTERING && ready() && tiny()) {
             transform();phase=STAGED;ticks=travel_ticks=0;
             krushaPrisonVisitTrace[6]=CollectableBase.Crystals;
         }
