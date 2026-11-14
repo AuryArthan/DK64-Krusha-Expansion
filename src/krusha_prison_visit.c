@@ -8,19 +8,43 @@
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
 static u8 skip,restore_mini,door_return;
+static u8 exterior_hud_owned;
+static u32 exterior_hud_started;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
  * staged crystals, return crystals, staged frames, last native frame. */
 volatile u32 krushaPrisonVisitTrace[10];
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static int tiny(void) {return valid(Player,0x178) && Character==3 && *(u32*)((u8*)Player+0x58)==5;}
 static int ready(void) {return ObjectModel2Timer>5 && valid(Player,0x178) && LZFadeoutProgress<=0 && !IsAutowalking;}
+/* A manually restored persistent counter has no native barrel actor to end
+ * its hold. Release ONLY our hold when Mini ends, through the native HUD
+ * cleanup (including saved pause-group masks). Never retain a HUD pointer or
+ * clear a counter belonging to a newly loaded map/file. */
+static void exteriorHudTick(void) {
+    u8* cc=*(u8**)0x807FC924;
+    if (!exterior_hud_owned) return;
+    if (!DetectAdventure() || CurrentMap!=34 || file!=*(u8*)0x807467C8 ||
+        ObjectModel2Timer<exterior_hud_started) {exterior_hud_owned=0;return;}
+    if (tiny() && valid(cc,0x2C4)) {
+        u8* data=*(u8**)((u8*)Player+0x174);
+        if (cc[0x2C0]==0 && CollectableBase.Crystals>0) return;
+        /* Keep native tag restrictions through the growth interpolation. */
+        if (valid(data,0x1D0) && *(f32*)(data+0x1CC)<.149f) return;
+    }
+    if (valid(HUD,6*sizeof(HUDDisplay)))
+        ((void (*)(s32,s32))0x806F8D58)(5,0);
+    exterior_hud_owned=0;
+}
 static void transform(void) {
     u8* cc=*(u8**)0x807FC924;
     if (restore_mini && tiny() && valid(cc,0x2C4) && CollectableBase.Crystals>0 && cc[0x2C0]!=0)
         ((void (*)(void*,u8))0x806D0468)(Player,0);
     if (restore_mini && tiny() && valid(cc,0x2C4) && cc[0x2C0]==0 &&
-        CurrentMap==34 && CollectableBase.Crystals>0)
-        ((void (*)(s32,u8,s32))0x806F8BC4)(5,1,0); /* native persistent Mini HUD */
+        CurrentMap==34 && CollectableBase.Crystals>0 &&
+        valid(HUD,6*sizeof(HUDDisplay)) && !HUD[5].freeze_timer) {
+        ((void (*)(s32,u8,s32))0x806F8BC4)(5,1,0);
+        exterior_hud_owned=1;exterior_hud_started=ObjectModel2Timer;
+    }
 }
 static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
@@ -39,6 +63,7 @@ s32 krushaPrisonVisitBegin(void) {
 }
 void krushaPrisonVisitTick(void) {
     u32 frame=*(u32*)0x8076A064;
+    exteriorHudTick();
     krushaPrisonVisitTrace[9]=frame;
     if (!DetectAdventure() || (phase && file!=*(u8*)0x807467C8)) {
         if (phase) end(0);
