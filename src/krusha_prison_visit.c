@@ -68,7 +68,12 @@ void krushaPrisonVisitTick(void) {
                 phase=RETURNING;travel_ticks=0;initiateTransition(34,RECRUITMENT_RETURN_EXIT);
             }
         }
-    } else if (phase==RETURNING && ready()) {transform();end(1);}
+    } else {
+        /* A native door can interrupt the stage without using our timer's
+         * transition helper. It still owns the same return/cleanup contract. */
+        if (phase==STAGED) {phase=RETURNING;travel_ticks=0;}
+        if (phase==RETURNING && ready()) {transform();end(1);}
+    }
     krushaPrisonVisitTrace[0]=phase;
 }
 
