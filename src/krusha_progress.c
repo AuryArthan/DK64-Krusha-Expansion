@@ -14,7 +14,12 @@ const char krushaSaveFormatSignature[] = KRUSHA_SAVE_SIGNATURE;
  * only the writer's LOCAL comparison snapshot if the device has moved on.
  * Never replace live progress, packed working RAM, or the native shadow here.
  * Footer reads are cheap in the normal case; a mismatch causes one full read.
- * Keep the native SI arbitration, 15 ms pacing, CRCs and incremental writes.
+ * Like the bundled SDK osEepromLongRead, consecutive READS need no write-cycle
+ * timer: osEepromRead polls EEPROM readiness and waits for both SI DMAs. The
+ * former 256 artificial15ms waits starved controller polling for seconds after
+ * a state restore. Keep the whole comparison under native SI ownership; all
+ * actual native WRITES still retain their existing15ms write pacing.
+ * Keep native SI arbitration, write pacing, CRCs and incremental writes.
  */
 u32 krushaSaveSyncTrace[4] = {0x4B535931, 0, 0, 0}; /* calls, rebases, read errors */
 static u8 save_device_snapshot[2048] = {1};
@@ -39,7 +44,6 @@ void* krushaSaveCompareSnapshot(void* dest, void* src, int size) {
     for (i = 0; i < 5 && !error; i++) {
         offset = (i < 4 ? (i + 1) * bytes - 4 : bytes * 4 + 60) & ~7;
         error = osEepromRead(queue, offset >> 3, footer);
-        delay(15.0f);
         if (error) break;
         for (byte = 0; byte < 8; byte++)
             if (footer[byte] != ((u8*)dest)[offset + byte]) mismatch = 1;
@@ -48,7 +52,6 @@ void* krushaSaveCompareSnapshot(void* dest, void* src, int size) {
     if (mismatch && !error) {
         for (i = 0; i < 256 && !error; i++) {
             error = osEepromRead(queue, i, &save_device_snapshot[i * 8]);
-            delay(15.0f);
             if (*(volatile u8*)0x80744460) error = -1;
         }
         if (!error) {

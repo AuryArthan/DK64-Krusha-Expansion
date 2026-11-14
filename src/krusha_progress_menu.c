@@ -1,5 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/krusha_recruitment.h"
+#include "../include/krusha_identity.h"
 
 extern void vanillaFileSummaryInit(void* actor, s32 input);
 extern Gfx* vanillaFileSummaryDraw(void* actor, Gfx* dl);
@@ -28,6 +30,8 @@ const void* krushaProgressFace(void) { return &krusha_face; }
 /* Native scale slot5 overlaps erase-confirmation state at80033FAC. Keep all
  * three sixth-face values resident; native arrays remain strictly five-wide. */
 f32 krushaFilePortraitTransform[3] = {-200.0f, -200.0f, 1.0f};
+s32 krushaFilePortraitUnlocked;
+u8 krushaFilePortraitShade = KRUSHA_IDENTITY_GRAY;
 
 s32 krushaCompletionPercentage(void) {
     /* Native weights, truncation and the 201-GB/exact-100 special cases stay
@@ -44,12 +48,16 @@ void krushaFileSummaryInit(void* actor, s32 input) {
     u8* data = *(u8**)((u8*)actor + 0x174);
     vanillaFileSummaryInit(actor, input);
     /* Native init loads the selected file, including our sixth RAM record. */
+    krushaFilePortraitUnlocked = krushaAvailable(krushaProgressActiveFile());
+    krushaFilePortraitShade = krushaFilePortraitUnlocked ? 255 : KRUSHA_IDENTITY_GRAY;
     for (level = 0; level < 8; level++) total += MovesBase[5].gb_count[level];
     *(s32*)0x8003380C += total; /* Earned totals remain credited when OFF. */
     if (krushaEnabled()) {
         /* Do not grow native position/scale or unlock/color arrays. The
          * sixth sprite callback reads its separate resident transform. */
-        krushaMenuAddSprite(data, &krusha_face, 5, 5, 0.8f, 2, 15);
+        const void* face = krushaFilePortraitUnlocked ?
+            (const void*)&krusha_face : (const void*)0x807211D0;
+        krushaMenuAddSprite(data, face, 5, 5, 0.8f, 2, 15);
     }
 }
 
@@ -61,10 +69,10 @@ Gfx* krushaFileSummaryDraw(void* actor, Gfx* dl) {
             f32 x, y, scale = 2.5f;
             krushaMenuTransform(data, 48.0f + 45.0f * i, 85.0f,
                                &x, &y, 4, 0, 1.5f);
-            /* Krusha remains available during the interim foundation build,
-             * before the rescue quest exists. Native lock presentation stays
-             * intact for the five original Kongs. */
-            if (i == 5 || *(u8*)(0x80033804 + i)) scale *= 0.85f;
+            /* The selected-file snapshot comes from native init, never a
+             * stale Adventure actor or a prospective Speed grant. */
+            if (i == 5 ? krushaFilePortraitUnlocked :
+                *(u8*)(0x80033804 + i)) scale *= 0.85f;
             if (i == 5) {
                 krushaFilePortraitTransform[0] = x * 4.0f - 32.0f;
                 krushaFilePortraitTransform[1] = y * 4.0f - 100.0f;

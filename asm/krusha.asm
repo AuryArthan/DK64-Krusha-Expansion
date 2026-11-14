@@ -356,6 +356,11 @@ krushaFilePortraitLayout:
     LUI t2, 0xC348
     SW t2, 0(at)
     SW t2, 4(at)
+    LUI at, hi(krushaFilePortraitShade)
+    LBU t2, lo(krushaFilePortraitShade)(at)
+    SB t2, 0x36A(s0)
+    SB t2, 0x36B(s0)
+    SB t2, 0x36C(s0)
     J 0x80031510
     NOP
 @@native:

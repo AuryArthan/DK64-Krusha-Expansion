@@ -1,5 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/krusha_recruitment.h"
+#include "../include/krusha_identity.h"
 
 extern void vanillaPauseBuild(void*, u8);
 extern void vanillaPauseSprite(void*, u8*);
@@ -92,8 +94,7 @@ static void refresh(void) {
         krushaPauseUnlocked[i] = ((u8*)0x80750530)[i];
     }
     krushaPauseFaces[5] = krushaProgressFace();
-    /* Normal ON availability is deliberately retained until rescue gameplay. */
-    krushaPauseUnlocked[5] = 1;
+    krushaPauseUnlocked[5] = krushaAvailable(file());
     for (int i = 0; i < 6; i++)
         krushaPauseAngles[i] = count == 6 ? 682 * i : (i < 5 ? ((s16*)0x807505A4)[i] : 0);
 }
@@ -101,6 +102,12 @@ static void refresh(void) {
 void krushaPauseBuild(void* data, u8 update) {
     refresh();
     pause_data = data;
+    /* A remembered sixth selection from another file/earlier page must not
+     * expose locked personal stats. Native input already skips locked slots. */
+    if (pause_data[0x14] == 5 && !krushaPauseUnlocked[5]) {
+        pause_data[0x14] = 0;
+        *(s16*)(pause_data + 0x10) = 0;
+    }
     vanillaPauseBuild(data, update);
 }
 
@@ -117,8 +124,10 @@ void krushaPauseSprite(void* node, u8* deleted) {
             *(f32*)(n + 0x360) = scale;
             *(f32*)(n + 0x364) = scale;
             krushaPauseX[index] = krushaPauseY[index] = -200.0f;
-            if (character == 5 || krushaPauseUnlocked[character]) {
+            if (krushaPauseUnlocked[character]) {
                 n[0x36A] = n[0x36B] = n[0x36C] = 255;
+            } else if (character == 5) {
+                n[0x36A] = n[0x36B] = n[0x36C] = KRUSHA_IDENTITY_GRAY;
             } else {
                 const u8* color = (const u8*)(0x8075054C + character * 4);
                 for (int i = 0; i < 3; i++) n[0x36A+i] = color[i];
@@ -162,7 +171,7 @@ void krushaPauseOption(void) {
 Gfx* krushaPauseNameText(Gfx* dl, s16 x, s16 y, f32 scale, char* text) {
     Gfx* (*native)(Gfx*,s16,s16,f32,char*) = (void*)0x806ABB98;
     if (pause_data && pause_data[0x12] == 1 && pause_data[0x14] == 5)
-        text = "KRUSHA";
+        text = krushaAvailable(file()) ? "KRUSHA" : "???";
     return native(dl,x,y,scale,text);
 }
 
