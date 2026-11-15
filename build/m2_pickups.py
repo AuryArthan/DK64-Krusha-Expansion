@@ -88,10 +88,11 @@ def prepare(rom_path):
     struct.pack_into('>H',gold,0,9);struct.pack_into('>hh',gold,12,7,0);defs+=gold
     # Private rescue key: native collision/suction metadata, no owner/inventory
     # changes or boss actor conversion. Native actor loop still stops at42.
-    from recruitment_keys import MODEL_TYPE
-    key=bytearray(native[25*20:26*20]);struct.pack_into('>H',key,0,MODEL_TYPE)
-    struct.pack_into('>H',key,14,0) # no boss-key actor alias, even beyond the native actor bound
-    defs+=key
+    from recruitment_keys import MODEL_TYPES
+    for typ in MODEL_TYPES:
+        key=bytearray(native[25*20:26*20]);struct.pack_into('>H',key,0,typ)
+        struct.pack_into('>H',key,14,0) # no native boss actor alias
+        defs+=key
     words=struct.unpack('>%dI'%(len(defs)//4),defs)
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
     header+='const u32 m2CollectDefs[%d] = {\n'%len(words)+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
@@ -181,6 +182,8 @@ def patch_code(fh,symbols):
     # Only the setup constructor's existing ownership classifier call. Native
     #3D rendering and suction use its original per-prop ownership flags.
     patch(0x806322BC,0x0C18CB9D,0x0C000000|(int(symbols['krusharecruitmentkeyowner'],16)&0xFFFFFFF)>>2)
+    patch(0x80637AC0,0x0C197402,0x0C000000|(int(symbols['krusharecruitmentkeyalphacall'],16)&0xFFFFFFF)>>2)
+    assert word(0x80637AC4)==0x00003025 # preserve native a2=0 delay slot
     # Native2D model2 ownership-opacity call; original routine remains callable.
     patch(0x806380B0,0x0C18E4AF,0x0C000000|(int(symbols['m2pickupopacity'],16)&0xFFFFFFF)>>2)
     target=int(symbols['m2collectdefs'],16)
@@ -189,7 +192,7 @@ def patch_code(fh,symbols):
         assert hi>>26==15 and ((hi&65535)<<16)+signed==0x80753EF0+offset,(hex(h),hex(lo))
         # The actor loop retains its native 42-row bound via its relocated end.
         ptr=target+offset;patch(h,hi,hi&0xFFFF0000|((ptr+32768)>>16&65535));patch(l,lo,lo&0xFFFF0000|ptr&65535)
-    patch(0x806F4A8C,0x2401002A,0x24010030)
+    patch(0x806F4A8C,0x2401002A,0x24010034)
     # The existing tag-anywhere build already allocates530 model2 slots/map.
     patch(0x80632188,0x0C1CC575,0x0C000000|(int(symbols['m2setuphidden'],16)&0xFFFFFFF)>>2)
 

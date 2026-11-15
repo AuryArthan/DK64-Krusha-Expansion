@@ -510,3 +510,10 @@ m2NativeActorCollision:
     SW ra, 0x2C(sp)
     J 0x80675818
     NOP
+
+; Native world-model2 caller retains its current model in s0. Its original
+; a0/a1/a2 and return address stay intact; only provide the fourth argument.
+krushaRecruitmentKeyAlphaCall:
+    MOVE a3, s0
+    J krushaRecruitmentKeyAlpha
+    NOP

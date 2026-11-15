@@ -32,5 +32,7 @@ int krushaRecruitmentKeyHidden(int map,int object_id);
 int krushaRecruitmentKeyContact(short runtime_id,unsigned char player,unsigned short type);
 void krushaRecruitmentKeyOwner(short map,short object_id,unsigned char* flags);
 int krushaRecruitmentKeyEffect(short type);
+int krushaRecruitmentKeyModel(int type,int mirror);
+int krushaRecruitmentKeyPresent(void* prop);
 
 #endif

@@ -49,6 +49,7 @@ static void presentation(void) {
     void (*setLayer)(s32)=(void*)0x80714A28;
     void (*sprite)(void*,f32,f32,f32,f32)=(void*)0x80714CC0;
     for (int i=0;i<ObjectModel2Count_Dupe;i++) {
+        if (krushaRecruitmentKeyPresent(&objects[i])) continue;
         if (objects[i].object_type!=9 || objects[i].unk_86!=1) continue;
         u8* model=*(u8**)((u8*)&objects[i]+0x20);
         if (!model) continue;

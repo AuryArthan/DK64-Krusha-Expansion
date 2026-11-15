@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "milestone": "R10",
+  "placement_status": "provisional; no reviewed key export supplied",
+  "source": "recruitment-keys-v1 proposals, R09 safe DK pilot and collision/route audit",
+  "keys": [
+    {
+      "id": "RK-DK",
+      "map": 34,
+      "object_id": 401,
+      "type": 60,
+      "owner": 0,
+      "xyz": [
+        2940.0,
+        509.848225,
+        2220.0
+      ],
+      "scale": 0.04,
+      "notes": "R09 central clearing, base raised to collision floor505.848+4.",
+      "status": "provisional"
+    },
+    {
+      "id": "RK-DIDDY",
+      "map": 34,
+      "object_id": 402,
+      "type": 62,
+      "owner": 1,
+      "xyz": [
+        1800.0,
+        2100,
+        850.0
+      ],
+      "scale": 0.04,
+      "notes": "Provisional open-air pickup west of the original Fungi-side Rocketbarrel. Native flight ceiling measured near2200; key is100 below it. Nearby600-unit box has no walkable surface above1622.5 (477.5 below key), so ordinary Diddy jumps cannot reach it. No scripted flight-only predicate; final placement review pending.",
+      "status": "provisional"
+    },
+    {
+      "id": "RK-LANKY",
+      "map": 34,
+      "object_id": 403,
+      "type": 63,
+      "owner": 2,
+      "xyz": [
+        2200.0,
+        518.565847,
+        3100.0
+      ],
+      "scale": 0.04,
+      "notes": "Mechanical-island shore, exposed slope514.566+4; ordinary swim/walk/jump access, inspect in native gameplay.",
+      "status": "provisional"
+    },
+    {
+      "id": "RK-TINY",
+      "map": 34,
+      "object_id": 404,
+      "type": 64,
+      "owner": 3,
+      "xyz": [
+        1100.0,
+        503.377998,
+        2550.0
+      ],
+      "scale": 0.04,
+      "notes": "Fairy Island outside shore, ground499.378+4, clear of fairy entrance and Mini barrel; ordinary movement only.",
+      "status": "provisional"
+    },
+    {
+      "id": "RK-CHUNKY",
+      "map": 34,
+      "object_id": 405,
+      "type": 65,
+      "owner": 4,
+      "xyz": [
+        3400.0,
+        504.0,
+        3100.0
+      ],
+      "scale": 0.04,
+      "notes": "Original prison-island approach500+4; clear of original entrance and miniature prison, no giant form required.",
+      "status": "provisional"
+    }
+  ]
+}
