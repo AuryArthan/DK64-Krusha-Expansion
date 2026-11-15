@@ -154,7 +154,7 @@ void krushaPrisonVisitInput(void* raw) {
 
 extern void vanillaBuildCameraMatrices(void*);
 /* Owned scene framing only: eye XYZ, target XYZ, vertical FOV. */
-f32 krushaPrisonCameraFraming[7]={900,900,-1200,900,350,1700,82};
+f32 krushaPrisonCameraFraming[7]={2200,800,300,900,450,1700,90};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
     if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
@@ -176,7 +176,7 @@ s32 krushaPrisonVisitCamera(void* display) {
     *(f32*)(cc+0x27C)=saved[6];*(f32*)(cc+0x288)=saved[7];return 1;
 }
 
-/* Render-only36-fold Mini appearance; native form/movement/upkeep and
+/* Render-only43.2-fold Mini appearance; native form/movement/upkeep and
  * collision remain untouched. Normalize the zero-budget normal form to the
  * same visible size during the owned scene. Never carry a model pointer. */
 f32 krushaPrisonVisualScale(void* actor) {
@@ -185,5 +185,5 @@ f32 krushaPrisonVisualScale(void* actor) {
     u8* data=*(u8**)((u8*)actor+0x174);
     if (!valid(data,0x1D0)) return 1;
     f32 scale=*(f32*)(data+0x1CC);
-    return scale>.045f && scale<.16f ? 1.8f/scale : 1;
+    return scale>.045f && scale<.16f ? 2.16f/scale : 1;
 }

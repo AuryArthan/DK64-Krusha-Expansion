@@ -59,8 +59,11 @@ def geometry(rom):
         # only its private scenery around the flat floor/cage center so the
         # fivefold cage fits behind the camera. Native collision stays exact.
         x,y,z=struct.unpack_from('>3h',g,p)
-        # Render floor50 at95, matching Tiny's unchanged native staging floor.
-        struct.pack_into('>3h',g,p,3*x-2*2700,3*y-2*150+135,3*z-2*3000)
+        # Render floor50 at95; translate this private visual room700 units
+        # in Z and300 units in-X to center its circular shell at900/1700.
+        # The private base step is flattened to floor95 beneath the staged
+        # displays and Tiny; colors, UVs and native collision remain exact.
+        struct.pack_into('>3h',g,p,3*x-2*2700-900,3*(150 if y<=285 else y)-2*150+135,3*z-2*3000+2100)
     return bytes(g)
 
 def return_exit(rom):
@@ -79,8 +82,8 @@ def prepare(rom_path):
     for ident in range(TOKEN,TOKEN+len(PALETTES)):assert not read_file(rom,25,ident)
     ASSETS.mkdir(parents=True,exist_ok=True)
     exits,outside=return_exit(rom);assert outside==13
-    # Stage Tiny outside the fivefold cage on an existing native floor95.
-    files={(23,34):exits,(23,MAP):struct.pack('>3h4B',1450,105,600,217,1,0,0)}
+    # Stage Mini Tiny on existing native floor95, clear of the larger cage.
+    files={(23,34):exits,(23,MAP):struct.pack('>3h4B',300,105,530,217,1,0,0)}
     for (table,mid),data in files.items():(ASSETS/f'{table}-{mid}.bin').write_bytes(data)
     h=ROOT/'include/recruitment_room.generated.h'
     h.write_text('/* Generated isolated recruitment room identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in dict(RECRUITMENT_ROOM_MAP=MAP,RECRUITMENT_ROOM_SOURCE=97,RECRUITMENT_ROOM_GEOMETRY=161,RECRUITMENT_ROOM_MIRROR=162,RECRUITMENT_ROOM_ZONE=163,RECRUITMENT_ROOM_TEXTURE_TOKEN=TOKEN,RECRUITMENT_ROOM_TEXTURE_INDEX=INDEX,RECRUITMENT_ROOM_EXTRA_TEXTURE_INDEX=165,RECRUITMENT_ROOM_TEXTURE_COUNT=len(PALETTES),RECRUITMENT_RETURN_EXIT=outside,RECRUITMENT_STAGE_TICKS=180).items()))

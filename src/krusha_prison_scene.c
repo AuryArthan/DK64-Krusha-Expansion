@@ -45,7 +45,7 @@ static void update(void) {
         /* Barrel displays request their own lighting path. In this world
          * scene use native room lighting, preserving Krusha's blue skin. */
         *(u32*)(a+0x60)&=~0x1000;
-        *(s16*)(a+0xE6)=2048;return;
+        *(s16*)(a+0xE6)=1536;return;
     }
     ((void(*)(void*,s32))0x806319C4)(a,0);
 }
@@ -83,17 +83,19 @@ void krushaPrisonSceneReset(void) {
 static void construct(void) {
     if (built) return;
     built=1;
-    /* Move the enlarged cage deeper into the staged room so Mini Tiny
-     * remains outside on her existing native floor. Captive stands120 units
-     * behind its center, clear of the front bars during his waiting pose. */
-    if (!empty && !spawn(0,316,0xDB,900,95,1820,7.65f,2048)) finished=1;
-    if (!spawn(1,115,0xC4,900,95,1700,3.23f,0)) finished=1;
+    /* The private room is centered on this cage; Mini Tiny remains
+     * outside on an existing native floor. Captive stands132 units
+     * behind its center along the diagonal view, clear of the front bars. */
+    if (!empty && !spawn(0,316,0xDB,806.662f,95,1793.338f,8.415f,1536)) finished=1;
+    if (!spawn(1,115,0xC4,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
-    /* Camera-facing hanging locks, nearly touching. Missing saved locks
-     * leave their own gap rather than changing another owner's placement. */
+    /* Five doubled locks follow the front-right straight horizontal bar.
+     * Its upper/lower edges are nativeY280/245. Shackle tops overlap the
+     * lower edge; body faces stay beneath it. Fixed saved-owner slots. */
     for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
-        !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,1060-i*80,673,
-            1700-dk_sqrt(1114.0f*1114.0f-(160.0f-i*80)*(160.0f-i*80)),.24f,2048)) finished=1;
+        !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,
+            1745.477f+(2-i)*127.2792f,790.0f,
+            854.523f+(2-i)*127.2792f,.48f,1536)) finished=1;
     krushaPrisonSceneTrace[8]=ObjectModel2Timer;
 }
 void krushaPrisonScenePrepare(unsigned int f) {
@@ -116,16 +118,16 @@ void krushaPrisonSceneBegin(unsigned int f) {
     if (!context() || begun) return;
     begun=1;age=text_clock=held_buttons=0;last_timer=ObjectModel2Timer;
     if (valid(Player,0xF0)) {
-        *(u16*)((u8*)Player+0xE6)=3484;*(u16*)((u8*)Player+0xEE)=3484;
+        *(u16*)((u8*)Player+0xE6)=249;*(u16*)((u8*)Player+0xEE)=249;
     }
     krushaPrisonSceneTrace[9]=ObjectModel2Timer;
 }
 static const char* first[6][4]={
     {"KRUSHA", "WE CAUGHT SOME MONKEYS. I WAS HUNGRY...", "SO I DEALT WITH THE WHOLE BUNCH MYSELF.",0},
     {"TINY", "YOU FREED THEM? AND THE OTHER", "KREMLINGS PUNISHED YOU?",0},
-    {"KRUSHA", "ER... YES! FREED THEM. THEY WERE", "FURIOUS I HADN'T SHARED.",0},
+    {"KRUSHA", "ER... YES, YES, FREED THEM...", "THEY WERE FURIOUS I HADN'T SHARED.",0},
     {"TINY", "SHARED THE CREDIT?",0,0},
-    {"KRUSHA", "EXACTLY! FIND THE FIVE COLORED KEYS,", "GET ME OUT, AND I'M ON YOUR SIDE.",0},
+    {"KRUSHA", "ER... YES, YES, WHATEVER... ANYWAY,", "FIND THE FIVE COLORED KEYS, GET ME OUT,", "AND I'M ON YOUR SIDE."},
     {"TINY", "ONE KEY FOR EACH OF US.", "WE'LL BRING THEM HERE.",0}
 };
 static const char* again[4]={"KRUSHA","STILL LOCKED UP. STILL HUNGRY.","KEEP LOOKING!",0};
