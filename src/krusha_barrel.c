@@ -315,12 +315,18 @@ void krushaBarrelControl(BarrelData* data) {
      * rotation and the original five retain native rules. */
     int locked_sixth = selecting_sixth && *(u32*)((u8*)sixth + 0x58) == 317;
     if (locked_sixth) {
-        patch(0x80683768, 0x10000032);
+        /* Native control increments +3C before its 9001-tick timeout. Let
+         * that timeout skip the lock and leave through an available original;
+         * forcing idle retention afterward would trap all carousel input. */
+        patch(0x80683768, *(u32*)((u8*)data + 0x3C) < 9000 ?
+              0x10000032 : 0x16000032);
         /* Locked originals keep their previous travel direction while they
          * auto-skip. A retained sixth must read the current stick instead.
          * Let native control update direction at its normal timer/input gate;
          * changing it before that gate would distort an in-flight rotation. */
-        patch(0x806837A0, 0);
+        /* With no horizontal input, automatic timeout travel retains the
+         * native previous direction. Only a real new stick turn overrides it. */
+        patch(0x806837A0, *(u8*)0x807FD640 >= 41 ? 0 : 0x1200000B);
     }
     vanillaBarrelControl(data);
     if (locked_sixth) {
