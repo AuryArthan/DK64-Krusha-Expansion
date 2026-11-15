@@ -11,6 +11,10 @@ COUNT=212
 
 def prepare(path):
  r=Path(path).read_bytes()
+ from recruitment_barrel import MODEL_TOKEN as previous_model_token
+ assert MODEL_TOKEN==previous_model_token+1
+ assert MODEL_TOKEN-1>=struct.unpack_from('>I',r,0x101C50+(32+5)*4)[0]
+ assert TEXTURE==MODEL+10 and COUNT==TEXTURE+10
  for i in range(TEXTURE_TOKEN,TEXTURE_TOKEN+10):assert not read_file(r,25,i)
  (ROOT/'include/recruitment_scene.generated.h').write_text('/* Generated R11 private display resources. */\n'+''.join(f'#define {k} {v}\n'for k,v in dict(RECRUITMENT_LOCK_MODEL=MODEL,RECRUITMENT_LOCK_TEXTURE=TEXTURE,RECRUITMENT_LOCK_MODEL_TOKEN=MODEL_TOKEN,RECRUITMENT_LOCK_TEXTURE_TOKEN=TEXTURE_TOKEN,RECRUITMENT_SCENE_ASSET_COUNT=COUNT).items()))
 
