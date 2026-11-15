@@ -73,7 +73,10 @@ def return_exit(rom):
     yaw=math.atan2(DOOR_NORMAL[0],DOOR_NORMAL[1])%(2*math.pi)
     angle=round(yaw*255/(2*math.pi))%256
     # Native exit.angle is the FIRST byte at+6, not a4096-unit ushort.
-    record=struct.pack('>3h4B',round(x),round(POSITION[1]),round(z),angle,1,0,0)
+    # The safe landing is already outside the entry capsule. A forced
+    # native walk-in overrides the Mini camera, then snaps to its normal
+    # follow view during the opening fade. Spawn directly at the landing.
+    record=struct.pack('>3h4B',round(x),round(POSITION[1]),round(z),angle,0,0,0)
     return original+record,len(original)//10
 
 def prepare(rom_path):
