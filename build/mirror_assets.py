@@ -47,7 +47,7 @@ def appendMirrorAssets(path):
         # Preserve all1283 historical mirror slots. R01's normal/mirrored
         # static models live directly in table27 at147/148; preview images
         # retain their reserved131..146 interval in either build preset.
-        assert n==(192 if table==27 else expected),(table,n)
+        assert n==(212 if table==27 else expected),(table,n)
         for index in range(expected):
             kind=table if table!=27 else 5 if index in PRIVATE_ACTORS else 4 if index in PRIVATE_MODELS else 0
             source=read_file(original,table,index) if kind else b''

@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_prison_scene.h"
 #include "../include/m3_progress.h"
 #include "../include/m3_kasplat.h"
 #include "../include/krusha_recruitment.h"
@@ -42,7 +43,7 @@ s32 krushaBuildActorBones(void* actor_ptr) {
     u8* actor = actor_ptr;
     u32 type = *(u32*)(actor + 0x58);
     s32 enlarge = (type == 7 && actor_ptr == Player) ||
-        (type == 316 && *(u16*)*(u8**)(actor + 0x174) == 7);
+        (type == 316 && *(u16*)*(u8**)(actor + 0x174) == 7 && CurrentMap!=216);
     extern f32 krushaPrisonVisualScale(void*);
     f32 factor=krushaPrisonVisualScale(actor_ptr);
     if (factor==1 && enlarge && krushaEnabled() && DetectAdventure()) factor=1.1f;
@@ -344,6 +345,7 @@ void krushaAdventure(void) {
         hook(0x80614EBC, krushaSnideAnimation);
         hook(0x806F79E0, m4CollectEffect);
         m4EncounterInstall();
+        krushaPrisonSceneInstall();
         hook(0x806EB0C0, krushaSetAction);
         hook(0x806F6644, krushaModelPickupAllowed);
         hook(0x806F544C, krushaAmmoCollectible);

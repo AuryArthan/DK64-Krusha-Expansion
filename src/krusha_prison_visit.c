@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_prison_scene.h"
 #include "../include/recruitment_assets.generated.h"
 #include "../include/recruitment_room.generated.h"
 
@@ -59,12 +60,14 @@ static void transform(void) {
 static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
     else krushaPrisonVisitTrace[3]++;
+    krushaPrisonSceneReset();
     phase=OUTSIDE;restore_mini=door_return=0;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=OUTSIDE;
 }
 s32 krushaPrisonVisitBusy(void) {return phase!=OUTSIDE;}
 s32 krushaPrisonVisitBegin(void) {
     if (phase || cooldown || !DetectAdventure() || CurrentMap!=34 || !tiny() || *(u8*)0x807467C8>2) return 0;
+    krushaPrisonSceneReset();
     phase=ENTERING;restore_mini=1;door_return=0;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
@@ -98,13 +101,14 @@ void krushaPrisonVisitTick(void) {
         if (phase==ENTERING && ready() && tiny()) {
             transform();phase=STAGED;ticks=travel_ticks=0;
             krushaPrisonVisitTrace[6]=CollectableBase.Crystals;
+            krushaPrisonSceneBegin(file);
         }
         if (phase==STAGED && !(TBVoidByte&3)) roomLighting();
         /* Native pause Exit Level also uses our landing, not Isles exit0. */
         if (LZFadeoutProgress>0 && phase!=ENTERING && DestMap==34) DestExit=RECRUITMENT_RETURN_EXIT;
         if (phase==STAGED && !(TBVoidByte&3) && !CutsceneActive && LZFadeoutProgress<=0) {
             ticks++;krushaPrisonVisitTrace[8]=ticks;
-            if (ticks>=RECRUITMENT_STAGE_TICKS || (skip && ticks>=45)) {
+            if (krushaPrisonSceneTick()) {
                 phase=RETURNING;travel_ticks=0;initiateTransition(34,RECRUITMENT_RETURN_EXIT);
             }
         }
@@ -138,7 +142,7 @@ void krushaPrisonVisitInput(void* raw) {
     if (!phase || !DetectAdventure() || (CurrentMap!=34 && CurrentMap!=RECRUITMENT_ROOM_MAP)) return;
     u16 buttons=*(u16*)raw;
     if (!(TBVoidByte&3)) {
-        if (phase==STAGED && ticks>=45 && (buttons & ~previous_buttons & 0xC000)) skip=1;
+        if (phase==STAGED) krushaPrisonSceneInput(buttons & ~previous_buttons);
         /* Start remains native, including its pause screens and Quit Game. */
         for (s32 i=0;i<4;i++) {
             u8* pad=(u8*)raw+i*6;*(u16*)pad &= 0x1000;pad[2]=pad[3]=0;
@@ -161,8 +165,8 @@ s32 krushaPrisonVisitCamera(void* display) {
     for (s32 i=0;i<3;i++) {saved[i]=eye[i];saved[i+3]=target[i];}
     saved[6]=*(f32*)(cc+0x27C);
     f32* pos=(f32*)((u8*)Player+0x7C);
-    eye[0]=pos[0]+55;eye[1]=pos[1]+18;eye[2]=pos[2]-100;
-    target[0]=pos[0];target[1]=pos[1]+15;target[2]=pos[2];
+    eye[0]=pos[0]-90;eye[1]=pos[1]+150;eye[2]=pos[2]-400;
+    target[0]=pos[0]+140;target[1]=pos[1]+80;target[2]=pos[2]+150;
     *(f32*)(cc+0x27C)=50;
     vanillaBuildCameraMatrices(display);
     for (s32 i=0;i<3;i++) {eye[i]=saved[i];target[i]=saved[i+3];}

@@ -42,6 +42,8 @@ from recruitment_assets import prepare as prepareRecruitment, patch_setup as pat
 prepareRecruitment(ROMName)
 from recruitment_keys import prepare as prepareRecruitmentKeys, patch_setup as patchRecruitmentKeys
 prepareRecruitmentKeys(ROMName)
+from recruitment_scene import prepare as prepareRecruitmentScene
+prepareRecruitmentScene(ROMName)
 from recruitment_room import prepare as prepareRecruitmentRoom, files as recruitmentRoomFiles, patch_data as patchRecruitmentData
 prepareRecruitmentRoom(ROMName)
 from recruitment_barrel import prepare as prepareRecruitmentBarrel

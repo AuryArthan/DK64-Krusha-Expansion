@@ -1,4 +1,5 @@
 #include "../include/recruitment_keys.generated.h"
+#include "../include/recruitment_scene.generated.h"
 #include "../include/common.h"
 #include "../include/krusha_recruitment.h"
 #include "../include/krusha_progress.h"
@@ -84,6 +85,12 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (index==RECRUITMENT_ROOM_MAP) {
         if (table==1) {table=27;index=mirrorEnabled()?RECRUITMENT_ROOM_MIRROR:RECRUITMENT_ROOM_GEOMETRY;}
         else if (table==18) {table=27;index=RECRUITMENT_ROOM_ZONE;}
+    }
+    if (table==5 && index>=RECRUITMENT_LOCK_MODEL_TOKEN-1 && index<RECRUITMENT_LOCK_MODEL_TOKEN+4) {
+        table=27;index=RECRUITMENT_LOCK_MODEL+(index-(RECRUITMENT_LOCK_MODEL_TOKEN-1))*2+(mirrorEnabled()!=0);
+    }
+    if (table==25 && index>=RECRUITMENT_LOCK_TEXTURE_TOKEN && index<RECRUITMENT_LOCK_TEXTURE_TOKEN+10) {
+        table=27;index+=RECRUITMENT_LOCK_TEXTURE-RECRUITMENT_LOCK_TEXTURE_TOKEN;
     }
     if (table==4) {
         int key=krushaRecruitmentKeyModel(index,mirrorEnabled());
@@ -182,8 +189,8 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || index==RECRUITMENT_BARREL_MODEL || index==RECRUITMENT_BARREL_MIRROR || index==RECRUITMENT_BARREL_EXTERIOR || index==RECRUITMENT_BARREL_EXTERIOR_MIRROR || (index>=123 && index<131))) {
-        /* These two actor models replace table5 files, which are deliberately
+    if (table == 27 && (format==1 || format==5 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || index==RECRUITMENT_BARREL_MODEL || index==RECRUITMENT_BARREL_MIRROR || index==RECRUITMENT_BARREL_EXTERIOR || index==RECRUITMENT_BARREL_EXTERIOR_MIRROR || (index>=123 && index<131))) {
+        /* Actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */
         u32** caches=(u32**)0x807F95A8;

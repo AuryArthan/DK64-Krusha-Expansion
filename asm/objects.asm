@@ -5,6 +5,7 @@
 .importobj "obj/src_krusha_colors.o"
 .importobj "obj/src_krusha_options.o"
 .importobj "obj/src_krusha_prison.o"
+.importobj "obj/src_krusha_prison_scene.o"
 .importobj "obj/src_krusha_prison_visit.o"
 .importobj "obj/src_krusha_progress.o"
 .importobj "obj/src_krusha_progress_hud.o"
