@@ -97,6 +97,7 @@ void krushaPrisonVisitTick(void) {
     if (phase!=STAGED && !(TBVoidByte&3) && LZFadeoutProgress<=0 && ++travel_ticks>300) {end(0);return;}
     if (CurrentMap!=34 && CurrentMap!=RECRUITMENT_ROOM_MAP) {end(0);return;}
     if (CurrentMap==RECRUITMENT_ROOM_MAP) {
+        if (phase==ENTERING && ObjectModel2Timer>0 && tiny()) krushaPrisonScenePrepare(file);
         if (!tiny() && ObjectModel2Timer>10 && phase!=RETURNING) {phase=RETURNING;travel_ticks=0;initiateTransition(34,RECRUITMENT_RETURN_EXIT);}
         if (phase==ENTERING && ready() && tiny()) {
             transform();phase=STAGED;ticks=travel_ticks=0;
@@ -142,7 +143,7 @@ void krushaPrisonVisitInput(void* raw) {
     if (!phase || !DetectAdventure() || (CurrentMap!=34 && CurrentMap!=RECRUITMENT_ROOM_MAP)) return;
     u16 buttons=*(u16*)raw;
     if (!(TBVoidByte&3)) {
-        if (phase==STAGED) krushaPrisonSceneInput(buttons & ~previous_buttons);
+        if (phase==STAGED) krushaPrisonSceneInput(buttons);
         /* Start remains native, including its pause screens and Quit Game. */
         for (s32 i=0;i<4;i++) {
             u8* pad=(u8*)raw+i*6;*(u16*)pad &= 0x1000;pad[2]=pad[3]=0;
@@ -153,7 +154,7 @@ void krushaPrisonVisitInput(void* raw) {
 
 extern void vanillaBuildCameraMatrices(void*);
 /* Owned scene framing only: eye XYZ, target XYZ, vertical FOV. */
-f32 krushaPrisonCameraFraming[7]={900,450,-550,900,150,1000,82};
+f32 krushaPrisonCameraFraming[7]={900,900,-1200,900,350,1700,82};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
     if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
@@ -175,7 +176,7 @@ s32 krushaPrisonVisitCamera(void* display) {
     *(f32*)(cc+0x27C)=saved[6];*(f32*)(cc+0x288)=saved[7];return 1;
 }
 
-/* Render-only14.4-fold Mini appearance; native form/movement/upkeep and
+/* Render-only36-fold Mini appearance; native form/movement/upkeep and
  * collision remain untouched. Normalize the zero-budget normal form to the
  * same visible size during the owned scene. Never carry a model pointer. */
 f32 krushaPrisonVisualScale(void* actor) {
@@ -184,5 +185,5 @@ f32 krushaPrisonVisualScale(void* actor) {
     u8* data=*(u8**)((u8*)actor+0x174);
     if (!valid(data,0x1D0)) return 1;
     f32 scale=*(f32*)(data+0x1CC);
-    return scale>.045f && scale<.16f ? .72f/scale : 1;
+    return scale>.045f && scale<.16f ? 1.8f/scale : 1;
 }

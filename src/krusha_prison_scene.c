@@ -8,7 +8,7 @@
  * Map216 has no native actors of these classes. Elsewhere dispatch is exact.
  * The native map destructor owns actor/model lifetimes; handles include UID. */
 static struct {u8* actor;u32 uid;} displays[7];
-static u32 active,file,page,age,advance,finished,empty,intro,last_timer,built;
+static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun;
 volatile u32 krushaPrisonSceneTrace[12];
 extern void krushaPlayActorAnimation(void*,s32);
 extern void krushaInitCharacterMesh(void*,u16);
@@ -75,20 +75,50 @@ static int spawn(int i,int type,int model,f32 x,f32 y,f32 z,f32 scale,s16 angle)
     krushaPrisonSceneTrace[4]++;return 1;
 }
 void krushaPrisonSceneReset(void) {
-    active=0;
+    active=begun=held_buttons=0;
     /* The owned visit always leaves through a native map transition. Let
      * its destructor release each actor once, including interrupted visits. */
     /* Do not follow or delete a handle from a previous map generation. */
 }
-void krushaPrisonSceneBegin(unsigned int f) {
+static void construct(void) {
+    if (built) return;
+    built=1;
+    /* Move the enlarged cage deeper into the staged room so Mini Tiny
+     * remains outside on her existing native floor. Captive stands120 units
+     * behind its center, clear of the front bars during his waiting pose. */
+    if (!empty && !spawn(0,316,0xDB,900,95,1820,7.65f,2048)) finished=1;
+    if (!spawn(1,115,0xC4,900,95,1700,3.23f,0)) finished=1;
+    u32 locks=krushaRecruitmentLocks(file);
+    /* Camera-facing hanging locks, nearly touching. Missing saved locks
+     * leave their own gap rather than changing another owner's placement. */
+    for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
+        !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,1060-i*80,673,
+            1700-dk_sqrt(1114.0f*1114.0f-(160.0f-i*80)*(160.0f-i*80)),.24f,2048)) finished=1;
+    krushaPrisonSceneTrace[8]=ObjectModel2Timer;
+}
+void krushaPrisonScenePrepare(unsigned int f) {
+    if (active || CurrentMap!=216 || !DetectAdventure() || f!=krushaProgressActiveFile() || Character!=3 || !Player) return;
+    /* Wait for THIS map's live player, not an exterior pointer carried
+     * through the map/heap transfer. Preparation still precedes fade-in. */
+    int found=0;
+    for (int n=0;n<ActorCount && n<256;n++) if ((void*)ActorArray[n]==Player) {found=1;break;}
+    if (!found) return;
     for (int i=0;i<7;i++) {displays[i].actor=0;displays[i].uid=0;}
-    active=1;file=f;page=age=advance=finished=built=0;last_timer=ObjectModel2Timer;
-    if (valid(Player,0xF0)) {
-        *(u16*)((u8*)Player+0xE6)=3484;*(u16*)((u8*)Player+0xEE)=3484;
-    }
+    active=1;file=f;page=age=text_clock=held_buttons=finished=built=begun=0;last_timer=ObjectModel2Timer;
     empty=krushaRecruitmentRecruited(file)!=0;
     intro=!empty && !krushaRecruitmentIntroSeen(file);
     krushaPrisonSceneTrace[0]++;krushaPrisonSceneTrace[5]=0;
+    krushaPrisonSceneTrace[9]=krushaPrisonSceneTrace[10]=krushaPrisonSceneTrace[11]=0;
+    construct();
+}
+void krushaPrisonSceneBegin(unsigned int f) {
+    krushaPrisonScenePrepare(f);
+    if (!context() || begun) return;
+    begun=1;age=text_clock=held_buttons=0;last_timer=ObjectModel2Timer;
+    if (valid(Player,0xF0)) {
+        *(u16*)((u8*)Player+0xE6)=3484;*(u16*)((u8*)Player+0xEE)=3484;
+    }
+    krushaPrisonSceneTrace[9]=ObjectModel2Timer;
 }
 static const char* first[6][4]={
     {"KRUSHA", "WE CAUGHT SOME MONKEYS. I WAS HUNGRY...", "SO I DEALT WITH THE WHOLE BUNCH MYSELF.",0},
@@ -109,8 +139,14 @@ static const char** lines(void) {
     if (!intro && !page && !krushaRecruitmentKeys(file)) return again;
     return wip;
 }
+static u32 length(const char* text) {
+    u32 n=0;if (text) while (n<95 && text[n]) n++;return n;
+}
+static u32 characters(void) {
+    const char** text=lines();return length(text[1])+length(text[2])+length(text[3]);
+}
 static Gfx* draw(Gfx* dl,void* actor) {
-    if (!context() || (TBVoidByte&3) || finished) return dl;
+    if (!context() || !begun || (TBVoidByte&3) || finished) return dl;
     const char** text=lines();
     Gfx*(*print)(Gfx*,s16,s16,f32,char*)=(void*)0x806ABB98;
     gDPPipeSync(dl++);
@@ -129,34 +165,40 @@ static Gfx* draw(Gfx* dl,void* actor) {
     s16 center=*(s16*)0x80744490*2;
     dl=print(dl,center,162*4,.42f,(char*)text[0]);
     gDPSetPrimColor(dl++,0,0,255,255,255,255);
-    for (int i=1;i<4;i++) if (text[i]) dl=print(dl,center,(173+i*11)*4,.35f,(char*)text[i]);
-    dl=print(dl,center,218*4,.25f,"A OR B: CONTINUE");
+    u32 remaining=text_clock/4;
+    s32(*width)(s16,char*)=(void*)0x806FBD5C;
+    for (int i=1;i<4;i++) if (text[i]) {
+        char prefix[96];u32 n=length(text[i]),shown=remaining<n?remaining:n;
+        for (u32 j=0;j<shown;j++) prefix[j]=text[i][j];
+        prefix[shown]=0;
+        remaining-=shown;
+        if (shown) {
+            /* Preserve the complete line's left edge while letters appear,
+             * using the same native font widths as its centered renderer. */
+            s16 x=center+(s16)(.7f*(width(1,prefix)-width(1,(char*)text[i])));
+            dl=print(dl,x,(173+i*11)*4,.35f,prefix);
+        }
+    }
     return dl;
 }
-void krushaPrisonSceneInput(unsigned int pressed) {if(context() && age>=15 && (pressed&0xC000)) advance=1;}
+void krushaPrisonSceneInput(unsigned int buttons) {if(context() && begun) held_buttons=buttons;}
 int krushaPrisonSceneTick(void) {
-    if (!context()) return 1;
+    if (!context() || !begun) return 1;
     if (ObjectModel2Timer<last_timer) {krushaPrisonSceneReset();return 1;}
     last_timer=ObjectModel2Timer;
-    /* One bounded construction attempt per slot, no retry allocation storm. */
-    if (!built) {
-        built=1;
-        if (!empty && !spawn(0,316,0xDB,900,95,1000,4.5f,2048)) finished=1;
-        if (!spawn(1,115,0xC4,900,95,1000,1.9f,0)) finished=1;
-        u32 locks=krushaRecruitmentLocks(file);
-        /* Follow the front of the enlarged cage. Keep every owner's fixed
-         * slot when an opened lock is omitted; no shifting saved colors. */
-        for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
-            !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,1260-i*180,435,
-                1000-dk_sqrt(655.0f*655.0f-(360.0f-i*180)*(360.0f-i*180)),.24f,2048)) finished=1;
-    }
     if (finished) return ++age>30;
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
-    age++;krushaPrisonSceneTrace[1]=page;krushaPrisonSceneTrace[2]=age;
+    age++;
+    /* Native textbox convention: held A accelerates, held Z slows. B has
+     * deliberately no skip/close action in this recruitment conversation. */
+    text_clock+=(held_buttons&0x2000)?1:held_buttons==0x8000?6:2;
+    krushaPrisonSceneTrace[1]=page;krushaPrisonSceneTrace[2]=age;
     krushaPrisonSceneTrace[3]=(empty?2:intro?0:1);
     krushaPrisonSceneTrace[6]=krushaRecruitmentKeys(file);krushaPrisonSceneTrace[7]=krushaRecruitmentLocks(file);
-    if (age>=240 || advance) {
-        advance=0;age=1;
+    krushaPrisonSceneTrace[10]=text_clock;krushaPrisonSceneTrace[11]=characters();
+    u32 duration=characters()*4+120;if (duration<180) duration=180;
+    if (text_clock>=duration && age>=45) {
+        text_clock=0;age=0;
         if (intro && page==5) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}
         page++;
         u32 pages=empty?1:intro?7:krushaRecruitmentKeys(file)?2:1;
