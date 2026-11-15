@@ -186,4 +186,3 @@ f32 krushaPrisonVisualScale(void* actor) {
     f32 scale=*(f32*)(data+0x1CC);
     return scale>.045f && scale<.16f ? .72f/scale : 1;
 }
-
