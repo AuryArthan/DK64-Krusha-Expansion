@@ -101,6 +101,9 @@ Gfx* krushaRecruitmentKeyAlpha(Gfx* dl,s16 alpha,u8 extra,void* model_ptr) {
     gDPPipeSync(dl++);
     gDPSetPrimColor(dl++,0,255,255,255,255,alpha);
     dl->words.w0=0xE200001C;
-    dl->words.w1=alpha==255 ? 0x0C192230 : (G_RM_AA_ZB_XLU_SURF | G_RM_AA_ZB_XLU_SURF2);
+    /* Keep the native fade depth/coverage flags: these props are submitted
+     * before some opaque geometry. Dropping Z_UPD lets later terrain punch
+     * through the key. Both blender cycles use incoming primitive alpha. */
+    dl->words.w1=alpha==255 ? 0x0C192230 : 0x00504270;
     return dl+1;
 }

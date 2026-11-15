@@ -77,7 +77,7 @@ def payloads(rom):
         # primitive-alpha blend works without the native fog-alpha shortcut.
         struct.pack_into('>II',model,0xC0,0,0)
         assert struct.unpack_from('>II',model,0xE0)==(0xFCFFFFFF,0xFFFCF238)
-        struct.pack_into('>I',model,0xE4,0xFFFCF23B) # final alpha=PRIMITIVE
+        struct.pack_into('>I',model,0xE4,0xFFFCF63B) # both cycles alpha=PRIMITIVE
         assert struct.unpack_from('>II',model,0x128)==(0xFD100000,0xC6F)
         struct.pack_into('>I',model,0x12C,PALETTE_TOKEN+owner)
         alternate,n=flip(bytes(model),4);assert n==count
