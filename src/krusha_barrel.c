@@ -314,9 +314,19 @@ void krushaBarrelControl(BarrelData* data) {
      * keeping s0=locked so native confirmation still refuses it. Horizontal
      * rotation and the original five retain native rules. */
     int locked_sixth = selecting_sixth && *(u32*)((u8*)sixth + 0x58) == 317;
-    if (locked_sixth) patch(0x80683768, 0x10000032);
+    if (locked_sixth) {
+        patch(0x80683768, 0x10000032);
+        /* Locked originals keep their previous travel direction while they
+         * auto-skip. A retained sixth must read the current stick instead.
+         * Let native control update direction at its normal timer/input gate;
+         * changing it before that gate would distort an in-flight rotation. */
+        patch(0x806837A0, 0);
+    }
     vanillaBarrelControl(data);
-    if (locked_sixth) patch(0x80683768, 0x16000032);
+    if (locked_sixth) {
+        patch(0x80683768, 0x16000032);
+        patch(0x806837A0, 0x1200000B);
+    }
     selecting_sixth=0;
     if (barrel[0x154] == 1) {
         data->spotlight = spotlight;
