@@ -4,6 +4,7 @@ void krushaPrisonSceneInstall(void);
 void krushaPrisonScenePrepare(unsigned int file);
 void krushaPrisonSceneBegin(unsigned int file);
 void krushaPrisonSceneReset(void);
+void krushaPrisonTinyAnimation(void* actor,int script);
 int krushaPrisonSceneTick(void);
 void krushaPrisonSceneInput(unsigned int held);
 int krushaPrisonDisplayOwned(void* actor);

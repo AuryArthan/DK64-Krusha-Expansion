@@ -8,8 +8,18 @@
  * Map216 has no native actors of these classes. Elsewhere dispatch is exact.
  * The native map destructor owns actor/model lifetimes; handles include UID. */
 static struct {u8* actor;u32 uid;} displays[7];
-static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun;
+static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun,voiced_page,voice_cooldown;
 volatile u32 krushaPrisonSceneTrace[12];
+/* quiet script installs, voice count, last voice, current cooldown. */
+volatile u32 krushaPrisonDialogueTrace[4];
+/* Native Tiny standing170 prefix: speed1, generic breathing clip0 with
+ * six-frame interpolation. Wait for its cycle and repeat; omit all native
+ * random boredom branches and their0x39/0x3D sound commands. */
+const u8 krushaPrisonTinyIdleScript[]={
+    0x24,0x3F,0x80,0,0,0,0,0,0,0x19,0,0,0x40,0xC0,0,0,0x04,0x34
+};
+void krushaPrisonTinyAnimation(void* actor,int script);
+
 extern void krushaPlayActorAnimation(void*,s32);
 extern void krushaInitCharacterMesh(void*,u16);
 extern void krushaHolsterModel(void*);
@@ -45,7 +55,7 @@ static void update(void) {
         /* Barrel displays request their own lighting path. In this world
          * scene use native room lighting, preserving Krusha's blue skin. */
         *(u32*)(a+0x60)&=~0x1000;
-        *(s16*)(a+0xE6)=1536;return;
+        *(s16*)(a+0xE6)=1900;return;
     }
     ((void(*)(void*,s32))0x806319C4)(a,0);
 }
@@ -85,17 +95,14 @@ static void construct(void) {
     built=1;
     /* The private room is centered on this cage; Mini Tiny remains
      * outside on an existing native floor. Captive stands132 units
-     * behind its center along the diagonal view, clear of the front bars. */
-    if (!empty && !spawn(0,316,0xDB,806.662f,95,1793.338f,8.415f,1536)) finished=1;
+     * behind its center, facing the rendered Tiny, clear of the front bars. */
+    if (!empty && !spawn(0,316,0xDB,900,95,1832,8.415f,1900)) finished=1;
     if (!spawn(1,115,0xC4,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
-    /* Five doubled locks follow the front-right straight horizontal bar.
-     * Its upper/lower edges are nativeY280/245. Shackle tops overlap the
-     * lower edge; body faces stay beneath it. Fixed saved-owner slots. */
+    /* Lower front rail; keyless locks face Tiny. Keep saved-owner gaps. */
     for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
         !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,
-            1745.477f+(2-i)*127.2792f,790.0f,
-            854.523f+(2-i)*127.2792f,.48f,1536)) finished=1;
+            1260-i*180,90,503.639f,.48f,2048)) finished=1;
     krushaPrisonSceneTrace[8]=ObjectModel2Timer;
 }
 void krushaPrisonScenePrepare(unsigned int f) {
@@ -117,10 +124,21 @@ void krushaPrisonSceneBegin(unsigned int f) {
     krushaPrisonScenePrepare(f);
     if (!context() || begun) return;
     begun=1;age=text_clock=held_buttons=0;last_timer=ObjectModel2Timer;
+    voiced_page=~0u;voice_cooldown=0;
     if (valid(Player,0xF0)) {
-        *(u16*)((u8*)Player+0xE6)=332;*(u16*)((u8*)Player+0xEE)=332;
+        *(u16*)((u8*)Player+0xE6)=3948;*(u16*)((u8*)Player+0xEE)=3948;
+        krushaPlayActorAnimation(Player,0x170);
     }
     krushaPrisonSceneTrace[9]=ObjectModel2Timer;
+}
+void krushaPrisonTinyAnimation(void* actor,int script) {
+    if (!context() || !begun || finished || actor!=Player || script!=0x170) return;
+    u8* animation=*(u8**)((u8*)actor+4);
+    if (!valid(animation,0x8C)) return;
+    *(const u8**)(animation+0x68)=krushaPrisonTinyIdleScript;
+    *(const u8**)(animation+0x6C)=krushaPrisonTinyIdleScript;
+    *(const u8**)0x807F5AF0=krushaPrisonTinyIdleScript;
+    krushaPrisonDialogueTrace[0]++;
 }
 static const char* first[6][4]={
     {"KRUSHA", "WE CAUGHT SOME MONKEYS. I WAS HUNGRY...", "SO I DEALT WITH THE WHOLE BUNCH MYSELF.",0},
@@ -191,6 +209,17 @@ int krushaPrisonSceneTick(void) {
     if (finished) return ++age>30;
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
     age++;
+    if (voice_cooldown) voice_cooldown--;
+    if (voiced_page!=page) {
+        voiced_page=page;
+        if (!empty && lines()[0][0]=='K' && !voice_cooldown && alive(0)) {
+            u16 cue=(!intro || (page&2)) ? 0x275 : 0x266;
+            playSound(cue,0x3FFF,63.0f,1.0f,0,0);
+            krushaPrisonDialogueTrace[1]++;krushaPrisonDialogueTrace[2]=cue;
+            voice_cooldown=90;
+        }
+    }
+    krushaPrisonDialogueTrace[3]=voice_cooldown;
     /* Native textbox convention: held A accelerates, held Z slows. B has
      * deliberately no skip/close action in this recruitment conversation. */
     text_clock+=(held_buttons&0x2000)?1:held_buttons==0x8000?6:2;

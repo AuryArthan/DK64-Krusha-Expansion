@@ -18,10 +18,24 @@ def prepare(path):
  for i in range(TEXTURE_TOKEN,TEXTURE_TOKEN+10):assert not read_file(r,25,i)
  (ROOT/'include/recruitment_scene.generated.h').write_text('/* Generated R11 private display resources. */\n'+''.join(f'#define {k} {v}\n'for k,v in dict(RECRUITMENT_LOCK_MODEL=MODEL,RECRUITMENT_LOCK_TEXTURE=TEXTURE,RECRUITMENT_LOCK_MODEL_TOKEN=MODEL_TOKEN,RECRUITMENT_LOCK_TEXTURE_TOKEN=TEXTURE_TOKEN,RECRUITMENT_SCENE_ASSET_COUNT=COUNT).items()))
 
+def without_inserted_key(source):
+    """Keep native lock/shackle; omit only separate inserted-key bone3."""
+    out=bytearray(source);base=struct.unpack_from('>I',out)[0]
+    end=struct.unpack_from('>I',out,4)[0]-base+40
+    start=struct.unpack_from('>I',out,end)[0]-base+40
+    bone=None;removed=0
+    for pos in range(start,end,8):
+        a,b=struct.unpack_from('>II',out,pos)
+        if a>>24==0xDA:bone=(b&0xFFFFFF)//64
+        if a>>24 in (5,6,7) and bone==3:
+            struct.pack_into('>II',out,pos,0,0);removed+=1
+    assert removed>0
+    return bytes(out)
+
 def payloads(r):
  from mirror_assets import flip
  from recruitment_keys import COLORS
- source=read_file(r,5,0xCC);result=[]
+ source=without_inserted_key(read_file(r,5,0xCC));result=[]
  assert struct.unpack_from('>II',source,0xD88)==(0xFD100000,0xBAB)
  for owner in range(5):
   b=bytearray(source)

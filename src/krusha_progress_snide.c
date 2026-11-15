@@ -3,6 +3,7 @@
 #include "../include/krusha_identity.h"
 #include "../include/krusha_victory.generated.h"
 #include "../include/krusha_recruitment.h"
+#include "../include/krusha_prison_scene.h"
 
 extern void vanillaSnideBoard(void);
 extern Gfx* vanillaSnideDraw(Gfx*, void*);
@@ -23,6 +24,7 @@ void krushaSnideAnimation(void* actor, s32 script) {
         script=script==0x1D2 ? 0x174 : 0x173;
     }
     vanillaCharacterScript(actor,script);
+    krushaPrisonTinyAnimation(actor,script);
     if ((CurrentMap==15 || m4VictoryActive()) && krushaEnabled() && DetectAdventure() &&
         Character==5 && actor==(void*)Player && script==0x173) {
         u8* animation=*(u8**)((u8*)actor+4);

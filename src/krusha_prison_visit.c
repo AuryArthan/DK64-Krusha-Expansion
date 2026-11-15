@@ -14,8 +14,15 @@ static u32 exterior_hud_started;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
  * staged crystals, return crystals, staged frames, last native frame. */
 volatile u32 krushaPrisonVisitTrace[10];
+/* Early form restores, first frame, last frame. */
+volatile u32 krushaPrisonReturnTrace[3];
 static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800000-size;}
 static int tiny(void) {return valid(Player,0x178) && Character==3 && *(u32*)((u8*)Player+0x58)==5;}
+static int liveTiny(void) {
+    if (!tiny()) return 0;
+    for (int n=0;n<ActorCount && n<256;n++) if ((void*)ActorArray[n]==Player) return 1;
+    return 0;
+}
 static int ready(void) {return ObjectModel2Timer>5 && valid(Player,0x178) && LZFadeoutProgress<=0 && !IsAutowalking;}
 /* Halfway from the earlier neutral0.65 light to native warm(102,64,30)/255.
  * Write a fixed blend, not a repeated average that would drift every frame. */
@@ -48,8 +55,18 @@ static void exteriorHudTick(void) {
 }
 static void transform(void) {
     u8* cc=*(u8**)0x807FC924;
-    if (restore_mini && tiny() && valid(cc,0x2C4) && CollectableBase.Crystals>0 && cc[0x2C0]!=0)
+    u8* data=tiny()?*(u8**)((u8*)Player+0x174):0;
+    u8* anim=tiny()?*(u8**)((u8*)Player+4):0;
+    if (restore_mini && tiny() && valid(cc,0x2C4) && valid(data,0x1E8) &&
+        valid(anim,0x40) && valid(*(void**)(data+0x104),0x180) && CollectableBase.Crystals>0 &&
+        (cc[0x2C0]!=0 || *(f32*)(data+0x1CC)>.051f ||
+         *(f32*)(data+0x1C0)>.051f || *(f32*)(anim+0x34)>.051f)) {
         ((void (*)(void*,u8))0x806D0468)(Player,0);
+        if (CurrentMap==34 && phase==RETURNING) {
+            if (!krushaPrisonReturnTrace[0]) krushaPrisonReturnTrace[1]=ObjectModel2Timer;
+            krushaPrisonReturnTrace[0]++;krushaPrisonReturnTrace[2]=ObjectModel2Timer;
+        }
+    }
     if (restore_mini && tiny() && valid(cc,0x2C4) && cc[0x2C0]==0 &&
         CurrentMap==34 && CollectableBase.Crystals>0 &&
         valid(HUD,6*sizeof(HUDDisplay)) && !HUD[5].freeze_timer) {
@@ -68,6 +85,7 @@ s32 krushaPrisonVisitBusy(void) {return phase!=OUTSIDE;}
 s32 krushaPrisonVisitBegin(void) {
     if (phase || cooldown || !DetectAdventure() || CurrentMap!=34 || !tiny() || *(u8*)0x807467C8>2) return 0;
     krushaPrisonSceneReset();
+    for (int i=0;i<3;i++) krushaPrisonReturnTrace[i]=0;
     phase=ENTERING;restore_mini=1;door_return=0;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
@@ -114,6 +132,11 @@ void krushaPrisonVisitTick(void) {
             }
         }
     } else {
+        /* Restore native Mini/camera during the loading fade, rather than
+         * waiting until the exterior walk-in finishes in visible gameplay. */
+        if (phase==RETURNING && ObjectModel2Timer>0 && liveTiny()) {
+            transform();
+        }
         /* A native door can interrupt the stage without using our timer's
          * transition helper. It still owns the same return/cleanup contract. */
         if (phase==STAGED) {phase=RETURNING;door_return=1;travel_ticks=0;}
@@ -154,26 +177,31 @@ void krushaPrisonVisitInput(void* raw) {
 
 extern void vanillaBuildCameraMatrices(void*);
 /* Owned scene framing only: eye XYZ, target XYZ, vertical FOV. */
-f32 krushaPrisonCameraFraming[7]={2200,800,300,900,450,1700,90};
+f32 krushaPrisonCameraFraming[7]={900,200,-900,900,450,1700,62};
+f32 krushaPrisonTinyStaging[3]={1000,0,-430};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
-    if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
+    if (!phase || !restore_mini || CurrentMap!=RECRUITMENT_ROOM_MAP ||
         !DetectAdventure() || file!=*(u8*)0x807467C8 ||
         !tiny() || !valid(cc,0x28C)) return 0;
     if (phase==ENTERING && !(TBVoidByte&3)) roomLighting();
     /* Temporary renderer-only view. Native collision/input camera state is
      * restored before returning; no persistent camera ownership or flags. */
     f32* eye=(f32*)(cc+0x210);f32* target=(f32*)(cc+0x228);
-    f32 saved[8];
+    f32 saved[11];
     for (s32 i=0;i<3;i++) {saved[i]=eye[i];saved[i+3]=target[i];}
     saved[6]=*(f32*)(cc+0x27C);
     saved[7]=*(f32*)(cc+0x288);
+    for (int i=0;i<3;i++) saved[8+i]=*(f32*)(cc+0x240+i*4);
+    *(f32*)(cc+0x240)=0;*(f32*)(cc+0x244)=1;*(f32*)(cc+0x248)=0;
     for (s32 i=0;i<3;i++) {eye[i]=krushaPrisonCameraFraming[i];target[i]=krushaPrisonCameraFraming[i+3];}
     *(f32*)(cc+0x27C)=krushaPrisonCameraFraming[6];
     *(f32*)(cc+0x288)=5000;
     vanillaBuildCameraMatrices(display);
     for (s32 i=0;i<3;i++) {eye[i]=saved[i];target[i]=saved[i+3];}
-    *(f32*)(cc+0x27C)=saved[6];*(f32*)(cc+0x288)=saved[7];return 1;
+    *(f32*)(cc+0x27C)=saved[6];*(f32*)(cc+0x288)=saved[7];
+    for (int i=0;i<3;i++) *(f32*)(cc+0x240+i*4)=saved[8+i];
+    return 1;
 }
 
 /* Render-only43.2-fold Mini appearance; native form/movement/upkeep and

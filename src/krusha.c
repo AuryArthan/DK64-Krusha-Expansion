@@ -56,14 +56,16 @@ s32 krushaBuildActorBones(void* actor_ptr) {
         saved[i][j] = matrix[i * 4 + j];
         matrix[i * 4 + j] *= factor;
     }
-    /* The close prison view stages Mini Tiny beside the cage upright.
-     * Move only her rendered skeleton200 units left; native position,
-     * collision, movement and the exterior Mini form remain untouched. */
+    /* Stage Tiny in front of the cage for the over-shoulder shot. These
+     * are render-only translations; restore before native movement. */
+    extern f32 krushaPrisonTinyStaging[3];
     s32 staged_tiny=CurrentMap==216 && actor_ptr==Player && type==5;
-    f32 saved_x=0;
-    if (staged_tiny) {saved_x=matrix[12];matrix[12]-=200;}
+    f32 saved_position[3];
+    if (staged_tiny) for (int i=0;i<3;i++) {
+        saved_position[i]=matrix[12+i];matrix[12+i]+=krushaPrisonTinyStaging[i];
+    }
     s32 result = vanillaBuildActorBones(actor_ptr);
-    if (staged_tiny) matrix[12]=saved_x;
+    if (staged_tiny) for (int i=0;i<3;i++) matrix[12+i]=saved_position[i];
     for (s32 i = 0; i < 3; i++) for (s32 j = 0; j < 3; j++) {
         matrix[i * 4 + j] = saved[i][j];
     }
