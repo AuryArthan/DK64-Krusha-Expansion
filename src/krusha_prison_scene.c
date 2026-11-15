@@ -118,7 +118,7 @@ void krushaPrisonSceneBegin(unsigned int f) {
     if (!context() || begun) return;
     begun=1;age=text_clock=held_buttons=0;last_timer=ObjectModel2Timer;
     if (valid(Player,0xF0)) {
-        *(u16*)((u8*)Player+0xE6)=249;*(u16*)((u8*)Player+0xEE)=249;
+        *(u16*)((u8*)Player+0xE6)=332;*(u16*)((u8*)Player+0xEE)=332;
     }
     krushaPrisonSceneTrace[9]=ObjectModel2Timer;
 }
