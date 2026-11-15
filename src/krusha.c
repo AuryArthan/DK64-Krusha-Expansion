@@ -168,6 +168,8 @@ u8 krushaSetAction(s16 action, void* actor, u8 player) {
 
 extern s32 m2PickupAllowed(s16,u8,u16);
 s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
+    int key=krushaRecruitmentKeyContact(object_id,player,type);
+    if (key>=0) return key;
     int gold=m4PickupAllowed(object_id,player,type);
     if (gold>=0) return gold;
     int blueprint=m3BlueprintAllowed(object_id,player,type);

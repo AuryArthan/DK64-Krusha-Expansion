@@ -26,4 +26,11 @@ int krushaCampaignAvailable(void);
 int krushaOriginalKongUnlocked(unsigned int kong);
 void krushaRecruitmentTick(void);
 
+int krushaRecruitmentKeyVisible(unsigned int file,unsigned int owner);
+int krushaRecruitmentKeyCollectible(unsigned int file,unsigned int owner,unsigned int character,unsigned int player);
+int krushaRecruitmentKeyHidden(int map,int object_id);
+int krushaRecruitmentKeyContact(short runtime_id,unsigned char player,unsigned short type);
+void krushaRecruitmentKeyOwner(short map,short object_id,unsigned char* flags);
+int krushaRecruitmentKeyEffect(short type);
+
 #endif

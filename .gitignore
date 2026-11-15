@@ -36,3 +36,5 @@ __pycache__/
 /include/recruitment_barrel.generated.h
 /bin/Arthan.png
 /bin/ExpansionTitle.png
+
+/include/recruitment_keys.generated.h

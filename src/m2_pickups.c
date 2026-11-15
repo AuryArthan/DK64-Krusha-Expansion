@@ -9,6 +9,8 @@ extern int m4SetupHidden(s32,s32);
 /* Only the setup constructor's permanent-object predicate calls this wrapper.
  * The original pickup ordering/counts are unchanged, as are cached map files. */
 s32 m2SetupHidden(s32 map, s32 object_id) {
+    int key=krushaRecruitmentKeyHidden(map,object_id);
+    if (key>=0) return key;
     if (map==34 && object_id==RECRUITMENT_OBJECT_ID) return !krushaEnabled() || !DetectAdventure();
     int private=m4SetupHidden(map,object_id);
     if (private>=0) return private;

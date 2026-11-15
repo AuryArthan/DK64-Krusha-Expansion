@@ -240,6 +240,7 @@ int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
 }
 
 void m4CollectEffect(s16 type,u8 player) {
+    if (krushaRecruitmentKeyEffect(type)) return;
     if (pickup_map==CurrentMap && Player==pickup_owner && frame()>=pickup_frame && frame()-pickup_frame<12) {
         m4RewardTrace[11]=type;m4RewardTrace[12]++;
     }

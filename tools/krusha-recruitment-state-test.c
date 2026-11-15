@@ -99,6 +99,31 @@ static void availability_tests(void){
     }
     printf("PASS: %lu R05 roster cases, read-only availability, scene/option guards, once-only Speed grant and persistence semantics\n",cases);
 }
+
+static void key_eligibility_tests(void) {
+    unsigned int f,mode,owner,character,player;unsigned long cases=0;
+    for(f=0;f<3;f++)for(mode=0;mode<128;mode++)for(owner=0;owner<7;owner++) {
+        unsigned char old[3][512];int expected;
+        reset();active=f;enabled=mode&1;adventure=(mode>>1)&1;
+        context=(mode>>2)&1;speed=0;originals=(mode&8)?31:0;
+        if(mode&16)bits[f][496+(owner<5?owner:0)]=1;
+        if(mode&32){unsigned int k;for(k=496;k<=506;k++)bits[f][k]=1;}
+        if(mode&64)active=(f+1)%3;
+        memcpy(old,bits,sizeof(bits));
+        expected=owner<5 && active==f && enabled && adventure && context &&
+            (owner==0 || originals) && !(mode&16) && !(mode&32);
+        assert(krushaRecruitmentKeyVisible(f,owner)==expected);
+        assert(!krushaRecruitmentKeyVisible(3,owner));
+        for(character=0;character<7;character++)for(player=0;player<2;player++) {
+            assert(krushaRecruitmentKeyCollectible(f,owner,character,player)==
+                (expected && character==owner && !player));cases++;
+        }
+        assert(!memcmp(old,bits,sizeof(bits))&&!saves&&!words&&!single_writes);
+    }
+    enabled=adventure=context=1;speed=0;originals=31;active=0;reset();
+    printf("PASS: %lu R09 actual key eligibility cases, native DK availability, hidden original owners, wrong owner/player/file, option/context/collected/recruited guards; read-only\n",cases);
+}
+
 int main(void){
     unsigned int f,i,j,k,order[5],before,keys,locks;
     unsigned char original[3][512];permute(0,0,order);assert(count==120);
@@ -143,6 +168,7 @@ int main(void){
     for(f=0;f<3;f++){reset();active=f;mixed_orders(0,0,0);}
     assert(interleavings==340200);
     availability_tests();
+    key_eligibility_tests();
     puts("PASS: 340,200 valid interleaved quest histories and 43,200 preservation cases across three files; guards, idempotence, final commit, neighbors and malformed reads");
     return 0;
 }

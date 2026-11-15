@@ -1,0 +1,21 @@
+{
+  "format": 1,
+  "milestone": "R09",
+  "scope": "One provisional DK rescue key; R10 owns the other four and final placement review.",
+  "keys": [
+    {
+      "id": "RK-DK",
+      "map": 34,
+      "object_id": 401,
+      "type": 60,
+      "owner": 0,
+      "xyz": [
+        2940.0,
+        504.0,
+        2220.0
+      ],
+      "scale": 0.04,
+      "notes": "Controlled clear central-island ground500, east of all five banana ports and clear of native loading zones. R10 final layout remains provisional. Field key uses24percent of the boss-room prop scale."
+    }
+  ]
+}

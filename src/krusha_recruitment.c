@@ -71,3 +71,14 @@ int krushaNextCharacter(int current,int direction) {
     }
     return current;
 }
+
+/* Rescue keys remain available BEFORE Krusha is recruited. DK is always a
+ * native available original; other owners use their actual rescue flags. */
+int krushaRecruitmentKeyVisible(unsigned int file,unsigned int owner) {
+    return owner<5 && writable(file) && krushaRecruitmentContext() &&
+        krushaOriginalKongUnlocked(owner) && !krushaRecruitmentRecruited(file) &&
+        !(krushaRecruitmentKeys(file)&(1u<<owner));
+}
+int krushaRecruitmentKeyCollectible(unsigned int file,unsigned int owner,unsigned int character,unsigned int player) {
+    return player==0 && character==owner && krushaRecruitmentKeyVisible(file,owner);
+}

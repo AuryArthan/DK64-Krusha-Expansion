@@ -1,3 +1,4 @@
+#include "../include/recruitment_keys.generated.h"
 #include "../include/common.h"
 #include "../include/krusha_recruitment.h"
 #include "../include/krusha_progress.h"
@@ -84,6 +85,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
         if (table==1) {table=27;index=mirrorEnabled()?RECRUITMENT_ROOM_MIRROR:RECRUITMENT_ROOM_GEOMETRY;}
         else if (table==18) {table=27;index=RECRUITMENT_ROOM_ZONE;}
     }
+    if (table==4 && index==RECRUITMENT_KEY_TYPE) {table=27;index=mirrorEnabled()?RECRUITMENT_KEY_MIRROR:RECRUITMENT_KEY_MODEL;}
     if (table==4 && index==RECRUITMENT_MODEL_TYPE) { table=27;index=mirrorEnabled()?RECRUITMENT_MIRROR_INDEX:RECRUITMENT_MODEL_INDEX; }
     if (table==25 && index>=RECRUITMENT_TEXTURE_TOKEN && index<RECRUITMENT_TEXTURE_TOKEN+RECRUITMENT_TEXTURE_COUNT) { table=27;index+=RECRUITMENT_TEXTURE_BASE-RECRUITMENT_TEXTURE_TOKEN; }
 #if M4_GRENADE_PREVIEW

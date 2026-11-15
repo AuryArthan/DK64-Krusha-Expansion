@@ -86,9 +86,15 @@ def prepare(rom_path):
     struct.pack_into('>H',blueprint,0,7);struct.pack_into('>hh',blueprint,12,7,0);defs+=blueprint
     gold=bytearray(native[15*20:16*20])
     struct.pack_into('>H',gold,0,9);struct.pack_into('>hh',gold,12,7,0);defs+=gold
-    words=struct.unpack('>235I',defs)
+    # Private rescue key: native collision/suction metadata, no owner/inventory
+    # changes or boss actor conversion. Native actor loop still stops at42.
+    from recruitment_keys import MODEL_TYPE
+    key=bytearray(native[25*20:26*20]);struct.pack_into('>H',key,0,MODEL_TYPE)
+    struct.pack_into('>H',key,14,0) # no boss-key actor alias, even beyond the native actor bound
+    defs+=key
+    words=struct.unpack('>%dI'%(len(defs)//4),defs)
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
-    header+='const u32 m2CollectDefs[235] = {\n'+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
+    header+='const u32 m2CollectDefs[%d] = {\n'%len(words)+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
     header+='static const struct { u16 slot, object_id, type, map; u8 units, coin, world; } m2Pickups[] = {\n'
     for p in registry_rows(None):header+='    {%d,%d,%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],p['map'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin',p['world'])
     header+='};\n'
@@ -172,6 +178,9 @@ def patch_code(fh,symbols):
     def patch(a,expected,new):
         assert word(a)==expected,hex(a)
         fh.seek(a-base);fh.write(new.to_bytes(4,'big'))
+    # Only the setup constructor's existing ownership classifier call. Native
+    #3D rendering and suction use its original per-prop ownership flags.
+    patch(0x806322BC,0x0C18CB9D,0x0C000000|(int(symbols['krusharecruitmentkeyowner'],16)&0xFFFFFFF)>>2)
     # Native2D model2 ownership-opacity call; original routine remains callable.
     patch(0x806380B0,0x0C18E4AF,0x0C000000|(int(symbols['m2pickupopacity'],16)&0xFFFFFFF)>>2)
     target=int(symbols['m2collectdefs'],16)
@@ -180,7 +189,7 @@ def patch_code(fh,symbols):
         assert hi>>26==15 and ((hi&65535)<<16)+signed==0x80753EF0+offset,(hex(h),hex(lo))
         # The actor loop retains its native 42-row bound via its relocated end.
         ptr=target+offset;patch(h,hi,hi&0xFFFF0000|((ptr+32768)>>16&65535));patch(l,lo,lo&0xFFFF0000|ptr&65535)
-    patch(0x806F4A8C,0x2401002A,0x2401002F)
+    patch(0x806F4A8C,0x2401002A,0x24010030)
     # The existing tag-anywhere build already allocates530 model2 slots/map.
     patch(0x80632188,0x0C1CC575,0x0C000000|(int(symbols['m2setuphidden'],16)&0xFFFFFFF)>>2)
 
