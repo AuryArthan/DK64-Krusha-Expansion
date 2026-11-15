@@ -63,6 +63,10 @@ static void transform(void) {
          *(f32*)(data+0x1C0)>.051f || *(f32*)(anim+0x34)>.051f)) {
         ((void (*)(void*,u8))0x806D0468)(Player,0);
         if (CurrentMap==34 && phase==RETURNING) {
+            /* The map constructor initialized a normal-size camera before
+             * Mini existed. Rebuild it once for the restored native form,
+             * during black loading, using the native player-load helper. */
+            ((void (*)(void*,u8))0x8061EB04)(Player,0);
             if (!krushaPrisonReturnTrace[0]) krushaPrisonReturnTrace[1]=ObjectModel2Timer;
             krushaPrisonReturnTrace[0]++;krushaPrisonReturnTrace[2]=ObjectModel2Timer;
         }
