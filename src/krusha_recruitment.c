@@ -6,6 +6,7 @@
  * real state machine run under a host fixture for every key/lock order. */
 extern int DetectAdventure(void);
 extern int krushaEnabled(void);
+extern signed char StorySkip;
 
 unsigned int krushaRecruitmentKeys(unsigned int file) {
     return file<3 ? krushaProgressRead(file,KRUSHA_KEYS_BIT,5) : 0;
@@ -75,7 +76,9 @@ int krushaNextCharacter(int current,int direction) {
 /* Rescue keys remain available BEFORE Krusha is recruited. DK is always a
  * native available original; other owners use their actual rescue flags. */
 int krushaRecruitmentKeyVisible(unsigned int file,unsigned int owner) {
-    return owner<5 && writable(file) && krushaRecruitmentContext() &&
+    /* Initial setup construction precedes the saved Speed grant in player
+     * spawn. Hide bypassed keys without granting progress in this query. */
+    return owner<5 && !StorySkip && writable(file) && krushaRecruitmentContext() &&
         krushaOriginalKongUnlocked(owner) && !krushaRecruitmentRecruited(file) &&
         !(krushaRecruitmentKeys(file)&(1u<<owner));
 }

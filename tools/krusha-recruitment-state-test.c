@@ -9,6 +9,7 @@ static unsigned char bits[3][512];
 static unsigned int active, saves, words, single_writes;
 static int adventure=1, enabled=1;
 static int context=1,scene,speed;
+signed char StorySkip;
 static unsigned int originals=31;
 int DetectAdventure(void){return adventure;}
 int krushaEnabled(void){return enabled;}
@@ -102,15 +103,15 @@ static void availability_tests(void){
 
 static void key_eligibility_tests(void) {
     unsigned int f,mode,owner,character,player;unsigned long cases=0;
-    for(f=0;f<3;f++)for(mode=0;mode<128;mode++)for(owner=0;owner<7;owner++) {
+    for(f=0;f<3;f++)for(mode=0;mode<256;mode++)for(owner=0;owner<7;owner++) {
         unsigned char old[3][512];int expected;
         reset();active=f;enabled=mode&1;adventure=(mode>>1)&1;
-        context=(mode>>2)&1;speed=0;originals=(mode&8)?31:0;
+        context=(mode>>2)&1;speed=StorySkip=!!(mode&128);originals=(mode&8)?31:0;
         if(mode&16)bits[f][496+(owner<5?owner:0)]=1;
         if(mode&32){unsigned int k;for(k=496;k<=506;k++)bits[f][k]=1;}
         if(mode&64)active=(f+1)%3;
         memcpy(old,bits,sizeof(bits));
-        expected=owner<5 && active==f && enabled && adventure && context &&
+        expected=owner<5 && !speed && active==f && enabled && adventure && context &&
             (owner==0 || originals) && !(mode&16) && !(mode&32);
         assert(krushaRecruitmentKeyVisible(f,owner)==expected);
         assert(!krushaRecruitmentKeyVisible(3,owner));
@@ -120,7 +121,7 @@ static void key_eligibility_tests(void) {
         }
         assert(!memcmp(old,bits,sizeof(bits))&&!saves&&!words&&!single_writes);
     }
-    enabled=adventure=context=1;speed=0;originals=31;active=0;reset();
+    enabled=adventure=context=1;speed=StorySkip=0;originals=31;active=0;reset();
     printf("PASS: %lu R09 actual key eligibility cases, native DK availability, hidden original owners, wrong owner/player/file, option/context/collected/recruited guards; read-only\n",cases);
 }
 
