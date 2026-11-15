@@ -152,28 +152,30 @@ void krushaPrisonVisitInput(void* raw) {
 }
 
 extern void vanillaBuildCameraMatrices(void*);
+/* Owned scene framing only: eye XYZ, target XYZ, vertical FOV. */
+f32 krushaPrisonCameraFraming[7]={900,450,-550,900,150,1000,82};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
     if ((phase!=ENTERING && phase!=STAGED) || CurrentMap!=RECRUITMENT_ROOM_MAP ||
         !DetectAdventure() || file!=*(u8*)0x807467C8 ||
-        !tiny() || !valid(cc,0x284)) return 0;
+        !tiny() || !valid(cc,0x28C)) return 0;
     if (phase==ENTERING && !(TBVoidByte&3)) roomLighting();
     /* Temporary renderer-only view. Native collision/input camera state is
      * restored before returning; no persistent camera ownership or flags. */
     f32* eye=(f32*)(cc+0x210);f32* target=(f32*)(cc+0x228);
-    f32 saved[7];
+    f32 saved[8];
     for (s32 i=0;i<3;i++) {saved[i]=eye[i];saved[i+3]=target[i];}
     saved[6]=*(f32*)(cc+0x27C);
-    f32* pos=(f32*)((u8*)Player+0x7C);
-    eye[0]=pos[0]-90;eye[1]=pos[1]+150;eye[2]=pos[2]-400;
-    target[0]=pos[0]+140;target[1]=pos[1]+80;target[2]=pos[2]+150;
-    *(f32*)(cc+0x27C)=50;
+    saved[7]=*(f32*)(cc+0x288);
+    for (s32 i=0;i<3;i++) {eye[i]=krushaPrisonCameraFraming[i];target[i]=krushaPrisonCameraFraming[i+3];}
+    *(f32*)(cc+0x27C)=krushaPrisonCameraFraming[6];
+    *(f32*)(cc+0x288)=5000;
     vanillaBuildCameraMatrices(display);
     for (s32 i=0;i<3;i++) {eye[i]=saved[i];target[i]=saved[i+3];}
-    *(f32*)(cc+0x27C)=saved[6];return 1;
+    *(f32*)(cc+0x27C)=saved[6];*(f32*)(cc+0x288)=saved[7];return 1;
 }
 
-/* Render-only7.2-fold Mini appearance; native form/movement/upkeep and
+/* Render-only14.4-fold Mini appearance; native form/movement/upkeep and
  * collision remain untouched. Normalize the zero-budget normal form to the
  * same visible size during the owned scene. Never carry a model pointer. */
 f32 krushaPrisonVisualScale(void* actor) {
@@ -182,5 +184,6 @@ f32 krushaPrisonVisualScale(void* actor) {
     u8* data=*(u8**)((u8*)actor+0x174);
     if (!valid(data,0x1D0)) return 1;
     f32 scale=*(f32*)(data+0x1CC);
-    return scale>.045f && scale<.16f ? .36f/scale : 1;
+    return scale>.045f && scale<.16f ? .72f/scale : 1;
 }
+

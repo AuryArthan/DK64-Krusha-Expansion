@@ -41,7 +41,11 @@ static void update(void) {
     if (i==0 && !(*(u32*)(a+0x60)&0x10)) {
         /* Native display init allocates its32 animation-channel records and
          * initializes Krusha's own mesh. It has no parent-barrel dependency. */
-        ((void(*)(void))0x80683158)();krushaHolsterModel(a);return;
+        ((void(*)(void))0x80683158)();krushaHolsterModel(a);
+        /* Barrel displays request their own lighting path. In this world
+         * scene use native room lighting, preserving Krusha's blue skin. */
+        *(u32*)(a+0x60)&=~0x1000;
+        *(s16*)(a+0xE6)=2048;return;
     }
     ((void(*)(void*,s32))0x806319C4)(a,0);
 }
@@ -56,10 +60,13 @@ static int spawn(int i,int type,int model,f32 x,f32 y,f32 z,f32 scale,s16 angle)
     *(f32*)(a+0x7C)=x;*(f32*)(a+0x80)=y;*(f32*)(a+0x84)=z;
     u8* anim=*(u8**)(a+4);
     for (int j=0;j<3;j++) *(f32*)(anim+0x34+j*4)=scale;
-    *(s16*)(a+0xE6)=angle;*(s16*)(a+0x128)=3000;
-    *(u32*)(a+0x60)|=0x40000000;
-    /* Preserve native RGB/lighting state; set only display opacity, without
-     * importing the cutscene force-color property or a synthetic skin tint. */
+    *(s16*)(a+0xE6)=angle;
+    *(s16*)(a+0x128)=255;  /* shadow opacity, not distance */
+    *(s16*)(a+0x12A)=3000; /* native display draw distance */
+    /* These seven owned cutscene displays use the native no-distance/chunk-
+     * cull bit. Their positions need not follow Mini Tiny's normal camera. */
+    *(u32*)(a+0x60)|=0x40000400;
+    /* Preserve native RGB/lighting; set opacity without a synthetic tint. */
     a[0x16D]=255;a[0x15F]=255;
     if (i==0) {
         *(u16*)*(u8**)(a+0x174)=7;krushaInitCharacterMesh(a,7);krushaHolsterModel(a);
@@ -77,7 +84,7 @@ void krushaPrisonSceneBegin(unsigned int f) {
     for (int i=0;i<7;i++) {displays[i].actor=0;displays[i].uid=0;}
     active=1;file=f;page=age=advance=finished=built=0;last_timer=ObjectModel2Timer;
     if (valid(Player,0xF0)) {
-        *(u16*)((u8*)Player+0xE6)=490;*(u16*)((u8*)Player+0xEE)=490;
+        *(u16*)((u8*)Player+0xE6)=3484;*(u16*)((u8*)Player+0xEE)=3484;
     }
     empty=krushaRecruitmentRecruited(file)!=0;
     intro=!empty && !krushaRecruitmentIntroSeen(file);
@@ -123,7 +130,7 @@ static Gfx* draw(Gfx* dl,void* actor) {
     dl=print(dl,center,162*4,.42f,(char*)text[0]);
     gDPSetPrimColor(dl++,0,0,255,255,255,255);
     for (int i=1;i<4;i++) if (text[i]) dl=print(dl,center,(173+i*11)*4,.35f,(char*)text[i]);
-    dl=print(dl,center,218*4,.25f,"A / B: CONTINUE");
+    dl=print(dl,center,218*4,.25f,"A OR B: CONTINUE");
     return dl;
 }
 void krushaPrisonSceneInput(unsigned int pressed) {if(context() && age>=15 && (pressed&0xC000)) advance=1;}
@@ -134,11 +141,14 @@ int krushaPrisonSceneTick(void) {
     /* One bounded construction attempt per slot, no retry allocation storm. */
     if (!built) {
         built=1;
-        if (!empty && !spawn(0,316,0xDB,1200,50,1210,.9f,2350)) finished=1;
-        if (!spawn(1,115,0xC4,1200,50,1210,.38f,0)) finished=1;
+        if (!empty && !spawn(0,316,0xDB,900,95,1000,4.5f,2048)) finished=1;
+        if (!spawn(1,115,0xC4,900,95,1000,1.9f,0)) finished=1;
         u32 locks=krushaRecruitmentLocks(file);
+        /* Follow the front of the enlarged cage. Keep every owner's fixed
+         * slot when an opened lock is omitted; no shifting saved colors. */
         for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
-            !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,1276-i*38,155,1078,.12f,2048)) finished=1;
+            !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,1260-i*180,435,
+                1000-dk_sqrt(655.0f*655.0f-(360.0f-i*180)*(360.0f-i*180)),.24f,2048)) finished=1;
     }
     if (finished) return ++age>30;
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);

@@ -55,6 +55,12 @@ def geometry(rom):
         if max(rgb)-min(rgb)>8:
             light=round(.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2])
             g[p+12:p+15]=bytes([light]*3)
+        # This is a locked, staged conversation, not a freeroam map. Enlarge
+        # only its private scenery around the flat floor/cage center so the
+        # fivefold cage fits behind the camera. Native collision stays exact.
+        x,y,z=struct.unpack_from('>3h',g,p)
+        # Render floor50 at95, matching Tiny's unchanged native staging floor.
+        struct.pack_into('>3h',g,p,3*x-2*2700,3*y-2*150+135,3*z-2*3000)
     return bytes(g)
 
 def return_exit(rom):
@@ -73,7 +79,8 @@ def prepare(rom_path):
     for ident in range(TOKEN,TOKEN+len(PALETTES)):assert not read_file(rom,25,ident)
     ASSETS.mkdir(parents=True,exist_ok=True)
     exits,outside=return_exit(rom);assert outside==13
-    files={(23,34):exits,(23,MAP):struct.pack('>3h4B',1000,60,1000,128,1,0,0)}
+    # Stage Tiny outside the fivefold cage on an existing native floor95.
+    files={(23,34):exits,(23,MAP):struct.pack('>3h4B',1450,105,600,217,1,0,0)}
     for (table,mid),data in files.items():(ASSETS/f'{table}-{mid}.bin').write_bytes(data)
     h=ROOT/'include/recruitment_room.generated.h'
     h.write_text('/* Generated isolated recruitment room identities. */\n'+''.join(f'#define {k} {v}\n' for k,v in dict(RECRUITMENT_ROOM_MAP=MAP,RECRUITMENT_ROOM_SOURCE=97,RECRUITMENT_ROOM_GEOMETRY=161,RECRUITMENT_ROOM_MIRROR=162,RECRUITMENT_ROOM_ZONE=163,RECRUITMENT_ROOM_TEXTURE_TOKEN=TOKEN,RECRUITMENT_ROOM_TEXTURE_INDEX=INDEX,RECRUITMENT_ROOM_EXTRA_TEXTURE_INDEX=165,RECRUITMENT_ROOM_TEXTURE_COUNT=len(PALETTES),RECRUITMENT_RETURN_EXIT=outside,RECRUITMENT_STAGE_TICKS=180).items()))
