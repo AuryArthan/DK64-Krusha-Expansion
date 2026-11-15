@@ -19,6 +19,10 @@ int krushaRecruitmentSpeedGrant(unsigned int file,int speed);
 int krushaNextCharacter(int current,int direction);
 int krushaRecruitmentContext(void);
 int krushaRecruitmentPlayable(void);
+/* World ownership, including setup construction during a return transition.
+ * Unlike playable(), this does not depend on the transient prison visit guard.
+ * Queries never grant Speed recruitment or modify a file. */
+int krushaCampaignAvailable(void);
 int krushaOriginalKongUnlocked(unsigned int kong);
 void krushaRecruitmentTick(void);
 

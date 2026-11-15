@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
+#include "../include/krusha_recruitment.h"
 
 /* Native unused bonus entry2 resolves flag1C4. Use it only as a token in the
  * new barrel's stock machinery; private slot0 remains the actual saved reward.
@@ -37,7 +38,7 @@ void m4BonusEligibility(void) {
     void (*native)(void)=(void*)0x8068086C;
     if (!m4PrivateBarrel(actor)) { native();return; }
     u8* data=Player ? *(u8**)((u8*)Player+0x174) : 0;
-    if (krushaEnabled() && DetectAdventure() && Character==5 && data && !data[0xCA]) {
+    if (krushaRecruitmentPlayable() && Character==5 && data && !data[0xCA]) {
         *(u32*)(actor+0x60)|=0x8000;
         *(u16*)(actor+0x132)=1;
     } else {

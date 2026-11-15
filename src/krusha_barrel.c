@@ -103,7 +103,11 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table==25 && index==7410) { table=27;index=68; }
     if (table == 5 && index == 0xC0 && krushaEnabled()) {
         table = 27;
-        index = 0;
+        /* Match native locked faces: reveal the question mark already on
+         * the wood beneath the sixth portrait. Separate models preserve
+         * shared portrait caches used by menus and the original five. */
+        index = (!krushaRecruitmentContext() || krushaCampaignAvailable()) ? 0 :
+            (mirrorEnabled() ? RECRUITMENT_BARREL_EXTERIOR_MIRROR : RECRUITMENT_BARREL_EXTERIOR);
     } else if (table == 25 && (index == 7001 || index == 7002)) {
         table = 27;
         index -= 7000;
@@ -170,7 +174,7 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
             }
         }
     }
-    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || index==RECRUITMENT_BARREL_MODEL || index==RECRUITMENT_BARREL_MIRROR || (index>=123 && index<131))) {
+    if (table == 27 && (format==1 || format==18 || index == 0 || index == 3 || index==58 || index==61 || index==69 || index==87 || index==RECRUITMENT_BARREL_MODEL || index==RECRUITMENT_BARREL_MIRROR || index==RECRUITMENT_BARREL_EXTERIOR || index==RECRUITMENT_BARREL_EXTERIOR_MIRROR || (index>=123 && index<131))) {
         /* These two actor models replace table5 files, which are deliberately
          * uncached in vanilla. Keep each actor's native model ownership while
          * sharing only the table4 models and table7/14/25 texture resources. */

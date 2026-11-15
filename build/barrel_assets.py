@@ -55,7 +55,7 @@ def encode_face(image):
     return halves
 
 
-def make_model(native):
+def make_model(native, locked=False):
     vertices = bytearray()
     commands = []
     def cmd(a, b=0): commands.append((a, b))
@@ -141,9 +141,21 @@ def make_model(native):
         if a == 0xDA380003: b = 0x04000000
         cmd(a,b)
     load(offsets['krusha'],16)
+    root_face_start = len(commands)
     tri2(0,1,2,0,2,3);tri2(4,0,3,4,3,5);tri2(6,4,5,6,5,7)
     pair_texture(TEXTURE_IDS[1])
     tri2(8,9,10,8,10,11);tri2(12,8,11,12,11,13);tri2(14,12,13,14,13,15)
+    if locked:
+        # The shell already carries the native question marks beneath every
+        # portrait. Omit only the root-bound sixth portrait's six triangle
+        # commands. Keep all material state, native five masks, geometry,
+        # pointers and allocation sizes identical to the accepted barrel.
+        removed = 0
+        for i in range(root_face_start, len(commands)):
+            if commands[i][0] >> 24 == 6:
+                commands[i] = (0, 0)
+                removed += 1
+        assert removed == 6
     face_bytes = bytearray(native[0xC60:0x1150])
     old_to_new = {old:offsets[name] for name,old in native_groups}
     for i in range(0,len(face_bytes),8):
@@ -239,6 +251,9 @@ def appendBarrelAssets(rom_path):
     from recruitment_barrel import payloads as recruitment_barrel_payloads
     payloads += recruitment_barrel_payloads(Path(rom_path).read_bytes())
     assert len(payloads)==173
+    from recruitment_barrel import exterior_payloads
+    payloads += exterior_payloads(Path(rom_path).read_bytes())
+    assert len(payloads)==175
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)

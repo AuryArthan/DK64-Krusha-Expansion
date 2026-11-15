@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/m3_progress.h"
+#include "../include/krusha_recruitment.h"
 #include "../include/m2_pickups.generated.h"
 #include "../include/recruitment_assets.generated.h"
 extern int m4SetupHidden(s32,s32);
@@ -14,7 +15,7 @@ s32 m2SetupHidden(s32 map, s32 object_id) {
     s32 (*nativeHidden)(s32,s32) = (void*)0x807315D4;
     for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
         if (map!=m2Pickups[i].map || object_id != m2Pickups[i].object_id) continue;
-        if (!krushaEnabled() || !DetectAdventure()) return 1;
+        if (!krushaCampaignAvailable()) return 1;
         return krushaProgressRead(*(u8*)0x807467C8,m2Pickups[i].slot,1);
     }
     return nativeHidden(map,object_id);
@@ -24,6 +25,7 @@ s32 m2SetupHidden(s32 map, s32 object_id) {
  * suction/despawn run afterward. The original flag index is -1 for private types;
  * only this registry can award them, once, to the independent sixth wallet. */
 static s32 m2Award(u16 slot,u8 units,u8 coin,u8 world) {
+        if (!krushaCampaignAvailable() || Character!=5) return 0;
         u8 file=*(u8*)0x807467C8;
         if (krushaProgressRead(file,slot,1)) return 0;
         s32 before=krushaProgressBananas(file,world);
@@ -49,7 +51,7 @@ s32 m2PickupAllowed(s16 object_id,u8 player,u16 type) {
     m2ContactTrace[3]++;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     object_id=setupId(object_id);
-    if (!krushaEnabled() || !DetectAdventure() || Character != 5 || player) return 0;
+    if (!krushaCampaignAvailable() || Character != 5 || player) return 0;
     for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
         if (CurrentMap!=m2Pickups[i].map || object_id != m2Pickups[i].object_id || type != m2Pickups[i].type) continue;
         m2ContactTrace[4]++;
@@ -92,6 +94,12 @@ void m2PickupOpacity(s16 type,u8* opaque,s16* alpha) {
     void (*nativeOpacity)(s16,u8*,s16*)=(void*)0x806392BC;
     if (krushaEnabled() && DetectAdventure() &&
         (type == 2 || type == 4 || type == 6 || type == 7)) {
+        /* Cached maps can retain a model2 after eligibility changes. Its
+         * contact path is gated separately; never expose a retained colored
+         * pickup while locked. Blueprints follow native visible-drop rules. */
+        if (type!=7 && !krushaCampaignAvailable()) {
+            *opaque=0;*alpha=0;return;
+        }
         u8* changes=*(u8**)0x807FC924;
         u8 viewport=*(u8*)0x807FC929;
         u8* actor=(changes && viewport < 4) ? *(u8**)(changes+viewport*0x2F0+4) : 0;
@@ -137,6 +145,7 @@ void m2ActorCollision(void* actor,void* collision) {
         m2NativeActorCollision(actor,collision);
         return;
     }
+    if (!krushaCampaignAvailable() || Character!=5) return;
     /* Single-threaded native dispatch consumes this pointer synchronously.
      * Restore it before any other actor is processed, including boss balloons. */
     const u32* saved=*entry;
@@ -152,7 +161,7 @@ s32 m2Balloon(void* sprite) {
     s32 index=balloonIndex(actor);
     if (index < 0) return 0;
     u8 file=*(u8*)0x807467C8;
-    if (!krushaEnabled() || !DetectAdventure() || krushaProgressRead(file,m2Balloons[index].slot,1)) {
+    if (!krushaCampaignAvailable() || krushaProgressRead(file,m2Balloons[index].slot,1)) {
         krushaNativeActorDelete(actor);
         return 1;
     }
@@ -187,7 +196,7 @@ s32 m2Balloon(void* sprite) {
         attach((void*)&m2_balloon_sprite,0.8f,actor,1,2);
         actor[0x144]=2;
     }
-    if (*(u8*)0x807FBD70==4) {
+    if (Character==5 && *(u8*)0x807FBD70==4) {
         void (*pop)(void*)=(void*)0x80686CF8;
         pop(actor);
         playSound(0x2BF,0x7FFF,63.0f,1.0f,5,0);

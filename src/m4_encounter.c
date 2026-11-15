@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/m5_campaign.h"
+#include "../include/krusha_recruitment.h"
 #include "../include/klump_colors.generated.h"
 #if M4_GRENADE_PREVIEW
 extern u8 m4GrenadeVisualScope;
@@ -89,7 +90,8 @@ int m4EncounterKlump(void* pointer) {
 }
 
 void m4EncounterShout(void) {
-    if (!m5Area(CurrentMap) || !krushaEnabled() || !Player || won() || pending || dropped) return;
+    if (!m5Area(CurrentMap) || !krushaRecruitmentPlayable() || Character!=5 ||
+        !(MovesBase[5].instrument_bitfield&1) || !Player || won() || pending || dropped) return;
     const M5Area* area=m5Area(CurrentMap);
     f32 dx=Player->xPos-area->pad[0],dz=Player->zPos-area->pad[2],dy=Player->yPos-area->pad[1];
     if (dx*dx+dz*dz>70*70 || dy < -20 || dy>35) return;

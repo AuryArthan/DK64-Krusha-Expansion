@@ -1,6 +1,7 @@
 #include "../include/common.h"
 #include "../include/krusha_progress.h"
 #include "../include/m5_campaign.h"
+#include "../include/krusha_recruitment.h"
 #include "../include/m4_rewards.generated.h"
 
 extern void m4NativeCollectEffect(s16,u8);
@@ -139,7 +140,8 @@ int m4ScriptCondition(u16* instruction,s16 runtime) {
     s16 id=setupId(runtime);
     const M5Area* area=m5Area(CurrentMap);
     if (id!=area->gate_id) return -1;
-    if (instruction[1]==0x4D35) return id==area->gate_id && krushaEnabled() && DetectAdventure() && cageProjectile();
+    if (instruction[1]==0x4D35) return krushaCampaignAvailable() && Character==5 &&
+        (MovesBase[5].weapon_bitfield&1) && cageProjectile();
     int disabled=!krushaEnabled() || !DetectAdventure() ||
         krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5+1,1);
     return (instruction[0]&0x8000) ? !disabled : disabled;
@@ -215,7 +217,7 @@ void m4RewardsTick(void) {
 
 int m4PickupAllowed(s16 object_id,u8 player,u16 type) {
     if (type!=9) return -1;
-    if (!krushaEnabled() || !DetectAdventure() || Character!=5 || player || !Player) return 0;
+    if (!krushaCampaignAvailable() || Character!=5 || player || !Player) return 0;
     s16 (*setupId)(s16)=(void*)0x8063D990;
     const M5Area* area=m5Area(CurrentMap);
     int slot=(area && (object_id==m4BonusPhysicalID || object_id==m4EncounterPickupID)) ? area->world*5 : reward(CurrentMap,setupId(object_id));

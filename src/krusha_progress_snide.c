@@ -2,6 +2,7 @@
 #include "../include/krusha_progress.h"
 #include "../include/krusha_identity.h"
 #include "../include/krusha_victory.generated.h"
+#include "../include/krusha_recruitment.h"
 
 extern void vanillaSnideBoard(void);
 extern Gfx* vanillaSnideDraw(Gfx*, void*);
@@ -34,6 +35,7 @@ void krushaSnideAnimation(void* actor, s32 script) {
 static unsigned int activeFile(void) { return *(volatile u8*)0x807467C8; }
 
 int krushaSnideDisplayRewardReady(void) {
+    if (!krushaRecruitmentPlayable() || Character!=5) return 0;
     /* The setup prop already sits near the doorway before its presentation.
      * Wait for the native hand-in phase, and require this visit to have held
      * blueprints. A repeat/no-blueprint visit must not collect the idle prop. */
@@ -81,9 +83,10 @@ int krushaSnideBonusFlag(int flag, int type) {
 }
 
 void krushaSnideSetFlag(int flag, int value, int type) {
-    if (flag >= 0x4000 && flag < 0x4200)
+    if (flag >= 0x4000 && flag < 0x4200) {
+        if (!krushaCampaignAvailable() || Character!=5) return;
         krushaProgressWrite(activeFile(),flag-0x4000,1,value != 0);
-    else setFlag(flag,value,type);
+    } else setFlag(flag,value,type);
 }
 
 int krushaSnideBoardComplete(int base, int width, int type) {

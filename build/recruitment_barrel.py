@@ -8,6 +8,8 @@ TEXTURE = 171
 MIRROR = 172
 MODEL_TOKEN = 0xEF  # One-based; file0xEE follows the private Klump file0xED.
 TEXTURE_TOKEN = 7830
+EXTERIOR = 173
+EXTERIOR_MIRROR = 174
 
 
 def prepare():
@@ -18,7 +20,18 @@ def prepare():
         f'#define RECRUITMENT_BARREL_TEXTURE {TEXTURE}\n'
         f'#define RECRUITMENT_BARREL_MIRROR {MIRROR}\n'
         f'#define RECRUITMENT_BARREL_MODEL_TOKEN {MODEL_TOKEN}\n'
-        f'#define RECRUITMENT_BARREL_TEXTURE_TOKEN {TEXTURE_TOKEN}\n')
+        f'#define RECRUITMENT_BARREL_TEXTURE_TOKEN {TEXTURE_TOKEN}\n'
+        f'#define RECRUITMENT_BARREL_EXTERIOR {EXTERIOR}\n'
+        f'#define RECRUITMENT_BARREL_EXTERIOR_MIRROR {EXTERIOR_MIRROR}\n')
+
+
+def exterior_payloads(rom):
+    from barrel_assets import read_file, make_model
+    from mirror_assets import flip
+    model, _ = make_model(read_file(rom, 5, 0xC0), locked=True)
+    mirrored, count = flip(model, 5)
+    assert count > 0
+    return [model, mirrored]
 
 
 def payloads(rom):

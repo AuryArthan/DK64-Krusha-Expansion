@@ -19,6 +19,10 @@ int krushaRecruitmentPlayable(void) {
     return krushaRecruitmentContext() && CurrentMap!=RECRUITMENT_ROOM_MAP &&
         !krushaPrisonVisitBusy() && krushaAvailable(krushaProgressActiveFile());
 }
+int krushaCampaignAvailable(void) {
+    return krushaRecruitmentContext() && CurrentMap!=RECRUITMENT_ROOM_MAP &&
+        krushaAvailable(krushaProgressActiveFile());
+}
 int krushaOriginalKongUnlocked(unsigned int kong) {
     static const u16 flags[5]={385,6,70,66,117};
     if (kong>=5) return 0;

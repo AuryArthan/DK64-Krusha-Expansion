@@ -2,6 +2,7 @@
 #include "../include/krusha_progress.h"
 #include "../include/m3_kasplat.h"
 #include "../include/m5_campaign.h"
+#include "../include/krusha_recruitment.h"
 
 extern void m3NativeKasplatInit(u8);
 extern void m3NativeEnemyDrop(void*);
@@ -170,7 +171,7 @@ int m3BlueprintAllowed(s16 object_id,u8 player,u16 type) {
     if (type!=7) return -1;
     m3KasplatTrace[2]++;
     m3KasplatTrace[5]=object_id;m3KasplatTrace[6]=physical_id;
-    if (!krushaEnabled() || Character!=5 || player || !DetectAdventure() ||
+    if (!krushaCampaignAvailable() || Character!=5 || player ||
         !m5Kasplat(CurrentMap) || object_id!=physical_id || krushaProgressRead(file(),blueprintBit(),1)) return 0;
     krushaProgressWrite(file(),blueprintBit(),1,1);
     m3KasplatTrace[3]++;
