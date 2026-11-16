@@ -89,6 +89,9 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table==5 && index>=RECRUITMENT_LOCK_MODEL_TOKEN-1 && index<RECRUITMENT_LOCK_MODEL_TOKEN+4) {
         table=27;index=RECRUITMENT_LOCK_MODEL+(index-(RECRUITMENT_LOCK_MODEL_TOKEN-1))*2+(mirrorEnabled()!=0);
     }
+    if (table==5 && index>=RECRUITMENT_TURN_KEY_MODEL_TOKEN-1 && index<RECRUITMENT_TURN_KEY_MODEL_TOKEN+4) {
+        table=27;index=RECRUITMENT_TURN_KEY_MODEL+(index-(RECRUITMENT_TURN_KEY_MODEL_TOKEN-1))*2+(mirrorEnabled()!=0);
+    }
     if (table==25 && index>=RECRUITMENT_LOCK_TEXTURE_TOKEN && index<RECRUITMENT_LOCK_TEXTURE_TOKEN+10) {
         table=27;index+=RECRUITMENT_LOCK_TEXTURE-RECRUITMENT_LOCK_TEXTURE_TOKEN;
     }
