@@ -1,3 +1,4 @@
+#pragma GCC optimize("Os","no-strict-aliasing")
 #include "../include/common.h"
 #include "../include/krusha_prison_scene.h"
 #include "../include/krusha_recruitment.h"
@@ -102,7 +103,7 @@ static void construct(void) {
     /* Lower front rail; keyless locks face Tiny. Keep saved-owner gaps. */
     for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
         !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,
-            1260-i*180,90,503.639f,.48f,2048)) finished=1;
+            1184.2835f-i*180,115,503.639f,.48f,2048)) finished=1;
     krushaPrisonSceneTrace[8]=ObjectModel2Timer;
 }
 void krushaPrisonScenePrepare(unsigned int f) {
@@ -140,18 +141,18 @@ void krushaPrisonTinyAnimation(void* actor,int script) {
     *(const u8**)0x807F5AF0=krushaPrisonTinyIdleScript;
     krushaPrisonDialogueTrace[0]++;
 }
-static const char* first[6][4]={
-    {"KRUSHA", "WE CAUGHT SOME MONKEYS. I WAS HUNGRY...", "SO I DEALT WITH THE WHOLE BUNCH MYSELF.",0},
-    {"TINY", "YOU FREED THEM? AND THE OTHER", "KREMLINGS PUNISHED YOU?",0},
-    {"KRUSHA", "ER... YES, YES, FREED THEM...", "THEY WERE FURIOUS I HADN'T SHARED.",0},
-    {"TINY", "SHARED THE CREDIT?",0,0},
-    {"KRUSHA", "ER... YES, YES, WHATEVER... ANYWAY,", "FIND THE FIVE COLORED KEYS, GET ME OUT,", "AND I'M ON YOUR SIDE."},
-    {"TINY", "ONE KEY FOR EACH OF US.", "WE'LL BRING THEM HERE.",0}
+static const char* first[6][6]={
+    {"KRUSHA", "WE CAUGHT SOME MONKEYS.", "I WAS HUNGRY... SO I", "DEALT WITH THE WHOLE", "BUNCH MYSELF.",0},
+    {"TINY", "YOU FREED THEM? AND", "THE OTHER KREMLINGS", "PUNISHED YOU?",0,0},
+    {"KRUSHA", "ER... YES, YES,", "FREED THEM... THEY", "WERE FURIOUS I", "HADN'T SHARED.",0},
+    {"TINY", "SHARED THE CREDIT?",0,0,0,0},
+    {"KRUSHA", "ER... YEAH, YEAH,", "WHATEVER... ANYWAY,", "FIND THE FIVE COLORED", "KEYS, GET ME OUT,", "AND I'M ON YOUR SIDE."},
+    {"TINY", "ONE KEY FOR EACH OF", "US. WE'LL BRING THEM", "HERE.",0,0}
 };
-static const char* again[4]={"KRUSHA","STILL LOCKED UP. STILL HUNGRY.","KEEP LOOKING!",0};
-static const char* held[4]={"TINY","WE'VE FOUND SOME COLORED KEYS!",0,0};
-static const char* wip[4]={"KRUSHA","THE LOCKS ARE STUCK FOR NOW.","KEEP YOUR KEYS. TRY AGAIN SOON.",0};
-static const char* gone[4]={"TINY","HE'S OUT. BETTER FIND THE OTHERS.",0,0};
+static const char* again[6]={"KRUSHA","STILL LOCKED UP.","STILL HUNGRY.","KEEP LOOKING!",0,0};
+static const char* held[6]={"TINY","WE'VE FOUND SOME","COLORED KEYS!",0,0,0};
+static const char* wip[6]={"KRUSHA","THE LOCKS ARE STUCK","FOR NOW. KEEP YOUR","KEYS. TRY AGAIN SOON.",0,0};
+static const char* gone[6]={"TINY","HE'S OUT. BETTER","FIND THE OTHERS.",0,0,0};
 static const char** lines(void) {
     if (empty) return gone;
     if (intro && page<6) return first[page];
@@ -163,40 +164,62 @@ static u32 length(const char* text) {
     u32 n=0;if (text) while (n<95 && text[n]) n++;return n;
 }
 static u32 characters(void) {
-    const char** text=lines();return length(text[1])+length(text[2])+length(text[3]);
+    const char** text=lines();u32 n=0;for(int i=1;i<6;i++) n+=length(text[i]);return n;
 }
 static Gfx* draw(Gfx* dl,void* actor) {
     if (!context() || !begun || (TBVoidByte&3) || finished) return dl;
     const char** text=lines();
-    Gfx*(*print)(Gfx*,s16,s16,f32,char*)=(void*)0x806ABB98;
-    gDPPipeSync(dl++);
-    dl->words.w0=0xE3000A01;dl->words.w1=0;dl++;
-    dl->words.w0=0xE200001C;dl->words.w1=0x00504240;dl++;
-    gDPSetCombineMode(dl++,G_CC_PRIMITIVE,G_CC_PRIMITIVE);
-    gDPSetPrimColor(dl++,0,0,0,0,0,165);
-    s32 scale=*(u8*)0x8074450C;if (scale<1 || scale>2) scale=1;
-    gDPFillRectangle(dl++,8*scale,155*scale,312*scale,231*scale);
-    gDPPipeSync(dl++);
+    /* Native animated cloud and its four tapering pointer bubbles. Use
+     * native deferred frame storage, exactly as the game's text renderer;
+     * no persistent text actor or K. Lumsy story controller is involved. */
+    Mtx* matrices=dk_malloc(0x3C0);
+    if (!matrices) return dl;
+    ((void(*)(void*))0x8061134C)(matrices);
+    u8 bubble[0x3C] __attribute__((aligned(8)));
+    /* Native pointer renderer reads only20..3B; these two angles are zero. */
+    *(u32*)(bubble+0x38)=0;
+    extern s32 mirrorEnabled(void);
+    s32 krusha=text[0][0]=='K';
+    f32 mouth=krusha?220:65,center=100;
+    if (mirrorEnabled()) {mouth=320-mouth;center=320-center;}
+    *(f32*)(bubble+0x20)=1;
+    *(f32*)(bubble+0x24)=mouth;
+    *(f32*)(bubble+0x28)=krusha?75:180;
+    *(f32*)(bubble+0x2C)=center;*(f32*)(bubble+0x30)=110;
+    *(Mtx**)(bubble+0x34)=matrices;
     gSPDisplayList(dl++,(void*)0x01000118);
     dl->words.w0=0xDA380007;dl->words.w1=0x020000C0;dl++;
+    dl->words.w0=0xE3000A01;dl->words.w1=0;dl++;
     dl->words.w0=0xE200001C;dl->words.w1=0x00504240;dl++;
-    gDPSetCombineLERP(dl++,0,0,0,TEXEL0,TEXEL0,0,PRIMITIVE,0,0,0,0,TEXEL0,TEXEL0,0,PRIMITIVE,0);
-    gDPSetPrimColor(dl++,0,0,255,225,110,255);
-    s16 center=*(s16*)0x80744490*2;
-    dl=print(dl,center,162*4,.42f,(char*)text[0]);
-    gDPSetPrimColor(dl++,0,0,255,255,255,255);
+    gDPSetCombineMode(dl++,G_CC_MODULATEIA_PRIM,G_CC_MODULATEIA_PRIM);
+    /* Native smooth-shading bit; the SDK value would enable front culling. */
+    dl->words.w0=0xD9000000;dl->words.w1=0x00200004;dl++;
+    s32 frame=(ObjectModel2Timer>>1)&7;
+    dl=((Gfx*(*)(Gfx*,void*,s16))0x806A3E9C)(dl,bubble,frame);
+    f32 matrix[4][4];
+    guScaleF(matrix,7.5f,7.5f,1);
+    matrix[3][0]=center*4-360;matrix[3][1]=200;
+    guMtxF2L(matrix,matrices);
+    dl=((Gfx*(*)(Gfx*,Mtx*,u8,s32))0x806A3C6C)(dl,matrices,150,frame);
+    /* The same blue native font6 as ordinary conversations. Full-line
+     * widths keep the left edge fixed as each prefix is revealed. */
+    Gfx*(*print)(Gfx*,s16,s16,s16,char*,u32)=(void*)0x806FC530;
     u32 remaining=text_clock/4;
     s32(*width)(s16,char*)=(void*)0x806FBD5C;
-    for (int i=1;i<4;i++) if (text[i]) {
+    s32 rows=0;for (int i=1;i<6;i++) if (text[i]) rows++;
+    for (int i=1;i<6;i++) if (text[i]) {
         char prefix[96];u32 n=length(text[i]),shown=remaining<n?remaining:n;
         for (u32 j=0;j<shown;j++) prefix[j]=text[i][j];
         prefix[shown]=0;
         remaining-=shown;
         if (shown) {
-            /* Preserve the complete line's left edge while letters appear,
-             * using the same native font widths as its centered renderer. */
-            s16 x=center+(s16)(.7f*(width(1,prefix)-width(1,(char*)text[i])));
-            dl=print(dl,x,(173+i*11)*4,.35f,prefix);
+            guScaleF(matrix,.65f,.65f,1);
+            matrix[3][0]=center*4-1.3f*width(6,(char*)text[i]);
+            matrix[3][1]=440-rows*22+(i-1)*44;
+            guMtxF2L(matrix,matrices+9+i);
+            dl->words.w0=0xDA380003;dl->words.w1=(u32)(matrices+9+i)&0x1FFFFFFF;dl++;
+            gDPSetPrimColor(dl++,0,0,40,40,255,255);
+            dl=print(dl,6,0,0,prefix,0);
         }
     }
     return dl;
