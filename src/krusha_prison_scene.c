@@ -103,7 +103,7 @@ static void construct(void) {
      * outside on an existing native floor. Captive stands220 units
      * behind its center, facing the rendered Tiny, clear of the front bars. */
     if (!empty && !spawn(0,316,0xDB,900,95,1920,8.415f,1900)) finished=1;
-    if (!spawn(1,115,0xC4,900,95,1700,3.553f,0)) finished=1;
+    if (!spawn(1,115,RECRUITMENT_CAGE_MODEL_TOKEN,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
     /* Five equal cells along the front rail. Align actual body vertices,
      * not bone2's offset origin: body center=root+(0.117,72.759,0).

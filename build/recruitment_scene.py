@@ -9,17 +9,18 @@ MODEL_TOKEN=0xF0
 TEXTURE_TOKEN=7850
 KEY_MODEL=212
 KEY_MODEL_TOKEN=245
-COUNT=222
+from recruitment_cage import MODEL as CAGE_MODEL, MODEL_TOKEN as CAGE_MODEL_TOKEN, COUNT
 
 def prepare(path):
  r=Path(path).read_bytes()
  from recruitment_barrel import MODEL_TOKEN as previous_model_token
  assert MODEL_TOKEN==previous_model_token+1
  assert MODEL_TOKEN-1>=struct.unpack_from('>I',r,0x101C50+(32+5)*4)[0]
- assert TEXTURE==MODEL+10 and KEY_MODEL==TEXTURE+10 and COUNT==KEY_MODEL+10
+ assert TEXTURE==MODEL+10 and KEY_MODEL==TEXTURE+10 and CAGE_MODEL==KEY_MODEL+10 and COUNT==CAGE_MODEL+2
  for i in range(TEXTURE_TOKEN,TEXTURE_TOKEN+10):assert not read_file(r,25,i)
  assert KEY_MODEL_TOKEN==MODEL_TOKEN+5
- (ROOT/'include/recruitment_scene.generated.h').write_text('/* Generated R11/R12 private display resources. */\n'+''.join(f'#define {k} {v}\n'for k,v in dict(RECRUITMENT_LOCK_MODEL=MODEL,RECRUITMENT_LOCK_TEXTURE=TEXTURE,RECRUITMENT_LOCK_MODEL_TOKEN=MODEL_TOKEN,RECRUITMENT_LOCK_TEXTURE_TOKEN=TEXTURE_TOKEN,RECRUITMENT_TURN_KEY_MODEL=KEY_MODEL,RECRUITMENT_TURN_KEY_MODEL_TOKEN=KEY_MODEL_TOKEN,RECRUITMENT_SCENE_ASSET_COUNT=COUNT).items()))
+ assert CAGE_MODEL_TOKEN==KEY_MODEL_TOKEN+5 and CAGE_MODEL_TOKEN<256
+ (ROOT/'include/recruitment_scene.generated.h').write_text('/* Generated R11/R12 private display resources. */\n'+''.join(f'#define {k} {v}\n'for k,v in dict(RECRUITMENT_LOCK_MODEL=MODEL,RECRUITMENT_LOCK_TEXTURE=TEXTURE,RECRUITMENT_LOCK_MODEL_TOKEN=MODEL_TOKEN,RECRUITMENT_LOCK_TEXTURE_TOKEN=TEXTURE_TOKEN,RECRUITMENT_TURN_KEY_MODEL=KEY_MODEL,RECRUITMENT_TURN_KEY_MODEL_TOKEN=KEY_MODEL_TOKEN,RECRUITMENT_CAGE_MODEL=CAGE_MODEL,RECRUITMENT_CAGE_MODEL_TOKEN=CAGE_MODEL_TOKEN,RECRUITMENT_SCENE_ASSET_COUNT=COUNT).items()))
 
 def without_inserted_key(source):
     """Keep native lock/shackle; omit only separate inserted-key bone3."""
@@ -72,5 +73,9 @@ def payloads(r):
   for offset,token in((0xD88,TEXTURE_TOKEN+owner*2),(0x1090,TEXTURE_TOKEN+owner*2),(0x11E0,TEXTURE_TOKEN+owner*2+1)):
    assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
   result.extend([bytes(b),flip(bytes(b),5)[0]])
+ assert len(result)==CAGE_MODEL-MODEL
+ from recruitment_cage import closed_cage
+ cage=closed_cage(read_file(r,5,0xC3))
+ result.extend([cage,flip(cage,5)[0]])
  assert len(result)==COUNT-MODEL
  return result
