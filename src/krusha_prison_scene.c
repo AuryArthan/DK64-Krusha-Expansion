@@ -15,10 +15,7 @@ static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescu
 /* Enlarge only the owned cage assembly about its fixed floor center.
  * Tiny, the native room and camera are independent of this display group. */
 #define ASSEMBLY_SCALE 1.06f
-#define CAPTIVE_YAW 1798 /*1900 minus9 degrees (102 native angle units).*/
-#define KEY_START_X 1260.0f
-#define KEY_START_Y 245.0f
-#define KEY_START_Z 380.0f
+#define CAPTIVE_YAW 2002 /*Reverse the previous18 degrees:1900 plus9.*/
 static f32 sceneX(f32 x) {return 900+(x-900)*ASSEMBLY_SCALE;}
 static f32 sceneY(f32 y) {return 95+(y-95)*ASSEMBLY_SCALE;}
 static f32 sceneZ(f32 z) {return 1700+(z-1700)*ASSEMBLY_SCALE;}
@@ -223,10 +220,13 @@ static void present(void) {
     }
     if (phase==PRISON_KEY_FLY) {
         f32 p=timer/PRISON_FLY_FRAMES;
-        /* Start in FRONT of Tiny's staged mesh (frontmost Z148),
-         * clear of her body and the key's backward-pointing shaft. */
-        poseWorld(owner+7,KEY_START_X+(sceneX(1294.9758f-owner*197.5464f)-KEY_START_X)*p,
-            KEY_START_Y+(sceneY(138.7783f)-KEY_START_Y)*p,KEY_START_Z+(sceneZ(503.639f)-KEY_START_Z)*p,.48f*ASSEMBLY_SCALE,2048);
+        /* Emanate from Tiny's actual rendered origin, including her staging
+         * translation. Never fly toward her from an unrelated rear point. */
+        extern f32 krushaPrisonTinyStaging[3];
+        f32* pos=(f32*)((u8*)Player+0x7C);
+        f32 x=pos[0]+krushaPrisonTinyStaging[0],y=pos[1]+krushaPrisonTinyStaging[1],z=pos[2]+krushaPrisonTinyStaging[2];
+        poseWorld(owner+7,x+(sceneX(1294.9758f-owner*197.5464f)-x)*p,
+            y+(sceneY(138.7783f)-y)*p,z+(sceneZ(503.639f)-z)*p,.48f*ASSEMBLY_SCALE,2048);
     } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN) {
         pose(owner+7,1294.9758f-owner*197.5464f,138.7783f+rise,503.639f,.48f*factor,2048);
     }
@@ -355,7 +355,7 @@ static Gfx* draw(Gfx* dl,void* actor) {
         gDPSetCombineMode(dl++,G_CC_MODULATEIA_PRIM,G_CC_MODULATEIA_PRIM);
         dl->words.w0=0xDA380007;dl->words.w1=0x020000C0;dl++;
         dl->words.w0=0xDA380003;dl->words.w1=0x02000180;dl++;
-        dl=widescreenImage(dl,7202+((ObjectModel2Timer>>2)&7),0,2,44,44,center*4,560,2.4f,2.4f,0,0);
+        dl=widescreenImage(dl,7202+((ObjectModel2Timer>>2)&7),0,2,44,44,center*4,560,2.4f,2.4f,180,0);
     }
     return dl;
 }
@@ -428,6 +428,10 @@ int krushaPrisonSceneTick(void) {
             else {
                 sequence=4;krushaPrisonDepartureTrace[0]=1;
                 if (alive(0)) krushaPlayActorAnimation(displays[0].actor,0xEA);
+                /* Closure used to hide him about16 native frames later.
+                 * Retire now, half a second earlier, before the forming
+                 * envelope can intersect his larger captive mesh. */
+                hideCaptive();
                 /* Native banana-port/rescue model152 and script298, sized
                  * to this captive. One owned display; native teardown owns
                  * all its model/animation resources exactly once. */
