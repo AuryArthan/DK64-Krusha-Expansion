@@ -71,6 +71,9 @@ static int spawn(int i,int type,int model,f32 x,f32 y,f32 z,f32 scale,s16 angle)
     *(f32*)(a+0x7C)=x;*(f32*)(a+0x80)=y;*(f32*)(a+0x84)=z;
     u8* anim=*(u8**)(a+4);
     for (int j=0;j<3;j++) *(f32*)(anim+0x34+j*4)=scale;
+    /* Owned display cage only: preserve width/height, reduce depth20%.
+     * Native cage actors elsewhere and Mini physics are untouched. */
+    if (i==1) *(f32*)(anim+0x3C)=2.8424f;
     *(s16*)(a+0xE6)=angle;
     *(s16*)(a+0x128)=255;  /* shadow opacity, not distance */
     *(s16*)(a+0x12A)=3000; /* native display draw distance */
@@ -100,10 +103,13 @@ static void construct(void) {
     if (!empty && !spawn(0,316,0xDB,900,95,1832,8.415f,1900)) finished=1;
     if (!spawn(1,115,0xC4,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
-    /* Lower front rail; keyless locks face Tiny. Keep saved-owner gaps. */
+    /* Five equal cells along the front rail. Align actual body vertices,
+     * not bone2's offset origin: body center=root+(0.117,72.759,0).
+     * Rail centerY240.671; follow its shallower frontZ742.113.
+     * Keep saved-owner gaps so presenting a key never reorders colors. */
     for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
         !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,
-            1184.2835f-i*180,115,503.639f,.48f,2048)) finished=1;
+            1294.9758f-i*197.5464f,167.9125f,743.1108f,.48f,2048)) finished=1;
     krushaPrisonSceneTrace[8]=ObjectModel2Timer;
 }
 void krushaPrisonScenePrepare(unsigned int f) {
