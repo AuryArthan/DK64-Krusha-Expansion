@@ -8,4 +8,5 @@ void krushaPrisonTinyAnimation(void* actor,int script);
 int krushaPrisonSceneTick(void);
 void krushaPrisonSceneInput(unsigned int held);
 int krushaPrisonDisplayOwned(void* actor);
+void krushaPrisonKeyBones(void* actor);
 #endif

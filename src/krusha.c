@@ -48,6 +48,11 @@ s32 krushaBuildActorBones(void* actor_ptr) {
     f32 factor=krushaPrisonVisualScale(actor_ptr);
     if (factor==1 && enlarge && krushaEnabled() && DetectAdventure()) factor=1.1f;
     if (factor==1) {
+        if (CurrentMap==216 && type==334) {
+            s32 result=vanillaBuildActorBones(actor_ptr);
+            krushaPrisonKeyBones(actor_ptr);
+            return result;
+        }
         return vanillaBuildActorBones(actor_ptr);
     }
     f32* matrix = (f32*)(actor + 0xC);

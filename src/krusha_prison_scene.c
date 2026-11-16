@@ -73,9 +73,9 @@ static int spawn(int i,int type,int model,f32 x,f32 y,f32 z,f32 scale,s16 angle)
     *(f32*)(a+0x7C)=x;*(f32*)(a+0x80)=y;*(f32*)(a+0x84)=z;
     u8* anim=*(u8**)(a+4);
     for (int j=0;j<3;j++) *(f32*)(anim+0x34+j*4)=scale;
-    /* Owned display cage only: preserve width/height, depth80% then85%.
+    /* Owned cage: original round X/Z footprint, height reduced20%.
      * Native cage actors elsewhere and Mini physics are untouched. */
-    if (i==1) *(f32*)(anim+0x3C)=2.41604f;
+    if (i==1) *(f32*)(anim+0x38)=2.8424f;
     *(s16*)(a+0xE6)=angle;
     *(s16*)(a+0x128)=255;  /* shadow opacity, not distance */
     *(s16*)(a+0x12A)=3000; /* native display draw distance */
@@ -107,15 +107,15 @@ static void construct(void) {
     u32 locks=krushaRecruitmentLocks(file);
     /* Five equal cells along the front rail. Align actual body vertices,
      * not bone2's offset origin: body center=root+(0.117,72.759,0).
-     * Rail centerY240.671; follow its shallower frontZ885.793.
+     * Rail centerY211.537; follow its original round frontZ502.641.
      * Keep saved-owner gaps so presenting a key never reorders colors. */
     for (int i=0;i<5;i++) if (!(locks&(1u<<i)) &&
         !spawn(i+2,334,RECRUITMENT_LOCK_MODEL_TOKEN+i,
-            1294.9758f-i*197.5464f,167.9125f,886.7908f,.48f,2048)) finished=1;
+            1294.9758f-i*197.5464f,138.7783f,503.639f,.48f,2048)) finished=1;
     u32 pending=krushaPrisonPendingKeys(file);
     for (int i=0;i<5;i++) if ((pending&(1u<<i)) &&
         !spawn(i+7,334,RECRUITMENT_TURN_KEY_MODEL_TOKEN+i,
-            1294.9758f-i*197.5464f,-2000,886.7908f,.48f,2048)) finished=1;
+            1294.9758f-i*197.5464f,-2000,503.639f,.48f,2048)) finished=1;
     krushaPrisonSceneTrace[8]=ObjectModel2Timer;
 }
 void krushaPrisonScenePrepare(unsigned int f) {
@@ -192,24 +192,51 @@ static void pose(int i,f32 x,f32 y,f32 z,f32 scale,s16 yaw) {
 static void present(void) {
     u32 phase=krushaPrisonTurnTrace[0],owner=krushaPrisonTurnTrace[1];
     f32 timer=krushaPrisonTurnTrace[2],rise=0,factor=1;
-    s16 yaw=2048;
-    if (phase==PRISON_KEY_TURN) yaw+=(s16)(timer*(1024.0f/PRISON_TURN_FRAMES));
-    if (phase>=PRISON_LOCK_OPEN) yaw=3072;
     if (phase==PRISON_LOCK_OPEN) {factor=1-timer/PRISON_OPEN_FRAMES;rise=timer*4;}
     if (phase==PRISON_LOCK_COMMIT || phase==PRISON_SELECT) factor=.0001f;
     for (int i=0;i<5;i++) {
         f32 x=1294.9758f-i*197.5464f;
-        if (krushaRecruitmentLocks(file)&(1u<<i)) pose(i+2,x,-2000,886.7908f,.0001f,2048);
-        else if (i==owner && phase==PRISON_LOCK_OPEN) pose(i+2,x,167.9125f+rise,886.7908f,.48f*factor,2048);
-        pose(i+7,x,-2000,886.7908f,.48f,2048);
+        if (krushaRecruitmentLocks(file)&(1u<<i)) pose(i+2,x,-2000,503.639f,.0001f,2048);
+        else if (i==owner && phase==PRISON_LOCK_OPEN) pose(i+2,x,138.7783f+rise,503.639f,.48f*factor,2048);
+        pose(i+7,x,-2000,503.639f,.48f,2048);
     }
     if (phase==PRISON_KEY_FLY) {
         f32 p=timer/PRISON_FLY_FRAMES;
         pose(owner+7,1300+(1294.9758f-owner*197.5464f-1300)*p,
-            245+(167.9125f-245)*p,100+(886.7908f-100)*p,.48f,2048);
+            245+(138.7783f-245)*p,100+(503.639f-100)*p,.48f,2048);
     } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN || phase==PRISON_FINAL_READY) {
-        pose(owner+7,1294.9758f-owner*197.5464f,167.9125f+rise,886.7908f,.48f*factor,yaw);
+        pose(owner+7,1294.9758f-owner*197.5464f,138.7783f+rise,503.639f,.48f*factor,2048);
     }
+}
+void krushaPrisonKeyBones(void* actor) {
+    u32 phase=krushaPrisonTurnTrace[0],owner=krushaPrisonTurnTrace[1];
+    if (!context() || owner>=5 || displays[owner+7].actor!=actor || !alive(owner+7)) return;
+    if (phase!=PRISON_KEY_TURN && phase!=PRISON_LOCK_OPEN && phase!=PRISON_FINAL_READY) return;
+    /* Native build has just selected and rebuilt THIS frame's bone bank.
+     * Bone3 origin is the key tip; local Z is the long shaft. Rotate only
+     * its X/Y basis so the shaft and tip stay bit-exactly fixed in the lock.
+     * Changing actor yaw/roll would swing the whole offset skeleton around
+     * the actor root, rather than rotate a physical key in its keyhole. */
+    Mtx* bones=*(Mtx**)((u8*)actor+8);
+    if (!valid(bones,256)) return;
+    f32 matrix[4][4];Mtx turned;
+    f32 angle=1.570796327f;
+    if (phase==PRISON_KEY_TURN) angle*=krushaPrisonTurnTrace[2]/(f32)PRISON_TURN_FRAMES;
+    extern f32 sinf(f32),cosf(f32);
+    f32 sine=sinf(angle),cosine=cosf(angle);
+    guMtxL2F(matrix,bones+3);
+    for (int i=0;i<3;i++) {
+        f32 x=matrix[0][i],y=matrix[1][i];
+        matrix[0][i]=cosine*x+sine*y;
+        matrix[1][i]=-sine*x+cosine*y;
+    }
+    guMtxF2L(matrix,&turned);
+    for (int row=0;row<2;row++) for (int col=0;col<3;col++) {
+        int i=row*4+col;
+        ((s16*)(bones+3))[i]=((s16*)&turned)[i];
+        ((u16*)(bones+3))[i+16]=((u16*)&turned)[i+16];
+    }
+    osWritebackDCache(bones+3,64);
 }
 static u32 length(const char* text) {
     u32 n=0;if (text) while (n<95 && text[n]) n++;return n;

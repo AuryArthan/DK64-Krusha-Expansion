@@ -181,7 +181,9 @@ void krushaPrisonVisitInput(void* raw) {
 
 extern void vanillaBuildCameraMatrices(void*);
 /* Owned scene framing only: eye XYZ, target XYZ, vertical FOV. */
-f32 krushaPrisonCameraFraming[7]={700,650,-650,1450,750,1700,58};
+/* Lower the view with the shorter cage's front rail, retaining its angle
+ * and magnification while keeping all five lock bodies inside the frame. */
+f32 krushaPrisonCameraFraming[7]={700,580,-650,1450,680,1700,58};
 f32 krushaPrisonTinyStaging[3]={1000,0,-430};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
