@@ -11,7 +11,7 @@ MODEL = 222
 MODEL_TOKEN = 250  # One-based actor token after the five independent keys.
 COUNT = MODEL + 2
 NATIVE_TIP_Y = 659
-END_Y = 950
+END_Y = 850
 
 
 def bar_extensions(source):
@@ -19,20 +19,26 @@ def bar_extensions(source):
     u = lambda off: struct.unpack_from('>I', source, off)[0]
     end = u(4) - u(0) + 40
     start = u(end) - u(0) + 40
-    groups = {y: {} for y in (263, NATIVE_TIP_Y)}
+    groups = {'joint': {}, 'tip': {}}
     for off in range(40, start, 16):
         x, y, z = struct.unpack_from('>3h', source, off)
-        if y not in groups:
+        level = 'tip' if y == NATIVE_TIP_Y else 'joint' if y in (526, 534) else None
+        if level is None:
             continue
         sector = round((math.atan2(z, x)*180/math.pi - 22.5)/45) % 8
-        groups[y].setdefault(sector, {}).setdefault((x, y, z), source[off:off+16])
+        groups[level].setdefault(sector, {}).setdefault((x, y, z), source[off:off+16])
     assert all(len(g) == 8 and all(len(v) == 3 for v in g.values()) for g in groups.values())
     result = []
     for sector in range(8):
-        lower, tip = groups[263][sector], groups[NATIVE_TIP_Y][sector]
+        # Follow the LAST native section above the upper rail. The longer
+        # Y263->659 average flattens its inward bend and looks convex.
+        lower, tip = groups['joint'][sector], groups['tip'][sector]
         center = lambda points: tuple(sum(p[i] for p in points)/3 for i in range(3))
         a, b = center(lower), center(tip)
-        factor = (END_Y - NATIVE_TIP_Y)/(NATIVE_TIP_Y - 263)
+        dx, dz = b[0]-a[0], b[2]-a[2]
+        meeting_y = b[1] - (b[0]*dx+b[2]*dz)*(b[1]-a[1])/(dx*dx+dz*dz)
+        assert 880 < meeting_y < 900 and END_Y < meeting_y
+        factor = (END_Y - b[1])/(b[1] - a[1])
         delta = (round((b[0]-a[0])*factor), END_Y-NATIVE_TIP_Y,
                  round((b[2]-a[2])*factor))
         ring = sorted(tip, key=lambda p: math.atan2(p[2]-b[2], p[0]-b[0]))
@@ -42,7 +48,8 @@ def bar_extensions(source):
             end_vertex = bytearray(start_vertex)
             struct.pack_into('>3h', end_vertex, 0, *(point[i]+delta[i] for i in range(3)))
             vertices.append((start_vertex, bytes(end_vertex)))
-        result.append(dict(sector=sector, vertices=vertices, delta=delta))
+        result.append(dict(sector=sector, vertices=vertices, delta=delta,
+                           last_joint=a, native_tip=b, meeting_y=meeting_y))
     return result
 
 

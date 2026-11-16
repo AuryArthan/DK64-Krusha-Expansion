@@ -12,6 +12,12 @@
 static struct {u8* actor;u32 uid;} displays[12];
 static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun,voiced_page,voice_cooldown;
 static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report*/
+/* Enlarge only the owned cage assembly about its fixed floor center.
+ * Tiny, the native room and camera are independent of this display group. */
+#define ASSEMBLY_SCALE 1.06f
+static f32 sceneX(f32 x) {return 900+(x-900)*ASSEMBLY_SCALE;}
+static f32 sceneY(f32 y) {return 95+(y-95)*ASSEMBLY_SCALE;}
+static f32 sceneZ(f32 z) {return 1700+(z-1700)*ASSEMBLY_SCALE;}
 volatile u32 krushaPrisonSceneTrace[12];
 /* quiet script installs, voice count, last voice, current cooldown. */
 volatile u32 krushaPrisonDialogueTrace[4];
@@ -69,13 +75,14 @@ void krushaPrisonSceneInstall(void) {
 }
 static int spawn(int i,int type,int model,f32 x,f32 y,f32 z,f32 scale,s16 angle) {
     if (!spawnActor(type,model)) return 0;
+    x=sceneX(x);y=sceneY(y);z=sceneZ(z);scale*=ASSEMBLY_SCALE;
     u8* a=*(u8**)0x807FBB44;displays[i].actor=a;displays[i].uid=*(u32*)(a+0x54);
     *(f32*)(a+0x7C)=x;*(f32*)(a+0x80)=y;*(f32*)(a+0x84)=z;
     u8* anim=*(u8**)(a+4);
     for (int j=0;j<3;j++) *(f32*)(anim+0x34+j*4)=scale;
     /* Owned cage: original round X/Z footprint, height reduced20%.
      * Native cage actors elsewhere and Mini physics are untouched. */
-    if (i==1) *(f32*)(anim+0x38)=2.8424f;
+    if (i==1) *(f32*)(anim+0x38)=2.8424f*ASSEMBLY_SCALE;
     *(s16*)(a+0xE6)=angle;
     *(s16*)(a+0x128)=255;  /* shadow opacity, not distance */
     *(s16*)(a+0x12A)=3000; /* native display draw distance */
@@ -182,12 +189,15 @@ static const char** lines(void) {
     if (krushaPrisonPendingKeys(file)) return intro?held:more;
     return again;
 }
-static void pose(int i,f32 x,f32 y,f32 z,f32 scale,s16 yaw) {
+static void poseWorld(int i,f32 x,f32 y,f32 z,f32 scale,s16 yaw) {
     if (!alive(i)) return;
     u8* a=displays[i].actor;u8* anim=*(u8**)(a+4);
     *(f32*)(a+0x7C)=x;*(f32*)(a+0x80)=y;*(f32*)(a+0x84)=z;
     *(s16*)(a+0xE6)=yaw;
     for (int j=0;j<3;j++) *(f32*)(anim+0x34+j*4)=scale;
+}
+static void pose(int i,f32 x,f32 y,f32 z,f32 scale,s16 yaw) {
+    poseWorld(i,sceneX(x),sceneY(y),sceneZ(z),scale*ASSEMBLY_SCALE,yaw);
 }
 static void present(void) {
     u32 phase=krushaPrisonTurnTrace[0],owner=krushaPrisonTurnTrace[1];
@@ -202,8 +212,10 @@ static void present(void) {
     }
     if (phase==PRISON_KEY_FLY) {
         f32 p=timer/PRISON_FLY_FRAMES;
-        pose(owner+7,1300+(1294.9758f-owner*197.5464f-1300)*p,
-            245+(138.7783f-245)*p,100+(503.639f-100)*p,.48f,2048);
+        /* Tiny has not grown: keep her hand-side launch point unchanged,
+         * then fly to the enlarged assembly's actual keyhole position. */
+        poseWorld(owner+7,1300+(sceneX(1294.9758f-owner*197.5464f)-1300)*p,
+            245+(sceneY(138.7783f)-245)*p,100+(sceneZ(503.639f)-100)*p,.48f*ASSEMBLY_SCALE,2048);
     } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN || phase==PRISON_FINAL_READY) {
         pose(owner+7,1294.9758f-owner*197.5464f,138.7783f+rise,503.639f,.48f*factor,2048);
     }
@@ -220,7 +232,7 @@ void krushaPrisonKeyBones(void* actor) {
     Mtx* bones=*(Mtx**)((u8*)actor+8);
     if (!valid(bones,256)) return;
     f32 matrix[4][4];Mtx turned;
-    f32 angle=1.570796327f;
+    f32 angle=-1.570796327f;
     if (phase==PRISON_KEY_TURN) angle*=krushaPrisonTurnTrace[2]/(f32)PRISON_TURN_FRAMES;
     extern f32 sinf(f32),cosf(f32);
     f32 sine=sinf(angle),cosine=cosf(angle);
