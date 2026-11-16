@@ -246,6 +246,10 @@ static Gfx* draw(Gfx* dl,void* actor) {
                 f32 head[4][4],x,y;guMtxL2F(head,bones+3);
                 ((s32(*)(f32,f32,f32,f32*,f32*,s32,f32,s32))0x80626F8C)(head[3][0],head[3][1],head[3][2],&x,&y,0,1,0);
                 if (x>0 && x<320 && y>0 && y<240) {
+                    /* The cloud uses the contracted HUD orthographic view;
+                     * the projected head is already a world-screen point.
+                     * Undo that extra contraction just for the tail target. */
+                    if (*(u8*)0x807444C0) x=160+(x-160)*(4.0f/3.0f);
                     mouth=(x-.08f*center)/.92f;mouth_y=(y-8.8f)/.92f;
                 }
             }
