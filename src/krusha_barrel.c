@@ -143,6 +143,11 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
         table = 27;
         index = 34;
     }
+    /* Immediate rescue-bubble CB images share existing native sprite
+     * payloads, but displayImage resolves through table14 rather than25. */
+    if (table == 14 && index >= 7202 && index <= 7209) {
+        table = 27; index -= 7192;
+    }
     if (table == 25 && index >= 7100 && index <= 7123) {
         table = 27;
         index -= 7090;

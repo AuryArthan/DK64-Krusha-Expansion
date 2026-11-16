@@ -6,19 +6,25 @@
 #include "../include/recruitment_scene.generated.h"
 #include "../include/krusha_prison_turnin.h"
 
-/* At most12 bounded native displays, never K. Lumsy's story controllers.
+/* At most13 bounded native displays, never K. Lumsy's story controllers.
  * Map216 has no native actors of these classes. Elsewhere dispatch is exact.
  * The native map destructor owns actor/model lifetimes; handles include UID. */
-static struct {u8* actor;u32 uid;} displays[12];
+static struct {u8* actor;u32 uid;} displays[13];
 static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun,voiced_page,voice_cooldown;
-static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescue*/
+static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescue,4 banana departure*/
 /* Enlarge only the owned cage assembly about its fixed floor center.
  * Tiny, the native room and camera are independent of this display group. */
 #define ASSEMBLY_SCALE 1.06f
+#define CAPTIVE_YAW 1798 /*1900 minus9 degrees (102 native angle units).*/
+#define KEY_START_X 1260.0f
+#define KEY_START_Y 245.0f
+#define KEY_START_Z 380.0f
 static f32 sceneX(f32 x) {return 900+(x-900)*ASSEMBLY_SCALE;}
 static f32 sceneY(f32 y) {return 95+(y-95)*ASSEMBLY_SCALE;}
 static f32 sceneZ(f32 z) {return 1700+(z-1700)*ASSEMBLY_SCALE;}
 volatile u32 krushaPrisonSceneTrace[12];
+/* departure started,age,native banana progress,captive hidden,native finish */
+volatile u32 krushaPrisonDepartureTrace[5];
 /* quiet script installs, voice count, last voice, current cooldown. */
 volatile u32 krushaPrisonDialogueTrace[4];
 /* Native Tiny standing170 prefix: speed1, generic breathing clip0 with
@@ -44,7 +50,7 @@ int krushaPrisonDisplayOwned(void* actor) {
     return CurrentMap==216 && displays[0].actor==actor && alive(0);
 }
 static int slot(void* actor) {
-    for (int i=0;i<12;i++) if (displays[i].actor==actor && alive(i)) return i;
+    for (int i=0;i<13;i++) if (displays[i].actor==actor && alive(i)) return i;
     return -1;
 }
 static void update(void) {
@@ -64,7 +70,7 @@ static void update(void) {
         /* Barrel displays request their own lighting path. In this world
          * scene use native room lighting, preserving Krusha's blue skin. */
         *(u32*)(a+0x60)&=~0x1000;
-        *(s16*)(a+0xE6)=1900;return;
+        *(s16*)(a+0xE6)=CAPTIVE_YAW;return;
     }
     ((void(*)(void*,s32))0x806319C4)(a,0);
 }
@@ -109,7 +115,7 @@ static void construct(void) {
     /* The private room is centered on this cage; Mini Tiny remains
      * outside on an existing native floor. Move the captive half of the
      * earlier264-unit step forward:132 WORLD units after group scaling. */
-    if (!empty && !spawn(0,316,0xDB,900,95,1795.4717f,8.415f,1900)) finished=1;
+    if (!empty && !spawn(0,316,0xDB,900,95,1795.4717f,8.415f,CAPTIVE_YAW)) finished=1;
     if (!spawn(1,115,RECRUITMENT_CAGE_MODEL_TOKEN,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
     /* Five equal cells along the front rail. Align actual body vertices,
@@ -132,9 +138,10 @@ void krushaPrisonScenePrepare(unsigned int f) {
     int found=0;
     for (int n=0;n<ActorCount && n<256;n++) if ((void*)ActorArray[n]==Player) {found=1;break;}
     if (!found) return;
-    for (int i=0;i<12;i++) {displays[i].actor=0;displays[i].uid=0;}
+    for (int i=0;i<13;i++) {displays[i].actor=0;displays[i].uid=0;}
     active=1;file=f;page=age=text_clock=held_buttons=finished=built=begun=0;last_timer=ObjectModel2Timer;
     sequence=0;
+    for (int i=0;i<5;i++) krushaPrisonDepartureTrace[i]=0;
     krushaPrisonTurnBegin(f);
     empty=krushaRecruitmentRecruited(file)!=0;
     intro=!empty && !krushaRecruitmentIntroSeen(file);
@@ -173,16 +180,17 @@ static const char* first[6][6]={
 static const char* again[6]={"KRUSHA","STILL LOCKED UP.","STILL HUNGRY.","KEEP LOOKING!",0,0};
 static const char* held[6]={"TINY","WE'VE ALREADY FOUND","SOME. LET'S TRY THEM.",0,0,0};
 static const char* more[6]={"TINY","MORE KEYS.","HOLD STILL!",0,0,0};
-static const char* release[2][6]={
-    {"KRUSHA","FREE AT LAST!","I'M WITH YOU NOW.","LEAVE THE GRAY","BANANAS TO ME!",0},
-    {"KRUSHA","I'LL MEET YOU IN","A TAG BARREL.",0,0,0}
+static const char* release[3][6]={
+    {"KRUSHA","FREE AT LAST!","I'M WITH YOU NOW.",0,0,0},
+    {"KRUSHA","I CAN HELP YOU BY","COLLECTING GRAY","BANANAS.",0,0},
+    {"KRUSHA","SEE YOU IN THE","TAG BARREL.",0,0,0}
 };
 static const char* counts[5]={"ONE LOCK LEFT.","TWO LOCKS LEFT.","THREE LOCKS LEFT.","FOUR LOCKS LEFT.","FIVE LOCKS LEFT."};
 static const char* remaining[6]={"KRUSHA",0,"KEEP LOOKING!",0,0,0};
 static const char* gone[6]={"TINY","HE'S OUT. BETTER","FIND THE OTHERS.",0,0,0};
 static const char** lines(void) {
     if (empty) return gone;
-    if (sequence==3) return release[page<2?page:1];
+    if (sequence==3) return release[page<3?page:2];
     if (intro && page<6) return first[page];
     if (sequence==2) {
         u32 mask=krushaRecruitmentLocks(file),count=0;
@@ -215,10 +223,10 @@ static void present(void) {
     }
     if (phase==PRISON_KEY_FLY) {
         f32 p=timer/PRISON_FLY_FRAMES;
-        /* Tiny has not grown: keep her hand-side launch point unchanged,
-         * then fly to the enlarged assembly's actual keyhole position. */
-        poseWorld(owner+7,1300+(sceneX(1294.9758f-owner*197.5464f)-1300)*p,
-            245+(sceneY(138.7783f)-245)*p,100+(sceneZ(503.639f)-100)*p,.48f*ASSEMBLY_SCALE,2048);
+        /* Start in FRONT of Tiny's staged mesh (frontmost Z148),
+         * clear of her body and the key's backward-pointing shaft. */
+        poseWorld(owner+7,KEY_START_X+(sceneX(1294.9758f-owner*197.5464f)-KEY_START_X)*p,
+            KEY_START_Y+(sceneY(138.7783f)-KEY_START_Y)*p,KEY_START_Z+(sceneZ(503.639f)-KEY_START_Z)*p,.48f*ASSEMBLY_SCALE,2048);
     } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN) {
         pose(owner+7,1294.9758f-owner*197.5464f,138.7783f+rise,503.639f,.48f*factor,2048);
     }
@@ -260,7 +268,7 @@ static u32 characters(void) {
     const char** text=lines();u32 n=0;for(int i=1;i<6;i++) n+=length(text[i]);return n;
 }
 static Gfx* draw(Gfx* dl,void* actor) {
-    if (!context() || !begun || (TBVoidByte&3) || finished || sequence==1) return dl;
+    if (!context() || !begun || (TBVoidByte&3) || finished || sequence==1 || sequence==4) return dl;
     const char** text=lines();
     /* Native animated cloud and its four tapering pointer bubbles. Use
      * native deferred frame storage, exactly as the game's text renderer;
@@ -337,7 +345,44 @@ static Gfx* draw(Gfx* dl,void* actor) {
             dl=print(dl,6,0,0,prefix,0);
         }
     }
+    if (sequence==3 && page==1 && text_clock>=characters()*4) {
+        /* Same eight RGBA16 silver CB frames as the existing pickup/HUD.
+         * Immediate native image drawing uses its bounded frame cache;
+         * no per-frame sprite actors or texture allocations are introduced. */
+        extern Gfx* widescreenImage(Gfx*,u16,s32,s32,s32,s32,s16,s16,f32,f32,s32,f32);
+        gDPPipeSync(dl++);
+        gDPSetPrimColor(dl++,0,0,255,255,255,255);
+        gDPSetCombineMode(dl++,G_CC_MODULATEIA_PRIM,G_CC_MODULATEIA_PRIM);
+        dl->words.w0=0xDA380007;dl->words.w1=0x020000C0;dl++;
+        dl->words.w0=0xDA380003;dl->words.w1=0x02000180;dl++;
+        dl=widescreenImage(dl,7202+((ObjectModel2Timer>>2)&7),0,2,44,44,center*4,560,2.4f,2.4f,0,0);
+    }
     return dl;
+}
+static void hideCaptive(void) {
+    if (!alive(0)) return;
+    pose(0,900,-2000,1795.4717f,.0001f,CAPTIVE_YAW);
+    displays[0].actor[0x16D]=0;*(s16*)(displays[0].actor+0x128)=0;
+    krushaPrisonDepartureTrace[3]=1;
+}
+static void departure(void) {
+    krushaPrisonDepartureTrace[1]=++age;
+    if (alive(12)) {
+        u8* banana=displays[12].actor;
+        u32 progress=banana[0x155];krushaPrisonDepartureTrace[2]=progress;
+        /* Native rescue banana script298 advances its OWN progress at
+         * closure and completion. Do not run actor60/225's callback: those
+         * mutate the real player/old cutscene controller. */
+        if (progress==1) {hideCaptive();banana[0x155]=2;}
+        if (progress>=3) {
+            banana[0x16D]=0;*(s16*)(banana+0x128)=0;
+            pose(12,900,-2000,1795.4717f,.0001f,CAPTIVE_YAW);
+            hideCaptive();krushaPrisonDepartureTrace[4]=1;finished=1;age=0;return;
+        }
+    }
+    /* Fail closed if a native resource cannot be constructed; never trap
+     * Tiny after the durable rescue transaction has already succeeded. */
+    if (age>180) {hideCaptive();finished=1;age=0;}
 }
 void krushaPrisonSceneInput(unsigned int buttons) {if(context() && begun) held_buttons=buttons;}
 int krushaPrisonSceneTick(void) {
@@ -345,6 +390,7 @@ int krushaPrisonSceneTick(void) {
     if (ObjectModel2Timer<last_timer) {krushaPrisonSceneReset();return 1;}
     last_timer=ObjectModel2Timer;
     if (finished) return ++age>30;
+    if (sequence==4) {departure();return 0;}
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
     if (sequence==1) {
         int done=krushaPrisonTurnTick();present();
@@ -373,19 +419,22 @@ int krushaPrisonSceneTick(void) {
     krushaPrisonSceneTrace[3]=(empty?2:intro?0:1);
     krushaPrisonSceneTrace[6]=krushaRecruitmentKeys(file);krushaPrisonSceneTrace[7]=krushaRecruitmentLocks(file);
     krushaPrisonSceneTrace[10]=text_clock;krushaPrisonSceneTrace[11]=characters();
-    u32 duration=characters()*4+120;if (duration<180) duration=180;
+    u32 duration=characters()*4+((sequence==3 && page==1)?360:120);if (duration<180) duration=180;
     if (text_clock>=duration && age>=45) {
         text_clock=0;age=0;
         if (intro && page==5) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}
         if (sequence==3) {
-            if (page<1) page++;
+            if (page<2) page++;
             else {
-                /* Retire visually; native map teardown still owns the actor,
-                 * animation, model and texture lifetimes exactly once. */
-                pose(0,900,-2000,1795.4717f,.0001f,1900);finished=1;
-                if (alive(0)) {
-                    displays[0].actor[0x16D]=0;
-                    *(s16*)(displays[0].actor+0x128)=0;
+                sequence=4;krushaPrisonDepartureTrace[0]=1;
+                if (alive(0)) krushaPlayActorAnimation(displays[0].actor,0xEA);
+                /* Native banana-port/rescue model152 and script298, sized
+                 * to this captive. One owned display; native teardown owns
+                 * all its model/animation resources exactly once. */
+                if (spawn(12,115,0x98,900,95,1795.4717f,8.415f,CAPTIVE_YAW)) {
+                    krushaPlayActorAnimation(displays[12].actor,0x298);
+                    *(void**)(displays[12].actor+0x11C)=displays[0].actor;
+                    *(s16*)(displays[12].actor+0x128)=0;
                 }
             }
         }
