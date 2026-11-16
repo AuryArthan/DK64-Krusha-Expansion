@@ -131,11 +131,18 @@ def main():
                         path = RUN / "videos" / (Path(cmd["record"]).name + ".mp4")
                         recording = subprocess.Popen(["ffmpeg", "-nostats", "-y", "-f", "x11grab", "-video_size", RESOLUTION,
                             "-framerate", "30", "-i", ENV["DISPLAY"], "-an", "-c:v", "libx264", "-preset", "ultrafast",
+                            # yuv420p requires even dimensions. Preserve every
+                            # pixel in odd-width native Wide captures (427x240)
+                            # by padding, never resampling the game image.
+                            "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "-threads", "2",
                             "-crf", "22", "-pix_fmt", "yuv420p", "-movflags", "+frag_keyframe+empty_moov", str(path)], env=ENV,
                             stdin=subprocess.PIPE, stdout=elog, stderr=subprocess.STDOUT)
                     if cmd.get("stop_record") and recording is not None:
                         recording.communicate(b"q", timeout=10)
+                        returncode = recording.returncode
                         recording = None
+                        if returncode:
+                            raise RuntimeError("Screen recording failed; inspect the emulator log")
                     keys = cmd.get("keys", [])
                     if keys:
                         xdo("keydown", *keys)
