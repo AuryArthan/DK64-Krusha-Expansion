@@ -1,8 +1,8 @@
-"""Closed metal lid for the private recruitment cage, using its native material.
+"""Extend the private cage's upper bars straight beyond the owned camera frame.
 
-Keep every original vertex, bone and body triangle. Insert a small watertight
-octagonal cap above the eight native post tips; native cages remain unchanged.
-The shallow raised center leaves headroom and gives the roof a readable profile.
+Preserve all native body vertices and triangles. Continue each triangular bar
+from its three Y659 endpoints along its original center line, at unchanged
+thickness. There is no lid, connecting roof or change to the original cages.
 """
 import math
 import struct
@@ -10,35 +10,44 @@ import struct
 MODEL = 222
 MODEL_TOKEN = 250  # One-based actor token after the five independent keys.
 COUNT = MODEL + 2
-RIM_Y = 659
-PEAK_Y = 733
-THICKNESS = 8
-CORNERS = ((174, 72), (72, 174), (-72, 174), (-174, 72),
-           (-174, -72), (-72, -174), (72, -174), (174, -72))
+NATIVE_TIP_Y = 659
+END_Y = 950
 
 
-def roof_triangles():
-    upper = [(x, RIM_Y + THICKNESS, z) for x, z in CORNERS]
-    lower = [(x, RIM_Y, z) for x, z in CORNERS]
+def bar_extensions(source):
+    """Eight records of original tip vertices and a common linear displacement."""
+    u = lambda off: struct.unpack_from('>I', source, off)[0]
+    end = u(4) - u(0) + 40
+    start = u(end) - u(0) + 40
+    groups = {y: {} for y in (263, NATIVE_TIP_Y)}
+    for off in range(40, start, 16):
+        x, y, z = struct.unpack_from('>3h', source, off)
+        if y not in groups:
+            continue
+        sector = round((math.atan2(z, x)*180/math.pi - 22.5)/45) % 8
+        groups[y].setdefault(sector, {}).setdefault((x, y, z), source[off:off+16])
+    assert all(len(g) == 8 and all(len(v) == 3 for v in g.values()) for g in groups.values())
     result = []
-    for i in range(8):
-        j = (i + 1) % 8
-        result.extend((((0, PEAK_Y, 0), upper[j], upper[i]),
-                       ((0, PEAK_Y - THICKNESS, 0), lower[i], lower[j]),
-                       (upper[i], upper[j], lower[j]),
-                       (upper[i], lower[j], lower[i])))
-    # Every geometric edge belongs to exactly two faces in opposite directions.
-    edges = {}
-    for tri in result:
-        for a, b in zip(tri, tri[1:] + tri[:1]):
-            key = tuple(sorted((a, b)))
-            edges.setdefault(key, []).append((a, b))
-    assert all(len(v) == 2 and v[0] == v[1][::-1] for v in edges.values())
+    for sector in range(8):
+        lower, tip = groups[263][sector], groups[NATIVE_TIP_Y][sector]
+        center = lambda points: tuple(sum(p[i] for p in points)/3 for i in range(3))
+        a, b = center(lower), center(tip)
+        factor = (END_Y - NATIVE_TIP_Y)/(NATIVE_TIP_Y - 263)
+        delta = (round((b[0]-a[0])*factor), END_Y-NATIVE_TIP_Y,
+                 round((b[2]-a[2])*factor))
+        ring = sorted(tip, key=lambda p: math.atan2(p[2]-b[2], p[0]-b[0]))
+        vertices = []
+        for point in ring:
+            start_vertex = tip[point]
+            end_vertex = bytearray(start_vertex)
+            struct.pack_into('>3h', end_vertex, 0, *(point[i]+delta[i] for i in range(3)))
+            vertices.append((start_vertex, bytes(end_vertex)))
+        result.append(dict(sector=sector, vertices=vertices, delta=delta))
     return result
 
 
-def closed_cage(source):
-    """Relocate the native actor layout, retaining its material and skeleton."""
+def extended_cage(source):
+    """Append only side quads, using native metal, normals and skeleton."""
     u = lambda off: struct.unpack_from('>I', source, off)[0]
     base = u(0)
     end = u(4) - base + 40
@@ -46,18 +55,15 @@ def closed_cage(source):
     assert len(source) == 6016 and (start, end) == (0xF18, 0x1490)
     assert source[end-16:end] == bytes.fromhex('d9f9ffff00000000df00000000000000')
     vertices = bytearray()
-    for tri in roof_triangles():
-        a, b, c = tri
-        ab, ac = [[p[i] - a[i] for i in range(3)] for p in (b, c)]
-        normal = [ab[1]*ac[2]-ab[2]*ac[1], ab[2]*ac[0]-ab[0]*ac[2],
-                  ab[0]*ac[1]-ab[1]*ac[0]]
-        length = math.sqrt(sum(v*v for v in normal))
-        normal = [round(v / length * 127) for v in normal]
-        for point in tri:
-            vertices += struct.pack('>3hH2h3bB', *point, 0, 0, 0, *normal, 255)
+    for bar in bar_extensions(source):
+        ring = bar['vertices']
+        for i in range(3):
+            a, b = ring[i]
+            c, d = ring[(i+1) % 3]
+            vertices += c+a+b+c+b+d  # Two outward-facing triangles per side.
+    assert len(vertices) == 144*16
     commands = bytearray()
-    # Reuse the already-bound native metal texture, lighting and texture-gen.
-    for first in range(0, 96, 24):
+    for first in range(0, 144, 24):
         commands += struct.pack('>II', 0x01018030, 0x03000000 + start - 40 + first*16)
         for index in range(0, 24, 6):
             commands += struct.pack('>II', 0x06000000 | index*2 << 16 |
@@ -69,9 +75,8 @@ def closed_cage(source):
         assert u(offset) >= base + end - 40
         struct.pack_into('>I', out, offset, u(offset) + delta)
     struct.pack_into('>I', out, end + delta, u(end) + len(vertices))
-    # Native model's vertical extent, not an actor/collision dimension.
-    assert struct.unpack_from('>h', source, 30)[0] == RIM_Y
-    struct.pack_into('>h', out, 30, PEAK_Y)
+    assert struct.unpack_from('>h', source, 30)[0] == NATIVE_TIP_Y
+    struct.pack_into('>h', out, 30, END_Y)
     assert out[40:start] == source[40:start]
     assert out[start+len(vertices):end-16+len(vertices)] == source[start:end-16]
     assert out[end+delta+4:] == source[end+4:]

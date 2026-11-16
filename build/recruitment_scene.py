@@ -74,8 +74,8 @@ def payloads(r):
    assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
   result.extend([bytes(b),flip(bytes(b),5)[0]])
  assert len(result)==CAGE_MODEL-MODEL
- from recruitment_cage import closed_cage
- cage=closed_cage(read_file(r,5,0xC3))
+ from recruitment_cage import extended_cage
+ cage=extended_cage(read_file(r,5,0xC3))
  result.extend([cage,flip(cage,5)[0]])
  assert len(result)==COUNT-MODEL
  return result
