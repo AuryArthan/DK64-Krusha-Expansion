@@ -11,7 +11,7 @@
  * The native map destructor owns actor/model lifetimes; handles include UID. */
 static struct {u8* actor;u32 uid;} displays[12];
 static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun,voiced_page,voice_cooldown;
-static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report*/
+static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescue*/
 /* Enlarge only the owned cage assembly about its fixed floor center.
  * Tiny, the native room and camera are independent of this display group. */
 #define ASSEMBLY_SCALE 1.06f
@@ -107,9 +107,9 @@ static void construct(void) {
     if (built) return;
     built=1;
     /* The private room is centered on this cage; Mini Tiny remains
-     * outside on an existing native floor. Captive stands220 units
-     * behind its center, facing the rendered Tiny, clear of the front bars. */
-    if (!empty && !spawn(0,316,0xDB,900,95,1920,8.415f,1900)) finished=1;
+     * outside on an existing native floor. Move the captive half of the
+     * earlier264-unit step forward:132 WORLD units after group scaling. */
+    if (!empty && !spawn(0,316,0xDB,900,95,1795.4717f,8.415f,1900)) finished=1;
     if (!spawn(1,115,RECRUITMENT_CAGE_MODEL_TOKEN,900,95,1700,3.553f,0)) finished=1;
     u32 locks=krushaRecruitmentLocks(file);
     /* Five equal cells along the front rail. Align actual body vertices,
@@ -173,15 +173,18 @@ static const char* first[6][6]={
 static const char* again[6]={"KRUSHA","STILL LOCKED UP.","STILL HUNGRY.","KEEP LOOKING!",0,0};
 static const char* held[6]={"TINY","WE'VE ALREADY FOUND","SOME. LET'S TRY THEM.",0,0,0};
 static const char* more[6]={"TINY","MORE KEYS.","HOLD STILL!",0,0,0};
-static const char* final[6]={"KRUSHA","ALL FIVE KEYS!","JUST ONE LAST LOCK","TO LOOSEN.",0,0};
+static const char* release[2][6]={
+    {"KRUSHA","FREE AT LAST!","I'M WITH YOU NOW.","LEAVE THE GRAY","BANANAS TO ME!",0},
+    {"KRUSHA","I'LL MEET YOU IN","A TAG BARREL.",0,0,0}
+};
 static const char* counts[5]={"ONE LOCK LEFT.","TWO LOCKS LEFT.","THREE LOCKS LEFT.","FOUR LOCKS LEFT.","FIVE LOCKS LEFT."};
 static const char* remaining[6]={"KRUSHA",0,"KEEP LOOKING!",0,0,0};
 static const char* gone[6]={"TINY","HE'S OUT. BETTER","FIND THE OTHERS.",0,0,0};
 static const char** lines(void) {
     if (empty) return gone;
+    if (sequence==3) return release[page<2?page:1];
     if (intro && page<6) return first[page];
     if (sequence==2) {
-        if (krushaPrisonTurnTrace[0]==PRISON_FINAL_READY) return final;
         u32 mask=krushaRecruitmentLocks(file),count=0;
         for (int i=0;i<5;i++) if (!(mask&(1u<<i))) count++;
         remaining[1]=counts[count?count-1:0];return remaining;
@@ -216,14 +219,14 @@ static void present(void) {
          * then fly to the enlarged assembly's actual keyhole position. */
         poseWorld(owner+7,1300+(sceneX(1294.9758f-owner*197.5464f)-1300)*p,
             245+(sceneY(138.7783f)-245)*p,100+(sceneZ(503.639f)-100)*p,.48f*ASSEMBLY_SCALE,2048);
-    } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN || phase==PRISON_FINAL_READY) {
+    } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN) {
         pose(owner+7,1294.9758f-owner*197.5464f,138.7783f+rise,503.639f,.48f*factor,2048);
     }
 }
 void krushaPrisonKeyBones(void* actor) {
     u32 phase=krushaPrisonTurnTrace[0],owner=krushaPrisonTurnTrace[1];
     if (!context() || owner>=5 || displays[owner+7].actor!=actor || !alive(owner+7)) return;
-    if (phase!=PRISON_KEY_TURN && phase!=PRISON_LOCK_OPEN && phase!=PRISON_FINAL_READY) return;
+    if (phase!=PRISON_KEY_TURN && phase!=PRISON_LOCK_OPEN) return;
     /* Native build has just selected and rebuilt THIS frame's bone bank.
      * Bone3 origin is the key tip; local Z is the long shaft. Rotate only
      * its X/Y basis so the shaft and tip stay bit-exactly fixed in the lock.
@@ -345,7 +348,10 @@ int krushaPrisonSceneTick(void) {
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
     if (sequence==1) {
         int done=krushaPrisonTurnTick();present();
-        if (done) {sequence=2;page++;age=text_clock=0;}
+        if (done) {
+            sequence=krushaRecruitmentRecruited(file)?3:2;
+            page=sequence==3?0:page+1;age=text_clock=0;
+        }
         return 0;
     }
     age++;
@@ -371,7 +377,19 @@ int krushaPrisonSceneTick(void) {
     if (text_clock>=duration && age>=45) {
         text_clock=0;age=0;
         if (intro && page==5) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}
-        if (sequence==2 || empty) finished=1;
+        if (sequence==3) {
+            if (page<1) page++;
+            else {
+                /* Retire visually; native map teardown still owns the actor,
+                 * animation, model and texture lifetimes exactly once. */
+                pose(0,900,-2000,1795.4717f,.0001f,1900);finished=1;
+                if (alive(0)) {
+                    displays[0].actor[0x16D]=0;
+                    *(s16*)(displays[0].actor+0x128)=0;
+                }
+            }
+        }
+        else if (sequence==2 || empty) finished=1;
         else if (intro && page<6) {
             page++;
             if (page==6 && !krushaPrisonPendingKeys(file)) sequence=2;

@@ -29,18 +29,15 @@ int krushaPrisonTurnTick(void) {
             t[0]=PRISON_TURN_DONE;return 1;
         }
         t[3]++;t[6]=t[1];t[7]=krushaRecruitmentLocks(turn_file);
+        /* The durable helper writes the fifth lock AND recruitment in one
+         * eleven-bit transaction. Only now hand the scene its release lines. */
+        if (t[7]==31) {t[0]=PRISON_FINAL_READY;t[2]=0;return 1;}
         t[0]=PRISON_SELECT;t[2]=0;
     } else {
         unsigned int duration=phase==PRISON_KEY_FLY?PRISON_FLY_FRAMES:
             phase==PRISON_KEY_TURN?PRISON_TURN_FRAMES:PRISON_OPEN_FRAMES;
         if (++t[2]>=duration) {
             t[2]=0;
-            if (phase==PRISON_KEY_TURN &&
-                (krushaRecruitmentLocks(turn_file)|(1u<<t[1]))==31) {
-                /* R12 proves the final key presentation, then returns safely.
-                 * Do not split the future fifth-lock/recruited transaction. */
-                t[0]=PRISON_FINAL_READY;return 1;
-            }
             t[0]=phase+1;
         }
     }
