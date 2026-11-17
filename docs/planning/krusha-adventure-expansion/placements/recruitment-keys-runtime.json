@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "milestone": "R10",
-  "placement_status": "provisional; no reviewed key export supplied",
-  "source": "recruitment-keys-v1 proposals, R09 safe DK pilot and collision/route audit",
+  "milestone": "v0.15 reviewed key placements",
+  "placement_status": "Four reviewed placements in validation; Tiny mouth request pending progression decision, approved shore retained",
+  "source": "Explicit reviewed atlas export",
   "keys": [
     {
       "id": "RK-DK",
@@ -11,13 +11,18 @@
       "type": 60,
       "owner": 0,
       "xyz": [
-        2940.0,
-        509.848225,
-        2220.0
+        2974.489,
+        404.0,
+        1120.165
       ],
       "scale": 0.04,
-      "notes": "R09 central clearing, base raised to collision floor505.848+4.",
-      "status": "provisional"
+      "notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT",
+      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "source_xyz": [
+        2974.489,
+        489,
+        1120.165
+      ]
     },
     {
       "id": "RK-DIDDY",
@@ -26,13 +31,18 @@
       "type": 62,
       "owner": 1,
       "xyz": [
-        1800.0,
-        2100,
-        850.0
+        3250.167,
+        1250.922921,
+        1671.169
       ],
       "scale": 0.04,
-      "notes": "Provisional open-air pickup west of the original Fungi-side Rocketbarrel. Native flight ceiling measured near2200; key is100 below it. Nearby600-unit box has no walkable surface above1622.5 (477.5 below key), so ordinary Diddy jumps cannot reach it. No scripted flight-only predicate; final placement review pending.",
-      "status": "provisional"
+      "notes": "Upper approach near Aztec; proposed ledge location, flight requirement undecided. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PLACE DIDDY's KEY HERE ON DK ISLE EAR, NEAR THE ANGRY AZTEC - I THINK THIS CAN ONLY BE REACHED WITH JETPACK",
+      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "source_xyz": [
+        3250.167,
+        1200,
+        1671.169
+      ]
     },
     {
       "id": "RK-LANKY",
@@ -41,13 +51,18 @@
       "type": 63,
       "owner": 2,
       "xyz": [
-        2200.0,
-        518.565847,
-        3100.0
+        2056.093,
+        207.36558,
+        4023.552
       ],
       "scale": 0.04,
-      "notes": "Mechanical-island shore, exposed slope514.566+4; ordinary swim/walk/jump access, inspect in native gameplay.",
-      "status": "provisional"
+      "notes": "Shore/tunnel approach on mechanical island; check water level and swimming access. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT LANKY'S KEY HERE ON THE BOTTOM OF THE SEA, BELOW THE SHIP",
+      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "source_xyz": [
+        2056.093,
+        489,
+        4023.552
+      ]
     },
     {
       "id": "RK-TINY",
@@ -61,8 +76,14 @@
         2550.0
       ],
       "scale": 0.04,
-      "notes": "Fairy Island outside shore, ground499.378+4, clear of fairy entrance and Mini barrel; ordinary movement only.",
-      "status": "provisional"
+      "notes": "Retained approved Fairy Island shore while the requested mouth route awaits a progression decision. Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT",
+      "status": "Mouth placement pending user progression choice; retain approved Fairy Island position",
+      "source_xyz": [
+        2530.611,
+        1740,
+        3147.061
+      ],
+      "pending_request": "Mouth opens after Caves and Castle keys, normal access requires Monkeyport; earlier rescue timing conflicts."
     },
     {
       "id": "RK-CHUNKY",
@@ -71,13 +92,20 @@
       "type": 65,
       "owner": 4,
       "xyz": [
-        3400.0,
-        504.0,
-        3100.0
+        3567.15,
+        1044.0,
+        1761.949
       ],
       "scale": 0.04,
-      "notes": "Original prison-island approach500+4; clear of original entrance and miniature prison, no giant form required.",
-      "status": "provisional"
+      "notes": "Prison-island perimeter; keep clear of K. Lumsy entrance and new prison footprint. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT CHUNKY'S KEY HERE ON THE FLOOR BEHIND THE ANGRY AZTEC HOUSE",
+      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "source_xyz": [
+        3567.15,
+        1040,
+        1761.949
+      ]
     }
-  ]
+  ],
+  "source_export_sha256": "1e5b15c7ef726eafcbd91bce61b507d9282e04b5426d099663a86bc1c6a07422",
+  "source_export": "input_files/collectible_placings/colored_keys/krusha-recruitment-keys-edited.json"
 }

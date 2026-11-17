@@ -1,6 +1,6 @@
 """R11 independent colored padlock displays. No native story/collision scripts."""
 from pathlib import Path
-import struct,colorsys
+import struct
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parents[1]
 MODEL=192
@@ -39,6 +39,7 @@ def without_inserted_key(source):
 def payloads(r):
  from mirror_assets import flip
  from recruitment_keys import COLORS
+ from recruitment_materials import metal_rgb
  source=without_inserted_key(read_file(r,5,0xCC));result=[]
  assert struct.unpack_from('>II',source,0xD88)==(0xFD100000,0xBAB)
  for owner in range(5):
@@ -47,12 +48,11 @@ def payloads(r):
    assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
   result.extend([bytes(b),flip(bytes(b),5)[0]])
  for color in COLORS:
-  hue,sat,_=colorsys.rgb_to_hsv(*(c/255 for c in color))
   for index,size in((0xBAB,2048),(0x130F,2744)):
    texture=read_file(r,25,index);assert len(texture)==size;out=bytearray()
    for(v,)in struct.iter_unpack('>H',texture):
-    rgb=(v>>11&31,v>>6&31,v>>1&31);value=max(rgb)/31
-    rgb=colorsys.hsv_to_rgb(hue,sat,value);c=[round(x*31)for x in rgb];out+=struct.pack('>H',c[0]<<11|c[1]<<6|c[2]<<1|v&1)
+    rgb=(v>>11&31,v>>6&31,v>>1&31)
+    c=metal_rgb(rgb,color);out+=struct.pack('>H',c[0]<<11|c[1]<<6|c[2]<<1|v&1)
    result.append(bytes(out))
  assert len(result)==20
  # Independent key components, keeping the original skeleton/bind pose.

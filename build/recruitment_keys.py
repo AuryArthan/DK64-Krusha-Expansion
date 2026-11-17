@@ -1,6 +1,6 @@
 """Five private rescue-key model2 resources; no native boss-key actor or inventory ID."""
 from pathlib import Path
-import json, struct, zlib, math, colorsys
+import json, struct, zlib, math
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parents[1]
 PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/recruitment-keys-runtime.json'
@@ -67,6 +67,7 @@ def patch_setup(filename,mid):
 
 def payloads(rom):
     from mirror_assets import flip
+    from recruitment_materials import metal_rgb
     normal=read_file(rom,4,316)
     mirrored,count=flip(normal,4);assert count>0
     result=[normal,mirrored] # approved R09 assets remain byte-exact
@@ -84,12 +85,10 @@ def payloads(rom):
         result.extend([bytes(model),alternate])
     palette=read_file(rom,25,0xC6F);assert len(palette)==32
     for owner,target in enumerate(COLORS):
-        if owner==0:result.append(palette);continue
-        hue,saturation,_=colorsys.rgb_to_hsv(*(v/255 for v in target));out=bytearray()
+        out=bytearray()
         for (v,)in struct.iter_unpack('>H',palette):
-            rgb=(v>>11&31,v>>6&31,v>>1&31);_,sat,value=colorsys.rgb_to_hsv(*(x/31 for x in rgb))
-            color=colorsys.hsv_to_rgb(hue,min(1,sat*saturation),value)
-            red,green,blue=(round(x*31)for x in color)
+            rgb=(v>>11&31,v>>6&31,v>>1&31)
+            red,green,blue=metal_rgb(rgb,target)
             out+=struct.pack('>H',red<<11|green<<6|blue<<1|v&1)
         result.append(bytes(out))
     assert len(result)==17

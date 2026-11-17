@@ -4,7 +4,7 @@ Render layout follows DonkViewer (Ballaam, MIT), license in tools/map-atlas/.
 R02 adds native private-model collision; original world resources stay intact.
 """
 from pathlib import Path
-import struct,json,hashlib,zlib
+import struct,json,hashlib,zlib,math
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parents[1]
 MODEL_TYPE=59
@@ -14,7 +14,13 @@ MIRROR_INDEX=148
 TEXTURE_BASE=149
 TEXTURE_TOKEN=7800
 SOURCE_TEXTURES=tuple(range(0x514,0x51D))
-POSITION=(3630.0,498.0,3409.5)
+POSITION=(2977.0,498.0,3288.0)
+FACING_TARGET=(2800.0,2200.0) # central DK island; rear aperture faces the island
+ROTATION_Y=math.atan2(FACING_TARGET[0]-POSITION[0],FACING_TARGET[1]-POSITION[2])-math.atan2(-.438993779,.898490440)
+
+def rotate(point):
+    x,y,z=point;c,s=math.cos(ROTATION_Y),math.sin(ROTATION_Y)
+    return (c*x+s*z,y,-s*x+c*z)
 ORIGIN=(3359.333333333,500.0,3409.5)
 SCALE=.23 # user requested8% less than the reviewed quarter scale
 SAFE_DEPTH=24.0
@@ -58,6 +64,7 @@ def model(rom):
             if texture in WALKWAY_TEXTURES and not local_coords:
                 local[0]=-local[0];local[2]=-local[2] # turn only the annulus180 degrees
                 for channel in range(12,15):v[channel]=round(v[channel]*WALKWAY_BRIGHTNESS)
+            local=[round(c) for c in rotate(local)]
             local_vertices.append(local)
             struct.pack_into('>3h',v,0,*local);vertices.extend(v)
         command(0x05000204);triangles.append(dict(source_command=source_command,texture=texture,vertices=xyz,local_vertices=local_vertices))
@@ -91,8 +98,8 @@ def model(rom):
                             # Move only the three original back-cap triangles.
                             # Keep the mouth/arch/sphere outline and all eight
                             # existing outer tunnel wall triangles unchanged.
-                            from recruitment_collision import DOOR_NORMAL
-                            xyz=[(pos[0]-DOOR_NORMAL[0]*TUNNEL_EXTENSION*3,pos[1],pos[2]-DOOR_NORMAL[1]*TUNNEL_EXTENSION*3) for pos in xyz]
+                            from recruitment_collision import LOCAL_DOOR_NORMAL
+                            xyz=[(pos[0]-LOCAL_DOOR_NORMAL[0]*TUNNEL_EXTENSION*3,pos[1],pos[2]-LOCAL_DOOR_NORMAL[1]*TUNNEL_EXTENSION*3) for pos in xyz]
                             tunnel_caps+=1
                         emit(raw,xyz,texture,p)
                 elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None;state_history=[]
@@ -110,7 +117,6 @@ def model(rom):
     # A double-sided stone infill follows the existing arches exactly. Seal
     # both ends of the large tunnel; leave the five-vertex rear opening alone.
     command(0xD9FFF9FF,0) # clear both cull flags for the infill
-    import math
     for arch in SEALED_ARCHES:
         assert set(arch)<=source_points, 'Entrance boundary moved in source ROM'
         dx,dz=arch[-1][0]-arch[0][0],arch[-1][2]-arch[0][2];length=math.hypot(dx,dz)
@@ -121,9 +127,9 @@ def model(rom):
             raw.append(struct.pack('>hhhHhh4B',x,y,z,0,uvx,uvy,170,170,170,255))
         for j in range(1,len(arch)-1):emit([raw[0],raw[j],raw[j+1]],[arch[0],arch[j],arch[j+1]],0x51B)
     assert len(triangles)==212 and tunnel_caps==3 and tunnel_material
-    from recruitment_collision import DOOR_NORMAL
+    from recruitment_collision import LOCAL_DOOR_NORMAL,LOCAL_DOOR_TANGENT
     inner=INNER_ARCH
-    deep=[(v[0]-DOOR_NORMAL[0]*TUNNEL_EXTENSION,v[1],v[2]-DOOR_NORMAL[1]*TUNNEL_EXTENSION) for v in inner]
+    deep=[(v[0]-LOCAL_DOOR_NORMAL[0]*TUNNEL_EXTENSION,v[1],v[2]-LOCAL_DOOR_NORMAL[1]*TUNNEL_EXTENSION) for v in inner]
     material(tunnel_material);command(0xD9FFF9FF,0)
     def tunnel_triangle(points):
         raw=[struct.pack('>3hH2h4B',0,0,0,0,round(v[0]*12),round(v[2]*12),145,145,145,255)for v in points]
@@ -134,6 +140,32 @@ def model(rom):
     tunnel_triangle([inner[0],inner[-1],deep[-1]])
     tunnel_triangle([inner[0],deep[-1],deep[0]])
     assert len(triangles)==222
+    # Solid low-poly crown, with baked vertex shading and native primitive
+    # alpha for distance fading. No textures, extra actors or particle effects.
+    from recruitment_spikes import triangles as spike_triangles
+    command(0xE7000000);command(0xD7000000,0)
+    command(0xFCFFFFFF,0xFFFE773B) # RGB=SHADE, alpha=PRIMITIVE, both cycles
+    crown=spike_triangles(LOCAL_DOOR_TANGENT,LOCAL_DOOR_NORMAL)
+    for first in range(0,72,24):
+        # Share each horn's two8-vertex rings and tip. This fits17 vertices
+        # in one native cache load instead of duplicating216 vertices, and
+        # keeps table27 inside its existing reserved ROM bank.
+        cache={};nodes=[];faces=[]
+        for points,colors in crown[first:first+24]:
+            local=[tuple(round(c) for c in rotate(p)) for p in points];indices=[]
+            for point,color in zip(local,colors):
+                key=point+color
+                if key not in cache:cache[key]=len(nodes);nodes.append((point,color))
+                indices.append(cache[key])
+            faces.append(indices)
+            triangles.append(dict(source_command=None,texture=None,vertices=points,local_vertices=local,spike=True))
+        assert len(nodes)==17
+        command(0x01000000|len(nodes)<<12|len(nodes)<<1,0x08000000+len(vertices))
+        for point,color in nodes:vertices+=struct.pack('>3hH2h4B',*point,0,0,0,*color,255)
+        for a,b in zip(faces[::2],faces[1::2]):
+            command(0x06000000|a[0]*2<<16|a[1]*2<<8|a[2]*2,b[0]*2<<16|b[1]*2<<8|b[2]*2)
+    assert len(triangles)==294
+    material(tunnel_material) # restore the native textured material state
     command(0xDF000000)
     donor=read_file(rom,4,0x267);old_v_end=u(donor,0x4C)
     dl=b''.join(commands);trans=struct.pack('>II',0xDF000000,0)
@@ -144,14 +176,14 @@ def model(rom):
     struct.pack_into('>3I',new,0x40,0x78,0x78+len(dl),new_vs)
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
-    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,tunnel_extension_local=TUNNEL_EXTENSION,tunnel_extension_world=TUNNEL_EXTENSION*SCALE,tunnel_added_triangles=10,tunnel_moved_cap_triangles=tunnel_caps,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
+    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,rotation_y_degrees=math.degrees(ROTATION_Y),facing_target=FACING_TARGET,spikes=3,spike_triangles=72,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,tunnel_extension_local=TUNNEL_EXTENSION,tunnel_extension_world=TUNNEL_EXTENSION*SCALE,tunnel_added_triangles=10,tunnel_moved_cap_triangles=tunnel_caps,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
     from recruitment_collision import with_collision
     return with_collision(bytes(new),report)
 
 def payloads(rom):
     normal,report=model(rom)
     from mirror_assets import flip
-    mirrored,n=flip(normal,4);assert n==report['triangles']
+    mirrored,n=flip(normal,4);assert n==report['triangles']-report['spike_triangles']//2
     textures=[]
     for i in SOURCE_TEXTURES:
         data=read_file(rom,25,i)

@@ -11,7 +11,7 @@
  * The native map destructor owns actor/model lifetimes; handles include UID. */
 static struct {u8* actor;u32 uid;} displays[13];
 static u32 active,file,page,age,text_clock,held_buttons,finished,empty,intro,last_timer,built,begun,voiced_page,voice_cooldown;
-static u32 pose_ready, shimmer_frame, shimmer_cursor;
+static u32 pose_ready;
 static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescue,4 banana departure*/
 /* Enlarge only the owned cage assembly about its fixed floor center.
  * Tiny, the native room and camera are independent of this display group. */
@@ -22,7 +22,7 @@ static f32 sceneY(f32 y) {return 95+(y-95)*ASSEMBLY_SCALE;}
 static f32 sceneZ(f32 z) {return 1700+(z-1700)*ASSEMBLY_SCALE;}
 /* Audio requests this boot, last opening owner; read-only QA telemetry. */
 volatile u32 krushaPrisonUnlockTrace[2];
-/* Entry pose frame/raw ID, shimmer emits, last emission frame. */
+/* Entry pose frame/raw ID; final two fields reserved (no sparkle emitter). */
 volatile u32 krushaPrisonPolishTrace[4];
 volatile u32 krushaPrisonSceneTrace[12];
 /* departure started,age,native banana progress,captive hidden,native finish */
@@ -164,7 +164,7 @@ void krushaPrisonScenePrepare(unsigned int f) {
     intro=!empty && !krushaRecruitmentIntroSeen(file);
     krushaPrisonSceneTrace[0]++;krushaPrisonSceneTrace[5]=0;
     krushaPrisonSceneTrace[9]=krushaPrisonSceneTrace[10]=krushaPrisonSceneTrace[11]=0;
-    tinyPose();shimmer_frame=ObjectModel2Timer;shimmer_cursor=2;
+    tinyPose();
     construct();
 }
 void krushaPrisonSceneBegin(unsigned int f) {
@@ -420,39 +420,12 @@ static void departure(void) {
      * Tiny after the durable rescue transaction has already succeeded. */
     if (age>180) {hideCaptive();finished=1;age=0;}
 }
-static void shimmer(void) {
-    /* Use the native eight-frame GB sparkle. At most one per10 active
-     * world ticks, never a renderer/paused-frame emitter. Native expiry and
-     * map teardown own the sprites; no saved actors or extra allocations. */
-    if ((TBVoidByte&3) || sequence==4 || ObjectModel2Timer-shimmer_frame<10) return;
-    shimmer_frame=ObjectModel2Timer;
-    for (int n=0;n<10;n++) {
-        u32 i=shimmer_cursor++;if (shimmer_cursor>=12) shimmer_cursor=2;
-        if (!alive(i)) continue;
-        u8* a=displays[i].actor;u8* anim=*(u8**)(a+4);
-        Mtx* bones=*(Mtx**)(a+8);
-        if (*(f32*)(a+0x80)<0 || !valid(anim,0x40) ||
-            *(f32*)(anim+0x34)<.05f || !valid(bones,256)) continue;
-        f32 m[4][4],p[3];
-        guMtxL2F(m,bones+(i<7?2:3));
-        f32 v[3]={12,121,327};
-        if (i<7) {v[0]=(i&1)?70:235;v[1]=(i&1)?-45:-205;v[2]=50;}
-        for (int j=0;j<3;j++) p[j]=m[3][j]+v[0]*m[0][j]+v[1]*m[1][j]+v[2]*m[2][j];
-        ((void(*)(s32))0x807149B8)(1);
-        ((void(*)(s32))0x80714998)(2);
-        ((void(*)(s32))0x80714A28)(4);
-        ((void(*)(void*,f32,f32,f32,f32))0x80714CC0)((void*)0x80720A7C,2.0f,p[0],p[1],p[2]-1.5f);
-        krushaPrisonPolishTrace[2]++;krushaPrisonPolishTrace[3]=ObjectModel2Timer;
-        return;
-    }
-}
 void krushaPrisonSceneInput(unsigned int buttons) {if(context() && begun) held_buttons=buttons;}
 int krushaPrisonSceneTick(void) {
     if (!context() || !begun) return 1;
     if (ObjectModel2Timer<last_timer) {krushaPrisonSceneReset();return 1;}
     last_timer=ObjectModel2Timer;
     if (finished) return ++age>30;
-    shimmer();
     if (sequence==4) {departure();return 0;}
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
     if (sequence==1) {

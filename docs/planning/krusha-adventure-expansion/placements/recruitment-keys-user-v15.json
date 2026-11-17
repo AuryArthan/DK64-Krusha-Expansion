@@ -1,0 +1,88 @@
+{
+  "format": "krusha-atlas-notes-v2",
+  "source_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
+  "mode": "move-only",
+  "draft_id": "recruitment-keys-v1",
+  "pins": [
+    {
+      "id": "RK-DK",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "label": "DK recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT",
+      "owner": "DK",
+      "xyz": [
+        2974.489,
+        489,
+        1120.165
+      ],
+      "status": "proposal"
+    },
+    {
+      "id": "RK-DIDDY",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "label": "Diddy recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "notes": "Upper approach near Aztec; proposed ledge location, flight requirement undecided. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PLACE DIDDY's KEY HERE ON DK ISLE EAR, NEAR THE ANGRY AZTEC - I THINK THIS CAN ONLY BE REACHED WITH JETPACK",
+      "owner": "Diddy",
+      "xyz": [
+        3250.167,
+        1200,
+        1671.169
+      ],
+      "status": "proposal"
+    },
+    {
+      "id": "RK-LANKY",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "label": "Lanky recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "notes": "Shore/tunnel approach on mechanical island; check water level and swimming access. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT LANKY'S KEY HERE ON THE BOTTOM OF THE SEA, BELOW THE SHIP",
+      "owner": "Lanky",
+      "xyz": [
+        2056.093,
+        489,
+        4023.552
+      ],
+      "status": "proposal"
+    },
+    {
+      "id": "RK-TINY",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "label": "Tiny recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "notes": "Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT",
+      "owner": "Tiny",
+      "xyz": [
+        2530.611,
+        1740,
+        3147.061
+      ],
+      "status": "proposal"
+    },
+    {
+      "id": "RK-CHUNKY",
+      "map": 34,
+      "map_name": "DK Isles Overworld",
+      "label": "Chunky recruitment key",
+      "kind": "key",
+      "quantity": 1,
+      "notes": "Prison-island perimeter; keep clear of K. Lumsy entrance and new prison footprint. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT CHUNKY'S KEY HERE ON THE FLOOR BEHIND THE ANGRY AZTEC HOUSE",
+      "owner": "Chunky",
+      "xyz": [
+        3567.15,
+        1040,
+        1761.949
+      ],
+      "status": "proposal"
+    }
+  ]
+}

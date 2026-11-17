@@ -14,6 +14,8 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
     parser.add_argument('--runtime-plan', type=Path, help='Seed a separate atlas from implemented R10 positions')
+    parser.add_argument('--draft-id', default='recruitment-keys-r10-v1', choices=('recruitment-keys-r10-v1','recruitment-keys-v15-v1'))
+    parser.add_argument('--title', default='Implemented keys — placements for review')
     args = parser.parse_args()
     out = args.out.resolve()
     if out.exists():
@@ -26,7 +28,7 @@ def main():
         for pin in seed['pins']:
             row = by_id[pin['id']]
             pin.update(xyz=row['xyz'], notes=row['notes'], status=row['status'])
-        seed.update(implemented=True, draft_id='recruitment-keys-r10-v1', title='R10 implemented keys — provisional placements')
+        seed.update(implemented=True, draft_id=args.draft_id, title=args.title)
     draft_id = seed['draft_id']
     seed_name = draft_id + '.json'
     subprocess.run([sys.executable, str(ROOT / 'tools/build-map-atlas.py'),

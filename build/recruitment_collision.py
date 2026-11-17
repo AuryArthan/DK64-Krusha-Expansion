@@ -8,9 +8,15 @@ import struct,math
 
 # Local rear arch, derived from the accepted render mesh. X/Z tangent runs
 # left-to-right; outward points from the sphere toward the rear landing.
-DOOR_CENTER=(-60.5,0.0,125.0)
-DOOR_TANGENT=(.898490440,.438993779)
-DOOR_NORMAL=(-.438993779,.898490440)
+LOCAL_DOOR_CENTER=(-60.5,0.0,125.0)
+LOCAL_DOOR_TANGENT=(.898490440,.438993779)
+LOCAL_DOOR_NORMAL=(-.438993779,.898490440)
+from recruitment_assets import rotate
+DOOR_CENTER=rotate(LOCAL_DOOR_CENTER)
+_t=rotate((LOCAL_DOOR_TANGENT[0],0,LOCAL_DOOR_TANGENT[1]))
+_n=rotate((LOCAL_DOOR_NORMAL[0],0,LOCAL_DOOR_NORMAL[1]))
+DOOR_TANGENT=(_t[0],_t[2])
+DOOR_NORMAL=(_n[0],_n[2])
 
 def normal(verts):
     a,b,c=verts;u=[b[i]-a[i] for i in range(3)];v=[c[i]-a[i] for i in range(3)]
