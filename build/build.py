@@ -458,6 +458,8 @@ from recruitment_room import patch_native_aliases
 patch_native_aliases(newROMName)
 from mirror_assets import appendMirrorAssets
 appendMirrorAssets(newROMName)
+from recruitment_pause import append_rotation_assets
+append_rotation_assets(newROMName)
 
 # Flashcart loader transfer padding (libdragon n64tool uses 16 KiB).
 # Append only: retain every existing code/asset byte and pointer address.

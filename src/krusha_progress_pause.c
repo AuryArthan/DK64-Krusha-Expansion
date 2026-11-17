@@ -141,14 +141,7 @@ void krushaPauseSprite(void* node, u8* deleted) {
         vanillaPauseSprite(node, deleted);
         meta[0] = 10.0f;
     } else {
-        int orbit=meta && (meta[0]==5 || meta[0]==8);
-        u8* menu=*(u8**)(n+0x35C);
         vanillaPauseSprite(node, deleted);
-        /* The colored-key page presents a fixed five-key row instead of
-         * overlapping it with the carousel. Keep native fade/destruction. */
-        if (orbit && !*deleted && menu && menu[0x12]==3 &&
-            krushaPauseTotalsCategory()==8)
-            *(f32*)(n+0x340)=-2000;
     }
 }
 

@@ -152,6 +152,9 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if ((table==14 || table==25) && index>=7250 && index<7255) {
         table=27; index-=7026;
     }
+    if ((table==14 || table==25) && index>=8000 && index<8075) {
+        table=29; index-=8000;
+    }
     if (table == 25 && index >= 7100 && index <= 7123) {
         table = 27;
         index -= 7090;
@@ -183,24 +186,24 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     extern void* mirrorFile(s32, s32, u8, u8);
     s32 mirrored = mirrorFileIndex(format, table, index);
     if (mirrored >= 0) return mirrorFile(format, mirrored, synchronous, unique);
-    if (table == 27) {
+    if (table == 27 || table == 29) {
         /* Native tables4/7/14/25 cache shared files; the originally empty
-         * table27 has no cache. World pickups can request each model/frame
+         * tables27/29 have no cache. World pickups can request each model/frame
          * many times, so preserve the same reference-counted sharing here.
          * Native loading, allocation, reference tracking and release still
          * own every payload. This is a pointer array, not a payload lifetime
          * extension or a separate untracked cache. */
         void (*initTable)(s32)=(void*)0x8066B5F4;
-        initTable(27);
+        initTable(table);
         u32** caches=(u32**)0x807F95A8;
-        if (!caches[27]) {
-            u32* offsets=((u32**)0x807F9528)[27];
-            u32 table_offset=(*(u32**)0x807F9520)[27];
+        if (!caches[table]) {
+            u32* offsets=((u32**)0x807F9528)[table];
+            u32 table_offset=(*(u32**)0x807F9520)[table];
             u32 bytes=(offsets[0]&0x7FFFFFFF)-table_offset;
             u32* cache=(bytes >= 4 && bytes <= 4096 && !(bytes&3)) ? dk_malloc(bytes) : 0;
             if (cache) {
                 for (u32 i=0;i<bytes/4;i++) cache[i]=0;
-                caches[27]=cache;
+                caches[table]=cache;
             }
         }
     }

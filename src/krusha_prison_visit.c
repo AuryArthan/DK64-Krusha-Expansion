@@ -184,7 +184,7 @@ extern void vanillaBuildCameraMatrices(void*);
 /* Lower the view with the shorter cage's front rail, retaining its angle
  * and magnification while keeping all five lock bodies inside the frame. */
 f32 krushaPrisonCameraFraming[7]={700,580,-650,1450,680,1700,58};
-f32 krushaPrisonTinyStaging[3]={1030,0,-430};
+f32 krushaPrisonTinyStaging[3]={1136.73785f,0,-464.06527f};
 s32 krushaPrisonVisitCamera(void* display) {
     u8* cc=*(u8**)0x807FC924;
     if (!phase || !restore_mini || CurrentMap!=RECRUITMENT_ROOM_MAP ||

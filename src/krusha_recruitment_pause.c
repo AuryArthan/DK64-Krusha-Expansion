@@ -11,8 +11,13 @@ static u8 count;
 volatile u32 krushaColoredKeysPauseTrace[9];
 static const struct {
     u32 id; u8 across,down,flags,codec; u32 rgba;
-    u8 animated,table; u16 width,height,frames,image;
-} key_icon={0x4B524B00,1,1,0,2,0xFFFFFFFF,0,1,44,44,1,7254};
+    u8 animated,table; u16 width,height,frames,image[80];
+} key_icon={0x4B524B00,1,1,0,2,0xFFFFFFFF,0,1,44,44,80,{
+    7250,8000,8001,8002,8003,8004,8005,8006,8007,8008,8009,8010,8011,8012,8013,8014,
+    7251,8015,8016,8017,8018,8019,8020,8021,8022,8023,8024,8025,8026,8027,8028,8029,
+    7252,8030,8031,8032,8033,8034,8035,8036,8037,8038,8039,8040,8041,8042,8043,8044,
+    7253,8045,8046,8047,8048,8049,8050,8051,8052,8053,8054,8055,8056,8057,8058,8059,
+    7254,8060,8061,8062,8063,8064,8065,8066,8067,8068,8069,8070,8071,8072,8073,8074}};
 
 extern void widescreenPauseSprite(void*,void*,s32,s32,f32,u8,s32);
 extern Gfx* widescreenPauseFraction(s16,s16,s16,s16,Gfx*,s8,f32);
@@ -65,17 +70,20 @@ Gfx* krushaPauseTotalsDraw(Gfx* dl,void* menu) {
         krushaColoredKeysPauseTrace[1]=keys;
         for (int i=0;i<5;i++) {
             int collected=(keys>>i)&1;
+            int frame=(ObjectModel2Timer>>1)&15;
+            int image=frame ? 8000+i*15+frame-1 : 7250+i;
             value+=collected;
             u32 alpha=collected?opacity:opacity*72/255;
             krushaColoredKeysPauseTrace[3+i]=alpha;
             gDPPipeSync(dl++);
             gDPSetPrimColor(dl++,0,0,255,255,255,alpha);
-            dl=widescreenImage(dl,7250+i,0,2,44,44,(72+i*44)*4,480,2.6f,2.6f,180,0);
+            dl=widescreenImage(dl,image,0,2,44,44,(112+i*24)*4,828,1.8f,1.8f,180,0);
         }
         gDPPipeSync(dl++);
         gDPSetPrimColor(dl++,0,0,255,255,255,255);
         krushaColoredKeysPauseTrace[2]=value;
         krushaColoredKeysPauseTrace[8]++;
+        return dl; /* The five keys replace only this category's fraction. */
     } else {
         value=((s16*)0x807FC828)[kind];
         maximum=((s16*)0x8075056C)[kind];

@@ -235,8 +235,8 @@ void krushaPrisonKeyBones(void* actor) {
     if (!context() || owner>=5 || displays[owner+7].actor!=actor || !alive(owner+7)) return;
     if (phase!=PRISON_KEY_TURN && phase!=PRISON_LOCK_OPEN) return;
     /* Native build has just selected and rebuilt THIS frame's bone bank.
-     * Bone3 origin is the key tip; local Z is the long shaft. Rotate only
-     * its X/Y basis so the shaft and tip stay bit-exactly fixed in the lock.
+     * Bone3 origin is the insertion anchor; local Z is the long shaft. Rotate only
+     * its X/Y basis so the shaft axis and anchor stay bit-exactly fixed in the lock.
      * Changing actor yaw/roll would swing the whole offset skeleton around
      * the actor root, rather than rotate a physical key in its keyhole. */
     Mtx* bones=*(Mtx**)((u8*)actor+8);
