@@ -14,6 +14,7 @@ static u8* pause_data = 0;
 /* Read-only QA observations of actual rendered fractions: personal(value,max,
  * character), team(value,max), overall(kind,value,max), and total draw calls. */
 volatile s32 krushaPauseFractionTrace[9] = {0};
+extern int krushaPauseTotalsCategory(void);
 
 s16 krushaPauseFractionTotal(s16 value, s16 total) {
     if (!DetectAdventure()) return total;
@@ -32,7 +33,8 @@ s16 krushaPauseFractionTotal(s16 value, s16 total) {
         /* Native807FC80C selects one of eight overall carousel slots.
          * 807FC818 maps their visual order to the permanent category. */
         u8 slot = *(u8*)0x807FC80C;
-        s8 kind = slot < 8 ? *(s8*)(0x807FC818 + slot) : -1;
+        s8 kind = pause_data && pause_data[0x12]==3 ? krushaPauseTotalsCategory() :
+            slot < 8 ? *(s8*)(0x807FC818 + slot) : -1;
         /* Native pause caps GBs at200; the file score counts Rareware too. */
         if (kind == 0 && total == 200) total = 225;
         if (kind == 7 && total == 40) total = 48;
@@ -138,7 +140,16 @@ void krushaPauseSprite(void* node, u8* deleted) {
         meta[0] = 16.0f;
         vanillaPauseSprite(node, deleted);
         meta[0] = 10.0f;
-    } else vanillaPauseSprite(node, deleted);
+    } else {
+        int orbit=meta && (meta[0]==5 || meta[0]==8);
+        u8* menu=*(u8**)(n+0x35C);
+        vanillaPauseSprite(node, deleted);
+        /* The colored-key page presents a fixed five-key row instead of
+         * overlapping it with the carousel. Keep native fade/destruction. */
+        if (orbit && !*deleted && menu && menu[0x12]==3 &&
+            krushaPauseTotalsCategory()==8)
+            *(f32*)(n+0x340)=-2000;
+    }
 }
 
 static void immediate(u32 address, u16 value) {

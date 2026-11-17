@@ -48,7 +48,9 @@ def appendMirrorAssets(path):
         # static models live directly in table27 at147/148; preview images
         # retain their reserved131..146 interval in either build preset.
         from recruitment_scene import COUNT as scene_count
-        assert n==(scene_count if table==27 else expected),(table,n)
+        # Five pause-only RGBA icons follow the scene; they need no mirrored
+        # geometry and preserve every established scene/Mirror index.
+        assert n==(scene_count+5 if table==27 else expected),(table,n)
         for index in range(expected):
             kind=table if table!=27 else 5 if index in PRIVATE_ACTORS else 4 if index in PRIVATE_MODELS else 0
             source=read_file(original,table,index) if kind else b''

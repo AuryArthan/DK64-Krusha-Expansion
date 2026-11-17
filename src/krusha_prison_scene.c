@@ -220,11 +220,10 @@ static void present(void) {
     }
     if (phase==PRISON_KEY_FLY) {
         f32 p=timer/PRISON_FLY_FRAMES;
-        /* Emanate from Tiny's actual rendered origin, including her staging
-         * translation. Never fly toward her from an unrelated rear point. */
-        extern f32 krushaPrisonTinyStaging[3];
+        /* Keep the approved key origin while Tiny moves another half-step
+         * left. This is intentionally independent of her render staging. */
         f32* pos=(f32*)((u8*)Player+0x7C);
-        f32 x=pos[0]+krushaPrisonTinyStaging[0],y=pos[1]+krushaPrisonTinyStaging[1],z=pos[2]+krushaPrisonTinyStaging[2];
+        f32 x=pos[0]+1090,y=pos[1],z=pos[2]-430;
         poseWorld(owner+7,x+(sceneX(1294.9758f-owner*197.5464f)-x)*p,
             y+(sceneY(138.7783f)-y)*p,z+(sceneZ(503.639f)-z)*p,.48f*ASSEMBLY_SCALE,2048);
     } else if (phase==PRISON_KEY_TURN || phase==PRISON_LOCK_OPEN) {
@@ -419,7 +418,9 @@ int krushaPrisonSceneTick(void) {
     krushaPrisonSceneTrace[3]=(empty?2:intro?0:1);
     krushaPrisonSceneTrace[6]=krushaRecruitmentKeys(file);krushaPrisonSceneTrace[7]=krushaRecruitmentLocks(file);
     krushaPrisonSceneTrace[10]=text_clock;krushaPrisonSceneTrace[11]=characters();
-    u32 duration=characters()*4+((sequence==3 && page==1)?360:120);if (duration<180) duration=180;
+    /* Halve only the fully revealed gray-banana interval, not the reading
+     * time or native A/Z speech pacing. */
+    u32 duration=characters()*4+((sequence==3 && page==1)?180:120);if (duration<180) duration=180;
     if (text_clock>=duration && age>=45) {
         text_clock=0;age=0;
         if (intro && page==5) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}

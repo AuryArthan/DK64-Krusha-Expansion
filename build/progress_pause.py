@@ -58,6 +58,24 @@ def patchPause(fh, symbols):
 
     patch(0x806ABB48,0x0C1AAEE6,0x0C000000 | (int(symbols['krushapausenametext'],16)&0xFFFFFFF)>>2)
 
+    # Own just the overall-category blocks. Native eight-wide arrays remain
+    # untouched; the ninth category/map lives in resident storage. Keep the
+    # native initialization, input, transitions, footer and teardown.
+    def block(start, end, expected, words):
+        assert word(start)==expected
+        for i,v in enumerate(words):
+            fh.seek(start-base+i*4); fh.write(v.to_bytes(4,'big'))
+        fh.seek(start-base+len(words)*4)
+        fh.write(bytes(end-start-len(words)*4))
+    def call(name): return 0x0C000000 | (int(symbols[name],16)&0xFFFFFFF)>>2
+    block(0x806AB2C0,0x806AB44C,0x3C028080,[
+        call('krushapausetotalsbuild'),0x02202025, # a0=s1, native menu
+        0x10000000 | ((0x806AB44C-0x806AB2CC)//4),0])
+    block(0x806A9F34,0x806AA044,0x3C118080,[
+        0x8FA5015C, # a1=menu
+        call('krushapausetotalsdraw'),0x02E02025, # a0=s7, current list
+        0x10000000 | ((0x806AA044-0x806A9F44)//4),0])
+
     # These immediates change only when the option changes. Validate their
     # complete original words here as strictly as the static relocations.
     for address,expected in [

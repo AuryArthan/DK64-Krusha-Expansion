@@ -148,6 +148,10 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if (table == 14 && index >= 7202 && index <= 7209) {
         table = 27; index -= 7192;
     }
+    /* Five pause-only owner-colored keys. Never alias native boss keys. */
+    if ((table==14 || table==25) && index>=7250 && index<7255) {
+        table=27; index-=7026;
+    }
     if (table == 25 && index >= 7100 && index <= 7123) {
         table = 27;
         index -= 7090;

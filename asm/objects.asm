@@ -16,6 +16,7 @@
 .importobj "obj/src_krusha_recruitment.o"
 .importobj "obj/src_krusha_recruitment_game.o"
 .importobj "obj/src_krusha_recruitment_keys.o"
+.importobj "obj/src_krusha_recruitment_pause.o"
 .importobj "obj/src_krusha_roar.o"
 .importobj "obj/src_krusha_roar_framing.o"
 .importobj "obj/src_krusha_roar_stage.o"
