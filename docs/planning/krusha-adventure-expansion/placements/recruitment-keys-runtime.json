@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "Four reviewed placements in validation; Tiny mouth request pending progression decision, approved shore retained",
+  "placement_status": "All five reviewed placements in native validation",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -71,19 +71,18 @@
       "type": 64,
       "owner": 3,
       "xyz": [
-        1100.0,
-        503.377998,
-        2550.0
+        2550.0,
+        1204.0,
+        3330.0
       ],
       "scale": 0.04,
-      "notes": "Retained approved Fairy Island shore while the requested mouth route awaits a progression decision. Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT",
-      "status": "Mouth placement pending user progression choice; retain approved Fairy Island position",
+      "notes": "CAPS request: near the mechanical-island mouth. User approved an early nearby ledge to preserve original rescue timing. Lower walkway beside the Factory approach, native floor1200+4, no Monkeyport or late mouth opening required.",
+      "status": "User approved nearby early ledge instead of late mouth; native validation pending",
       "source_xyz": [
         2530.611,
         1740,
         3147.061
-      ],
-      "pending_request": "Mouth opens after Caves and Castle keys, normal access requires Monkeyport; earlier rescue timing conflicts."
+      ]
     },
     {
       "id": "RK-CHUNKY",
@@ -107,5 +106,6 @@
     }
   ],
   "source_export_sha256": "1e5b15c7ef726eafcbd91bce61b507d9282e04b5426d099663a86bc1c6a07422",
-  "source_export": "input_files/collectible_placings/colored_keys/krusha-recruitment-keys-edited.json"
+  "source_export": "input_files/collectible_placings/colored_keys/krusha-recruitment-keys-edited.json",
+  "tiny_route_decision": "Nearby early ledge approved; retain originally agreed recruitment timing"
 }
