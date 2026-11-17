@@ -18,6 +18,8 @@ POSITION=(3630.0,498.0,3409.5)
 ORIGIN=(3359.333333333,500.0,3409.5)
 SCALE=.23 # user requested8% less than the reviewed quarter scale
 SAFE_DEPTH=24.0
+TUNNEL_EXTENSION=120.0 # local units;27.6 world units inward, mouth unchanged
+INNER_ARCH=((-83,0,114),(-79,33,116),(-61,50,125),(-43,33,133),(-38,0,136))
 WALKWAY_TEXTURES=(0x10,0x24F)
 WALKWAY_BRIGHTNESS=0.60
 STONE_TINT=(0.24,0.30,0.60)
@@ -40,20 +42,20 @@ def selected(vertices,texture):
 
 def model(rom):
     geo=read_file(rom,1,34);ds,vs=u(geo,0x34),u(geo,0x38);cs,ce=u(geo,0x68),u(geo,0x6C)
-    vertices=bytearray();commands=[];materials=[];triangles=[];used_textures=set();cap_material=None;source_points=set()
+    vertices=bytearray();commands=[];materials=[];triangles=[];used_textures=set();cap_material=None;tunnel_material=None;source_points=set();tunnel_caps=0
     def command(a,b=0):commands.append(struct.pack('>II',a,b))
     def material(values):
         for ma,mb in values:
             if ma>>24==0xFD and mb in SOURCE_TEXTURES:
                 used_textures.add(mb);mb=TEXTURE_TOKEN+SOURCE_TEXTURES.index(mb)
             command(ma,mb)
-    def emit(raw,xyz,texture,source_command=None):
+    def emit(raw,xyz,texture,source_command=None,local_coords=False):
         command(0xD9FDFFFF,0) # map vertices are prelit RGBA, not normals
         command(0x01003006,0x08000000+len(vertices))
         local_vertices=[]
         for data,pos in zip(raw,xyz):
-            v=bytearray(data);local=[round(pos[i]/3-ORIGIN[i]) for i in range(3)]
-            if texture in WALKWAY_TEXTURES:
+            v=bytearray(data);local=[round(pos[i]) if local_coords else round(pos[i]/3-ORIGIN[i]) for i in range(3)]
+            if texture in WALKWAY_TEXTURES and not local_coords:
                 local[0]=-local[0];local[2]=-local[2] # turn only the annulus180 degrees
                 for channel in range(12,15):v[channel]=round(v[channel]*WALKWAY_BRIGHTNESS)
             local_vertices.append(local)
@@ -82,7 +84,16 @@ def model(rom):
                         if not selected(xyz,texture):continue
                         source_points.update(xyz)
                         if texture==0x51B and cap_material is None:cap_material=list(state_history)
+                        if texture==0x514 and tunnel_material is None:tunnel_material=list(state_history)
                         material(materials);materials=[]
+                        local=[tuple(round(pos[i]/3-ORIGIN[i]) for i in range(3)) for pos in xyz]
+                        if texture==0x51A and all(v in INNER_ARCH for v in local):
+                            # Move only the three original back-cap triangles.
+                            # Keep the mouth/arch/sphere outline and all eight
+                            # existing outer tunnel wall triangles unchanged.
+                            from recruitment_collision import DOOR_NORMAL
+                            xyz=[(pos[0]-DOOR_NORMAL[0]*TUNNEL_EXTENSION*3,pos[1],pos[2]-DOOR_NORMAL[1]*TUNNEL_EXTENSION*3) for pos in xyz]
+                            tunnel_caps+=1
                         emit(raw,xyz,texture,p)
                 elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None;state_history=[]
                 elif op in (0,3):pass
@@ -109,7 +120,20 @@ def model(rom):
             uvy=round((y-1500)/3*20)
             raw.append(struct.pack('>hhhHhh4B',x,y,z,0,uvx,uvy,170,170,170,255))
         for j in range(1,len(arch)-1):emit([raw[0],raw[j],raw[j+1]],[arch[0],arch[j],arch[j+1]],0x51B)
-    assert len(triangles)==212
+    assert len(triangles)==212 and tunnel_caps==3 and tunnel_material
+    from recruitment_collision import DOOR_NORMAL
+    inner=INNER_ARCH
+    deep=[(v[0]-DOOR_NORMAL[0]*TUNNEL_EXTENSION,v[1],v[2]-DOOR_NORMAL[1]*TUNNEL_EXTENSION) for v in inner]
+    material(tunnel_material);command(0xD9FFF9FF,0)
+    def tunnel_triangle(points):
+        raw=[struct.pack('>3hH2h4B',0,0,0,0,round(v[0]*12),round(v[2]*12),145,145,145,255)for v in points]
+        emit(raw,points,0x514,local_coords=True)
+    for i in range(4):
+        tunnel_triangle([inner[i],deep[i],deep[i+1]])
+        tunnel_triangle([inner[i],deep[i+1],inner[i+1]])
+    tunnel_triangle([inner[0],inner[-1],deep[-1]])
+    tunnel_triangle([inner[0],deep[-1],deep[0]])
+    assert len(triangles)==222
     command(0xDF000000)
     donor=read_file(rom,4,0x267);old_v_end=u(donor,0x4C)
     dl=b''.join(commands);trans=struct.pack('>II',0xDF000000,0)
@@ -120,7 +144,7 @@ def model(rom):
     struct.pack_into('>3I',new,0x40,0x78,0x78+len(dl),new_vs)
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
-    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
+    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,tunnel_extension_local=TUNNEL_EXTENSION,tunnel_extension_world=TUNNEL_EXTENSION*SCALE,tunnel_added_triangles=10,tunnel_moved_cap_triangles=tunnel_caps,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
     from recruitment_collision import with_collision
     return with_collision(bytes(new),report)
 

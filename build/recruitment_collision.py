@@ -50,16 +50,16 @@ def with_collision(model,report):
     for i in range(1,len(hull)-1):
         tri=[(x,0,z) for x,z in (hull[0],hull[i+1],hull[i])]
         add(floors,seen_f,tri)
-    # A small supported staging area inside the aperture; no R03 interior yet.
-    # The invisible backstop is twelve world units behind the visible arch. Mini
-    # Tiny can occupy the entrance volume, but cannot wander into an unbuilt room.
+    # Support the extended recess. The native visible back cap is120 local
+    # units inward; keep the redundant safety wall behind it and the floor
+    # beneath the entire recess. The unchanged entry trigger fires well ahead.
     cx,cy,cz=DOOR_CENTER;tx,tz=DOOR_TANGENT;nx,nz=DOOR_NORMAL
     def point(side,depth,y):return (cx+tx*side+nx*depth,y,cz+tz*side+nz*depth)
-    a,b,c,d=[point(s,-48,y) for s,y in [(-27,0),(27,0),(27,54),(-27,54)]]
+    a,b,c,d=[point(s,-160,y) for s,y in [(-27,0),(27,0),(27,54),(-27,54)]]
     for tri in [(a,b,c),(a,c,d),(c,b,a),(d,c,a)]:
         # Keep opposing faces of the readiness backstop explicitly.
         walls.append(tuple(tuple(round(x) for x in p) for p in tri))
-    a,b,c,d=[point(s,depth,0) for s,depth in [(-28,20),(-28,-56),(28,-56),(28,20)]]
+    a,b,c,d=[point(s,depth,0) for s,depth in [(-28,20),(-28,-168),(28,-168),(28,20)]]
     for tri in [(a,b,c),(a,c,d)]:
         if normal(tri)[0][1]<0:tri=tri[::-1]
         add(floors,seen_f,tri)
@@ -70,5 +70,5 @@ def with_collision(model,report):
     out=bytearray(model[:start]+wall_bytes+floor_bytes+model[old_tail:])
     struct.pack_into('>II',out,0x4C,start,start+len(wall_bytes))
     for p in range(0x54,0x74,4):struct.pack_into('>I',out,p,u(p)+delta)
-    report.update(collision=dict(walls=len(walls),floors=len(floors),wall_stride=22,floor_stride=24,floor_bounds=bounds,door_center=DOOR_CENTER,door_tangent=DOOR_TANGENT,door_normal=DOOR_NORMAL,readiness_backstop_world_depth=12,wall_vertices=walls,floor_vertices=floors),model_bytes=len(out))
+    report.update(collision=dict(walls=len(walls),floors=len(floors),wall_stride=22,floor_stride=24,floor_bounds=bounds,door_center=DOOR_CENTER,door_tangent=DOOR_TANGENT,door_normal=DOOR_NORMAL,readiness_backstop_local_depth=160,wall_vertices=walls,floor_vertices=floors),model_bytes=len(out))
     return bytes(out),report
