@@ -35,6 +35,7 @@ volatile u32 krushaPrisonDialogueTrace[4];
 const u8 krushaPrisonTinyIdleScript[]={
     0x24,0x3F,0x80,0,0,0,0,0,0,0x19,0,0,0,0,0,0,0x04,0x34
 };
+static u8 tinyEntryScript[42];
 void krushaPrisonTinyAnimation(void* actor,int script);
 
 extern void krushaPlayActorAnimation(void*,s32);
@@ -172,19 +173,34 @@ void krushaPrisonSceneBegin(unsigned int f) {
     begun=1;age=text_clock=held_buttons=0;last_timer=ObjectModel2Timer;
     voiced_page=~0u;voice_cooldown=0;
     tinyPose();
+    /* The replaced landing clip no longer reaches its native end marker.
+     * Once entry/fade/autowalk finish, use the SAME native ground-action
+     * cleanup used by landing script callback5 before owning the dialogue. */
+    ((void(*)(void*))0x806CFF9C)(Player);
+    krushaPlayActorAnimation(Player,0x170);
     krushaPrisonSceneTrace[9]=ObjectModel2Timer;
 }
 void krushaPrisonTinyAnimation(void* actor,int script) {
     if (!context() || finished || actor!=Player ||
-        (script!=0x170 && script!=0xAE && script!=0xB3)) return;
-    /* The native map-entry controller asks for AE/B3 after preparation.
-     * Keep its script ID/action/motion contract, replace only its visual
-     * bytecode with the same quiet standing loop during this owned scene. */
+        (script!=0x170 && script!=0xAE)) return;
     u8* animation=*(u8**)((u8*)actor+4);
     if (!valid(animation,0x8C)) return;
-    *(const u8**)(animation+0x68)=krushaPrisonTinyIdleScript;
-    *(const u8**)(animation+0x6C)=krushaPrisonTinyIdleScript;
-    *(const u8**)0x807F5AF0=krushaPrisonTinyIdleScript;
+    const u8* visual=krushaPrisonTinyIdleScript;
+    if (script==0xAE) {
+        /* Keep ALL native entry callbacks, waits, sounds and the B3 handoff.
+         * Only its opening raw-clip argument/interpolation change. Replacing
+         * the whole entry loop skips B3's return-to-standing action cleanup. */
+        const u8* native=*(const u8**)(animation+0x68);
+        if (!valid((void*)native,42) || native[0]!=0x15 ||
+            native[1]!=1 || native[2]!=0xE1) return;
+        for (int i=0;i<42;i++) tinyEntryScript[i]=native[i];
+        tinyEntryScript[2]=0xD0;
+        for (int i=3;i<7;i++) tinyEntryScript[i]=0;
+        visual=tinyEntryScript;
+    }
+    *(const u8**)(animation+0x68)=visual;
+    *(const u8**)(animation+0x6C)=visual;
+    *(const u8**)0x807F5AF0=visual;
     krushaPrisonDialogueTrace[0]++;
 }
 static const char* first[6][6]={
@@ -425,7 +441,7 @@ static void shimmer(void) {
         ((void(*)(s32))0x807149B8)(1);
         ((void(*)(s32))0x80714998)(2);
         ((void(*)(s32))0x80714A28)(4);
-        ((void(*)(void*,f32,f32,f32,f32))0x80714CC0)((void*)0x80720A7C,.9f,p[0],p[1],p[2]-1.5f);
+        ((void(*)(void*,f32,f32,f32,f32))0x80714CC0)((void*)0x80720A7C,2.0f,p[0],p[1],p[2]-1.5f);
         krushaPrisonPolishTrace[2]++;krushaPrisonPolishTrace[3]=ObjectModel2Timer;
         return;
     }
