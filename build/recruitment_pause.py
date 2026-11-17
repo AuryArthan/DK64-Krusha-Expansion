@@ -7,8 +7,11 @@ FIRST = 224
 TOKEN = 7250
 
 def payloads(rom, read_file):
-    native = read_file(rom, 25, 5893)
+    # Native descriptor807210B8 (boss key), frame0 of16. The adjacent
+    # descriptor807210EC is the battle crown, not another key variant.
+    native = read_file(rom, 25, 5877)
     assert len(native) == 44 * 44 * 2
+    assert all(not read_file(rom,25,i) for i in range(TOKEN,TOKEN+5))
     result = []
     for target in COLORS:
         hue, saturation, _ = colorsys.rgb_to_hsv(*(x / 255 for x in target))

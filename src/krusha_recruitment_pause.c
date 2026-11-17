@@ -70,7 +70,7 @@ Gfx* krushaPauseTotalsDraw(Gfx* dl,void* menu) {
             krushaColoredKeysPauseTrace[3+i]=alpha;
             gDPPipeSync(dl++);
             gDPSetPrimColor(dl++,0,0,255,255,255,alpha);
-            dl=widescreenImage(dl,7250+i,0,2,44,44,(72+i*44)*4,480,2.6f,2.6f,0,0);
+            dl=widescreenImage(dl,7250+i,0,2,44,44,(72+i*44)*4,480,2.6f,2.6f,180,0);
         }
         gDPPipeSync(dl++);
         gDPSetPrimColor(dl++,0,0,255,255,255,255);
