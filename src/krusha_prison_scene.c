@@ -19,6 +19,8 @@ static u32 sequence; /*0 dialogue,1 independent key/lock motion,2 report,3 rescu
 static f32 sceneX(f32 x) {return 900+(x-900)*ASSEMBLY_SCALE;}
 static f32 sceneY(f32 y) {return 95+(y-95)*ASSEMBLY_SCALE;}
 static f32 sceneZ(f32 z) {return 1700+(z-1700)*ASSEMBLY_SCALE;}
+/* Audio requests this boot, last opening owner; read-only QA telemetry. */
+volatile u32 krushaPrisonUnlockTrace[2];
 volatile u32 krushaPrisonSceneTrace[12];
 /* departure started,age,native banana progress,captive hidden,native finish */
 volatile u32 krushaPrisonDepartureTrace[5];
@@ -393,6 +395,12 @@ int krushaPrisonSceneTick(void) {
     ((void(*)(void*,void*,u8))0x8068C350)(draw,Player,3);
     if (sequence==1) {
         int done=krushaPrisonTurnTick();present();
+        if (krushaPrisonTurnTrace[0]==PRISON_LOCK_OPEN && !krushaPrisonTurnTrace[2]) {
+            /* The native K.Lumsy padlock's short opening sound, once at
+             * the turn->open edge. Pause/repeat visits do not retrigger it. */
+            playSound(0x1F6,0x5FFF,63.0f,1.0f,5,0);
+            krushaPrisonUnlockTrace[0]++;krushaPrisonUnlockTrace[1]=krushaPrisonTurnTrace[1];
+        }
         if (done) {
             sequence=krushaRecruitmentRecruited(file)?3:2;
             page=sequence==3?0:page+1;age=text_clock=0;

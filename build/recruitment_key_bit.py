@@ -59,10 +59,12 @@ def complete_key(source):
         normals=[round(x*127/length) for x in n]
         for p in (a,b,c):vertices+=struct.pack('>3hH2h3bB',*p,0,0,0,*normals,255)
     commands=bytearray()
-    # Original gold shank material; token is already owner-tinted by caller.
-    for a,b in struct.iter_unpack('>II',source[0xD50:0xDD0]):
-        if a>>24 not in (1,5,6,7,0xDA,0xDF):commands+=struct.pack('>II',a,b)
-    commands+=struct.pack('>II',0xDA380003,0x040000C0)
+    # Join the EXISTING key draw block while its material/lighting is active.
+    # A second G_DL_NOPUSH segment7 header replaces the native segment binding
+    # (8061324C/80614C38), skipping the original bow/shank. Put all teeth before
+    # its original lighting reset and segment7 alternate-branch marker.
+    insert=0x1050
+    assert source[insert:insert+16]==bytes.fromhex('d9f9ffff000000000000000000000007')
     count=len(vertices)//16
     for first in range(0,count,24):
         batch=min(24,count-first)
@@ -70,10 +72,16 @@ def complete_key(source):
         for i in range(0,batch,6):
             commands+=struct.pack('>II',0x06000000|i*2<<16|(i+1)*2<<8|(i+2)*2,(i+3)*2<<16|(i+4)*2<<8|(i+5)*2)
     delta=len(vertices)+len(commands)
-    out=bytearray(source[:start]+vertices+source[start:end-8]+commands+source[end-8:])
+    out=bytearray(source[:start]+vertices+source[start:insert]+commands+source[insert:])
     for off in (4,8,12,16):
         assert u(off)>=base+end-40
         struct.pack_into('>I',out,off,u(off)+delta)
     struct.pack_into('>I',out,end+delta,u(end)+len(vertices))
     assert out[40:start]==source[40:start] and out[end+delta+4:]==source[end+4:]
+    new_start=u(end)+len(vertices)-base+40
+    new_end=end+delta
+    matrices=[w&0xFFFFFF for a,w in struct.iter_unpack('>II',out[new_start:new_end]) if a>>24==0xDA]
+    assert matrices==[0x40,0xC0,0x80,0], matrices
+    branches=[w for a,w in struct.iter_unpack('>II',out[new_start:new_end]) if a==0xDE010000]
+    assert branches==[0x07000000], branches
     return bytes(out)
