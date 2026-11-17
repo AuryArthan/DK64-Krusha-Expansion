@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "All five reviewed placements in native validation",
+  "placement_status": "All five reviewed placements verified by native pickup on the current ROM",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -16,13 +16,14 @@
         1120.165
       ],
       "scale": 0.04,
-      "notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT",
-      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "notes": "Reviewed X/Z, bottom of the small pond. Native floor400; key base404. Real underwater pickup verified.",
+      "status": "native-verified reviewed placement",
       "source_xyz": [
         2974.489,
         489,
         1120.165
-      ]
+      ],
+      "source_notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT"
     },
     {
       "id": "RK-DIDDY",
@@ -36,13 +37,14 @@
         1671.169
       ],
       "scale": 0.04,
-      "notes": "Upper approach near Aztec; proposed ledge location, flight requirement undecided. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PLACE DIDDY's KEY HERE ON DK ISLE EAR, NEAR THE ANGRY AZTEC - I THINK THIS CAN ONLY BE REACHED WITH JETPACK",
-      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "notes": "Reviewed X/Z on the ear by Angry Aztec. Native floor1246.922921; base1250.922921. Original Isles Rocketbarrel flight reaches the ear; native contact pickup verified.",
+      "status": "native-verified reviewed placement",
       "source_xyz": [
         3250.167,
         1200,
         1671.169
-      ]
+      ],
+      "source_notes": "Upper approach near Aztec; proposed ledge location, flight requirement undecided. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PLACE DIDDY's KEY HERE ON DK ISLE EAR, NEAR THE ANGRY AZTEC - I THINK THIS CAN ONLY BE REACHED WITH JETPACK"
     },
     {
       "id": "RK-LANKY",
@@ -56,13 +58,14 @@
         4023.552
       ],
       "scale": 0.04,
-      "notes": "Shore/tunnel approach on mechanical island; check water level and swimming access. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT LANKY'S KEY HERE ON THE BOTTOM OF THE SEA, BELOW THE SHIP",
-      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "notes": "Reviewed X/Z on the sea bottom beneath the ship. Native floor203.36558; base207.36558. Real underwater pickup verified.",
+      "status": "native-verified reviewed placement",
       "source_xyz": [
         2056.093,
         489,
         4023.552
-      ]
+      ],
+      "source_notes": "Shore/tunnel approach on mechanical island; check water level and swimming access. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT LANKY'S KEY HERE ON THE BOTTOM OF THE SEA, BELOW THE SHIP"
     },
     {
       "id": "RK-TINY",
@@ -76,13 +79,14 @@
         3330.0
       ],
       "scale": 0.04,
-      "notes": "CAPS request: near the mechanical-island mouth. User approved an early nearby ledge to preserve original rescue timing. Lower walkway beside the Factory approach, native floor1200+4, no Monkeyport or late mouth opening required.",
-      "status": "User approved nearby early ledge instead of late mouth; native validation pending",
+      "notes": "User approved an early nearby ledge instead of the late mouth, preserving rescue timing. Lower walkway by Factory/vines, floor1200; base1204. Walk around the pillar; no Monkeyport or late mouth opening required. Native walk/pickup verified.",
+      "status": "native-verified reviewed placement",
       "source_xyz": [
         2530.611,
         1740,
         3147.061
-      ]
+      ],
+      "source_notes": "Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT"
     },
     {
       "id": "RK-CHUNKY",
@@ -96,13 +100,14 @@
         1761.949
       ],
       "scale": 0.04,
-      "notes": "Prison-island perimeter; keep clear of K. Lumsy entrance and new prison footprint. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT CHUNKY'S KEY HERE ON THE FLOOR BEHIND THE ANGRY AZTEC HOUSE",
-      "status": "user-reviewed X/Z; adjusted to requested support; gameplay validation pending",
+      "notes": "Reviewed X/Z on the ground behind the Aztec hut. Native floor1040; base1044. Approach from the sloping path at1020; native walk/pickup verified.",
+      "status": "native-verified reviewed placement",
       "source_xyz": [
         3567.15,
         1040,
         1761.949
-      ]
+      ],
+      "source_notes": "Prison-island perimeter; keep clear of K. Lumsy entrance and new prison footprint. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT CHUNKY'S KEY HERE ON THE FLOOR BEHIND THE ANGRY AZTEC HOUSE"
     }
   ],
   "source_export_sha256": "1e5b15c7ef726eafcbd91bce61b507d9282e04b5426d099663a86bc1c6a07422",

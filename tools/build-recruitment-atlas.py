@@ -45,6 +45,14 @@ def main():
                 name=pin['label'], owner='Krusha',
                 kind='landmark' if pin['kind'] in ('note', 'switch') else pin['kind'],
                 source='implemented-campaign-reference'))
+    if args.draft_id == 'recruitment-keys-v15-v1':
+        sys.path.insert(0, str(ROOT / 'build'))
+        from recruitment_assets import POSITION, SCALE
+        from recruitment_collision import DOOR_CENTER
+        data['points'].append(dict(id='reference-mini-prison',
+            name='Mini prison entrance', kind='landmark', owner='Krusha',
+            xyz=[POSITION[i] + DOOR_CENTER[i] * SCALE for i in range(3)],
+            source='implemented-prison-reference', quantity=1))
     data['meta']['points'] = len(data['points'])
     map_path.write_text('window.ATLAS_MAP=' + json.dumps(data, separators=(',', ':')) + ';\n')
     (out / 'draft-seed.js').write_text('window.KRUSHA_DRAFTS=' + json.dumps([seed]) +
