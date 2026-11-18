@@ -62,6 +62,20 @@ def patchStaticCode(filename):
 		fh.seek(-8, 1)
 		fh.write((0x08000000 | ((int(symbols['islesrambiowner'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
 
+		# The only animal first-use dialogue call. Leave the native dialogue
+		# and its flags intact in the original levels.
+		fh.seek(0x806EDD0C - 0x805FB300)
+		assert fh.read(4) == bytes.fromhex('0c1bb542')
+		fh.seek(-4, 1)
+		fh.write((0x0C000000 | ((int(symbols['islesanimalfirstusetext'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+
+		# Keep the native manual reversion input immediately after this branch.
+		fh.seek(0x806CB580 - 0x805FB300)
+		assert fh.read(12) == bytes.fromhex('331908001320000900000000')
+		fh.seek(-12, 1)
+		fh.write((0x08000000 | ((int(symbols['islesanimalzone'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+		fh.write(bytes(4))
+
 		# Only the rainbow award's FTT call, after the original five-wallet loop.
 		# The wrapper credits the sixth adventure wallet even when Krusha is OFF.
 		fh.seek(0x806F54E0 - 0x805FB300)

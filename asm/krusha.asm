@@ -536,3 +536,32 @@ islesRambiOwner:
 @@resume:
     J 0x8067ED34
     NOP
+
+; Skip the first-use dialogue on the Isles without setting the native flag.
+islesAnimalFirstUseText:
+    LUI t0, hi(CurrentMap)
+    LW t0, lo(CurrentMap)(t0)
+    ADDIU t1, zero, 34
+    BEQ t0, t1, @@return
+    NOP
+    J 0x806ED508
+    NOP
+@@return:
+    JR ra
+    NOP
+
+; The player update reaches this block only for the two animal forms.
+; Continue straight to the manual reversion check on the Isles.
+islesAnimalZone:
+    LUI t9, hi(CurrentMap)
+    LW t9, lo(CurrentMap)(t9)
+    ADDIU at, zero, 34
+    BEQ t9, at, @@manual
+    ANDI t9, t8, 0x0800
+    BEQZ t9, @@manual
+    NOP
+    J 0x806CB58C
+    NOP
+@@manual:
+    J 0x806CB5AC
+    NOP

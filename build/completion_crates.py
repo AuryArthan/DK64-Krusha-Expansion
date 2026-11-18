@@ -6,8 +6,8 @@ from barrel_assets import read_file
 
 # Map, original setup actor ID, actor type minus 16, new ID, world coordinates.
 CRATES = (
-    (7, 27, 2, 620, (2720, 500, 2220)),
-    (30, 13, 113, 621, (2310, 436, 2720)),
+    (7, 27, 2, 620, (2520, 500, 2155)),
+    (30, 13, 113, 621, (2425, 441, 2760)),
 )
 
 
