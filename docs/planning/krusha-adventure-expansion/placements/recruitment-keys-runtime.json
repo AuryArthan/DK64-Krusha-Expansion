@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "New illustrated DK nose and Tiny pipe placements under native validation; other three unchanged",
+  "placement_status": "Implemented and native-verified illustrated DK nose/Tiny Factory pipe placements; other three unchanged",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -16,8 +16,8 @@
         2200.0
       ],
       "scale": 0.04,
-      "notes": "On the central DK Isle snout below the eye ledge. Native steep surface853.719; rotating-key base12 above it for clearance. Slide off eye ledge2850/1058/2070 to collect; final native validation pending.",
-      "status": "illustrated nose placement in validation",
+      "notes": "On the central DK Isle snout below the eye ledge. Native steep surface853.719; rotating-key base12 above it for clearance. Slide off eye ledge2850/1058/2070 to collect; native pickup verified on standalone and Next/GLideN64.",
+      "status": "implemented; native slide/backflip pickup, own-bit progression and palette reload verified on 40286168; exact-ROM numbered states ready",
       "source_xyz": [
         2974.489,
         489,
@@ -80,8 +80,8 @@
         3430.0
       ],
       "scale": 0.04,
-      "notes": "Top of the left-hand bent pipe beside Frantic Factory entrance. Native support1331.566; base4 above. Jump from the outside approach, avoiding the porch roof; final native validation pending.",
-      "status": "illustrated Factory pipe placement in validation",
+      "notes": "Top of the left-hand bent pipe beside Frantic Factory entrance. Native support1331.566; base4 above. From top stair2500/1260/3400, crouch and backflip toward2540/3430 with early steering to clear the porch. Native pickup verified on standalone and Next/GLideN64.",
+      "status": "implemented; native slide/backflip pickup, own-bit progression and palette reload verified on 40286168; exact-ROM numbered states ready",
       "source_xyz": [
         2530.611,
         1740,
