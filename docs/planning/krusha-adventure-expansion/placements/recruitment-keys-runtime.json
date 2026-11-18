@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "DK key snapped to the central snout ridge, native validation pending; other four keys unchanged",
+  "placement_status": "DK key centered on the exact native nose ridge; native slide pickup and distance color reload verified on standalone and Next; other four keys unchanged",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -16,8 +16,8 @@
         2200.0
       ],
       "scale": 0.04,
-      "notes": "Centered on the native snout ridge shared by the two sloped nose triangles, at Z2200. Exact edge interpolation t67/355, support888.72112676; base+12. Slide off the centered eye ledge near2800/1058/2070; validation pending.",
-      "status": "central-ridge placement in validation",
+      "notes": "Centered on the native snout ridge shared by the two sloped nose triangles, at Z2200. Exact edge interpolation t67/355, support888.72112676; base+12. Slide off the centered eye ledge near2800/1058/2070; native slide pickup verified on standalone and Next/GLideN64.",
+      "status": "implemented; native ridge slide pickup, own-bit progression, palette streaming and exact-ROM numbered state verified on b323579f",
       "source_xyz": [
         2974.489,
         489,
