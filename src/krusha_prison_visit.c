@@ -9,8 +9,9 @@
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
 static u8 skip,restore_mini,door_return;
-static u8 exterior_hud_owned;
-static u32 exterior_hud_started;
+enum { RETURN_HUD = 1, RETURN_THEME = 2, MINI_MONKEY_SONG = 16 };
+static u8 exterior_effects;
+static u32 exterior_started;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
  * staged crystals, return crystals, staged frames, last native frame. */
 volatile u32 krushaPrisonVisitTrace[10];
@@ -38,20 +39,22 @@ static void roomLighting(void) {
  * its hold. Release ONLY our hold when Mini ends, through the native HUD
  * cleanup (including saved pause-group masks). Never retain a HUD pointer or
  * clear a counter belonging to a newly loaded map/file. */
-static void exteriorHudTick(void) {
+static void exteriorEffectsTick(void) {
     u8* cc=*(u8**)0x807FC924;
-    if (!exterior_hud_owned) return;
+    if (!exterior_effects) return;
     if (!DetectAdventure() || CurrentMap!=34 || file!=*(u8*)0x807467C8 ||
-        ObjectModel2Timer<exterior_hud_started) {exterior_hud_owned=0;return;}
+        ObjectModel2Timer<exterior_started) {exterior_effects=0;return;}
     if (tiny() && valid(cc,0x2C4)) {
         u8* data=*(u8**)((u8*)Player+0x174);
         if (cc[0x2C0]==0 && CollectableBase.Crystals>0) return;
         /* Keep native tag restrictions through the growth interpolation. */
         if (valid(data,0x1D0) && *(f32*)(data+0x1CC)<.149f) return;
     }
-    if (valid(HUD,6*sizeof(HUDDisplay)))
+    if ((exterior_effects & RETURN_HUD) && valid(HUD,6*sizeof(HUDDisplay)))
         ((void (*)(s32,s32))0x806F8D58)(5,0);
-    exterior_hud_owned=0;
+    if (exterior_effects & RETURN_THEME)
+        ((void (*)(s32,u8))0x80602B60)(MINI_MONKEY_SONG,1);
+    exterior_effects=0;
 }
 static void transform(void) {
     u8* cc=*(u8**)0x807FC924;
@@ -75,7 +78,7 @@ static void transform(void) {
         CurrentMap==34 && CollectableBase.Crystals>0 &&
         valid(HUD,6*sizeof(HUDDisplay)) && !HUD[5].freeze_timer) {
         ((void (*)(s32,u8,s32))0x806F8BC4)(5,1,0);
-        exterior_hud_owned=1;exterior_hud_started=ObjectModel2Timer;
+        exterior_effects |= RETURN_HUD;exterior_started=ObjectModel2Timer;
     }
 }
 static void end(int returned) {
@@ -98,7 +101,7 @@ s32 krushaPrisonVisitBegin(void) {
 }
 void krushaPrisonVisitTick(void) {
     u32 frame=*(u32*)0x8076A064;
-    exteriorHudTick();
+    exteriorEffectsTick();
     krushaPrisonVisitTrace[9]=frame;
     if (!DetectAdventure() || (phase && file!=*(u8*)0x807467C8)) {
         if (phase) end(0);
@@ -155,8 +158,11 @@ void krushaPrisonVisitTick(void) {
              * also starts a form theme, independently of setting the scale. */
             if (restore_mini && tiny() && CollectableBase.Crystals > 0) {
                 u8* cc = *(u8**)0x807FC924;
-                if (valid(cc, 0x2C4) && cc[0x2C0] == 0)
-                    playSong(16, 1.0f);
+                if (valid(cc, 0x2C4) && cc[0x2C0] == 0) {
+                    playSong(MINI_MONKEY_SONG, 1.0f);
+                    exterior_effects |= RETURN_THEME;
+                    exterior_started = ObjectModel2Timer;
+                }
             }
             end(1);
         }
