@@ -1,6 +1,10 @@
 """Three small faceted orange/pink crown spikes for the private prison."""
 import math
-ENLARGEMENT = 1.265 # approved1.10 enlarged another15 percent about each planted root
+ENLARGEMENT = 1.10 * 1.15 * 1.05
+# Three world units. The widest enlarged root ring otherwise floats over the
+# curved roof at its outer edge. All eight vertices must enter the roof, rather
+# than merely placing the centre of the horn on it. Independently mesh-audited.
+LOWERING = 13
 
 
 def triangles(tangent, normal):
@@ -13,7 +17,7 @@ def triangles(tangent, normal):
         ((135,177,220),(20,12),(-133,-145,-161)),
     ):
         root=heights[0]
-        heights=tuple(root+(height-root)*ENLARGEMENT for height in heights)
+        heights=tuple(root+(height-root)*ENLARGEMENT-LOWERING for height in heights)
         radii=tuple(radius*ENLARGEMENT for radius in radii)
         offsets=tuple((0,n)for n in depths)
         centers = [(tangent[0] * t + normal[0] * n, y,

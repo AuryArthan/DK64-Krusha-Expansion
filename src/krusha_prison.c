@@ -21,10 +21,11 @@ static int valid(void* p,u32 n) {return (u32)p>=0x80000000 && (u32)p<=0x80800000
 static f32 absolute(f32 x) {return x<0 ? -x : x;}
 static void reset(void) {owner=0;armed=latched=0;krushaPrisonTrace[2]=krushaPrisonTrace[3]=krushaPrisonTrace[4]=0;}
 
-static void solidBaseWalls(u8* object) {
+static void solidPrisonWalls(u8* object) {
     /* Native73708 ->73B78 rejects kind2 contacts below21 fixed units.
-     * Mini's radius is20, so she walks through the gently sloped base panels.
-     * Treat ONLY those panels as solid kind1 in THIS live object's cache.
+     * Mini's radius is20. This applies to the curved shell as well as its base:
+     * preserve these steep panels as solid kind1 in THIS live object's cache.
+     * Gentle roof slopes retain kind0 and their ordinary native floor records.
      * Preserve planes/vertices and native allocation/rebuild/destruction. */
     if (!(object[0x3D]&1)) return;
     u8* first=*(u8**)(object+0x40);
@@ -32,16 +33,10 @@ static void solidBaseWalls(u8* object) {
     u32 size=(u32)end-(u32)first;
     if ((u32)end<=(u32)first || size>RECRUITMENT_COLLISION_WALLS*88 ||
         size%88 || !valid(first,size)) return;
-    s32 base=(s32)(RECRUITMENT_DOOR_Y*8);
     for (u8* wall=first;wall<end;wall+=88) {
         if (wall[0x4B]!=2) continue;
-        s32 a=*(s32*)(wall+0x28),b=*(s32*)(wall+0x34),c=*(s32*)(wall+0x40);
-        if (a>=base && b>=base && c>=base &&
-            a<=base+100 && b<=base+100 && c<=base+100 &&
-            (a==base || b==base || c==base)) {
-            wall[0x4B]=1;
-            krushaPrisonWallFixes++;
-        }
+        wall[0x4B]=1;
+        krushaPrisonWallFixes++;
     }
 }
 
@@ -51,7 +46,7 @@ static int exteriorLoaded(void) {
     if (count<1 || count>1000 || !valid(objects,count*sizeof(ModelTwoData))) return 0;
     for (s32 i=0;i<count;i++) if (objects[i].object_id==RECRUITMENT_OBJECT_ID &&
         objects[i].object_type==RECRUITMENT_MODEL_TYPE) {
-            solidBaseWalls((u8*)&objects[i]);return 1;
+            solidPrisonWalls((u8*)&objects[i]);return 1;
         }
     return 0;
 }
@@ -95,7 +90,6 @@ void krushaPrisonTick(void) {
     f32 mx=x-RECRUITMENT_MODEL_X,mz=z-RECRUITMENT_MODEL_Z;
     if (mx*mx+mz*mz<10000.0f) *(volatile s16*)RECRUITMENT_SHIP_MUSIC_RADIUS_ADDRESS=0;
     f32 dx=x-RECRUITMENT_DOOR_X,dz=z-RECRUITMENT_DOOR_Z;
-    if (absolute(dx)>45 || absolute(dz)>45) {reset();last_frame=frame;return;}
     f32 side=dx*RECRUITMENT_DOOR_TX+dz*RECRUITMENT_DOOR_TZ;
     f32 depth=dx*RECRUITMENT_DOOR_NX+dz*RECRUITMENT_DOOR_NZ;
     krushaPrisonDistance[0]=side;krushaPrisonDistance[1]=depth;
@@ -124,6 +118,16 @@ void krushaPrisonTick(void) {
     int moving=p[0x154]==12 || p[0x154]==13 || p[0x154]==14;
     int eligible=small && height && moving;
     krushaPrisonTrace[3]=eligible;
+    /* A deliberately undersized inner core is entirely behind the native
+     * shell, not on its playable roof/walkway. If an attack tunnels through
+     * a wall, use the established safe exit rather than leave a trapped actor.
+     * Preserve the genuine Mini doorway approach/transition. No normal exterior
+     * contact reaches this volume; the emitted mesh audit checks its margin. */
+    if (mx*mx+mz*mz<1296.0f && y>RECRUITMENT_DOOR_Y-8 &&
+        y<RECRUITMENT_DOOR_Y+20 &&
+        !(eligible && absolute(side)<3.5f && depth>-4 && depth<25)) {
+        recover(p);last_depth=24;return;
+    }
     /* Keep the established failed-Mini recovery local to the actual hole,
      * and apply it to every full-size Kong that slips past native collision.
      * A genuine Mini entrant and the roof/walkway never enter this branch. */
