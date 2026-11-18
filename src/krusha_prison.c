@@ -123,7 +123,7 @@ void krushaPrisonTick(void) {
      * a wall, use the established safe exit rather than leave a trapped actor.
      * Preserve the genuine Mini doorway approach/transition. No normal exterior
      * contact reaches this volume; the emitted mesh audit checks its margin. */
-    if (mx*mx+mz*mz<1296.0f && y>RECRUITMENT_DOOR_Y-8 &&
+    if (mx*mx+mz*mz<784.0f && y>RECRUITMENT_DOOR_Y-8 &&
         y<RECRUITMENT_DOOR_Y+20 &&
         !(eligible && absolute(side)<3.5f && depth>-4 && depth<25)) {
         recover(p);last_depth=24;return;

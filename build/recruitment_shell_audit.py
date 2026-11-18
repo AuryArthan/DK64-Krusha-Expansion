@@ -125,7 +125,7 @@ def extra(r,b,clean,path,check,report,sym,baseline):
     if min(a[1],b[1])<level<max(a[1],b[1]):
      f=(level-a[1])/(b[1]-a[1]);points.append((a[0]+f*(b[0]-a[0]),a[2]+f*(b[2]-a[2])))
   ring=hull(points);distances=[(a[0]*b[1]-a[1]*b[0])/math.hypot(b[0]-a[0],b[1]-a[1])for a,b in zip(ring,ring[1:]+ring[:1])]
-  check('inner36-unit core remains behind outer shell at Y '+str(level),len(ring)>=3 and min(distances)>39,dict(inradius=min(distances),clearance=min(distances)-36))
-  clear.append(min(distances)-36)
+  check('inner28-unit core remains behind outer shell at Y '+str(level),len(ring)>=3 and min(distances)>31,dict(inradius=min(distances),clearance=min(distances)-28))
+  clear.append(min(distances)-28)
  check('inner guard retains native Mini entry exemption', '!(eligible && absolute(side)<3.5f && depth>-4 && depth<25)'in source)
  report['core_min_envelope_margin_world']=min(clear)
