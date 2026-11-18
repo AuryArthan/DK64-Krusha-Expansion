@@ -49,6 +49,19 @@ def patchStaticCode(filename):
 		fh.seek(0x8060D39C - 0x805FB300)
 		fh.write((0x0C000000 | ((int(symbols['krushasavecomparesnapshot'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
 
+		# Map setup's native actor-list constructor. Only the two new Isles
+		# crate spawners receive a completion-aware activation predicate.
+		fh.seek(0x806887F0 - 0x805FB300)
+		assert fh.read(4) == (0x0C000000 | ((0x80688FC0 & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big')
+		fh.seek(-4, 1)
+		fh.write((0x0C000000 | ((int(symbols['completioncratesetup'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
+
+		# Original bne v1,at followed by li a2,129. Keep its delay slot.
+		fh.seek(0x8067ED28 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('1461000224060081')
+		fh.seek(-8, 1)
+		fh.write((0x08000000 | ((int(symbols['islesrambiowner'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
+
 		# Only the rainbow award's FTT call, after the original five-wallet loop.
 		# The wrapper credits the sixth adventure wallet even when Krusha is OFF.
 		fh.seek(0x806F54E0 - 0x805FB300)

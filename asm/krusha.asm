@@ -517,3 +517,22 @@ krushaRecruitmentKeyAlphaCall:
     MOVE a3, s0
     J krushaRecruitmentKeyAlpha
     NOP
+
+; The shared native crate handler allows every Kong to activate Rambi.
+; For the Isles reward, v0 is the player actor type and t2 is ACTOR_DK (2).
+; Non-Rambi actors retain the previously calculated native eligibility in a1.
+islesRambiOwner:
+    BNE v1, at, @@resume
+    NOP
+    LUI at, hi(CurrentMap)
+    LW at, lo(CurrentMap)(at)
+    XORI at, at, 34
+    BNEZ at, @@allow
+    NOP
+    BNE v0, t2, @@resume
+    NOP
+@@allow:
+    ADDIU a1, zero, 1
+@@resume:
+    J 0x8067ED34
+    NOP

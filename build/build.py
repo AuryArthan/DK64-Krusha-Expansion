@@ -95,11 +95,12 @@ subprocess.run([ARMIPS, "asm/main.asm", "-definelabel", "RECRUITMENT_QA", str(in
                 "-sym", newROMName.replace(".z64", ".sym")], check=True)
 
 from campaign_data import maps as campaignMaps, balloons as campaignBalloons, area as campaignArea
+from completion_crates import patch_setup as patchCompletionCrates
 from native_pickup_adjustments import patch_setup as patchNativePickups
 file_dict = []
 for mid in campaignMaps():
     if mid==7:continue
-    file_dict.append({"name":f"M5 map{mid} pickups/rewards","pointer_table_index":9,"file_index":mid,"source_file":f"bin/M5Setup{mid}.bin","patcher":lambda name,mid=mid:(patchM2Setup(name,mid),patchM4Setup(name,mid),patchNativePickups(name,mid),patchRecruitmentSetup(name,mid),patchRecruitmentKeys(name,mid))})
+    file_dict.append({"name":f"M5 map{mid} pickups/rewards","pointer_table_index":9,"file_index":mid,"source_file":f"bin/M5Setup{mid}.bin","patcher":lambda name,mid=mid:(patchM2Setup(name,mid),patchM4Setup(name,mid),patchNativePickups(name,mid),patchRecruitmentSetup(name,mid),patchRecruitmentKeys(name,mid),patchCompletionCrates(name,mid))})
     if campaignArea(mid):
         file_dict.append({"name":f"M5 map{mid} cage script","pointer_table_index":10,"file_index":mid,"source_file":f"bin/M5Scripts{mid}.bin","patcher":lambda name,mid=mid:patchM5Scripts(name,mid)})
     if campaignBalloons(mid):
