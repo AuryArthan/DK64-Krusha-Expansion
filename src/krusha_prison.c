@@ -57,8 +57,9 @@ static int exteriorLoaded(void) {
 }
 
 static void recover(u8* p) {
-    /* Native detach, then move only this player out of our aperture before
-     * normal-size recovery. No crystal refill, forced action or scale write. */
+    /* Native detach, then move only this player out of our aperture. Recover any full-size root
+     * that has slipped past the arch collision.
+     * No crystal refill, forced action, identity change or scale write. */
     ((void (*)(void*))0x80672C30)(p);
     for (s32 base=0x7C;base<=0x88;base+=0xC) {
         *(f32*)(p+base)=RECRUITMENT_DOOR_SAFE_X;
@@ -75,11 +76,24 @@ static void recover(u8* p) {
 void krushaPrisonTick(void) {
     u32 frame=*(u32*)0x8076A064;
     u8* p=(u8*)Player;
-    if (!krushaEnabled() || !DetectAdventure() || CurrentMap!=34 ||
+    s32 enabled=krushaEnabled();
+    /* Extend the native camera-based prison music cylinder over the small
+     * prison. Native song selection/fading still owns playback; restore its
+     * original radius whenever the expansion is OFF. No new song request. */
+    *(volatile s16*)RECRUITMENT_MUSIC_RADIUS_ADDRESS=enabled ?
+        RECRUITMENT_MUSIC_RADIUS_EXPANDED : RECRUITMENT_MUSIC_RADIUS_ORIGINAL;
+    *(volatile s16*)RECRUITMENT_SHIP_MUSIC_RADIUS_ADDRESS=RECRUITMENT_SHIP_MUSIC_RADIUS_ORIGINAL;
+    if (!enabled || !DetectAdventure() || CurrentMap!=34 ||
         ObjectModel2Timer<5 || !valid(p,0x178)) {reset();last_frame=frame;return;}
     f32 x=*(f32*)(p+0x7C),y=*(f32*)(p+0x80),z=*(f32*)(p+0x84);
     if (absolute(x-RECRUITMENT_MODEL_X)>110 || absolute(z-RECRUITMENT_MODEL_Z)>110 ||
         !exteriorLoaded()) {reset();last_frame=frame;return;}
+    /* Ship song110 has a higher native request priority than prison112.
+     * A larger prison cylinder alone still loses when the camera looks west.
+     * Exclude that competing cylinder ONLY while the player occupies the small
+     * prison's100-unit footprint; native fades/pauses/one-shots remain intact. */
+    f32 mx=x-RECRUITMENT_MODEL_X,mz=z-RECRUITMENT_MODEL_Z;
+    if (mx*mx+mz*mz<10000.0f) *(volatile s16*)RECRUITMENT_SHIP_MUSIC_RADIUS_ADDRESS=0;
     f32 dx=x-RECRUITMENT_DOOR_X,dz=z-RECRUITMENT_DOOR_Z;
     if (absolute(dx)>45 || absolute(dz)>45) {reset();last_frame=frame;return;}
     f32 side=dx*RECRUITMENT_DOOR_TX+dz*RECRUITMENT_DOOR_TZ;
@@ -110,8 +124,11 @@ void krushaPrisonTick(void) {
     int moving=p[0x154]==12 || p[0x154]==13 || p[0x154]==14;
     int eligible=small && height && moving;
     krushaPrisonTrace[3]=eligible;
-    if (tiny && (!small || CollectableBase.Crystals<=0) && absolute(side)<6.8f &&
-        depth<5.0f && depth>-14 && y>RECRUITMENT_DOOR_Y-5 && y<RECRUITMENT_DOOR_Y+15) {
+    /* Keep the established failed-Mini recovery local to the actual hole,
+     * and apply it to every full-size Kong that slips past native collision.
+     * A genuine Mini entrant and the roof/walkway never enter this branch. */
+    if (!small && absolute(side)<6.8f && depth<5.0f && depth>-14 &&
+        y>RECRUITMENT_DOOR_Y-5 && y<RECRUITMENT_DOOR_Y+15) {
         recover(p);last_depth=24;return;
     }
     if (depth>7 || absolute(side)>10 || !height) latched=0;

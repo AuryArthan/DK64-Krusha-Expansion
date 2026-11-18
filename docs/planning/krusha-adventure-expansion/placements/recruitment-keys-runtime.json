@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "Implemented and native-verified illustrated DK nose/Tiny Factory pipe placements; other three unchanged",
+  "placement_status": "DK key snapped to the central snout ridge, native validation pending; other four keys unchanged",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -11,20 +11,25 @@
       "type": 60,
       "owner": 0,
       "xyz": [
-        2850.0,
-        865.719,
+        2784.351643192488,
+        900.7211267605634,
         2200.0
       ],
       "scale": 0.04,
-      "notes": "On the central DK Isle snout below the eye ledge. Native steep surface853.719; rotating-key base12 above it for clearance. Slide off eye ledge2850/1058/2070 to collect; native pickup verified on standalone and Next/GLideN64.",
-      "status": "implemented; native slide/backflip pickup, own-bit progression and palette reload verified on 40286168; exact-ROM numbered states ready",
+      "notes": "Centered on the native snout ridge shared by the two sloped nose triangles, at Z2200. Exact edge interpolation t67/355, support888.72112676; base+12. Slide off the centered eye ledge near2800/1058/2070; validation pending.",
+      "status": "central-ridge placement in validation",
       "source_xyz": [
         2974.489,
         489,
         1120.165
       ],
       "source_notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT",
-      "access_route": "eyes_slide"
+      "access_route": "eyes_slide",
+      "access_start": [
+        2800,
+        1070,
+        2070
+      ]
     },
     {
       "id": "RK-DIDDY",

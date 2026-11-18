@@ -1,6 +1,6 @@
 """Three small faceted orange/pink crown spikes for the private prison."""
 import math
-ENLARGEMENT = 1.10
+ENLARGEMENT = 1.265 # approved1.10 enlarged another15 percent about each planted root
 
 
 def triangles(tangent, normal):

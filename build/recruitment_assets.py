@@ -253,6 +253,11 @@ def prepare(rom_path):
     from m4_rewards import props,rows
     used.update(props(34).values());used.update(p['object_id'] for p in rows(34))
     static=zlib.decompress(rom[0xC29D4:],47)
+    # Native80603450's Isles cylinders are14-byte records. The radius alone
+    # is updated at runtime; verify the USA prison row before exposing it.
+    music_row=0x8074626E
+    assert struct.unpack_from('>5h4B',static,music_row-0x80744460)==(3610,477,3302,-1,630,0,112,0,0)
+    assert struct.unpack_from('>5h4B',static,0x80746244-0x80744460)==(2076,477,3750,-1,980,0,110,0,0)
     used.update(struct.unpack_from('>H',static,0x80755A20-0x80744460+i*8+2)[0] for i in range(113) if static[0x80755A20-0x80744460+i*8]==34)
     used.update(struct.unpack_from('>H',static,0x80747D50-0x80744460+i*4+2)[0] for i in range(8) if struct.unpack_from('>H',static,0x80747D50-0x80744460+i*4)[0]==34)
     assert OBJECT_ID not in used
@@ -264,6 +269,8 @@ def prepare(rom_path):
     door=[POSITION[i]+DOOR_CENTER[i]*SCALE for i in range(3)]
     with target.open('a') as header:
         header.write(f'#define RECRUITMENT_MODEL_X {POSITION[0]:.9f}f\n#define RECRUITMENT_MODEL_Z {POSITION[2]:.9f}f\n#define RECRUITMENT_COLLISION_WALLS {report["collision"]["walls"]}\n')
+    with target.open('a') as header:
+        header.write('#define RECRUITMENT_MUSIC_RADIUS_ADDRESS 0x80746276\n#define RECRUITMENT_MUSIC_RADIUS_ORIGINAL 630\n#define RECRUITMENT_MUSIC_RADIUS_EXPANDED 900\n#define RECRUITMENT_SHIP_MUSIC_RADIUS_ADDRESS 0x8074624C\n#define RECRUITMENT_SHIP_MUSIC_RADIUS_ORIGINAL 980\n')
     values=dict(X=door[0],Y=door[1],Z=door[2],TX=DOOR_TANGENT[0],TZ=DOOR_TANGENT[1],NX=DOOR_NORMAL[0],NZ=DOOR_NORMAL[1],SAFE_X=door[0]+SAFE_DEPTH*DOOR_NORMAL[0],SAFE_Z=door[2]+SAFE_DEPTH*DOOR_NORMAL[1])
     with target.open('a') as header:
         for name,value in values.items():header.write(f'#define RECRUITMENT_DOOR_{name} {value:.9f}f\n')
