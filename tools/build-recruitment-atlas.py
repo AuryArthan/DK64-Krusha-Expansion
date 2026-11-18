@@ -14,7 +14,7 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
     parser.add_argument('--runtime-plan', type=Path, help='Seed a separate atlas from implemented R10 positions')
-    parser.add_argument('--draft-id', default='recruitment-keys-r10-v1', choices=('recruitment-keys-r10-v1','recruitment-keys-v15-v1'))
+    parser.add_argument('--draft-id', default='recruitment-keys-r10-v1', choices=('recruitment-keys-r10-v1','recruitment-keys-v15-v1','recruitment-keys-v15-refined-v1'))
     parser.add_argument('--title', default='Implemented keys — placements for review')
     args = parser.parse_args()
     out = args.out.resolve()
@@ -45,7 +45,7 @@ def main():
                 name=pin['label'], owner='Krusha',
                 kind='landmark' if pin['kind'] in ('note', 'switch') else pin['kind'],
                 source='implemented-campaign-reference'))
-    if args.draft_id == 'recruitment-keys-v15-v1':
+    if args.draft_id.startswith('recruitment-keys-v15-'):
         sys.path.insert(0, str(ROOT / 'build'))
         from recruitment_assets import POSITION, SCALE
         from recruitment_collision import DOOR_CENTER
