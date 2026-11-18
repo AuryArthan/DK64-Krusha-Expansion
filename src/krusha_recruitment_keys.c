@@ -23,17 +23,19 @@ void krushaRecruitmentTextureIdentity(void* ptr,s32* table,s32* index) {
 static u32 key_sound_frame;
 static u8 key_sound_pending;
 void krushaRecruitmentMusicLoad(u32 source,void* dest,u32* size,u32 mode,u32 a,u32 b,void* scratch) {
-    if (key_sound_pending && CurrentMap==34 && ObjectModel2Timer-key_sound_frame<60) {
+    if (CurrentMap!=34 || ObjectModel2Timer-key_sound_frame>=60) key_sound_pending=0;
+    if (key_sound_pending) {
         for (int i=0;i<4;i++) if (((void**)0x8076BF38)[i]==dest && ((u8*)0x80770560)[i]==145) {
             extern void* krushaBarrelFile(s32,s32,u8,u8);
             key_sound_pending=0;
             void* data=krushaBarrelFile(27,RECRUITMENT_KEY_SOUND_ASSET,1,0);
-            if (data) {
+            if (data && RECRUITMENT_KEY_SOUND_BYTES<=((u32*)0x807452B0)[i]) {
                 dk_memcpy(dest,data,RECRUITMENT_KEY_SOUND_BYTES);
                 ((void(*)(void*,s32,s32))0x8066B434)(data,0,0);
                 *size=RECRUITMENT_KEY_SOUND_BYTES;
                 return;
             }
+            if (data) ((void(*)(void*,s32,s32))0x8066B434)(data,0,0);
         }
     }
     ((void(*)(u32,void*,u32*,u32,u32,u32,void*))0x8060B140)(source,dest,size,mode,a,b,scratch);

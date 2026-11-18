@@ -25,7 +25,7 @@ def payload(rom, semitones=3):
                     backup=pos-(distance+4);assert 0<=backup<len(source)and remaining
                     value=source[backup];backup+=1;remaining-=1
             return value
-        def byte(value):stream.append(value);stream.extend(b'\xfe'if value==0xfe else b'')
+        def byte(value):stream.append(value)
         def varlen():
             for _ in range(5):
                 v=get();byte(v)
@@ -49,6 +49,27 @@ def payload(rom, semitones=3):
                     byte(get())
                     if last>>4==9:varlen()
         else:raise AssertionError('Missing sequence end')
-        new_offsets.append(len(out));out.extend(stream)
+        new_offsets.append(len(out))
+        # The native one-shot channel has only342 bytes, including its header.
+        # Repack repeated literal bytes using Rare's backwards-copy form. A
+        # backreference copies raw bytes (without recursively decoding FE), so
+        # never match across an encoded reference or escape byte.
+        at=0
+        while at<len(stream):
+            length=0;match=0
+            for previous in range(68,len(out)):
+                n=0
+                while (n<255 and at+n<len(stream) and previous+n<len(out)
+                       and out[previous+n]!=0xfe and out[previous+n]==stream[at+n]):
+                    n+=1
+                if n>length:length,match=n,previous
+            if length>4:
+                distance=len(out)-match;assert distance<65536
+                out.extend((0xfe,distance>>8,distance&255,length));at+=length
+            else:
+                value=stream[at];out.append(value)
+                if value==0xfe:out.append(value)
+                at+=1
     struct.pack_into('>16I',out,0,*new_offsets);out[64:68]=source[64:68];assert notes>20
+    assert len(out)<=342, 'Never overrun the native one-shot sequence buffer'
     return bytes(out)
