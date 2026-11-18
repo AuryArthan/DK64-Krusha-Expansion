@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "All five reviewed placements verified by native pickup on the current ROM",
+  "placement_status": "All five placements verified by native pickup and distance unload/reload on the current candidate",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -79,8 +79,8 @@
         3210.0
       ],
       "scale": 0.04,
-      "notes": "Concealed Galleon-side roof/ledge below the Factory walkway, away from the bananaport. Proposed native Tiny jump/Twirl drop from the upper path; validation pending.",
-      "status": "new concealed placement in native validation",
+      "notes": "Concealed lower Galleon-side ledge below the Factory walkway, away from the bananaport. Native floor900; key base904. Native jump and second-A Twirl from the upper path at2640/1200/3370 reaches the ledge; pickup and distance palette reload verified. No late mouth/Monkeyport gate.",
+      "status": "native-verified concealed placement",
       "source_xyz": [
         2530.611,
         1740,
