@@ -1,7 +1,7 @@
 {
   "format": 1,
   "milestone": "v0.15 reviewed key placements",
-  "placement_status": "All five placements verified by native pickup and distance unload/reload on the current candidate",
+  "placement_status": "New illustrated DK nose and Tiny pipe placements under native validation; other three unchanged",
   "source": "Explicit reviewed atlas export",
   "keys": [
     {
@@ -11,19 +11,20 @@
       "type": 60,
       "owner": 0,
       "xyz": [
-        2974.489,
-        404.0,
-        1120.165
+        2850.0,
+        865.719,
+        2200.0
       ],
       "scale": 0.04,
-      "notes": "Reviewed X/Z, bottom of the small pond. Native floor400; key base404. Real underwater pickup verified.",
-      "status": "native-verified reviewed placement",
+      "notes": "On the central DK Isle snout below the eye ledge. Native steep surface853.719; rotating-key base12 above it for clearance. Slide off eye ledge2850/1058/2070 to collect; final native validation pending.",
+      "status": "illustrated nose placement in validation",
       "source_xyz": [
         2974.489,
         489,
         1120.165
       ],
-      "source_notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT"
+      "source_notes": "Central island approach; simple first discovery, clear of training exit. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT THIS KEY ON THE BOTTOM OF THE SMALL POND WHERE I MARKED IT",
+      "access_route": "eyes_slide"
     },
     {
       "id": "RK-DIDDY",
@@ -74,19 +75,20 @@
       "type": 64,
       "owner": 3,
       "xyz": [
-        2640.0,
-        904.0,
-        3210.0
+        2540.0,
+        1335.566,
+        3430.0
       ],
       "scale": 0.04,
-      "notes": "Concealed lower Galleon-side ledge below the Factory walkway, away from the bananaport. Native floor900; key base904. Native jump and second-A Twirl from the upper path at2640/1200/3370 reaches the ledge; pickup and distance palette reload verified. No late mouth/Monkeyport gate.",
-      "status": "native-verified concealed placement",
+      "notes": "Top of the left-hand bent pipe beside Frantic Factory entrance. Native support1331.566; base4 above. Jump from the outside approach, avoiding the porch roof; final native validation pending.",
+      "status": "illustrated Factory pipe placement in validation",
       "source_xyz": [
         2530.611,
         1740,
         3147.061
       ],
-      "source_notes": "Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT"
+      "source_notes": "Fairy Island exterior; near miniature-route discovery, clear of entry trigger. Initial ground estimate only; not gameplay tested. Move freely and add access instructions. PUT TINY'S KEY IN THE BIG KREMLIN ISLAND'S MOUTH NEAR HERE, I THINK TINY CAN REACH IT",
+      "access_route": "factory_pipe_jump"
     },
     {
       "id": "RK-CHUNKY",

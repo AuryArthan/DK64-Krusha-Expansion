@@ -1,5 +1,6 @@
 """Three small faceted orange/pink crown spikes for the private prison."""
 import math
+ENLARGEMENT = 1.10
 
 
 def triangles(tangent, normal):
@@ -11,6 +12,9 @@ def triangles(tangent, normal):
         ((190,235,282),(26,16),(-65,-78,-95)),
         ((135,177,220),(20,12),(-133,-145,-161)),
     ):
+        root=heights[0]
+        heights=tuple(root+(height-root)*ENLARGEMENT for height in heights)
+        radii=tuple(radius*ENLARGEMENT for radius in radii)
         offsets=tuple((0,n)for n in depths)
         centers = [(tangent[0] * t + normal[0] * n, y,
                     tangent[1] * t + normal[1] * n)

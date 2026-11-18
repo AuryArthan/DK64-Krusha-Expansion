@@ -5,8 +5,8 @@ End plinths scale uniformly .23; stretch the central tether to span the new gap.
 """
 import math,struct
 from barrel_assets import read_file
-SHIP=(2832.,500.,3288.)
-PRISON=(2925.,498.,3288.)
+SHIP=(2900.,500.,3520.)
+PRISON=(2954.,498.,3340.)
 SOURCE_A=(2973.5,500.,3681.666666667)
 SOURCE_B=(3106.,500.,3501.666666667)
 SCALE=.23
@@ -15,6 +15,7 @@ SCALE=.23
 def triangles(rom):
     geo=read_file(rom,1,34);u=lambda p:struct.unpack_from('>I',geo,p)[0];ds,vs,cs=u(0x34),u(0x38),u(0x68);chunk=struct.unpack_from('>13I',geo,cs+52);out=[]
     dx,dz=SOURCE_B[0]-SOURCE_A[0],SOURCE_B[2]-SOURCE_A[2];length=math.hypot(dx,dz);ax,az=dx/length,dz/length
+    dx,dz=PRISON[0]-SHIP[0],PRISON[2]-SHIP[2];span=math.hypot(dx,dz);nx,nz=dx/span,dz/span
     for start,size in[chunk[j:j+2]for j in(3,5,7,9)]:
         if not size:continue
         cursor=loaded=0;cache={};texture=None;history=[]
@@ -36,8 +37,12 @@ def triangles(rom):
                         if texture!=0x50f:
                             end=0 if t<.5 else 1;center=SOURCE_A if end==0 else SOURCE_B;anchor=SHIP if end==0 else PRISON
                             along=(x-center[0])*ax+(z-center[2])*az
-                            mapped.append((anchor[0]+along*SCALE,anchor[1]+(y-500)*SCALE,anchor[2]+side*SCALE))
-                        else:mapped.append((SHIP[0]+t*(PRISON[0]-SHIP[0]),SHIP[1]+t*(PRISON[1]-SHIP[1])+(y-500)*SCALE,SHIP[2]+side*SCALE))
+                            mapped.append((anchor[0]+(along*nx-side*nz)*SCALE,anchor[1]+(y-500)*SCALE,anchor[2]+(along*nz+side*nx)*SCALE))
+                        else:
+                            # Bury both rope ends in the anchor bodies; do not
+                            # stretch the native endpoint overhang past them.
+                            t=max(0.,min(1.,t))
+                            mapped.append((SHIP[0]+t*dx-side*SCALE*nz,SHIP[1]+t*(PRISON[1]-SHIP[1])+(y-500)*SCALE,SHIP[2]+t*dz+side*SCALE*nx))
                     # Same native pipeline, omit redundant previous texture loads.
                     material=history if texture==0x24e else history[:10]+history[20:] if texture==0x251 else history[:4]+history[-18:]
                     out.append(dict(raw=raw,world=mapped,material=material,texture=texture,source_command=p))
