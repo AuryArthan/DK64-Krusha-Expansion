@@ -150,7 +150,15 @@ void krushaPrisonVisitTick(void) {
              * authored native exit: detach, reset motion/collision and camera.
              * Never move a saved actor pointer or force an action/scale. */
             if (door_return) ((void (*)(s32))0x806C92C4)(RECRUITMENT_RETURN_EXIT);
-            transform();end(1);
+            transform();
+            /* Loading Isles restores its ambient music. The usual Mini barrel
+             * also starts a form theme, independently of setting the scale. */
+            if (restore_mini && tiny() && CollectableBase.Crystals > 0) {
+                u8* cc = *(u8**)0x807FC924;
+                if (valid(cc, 0x2C4) && cc[0x2C0] == 0)
+                    playSong(16, 1.0f);
+            }
+            end(1);
         }
     }
     krushaPrisonVisitTrace[0]=phase;
