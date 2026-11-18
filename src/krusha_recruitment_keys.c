@@ -8,18 +8,6 @@ static int keyType(int type) {
         if (recruitmentKeys[i].type==type) return i;
     return -1;
 }
-/* Native Model2 texture retirement restores the file index into G_SETTIMG.
- * Our loader uses table27 physically, so translate only private key palettes
- * back to their logical table25 tokens before native reload. Allocation/free
- * tracking remains physical and entirely native. */
-void krushaRecruitmentTextureIdentity(void* ptr,s32* table,s32* index) {
-    ((void(*)(void*,s32*,s32*))0x8066B7AC)(ptr,table,index);
-    if (*table==27 && *index>=RECRUITMENT_KEY_PALETTE &&
-        *index<RECRUITMENT_KEY_PALETTE+RECRUITMENT_KEY_COUNT) {
-        *index+=RECRUITMENT_KEY_PALETTE_TOKEN-RECRUITMENT_KEY_PALETTE;
-        *table=25;
-    }
-}
 static u32 key_sound_frame;
 static u8 key_sound_pending;
 void krushaRecruitmentMusicLoad(u32 source,void* dest,u32* size,u32 mode,u32 a,u32 b,void* scratch) {

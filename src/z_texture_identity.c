@@ -1,5 +1,6 @@
 #include "../include/common.h"
 #include "../include/recruitment_assets.generated.h"
+#include "../include/recruitment_keys.generated.h"
 
 /* Kept after the existing objects in link order so the established resident
  * code/data addresses stay unchanged. Native Model2 streaming stores only
@@ -13,6 +14,9 @@ void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
     if (*table!=27) return;
     if (*index>=RECRUITMENT_TEXTURE_BASE && *index<RECRUITMENT_TEXTURE_BASE+RECRUITMENT_TEXTURE_COUNT) {
         *table=25;*index+=RECRUITMENT_TEXTURE_TOKEN-RECRUITMENT_TEXTURE_BASE;
+    } else if (*index>=RECRUITMENT_KEY_PALETTE && *index<RECRUITMENT_KEY_PALETTE+RECRUITMENT_KEY_COUNT) {
+        *table=25;*index+=RECRUITMENT_KEY_PALETTE_TOKEN-RECRUITMENT_KEY_PALETTE;
+        krushaModel2TextureTrace[3]++;
     } else if (*index==68) {
         *table=25;*index=7410;
         krushaModel2TextureTrace[1]++;

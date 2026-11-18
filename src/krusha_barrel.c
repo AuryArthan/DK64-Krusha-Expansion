@@ -392,11 +392,6 @@ char* krushaBarrelName(BarrelData* data, s32 index) {
 
 void krushaBarrelInstall(void) {
     jump(0x8066B0F8, krushaBarrelFile);
-    extern void krushaRecruitmentTextureIdentity(void*,s32*,s32*);
-    /* Model2 shared and ordinary displaylist retirement; native delay slots
-     * and reference-counted release calls are preserved. */
-    patch(0x80636BAC,0x0C000000|(((u32)krushaRecruitmentTextureIdentity&0x0FFFFFFF)>>2));
-    patch(0x806368A0,0x0C000000|(((u32)krushaRecruitmentTextureIdentity&0x0FFFFFFF)>>2));
     extern void krushaRecruitmentMusicLoad(u32,void*,u32*,u32,u32,u32,void*);
     patch(0x8060A324,0x0C000000|(((u32)krushaRecruitmentMusicLoad&0x0FFFFFFF)>>2));
     jump(0x80682E38, krushaBarrelSpawn);
