@@ -48,15 +48,19 @@ def selected(vertices,texture):
 
 def model(rom):
     geo=read_file(rom,1,34);ds,vs=u(geo,0x34),u(geo,0x38);cs,ce=u(geo,0x68),u(geo,0x6C)
+    lighting=True
     vertices=bytearray();commands=[];materials=[];triangles=[];used_textures=set();cap_material=None;tunnel_material=None;source_points=set();tunnel_caps=0
-    def command(a,b=0):commands.append(struct.pack('>II',a,b))
+    def command(a,b=0):
+        nonlocal lighting
+        if a>>24==0xD9:lighting=(lighting and bool(a&0x20000))or bool(b&0x20000)
+        commands.append(struct.pack('>II',a,b))
     def material(values):
         for ma,mb in values:
             if ma>>24==0xFD and mb in SOURCE_TEXTURES:
                 used_textures.add(mb);mb=TEXTURE_TOKEN+SOURCE_TEXTURES.index(mb)
             command(ma,mb)
-    def emit(raw,xyz,texture,source_command=None,local_coords=False):
-        command(0xD9FDFFFF,0) # map vertices are prelit RGBA, not normals
+    def emit(raw,xyz,texture,source_command=None,local_coords=False,tunnel=False):
+        if lighting:command(0xD9FDFFFF,0) # map vertices are prelit RGBA, not normals
         command(0x01003006,0x08000000+len(vertices))
         local_vertices=[]
         for data,pos in zip(raw,xyz):
@@ -64,6 +68,8 @@ def model(rom):
             if texture in WALKWAY_TEXTURES and not local_coords:
                 local[0]=-local[0];local[2]=-local[2] # turn only the annulus180 degrees
                 for channel in range(12,15):v[channel]=round(v[channel]*WALKWAY_BRIGHTNESS)
+            if tunnel:
+                for channel in range(12,15):v[channel]=round(v[channel]*.035)
             local=[round(c) for c in rotate(local)]
             local_vertices.append(local)
             struct.pack_into('>3h',v,0,*local);vertices.extend(v)
@@ -94,14 +100,17 @@ def model(rom):
                         if texture==0x514 and tunnel_material is None:tunnel_material=list(state_history)
                         material(materials);materials=[]
                         local=[tuple(round(pos[i]/3-ORIGIN[i]) for i in range(3)) for pos in xyz]
-                        if texture==0x51A and all(v in INNER_ARCH for v in local):
+                        is_cap=texture==0x51A and all(v in INNER_ARCH for v in local)
+                        if is_cap:
                             # Move only the three original back-cap triangles.
                             # Keep the mouth/arch/sphere outline and all eight
                             # existing outer tunnel wall triangles unchanged.
                             from recruitment_collision import LOCAL_DOOR_NORMAL
                             xyz=[(pos[0]-LOCAL_DOOR_NORMAL[0]*TUNNEL_EXTENSION*3,pos[1],pos[2]-LOCAL_DOOR_NORMAL[1]*TUNNEL_EXTENSION*3) for pos in xyz]
                             tunnel_caps+=1
-                        emit(raw,xyz,texture,p)
+                        from recruitment_collision import LOCAL_DOOR_CENTER,LOCAL_DOOR_TANGENT,LOCAL_DOOR_NORMAL
+                        is_wall=texture==0x514 and all(abs((v[0]-LOCAL_DOOR_CENTER[0])*LOCAL_DOOR_TANGENT[0]+(v[2]-LOCAL_DOOR_CENTER[2])*LOCAL_DOOR_TANGENT[1])<38 and 0<=v[1]<=65 and -70<(v[0]-LOCAL_DOOR_CENTER[0])*LOCAL_DOOR_NORMAL[0]+(v[2]-LOCAL_DOOR_CENTER[2])*LOCAL_DOOR_NORMAL[1]<12 for v in local)
+                        emit(raw,xyz,texture,p,tunnel=is_cap or is_wall)
                 elif op==0xDF:cursor+=loaded;loaded=0;cache={};materials=[];texture=None;state_history=[]
                 elif op in (0,3):pass
                 elif op in (0xDA,0xDE,2):
@@ -133,7 +142,7 @@ def model(rom):
     material(tunnel_material);command(0xD9FFF9FF,0)
     def tunnel_triangle(points):
         raw=[struct.pack('>3hH2h4B',0,0,0,0,round(v[0]*12),round(v[2]*12),145,145,145,255)for v in points]
-        emit(raw,points,0x514,local_coords=True)
+        emit(raw,points,0x514,local_coords=True,tunnel=True)
     for i in range(4):
         tunnel_triangle([inner[i],deep[i],deep[i+1]])
         tunnel_triangle([inner[i],deep[i+1],inner[i+1]])
@@ -165,6 +174,33 @@ def model(rom):
         for a,b in zip(faces[::2],faces[1::2]):
             command(0x06000000|a[0]*2<<16|a[1]*2<<8|a[2]*2,b[0]*2<<16|b[1]*2<<8|b[2]*2)
     assert len(triangles)==294
+    # Reuse vanilla tether/anchors, with shared vertices and TRI2 batches.
+    from recruitment_bridge import triangles as bridge_triangles
+    bridge=bridge_triangles(rom)
+    for texture in (0x24e,0x251,0x50f):
+        group=[v for v in bridge if v['texture']==texture]
+        material(group[0]['material']);command(0xD9FDFFFF,0)
+        nodes=[];cache={};faces=[]
+        def flush():
+            if not faces:return
+            command(0x01000000|len(nodes)<<12|len(nodes)<<1,0x08000000+len(vertices))
+            for raw in nodes:vertices.extend(raw)
+            for i in range(0,len(faces),2):
+                a=faces[i]
+                if i+1<len(faces):
+                    b=faces[i+1];command(0x06000000|a[0]*2<<16|a[1]*2<<8|a[2]*2,b[0]*2<<16|b[1]*2<<8|b[2]*2)
+                else:command(0x05000000|a[0]*2<<16|a[1]*2<<8|a[2]*2)
+        for t in group:
+            local=[];raws=[]
+            for raw,point in zip(t['raw'],t['world']):
+                point=tuple(round((point[i]-POSITION[i])/SCALE)for i in range(3));v=bytearray(raw);struct.pack_into('>3h',v,0,*point);raws.append(bytes(v));local.append(point)
+            if len(set(raws)-cache.keys())+len(nodes)>32:flush();nodes=[];cache={};faces=[]
+            indices=[]
+            for v in raws:
+                if v not in cache:cache[v]=len(nodes);nodes.append(v)
+                indices.append(cache[v])
+            faces.append(indices);triangles.append(dict(source_command=t['source_command'],texture=texture,vertices=t['world'],local_vertices=local,bridge=True))
+        flush()
     material(tunnel_material) # restore the native textured material state
     command(0xDF000000)
     donor=read_file(rom,4,0x267);old_v_end=u(donor,0x4C)
@@ -176,14 +212,15 @@ def model(rom):
     struct.pack_into('>3I',new,0x40,0x78,0x78+len(dl),new_vs)
     for p in range(0x4C,0x74,4):struct.pack_into('>I',new,p,u(donor,p)+delta)
     for p in (0x4C,0x50):struct.pack_into('>I',new,u(new,p),0)
-    report=dict(triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,rotation_y_degrees=math.degrees(ROTATION_Y),facing_target=FACING_TARGET,spikes=3,spike_triangles=72,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,tunnel_extension_local=TUNNEL_EXTENSION,tunnel_extension_world=TUNNEL_EXTENSION*SCALE,tunnel_added_triangles=10,tunnel_moved_cap_triangles=tunnel_caps,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
+    triangle_commands=sum(1 for c in commands if c[0]in(5,6))
+    report=dict(triangle_commands=triangle_commands,bridge_triangles=36,triangles=len(triangles),vertices=len(vertices)//16,model_bytes=len(new),used_private_source_textures=sorted(used_textures),source_triangles=triangles,position=POSITION,scale=SCALE,origin=ORIGIN,rotation_y_degrees=math.degrees(ROTATION_Y),facing_target=FACING_TARGET,spikes=3,spike_triangles=72,walkway_triangles=66,sealed_arches=SEALED_ARCHES,infill_triangles=10,tunnel_extension_local=TUNNEL_EXTENSION,tunnel_extension_world=TUNNEL_EXTENSION*SCALE,tunnel_added_triangles=10,tunnel_moved_cap_triangles=tunnel_caps,walkway_rotation_degrees=180,walkway_brightness=WALKWAY_BRIGHTNESS)
     from recruitment_collision import with_collision
     return with_collision(bytes(new),report)
 
 def payloads(rom):
     normal,report=model(rom)
     from mirror_assets import flip
-    mirrored,n=flip(normal,4);assert n==report['triangles']-report['spike_triangles']//2
+    mirrored,n=flip(normal,4);assert n==report['triangle_commands']
     textures=[]
     for i in SOURCE_TEXTURES:
         data=read_file(rom,25,i)

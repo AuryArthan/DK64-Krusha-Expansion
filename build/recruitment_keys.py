@@ -45,7 +45,8 @@ def prepare(rom_path):
         # Reject any reference to the chosen ID, even in another operand role.
         assert p['object_id'] not in struct.unpack('>%dH'%(len(script)//2),script[:len(script)//2*2])
     h='/* Generated R10 private key identities, separate from native rewards. */\n'
-    h+=f'#define RECRUITMENT_KEY_PALETTE_TOKEN {PALETTE_TOKEN}\n#define RECRUITMENT_KEY_PALETTE {PALETTE}\n#define RECRUITMENT_KEY_COUNT 5\n'
+    from recruitment_key_sound import payload as sound
+    h+=f'#define RECRUITMENT_KEY_PALETTE_TOKEN {PALETTE_TOKEN}\n#define RECRUITMENT_KEY_PALETTE {PALETTE}\n#define RECRUITMENT_KEY_COUNT 5\n#define RECRUITMENT_KEY_SOUND_ASSET 229\n#define RECRUITMENT_KEY_SOUND_BYTES {len(sound(rom))}\n'
     h+='static const struct { unsigned short map, object_id, type, model, mirror; unsigned char owner; } recruitmentKeys[] = {\n'
     h+=''.join('    {%d,%d,%d,%d,%d,%d},\n'%(p['map'],p['object_id'],p['type'],MODEL+p['owner']*2,MODEL+p['owner']*2+1,p['owner'])for p in keys)+'};\n'
     (ROOT/'include/recruitment_keys.generated.h').write_text(h)

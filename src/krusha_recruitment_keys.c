@@ -8,6 +8,36 @@ static int keyType(int type) {
         if (recruitmentKeys[i].type==type) return i;
     return -1;
 }
+/* Native Model2 texture retirement restores the file index into G_SETTIMG.
+ * Our loader uses table27 physically, so translate only private key palettes
+ * back to their logical table25 tokens before native reload. Allocation/free
+ * tracking remains physical and entirely native. */
+void krushaRecruitmentTextureIdentity(void* ptr,s32* table,s32* index) {
+    ((void(*)(void*,s32*,s32*))0x8066B7AC)(ptr,table,index);
+    if (*table==27 && *index>=RECRUITMENT_KEY_PALETTE &&
+        *index<RECRUITMENT_KEY_PALETTE+RECRUITMENT_KEY_COUNT) {
+        *index+=RECRUITMENT_KEY_PALETTE_TOKEN-RECRUITMENT_KEY_PALETTE;
+        *table=25;
+    }
+}
+static u32 key_sound_frame;
+static u8 key_sound_pending;
+void krushaRecruitmentMusicLoad(u32 source,void* dest,u32* size,u32 mode,u32 a,u32 b,void* scratch) {
+    if (key_sound_pending && CurrentMap==34 && ObjectModel2Timer-key_sound_frame<60) {
+        for (int i=0;i<4;i++) if (((void**)0x8076BF38)[i]==dest && ((u8*)0x80770560)[i]==145) {
+            extern void* krushaBarrelFile(s32,s32,u8,u8);
+            key_sound_pending=0;
+            void* data=krushaBarrelFile(27,RECRUITMENT_KEY_SOUND_ASSET,1,0);
+            if (data) {
+                dk_memcpy(dest,data,RECRUITMENT_KEY_SOUND_BYTES);
+                ((void(*)(void*,s32,s32))0x8066B434)(data,0,0);
+                *size=RECRUITMENT_KEY_SOUND_BYTES;
+                return;
+            }
+        }
+    }
+    ((void(*)(u32,void*,u32*,u32,u32,u32,void*))0x8060B140)(source,dest,size,mode,a,b,scratch);
+}
 int krushaRecruitmentKeyModel(int type,int mirror) {
     int i=keyType(type);
     return i<0 ? -1 : mirror ? recruitmentKeys[i].mirror : recruitmentKeys[i].model;
@@ -46,8 +76,12 @@ int krushaRecruitmentKeyContact(short runtime_id,unsigned char player,unsigned s
     unsigned int file=krushaProgressActiveFile();
     if (i<0 || recruitmentKeys[i].type!=type || !krushaRecruitmentKeyCollectible(file,recruitmentKeys[i].owner,Character,player)) return 0;
     if (!krushaRecruitmentCollectKey(file,recruitmentKeys[i].owner)) return 0;
-    /* Brief native pickup chime, no GB/key music or player action. */
-    playSound(0x263,0x7FFF,63.0f,1.0f,0,0);
+    /* Native rainbow-coin one-shot, with a private transposed sequence.
+     * Stop only this short jingle so consecutive key pickups retrigger it.
+     * Its ordinary ROM sequence and other pickups remain unchanged. */
+    ((void(*)(s32,u8))0x80602B60)(145,1);
+    key_sound_frame=ObjectModel2Timer;key_sound_pending=1;
+    playSong(145,1.0f);
     return 1;
 }
 /* Native3D props already have five ownership bits, including DK bit8.

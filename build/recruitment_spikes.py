@@ -4,13 +4,14 @@ import math
 
 def triangles(tangent, normal):
     result = []
-    for side in (-1, 0, 1):
-        if side:
-            heights, radii = (183, 240, 297), (29, 18)
-            offsets = ((side * 76, 20), (side * 92, 16), (side * 112, -16))
-        else:
-            heights, radii = (211, 270, 335), (32, 20)
-            offsets = ((0, 0), (0, -15), (0, -40))
+    # Forehead to nape, on the mouth's normal axis. The largest is near
+    # the dome summit; the two smaller horns descend along its back.
+    for heights,radii,depths in (
+        ((211,270,335),(32,20),(20,8,-10)),
+        ((190,235,282),(26,16),(-65,-78,-95)),
+        ((135,177,220),(20,12),(-133,-145,-161)),
+    ):
+        offsets=tuple((0,n)for n in depths)
         centers = [(tangent[0] * t + normal[0] * n, y,
                     tangent[1] * t + normal[1] * n)
                    for y, (t, n) in zip(heights, offsets)]

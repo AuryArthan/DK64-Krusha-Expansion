@@ -263,6 +263,9 @@ def appendBarrelAssets(rom_path):
     from recruitment_pause import payloads as key_ui_payloads, FIRST as key_ui_first
     assert len(payloads)==key_ui_first
     payloads += key_ui_payloads(Path(rom_path).read_bytes(), read_file)
+    from recruitment_key_sound import payload
+    assert len(payloads)==229
+    payloads.append(payload(Path(rom_path).read_bytes()))
     assert CUSTOM_ROM+(len(payloads)+1)*4+sum(map(len,payloads)) < 0x02200000
     with open(rom_path,'r+b') as stream:
         stream.seek(0,2)
