@@ -11,12 +11,16 @@
 
 ```sh
 mkdir -p runtime/tests
-cc -Wall -Wextra -Werror -O2 tools/krusha-prison-turnin-test.c \
+cc -Wall -Wextra -Werror -O2 tests/krusha-prison-turnin-test.c \
   src/krusha_recruitment.c src/krusha_prison_turnin.c -o runtime/tests/turnins
 ./runtime/tests/turnins
 ```
 
 The host test covers key/lock ordering across files, interrupted turn-ins, duplicate visits and preservation of adjacent save bits. The emulator covers rendering, collision, music, transitions and EEPROM persistence on cold boot.
+
+## Start a new Adventure in the emulator
+
+After setting up the bundled Mupen64Plus, run `/usr/bin/python3 tests/fresh-adventure.py`. It opens a private X display on Linux, creates its own erased EEPROM, selects ordinary tagging through Options and reaches the Training Grounds as DK. The test checks the default options, locked roster, empty quest and healthy engine, and records a screenshot and report under `runtime/tests/`. It stages DK at the ordinary Treehouse exit. Supply ImageMagick’s `import` for screenshots. Set `DK64_DISPLAY` to an unused X display if another test is running.
 
 ## Gameplay checks
 
