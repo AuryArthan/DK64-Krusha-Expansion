@@ -579,3 +579,14 @@ islesAnimalZone:
 @@manual:
     J 0x806CB5AC
     NOP
+
+; Native surface solver's depth local is at sp+0x2c. Its return address
+; is already saved in the native frame, so this can call the depth helper.
+islesRambiSwimDepthHook:
+    LWC1 f12, 0x2C(sp)
+    JAL islesRambiSwimDepth
+    LW a1, 0(s0)
+    SWC1 f0, 0x2C(sp)
+    LW t6, 0(s0)
+    J 0x806D85B8
+    ADDIU at, zero, 0x4E

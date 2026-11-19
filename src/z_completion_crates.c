@@ -7,6 +7,18 @@ static SpawnerTest const nativeInRange = (SpawnerTest)0x80689F80;
 static u32 next_check;
 static u8 unlocked;
 
+f32 islesRambiSwimDepth(f32 nativeDepth, const playerData* actor) {
+    if (CurrentMap != 34 || actor->characterID != 8 || actor->control_state != 0x4E)
+        return nativeDepth;
+
+    /* Rambi's vanilla model is about 33.5 world units tall. Add a
+     * quarter of that in deep water, tapering to the native depth on shore. */
+    f32 available = actor->waterSurface - actor->floor;
+    if (available <= nativeDepth) return nativeDepth;
+    f32 lowered = nativeDepth + 8.4f;
+    return available < lowered ? available : lowered;
+}
+
 void completionCrateEntrySong(s32 song, f32 volume) {
     playSong(song, volume);
     /* The legacy CurrentActorPointer label refers to the last spawn. */

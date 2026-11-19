@@ -87,6 +87,14 @@ def patchStaticCode(filename):
 		fh.write((0x08000000 | ((int(symbols['islesanimalzone'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
 		fh.write(bytes(4))
 
+		# Adjust the native depth local after either movement profile loads
+		# it. Both the dive test and the surface clamp use that same value.
+		fh.seek(0x806D85B0 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('8e0e00002401004e')
+		fh.seek(-8, 1)
+		fh.write((0x08000000 | ((int(symbols['islesrambiswimdepthhook'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+		fh.write(bytes(4))
+
 		# Only the rainbow award's FTT call, after the original five-wallet loop.
 		# The wrapper credits the sixth adventure wallet even when Krusha is OFF.
 		fh.seek(0x806F54E0 - 0x805FB300)
