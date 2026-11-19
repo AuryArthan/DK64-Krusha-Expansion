@@ -203,14 +203,19 @@ void krushaPrisonTinyAnimation(void* actor,int script) {
     *(const u8**)0x807F5AF0=visual;
     krushaPrisonDialogueTrace[0]++;
 }
-static const char* first[6][6]={
-    {"KRUSHA", "WE CAUGHT SOME MONKEYS.", "I WAS HUNGRY... SO I", "DEALT WITH THE WHOLE", "BUNCH MYSELF.",0},
+static const char* first[][6]={
+    {"TINY", "WHO ARE YOU? AND WHAT", "ARE YOU DOING HERE?",0,0,0},
+    {"KRUSHA", "NAME'S KRUSHA. THE", "OTHER KREMLINGS...", "THEY IMPRISONED ME", "HERE, THAT'S WHAT.",0},
+    {"TINY", "WHY DID THEY DO THAT?",0,0,0,0},
+    {"KRUSHA", "THEY WERE MAD AT ME.", "SEE... A FEW DAYS AGO,", "WE CAUGHT US A BUNCH", "OF MONKEYS.",0},
+    {"KRUSHA", "I WAS HUNGRY, SO I", "DEALT WITH THE WHOLE", "BUNCH MYSELF, WHILE", "THE OTHERS WERE", "SLEEPING."},
     {"TINY", "YOU FREED THEM? AND", "THE OTHER KREMLINGS", "PUNISHED YOU?",0,0},
     {"KRUSHA", "ER... YES, YES,", "FREED THEM... THEY", "WERE FURIOUS I", "HADN'T SHARED.",0},
     {"TINY", "SHARED THE CREDIT?",0,0,0,0},
     {"KRUSHA", "ER... YEAH, YEAH,", "WHATEVER... ANYWAY,", "FIND THE FIVE COLORED", "KEYS, GET ME OUT,", "AND I'M ON YOUR SIDE."},
     {"TINY", "ONE KEY FOR EACH OF", "US. WE'LL BRING THEM", "HERE.",0,0}
 };
+enum { FIRST_PAGE_COUNT=sizeof(first)/sizeof(first[0]) };
 static const char* again[6]={"KRUSHA","STILL LOCKED UP.","STILL HUNGRY.","KEEP LOOKING!",0,0};
 static const char* held[6]={"TINY","WE'VE ALREADY FOUND","SOME. LET'S TRY THEM.",0,0,0};
 static const char* more[6]={"TINY","MORE KEYS.","HOLD STILL!",0,0,0};
@@ -225,7 +230,7 @@ static const char* gone[6]={"TINY","HE'S OUT. BETTER","FIND THE OTHERS.",0,0,0};
 static const char** lines(void) {
     if (empty) return gone;
     if (sequence==3) return release[page<3?page:2];
-    if (intro && page<6) return first[page];
+    if (intro && page<FIRST_PAGE_COUNT) return first[page];
     if (sequence==2) {
         u32 mask=krushaRecruitmentLocks(file),count=0;
         for (int i=0;i<5;i++) if (!(mask&(1u<<i))) count++;
@@ -466,7 +471,7 @@ int krushaPrisonSceneTick(void) {
     u32 duration=characters()*4+((sequence==3 && page==1)?180:120);if (duration<180) duration=180;
     if (text_clock>=duration && age>=45) {
         text_clock=0;age=0;
-        if (intro && page==5) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}
+        if (intro && sequence==0 && page+1==FIRST_PAGE_COUNT) {krushaRecruitmentMarkIntro(file);krushaPrisonSceneTrace[5]++;}
         if (sequence==3) {
             if (page<2) page++;
             else {
@@ -487,9 +492,9 @@ int krushaPrisonSceneTick(void) {
             }
         }
         else if (sequence==2 || empty) finished=1;
-        else if (intro && page<6) {
+        else if (intro && page<FIRST_PAGE_COUNT) {
             page++;
-            if (page==6 && !krushaPrisonPendingKeys(file)) sequence=2;
+            if (page==FIRST_PAGE_COUNT && !krushaPrisonPendingKeys(file)) sequence=2;
         } else if (krushaPrisonPendingKeys(file)) {
             sequence=1;page++;krushaPrisonTurnBegin(file);
         } else finished=1;

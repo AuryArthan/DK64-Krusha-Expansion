@@ -16,6 +16,7 @@ extern void krushaPlayScream(void);
 extern void krushaHolsterModel(void*);
 
 static int lesson_scene;
+static int lesson_greeted;
 static int offer_type = -1;
 static int offer_value;
 /* Native two-tile head descriptor, reusing the approved barrel/file portrait.
@@ -64,7 +65,7 @@ void m3SpeedOwnership(void) {
 
 void m3ProgressTick(void) {
     m3KasplatTick();
-    if (CurrentMap!=25) lesson_scene=0;
+    if (CurrentMap!=25) lesson_scene=lesson_greeted=0;
     if (!DetectAdventure()) return;
     int guns=0, instruments=0;
     for (int k=0;k<5;k++) {
@@ -212,10 +213,27 @@ const char* m3ShopDialogue(const u8* text,u16 length) {
         starts(text,length,"I CAN'T BE BOTHERED TO MAKE ANY MORE POTIONS") ||
         starts(text,length,"THAT'S ALL THE POTIONS YOU'RE GETTING")))
         return "MY POTIONS ARE FOR KONGS, NOT WALKING ARMORIES! BRING ME 15 BANANA MEDALS AND WE CAN TALK ABOUT MY COMPUTER GAME.";
-    if (CurrentMap==25 && lesson_scene && offer_type==4 && offer_value==1) {
-        return MovesBase[5].instrument_bitfield&1 ?
-            "WHAT A ROAR! YOUR VOICE IS AN INSTRUMENT! USE Z AND C-UP. HEADPHONES REFILL YOUR SHOUT ENERGY." :
-            "AN INSTRUMENT? YOU? WELL, LET US HEAR WHAT THAT VOICE CAN DO. THIS LESSON IS ON ME!";
-    }
     return 0;
+}
+
+void m3QueueShopDialogue(void* actor,u16 bank,u8 index) {
+    void (*loadText)(void*,u16,u8)=(void*)0x8070D8C0;
+    if (bank==9 && CurrentMap==25 && active() && lesson_scene &&
+        actor && *(u32*)((u8*)actor+0x58)==191) {
+        if (index==18) {
+            /* The native tutorial is queued after the demonstration. */
+            loadText(actor,bank,23);
+            return;
+        }
+        if (!(MovesBase[5].instrument_bitfield&1) && (index==0 || index==3 || index==4)) {
+            /* A first shop visit queues both a greeting and an offer.
+             * Collapse them to one lesson opener, including on later visits. */
+            if (!lesson_greeted) {
+                lesson_greeted=1;
+                loadText(actor,bank,22);
+            }
+            return;
+        }
+    }
+    loadText(actor,bank,index);
 }

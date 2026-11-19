@@ -28,6 +28,7 @@ print("Cranky's Lab Build System")
 print()
 
 print("[1 / 8] - Compiling C Code")
+from candy_dialogue import patch_candy_dialogue
 from character_colors import write_identity_header
 write_identity_header()
 from klump_colors import prepare as prepareKlumpColors
@@ -158,6 +159,13 @@ file_dict += [
 		"source_file": "bin/ExpansionTitle.png",
 		"texture_format": "rgba5551",
 		"use_zlib": True,
+	},
+	{
+		"name": "Candy Text",
+		"pointer_table_index": 12,
+		"file_index": 9,
+		"source_file": "bin/CandyText.bin",
+		"patcher": patch_candy_dialogue,
 	},
 	{
 		"name": "Menu Text",

@@ -12,6 +12,9 @@ def patch_shop(fh,symbols):
         patch(a,expected,[target(name,0x08000000),0])
     patch(0x800269D0,'0c18539e',[target('m3shopanimation',0x0C000000)])
     patch(0x80027C78,'0c1c39d4',[target('m3purchasetext',0x0C000000)])
+    # Shop-only greeting, offer and post-purchase tutorial queues.
+    for address in (0x800265F0, 0x8002661C, 0x80026D04, 0x80026D20):
+        patch(address, '0c1c3630', [target('m3queueshopdialogue', 0x0C000000)])
 
 def patch_pickups(fh,symbols):
     base=0x805FB300
