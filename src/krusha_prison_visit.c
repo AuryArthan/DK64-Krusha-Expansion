@@ -9,6 +9,8 @@
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
 static u8 skip,restore_mini,door_return,entry_cue_wait;
+static s8 entry_stick_x,entry_stick_y;
+static Controller* const adventure_pad = (Controller*)0x807ECD10;
 enum { RETURN_HUD = 1, RETURN_THEME = 2, MINI_MONKEY_SONG = 16, IRIS_CLOSING_SONG = 44 };
 static u8 exterior_effects;
 static u32 exterior_started;
@@ -98,6 +100,8 @@ s32 krushaPrisonVisitBegin(void) {
     krushaPrisonSceneReset();
     for (int i=0;i<3;i++) krushaPrisonReturnTrace[i]=0;
     phase=ENTERING;restore_mini=1;door_return=0;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
+    entry_stick_x=adventure_pad->stickX;
+    entry_stick_y=adventure_pad->stickY;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
     /* Prime the native closing jingle before the iris starts. Queuing both
@@ -207,6 +211,18 @@ void krushaPrisonVisitInput(void* raw) {
         }
     }
     previous_buttons=buttons;
+}
+
+void krushaPrisonReadAdventurePad(void) {
+    ((void (*)(void))0x8060AC7C)();
+    if (phase!=ENTERING || CurrentMap!=34 || !DetectAdventure() ||
+        file!=*(u8*)0x807467C8 || (TBVoidByte&3) || CutsceneActive ||
+        IsAutowalking || !tiny() || LZFadeoutProgress>=28 ||
+        (!entry_cue_wait && DestMap!=RECRUITMENT_ROOM_MAP)) return;
+    /* Native map fades zero the filtered stick. Continue the latched
+     * approach on the existing movement/collision path until the iris closes. */
+    adventure_pad->stickX=entry_stick_x;
+    adventure_pad->stickY=entry_stick_y;
 }
 
 extern void vanillaBuildCameraMatrices(void*);

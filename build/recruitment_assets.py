@@ -25,7 +25,7 @@ def rotate(point):
 ORIGIN=(3359.333333333,500.0,3409.5)
 SCALE=.23 # user requested8% less than the reviewed quarter scale
 SAFE_DEPTH=24.0
-TUNNEL_EXTENSION=120.0 # local units;27.6 world units inward, mouth unchanged
+TUNNEL_EXTENSION=190.0 # local units;43.7 world units inward, mouth unchanged
 INNER_ARCH=((-83,0,114),(-79,33,116),(-61,50,125),(-43,33,133),(-38,0,136))
 WALKWAY_TEXTURES=(0x10,0x24F)
 WALKWAY_BRIGHTNESS=0.60

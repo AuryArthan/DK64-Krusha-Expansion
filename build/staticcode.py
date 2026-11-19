@@ -96,6 +96,12 @@ def patchStaticCode(filename):
 
 		from recruitment_room import patch_code as patchRoom
 		patchRoom(fh,symbols)
+		# Gameplay's controller read, after which a native fade zeroes the stick.
+		# Give only a committed Mini prison entry its original approach stick.
+		fh.seek(0x805FC3F4 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('0c182b1fac39a048')
+		fh.seek(-8, 1)
+		fh.write((0x0C000000 | ((int(symbols['krushaprisonreadadventurepad'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
 		# Only the barrel confirmation's native busy check. Keep native layout,
 		# rotation and cleanup; reject an unavailable sixth choice before swap.
 		fh.seek(0x806838A8 - 0x805FB300)

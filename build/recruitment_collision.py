@@ -11,7 +11,7 @@ import struct,math
 LOCAL_DOOR_CENTER=(-60.5,0.0,125.0)
 LOCAL_DOOR_TANGENT=(.898490440,.438993779)
 LOCAL_DOOR_NORMAL=(-.438993779,.898490440)
-from recruitment_assets import rotate
+from recruitment_assets import TUNNEL_EXTENSION, rotate
 DOOR_CENTER=rotate(LOCAL_DOOR_CENTER)
 _t=rotate((LOCAL_DOOR_TANGENT[0],0,LOCAL_DOOR_TANGENT[1]))
 _n=rotate((LOCAL_DOOR_NORMAL[0],0,LOCAL_DOOR_NORMAL[1]))
@@ -56,16 +56,17 @@ def with_collision(model,report):
     for i in range(1,len(hull)-1):
         tri=[(x,0,z) for x,z in (hull[0],hull[i+1],hull[i])]
         add(floors,seen_f,tri)
-    # Support the extended recess. The native visible back cap is120 local
-    # units inward; keep the redundant safety wall behind it and the floor
-    # beneath the entire recess. The unchanged entry trigger fires well ahead.
+    # Keep the safety wall behind the visible cap and the floor beneath the
+    # whole recess. The unchanged entry trigger fires well ahead.
+    backstop = TUNNEL_EXTENSION + 40
     cx,cy,cz=DOOR_CENTER;tx,tz=DOOR_TANGENT;nx,nz=DOOR_NORMAL
     def point(side,depth,y):return (cx+tx*side+nx*depth,y,cz+tz*side+nz*depth)
-    a,b,c,d=[point(s,-160,y) for s,y in [(-27,0),(27,0),(27,54),(-27,54)]]
+    a,b,c,d=[point(s,-backstop,y) for s,y in [(-27,0),(27,0),(27,54),(-27,54)]]
     for tri in [(a,b,c),(a,c,d),(c,b,a),(d,c,a)]:
         # Keep opposing faces of the readiness backstop explicitly.
         walls.append(tuple(tuple(round(x) for x in p) for p in tri))
-    a,b,c,d=[point(s,depth,0) for s,depth in [(-28,20),(-28,-168),(28,-168),(28,20)]]
+    far_floor = -backstop - 8
+    a,b,c,d=[point(s,depth,0) for s,depth in [(-28,20),(-28,far_floor),(28,far_floor),(28,20)]]
     for tri in [(a,b,c),(a,c,d)]:
         if normal(tri)[0][1]<0:tri=tri[::-1]
         add(floors,seen_f,tri)
@@ -76,5 +77,5 @@ def with_collision(model,report):
     out=bytearray(model[:start]+wall_bytes+floor_bytes+model[old_tail:])
     struct.pack_into('>II',out,0x4C,start,start+len(wall_bytes))
     for p in range(0x54,0x74,4):struct.pack_into('>I',out,p,u(p)+delta)
-    report.update(collision=dict(walls=len(walls),floors=len(floors),wall_stride=22,floor_stride=24,floor_bounds=bounds,door_center=DOOR_CENTER,door_tangent=DOOR_TANGENT,door_normal=DOOR_NORMAL,readiness_backstop_local_depth=160,wall_vertices=walls,floor_vertices=floors),model_bytes=len(out))
+    report.update(collision=dict(walls=len(walls),floors=len(floors),wall_stride=22,floor_stride=24,floor_bounds=bounds,door_center=DOOR_CENTER,door_tangent=DOOR_TANGENT,door_normal=DOOR_NORMAL,readiness_backstop_local_depth=backstop,wall_vertices=walls,floor_vertices=floors),model_bytes=len(out))
     return bytes(out),report

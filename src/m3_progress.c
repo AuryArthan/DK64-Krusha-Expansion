@@ -138,13 +138,23 @@ void m3FindPurchase(void* menu, void* progress, int first) {
 
 void m3ShopPurchase(void* menu, void* progress) {
     u8* data=menu;
+    void (*change)(int,u8,s16)=(void*)0x806F91B4;
     if (active()) {
         int price=*(s16*)(data+4);
         if ((s8)data[0xB]<0 || price<0 || price>MovesBase[5].coins) return;
-        if ((data[0xB]==2 || data[0xB]==4) && data[0x11]==1) {
-            int bit=data[0xB]==2 ? KRUSHA_GUN_BIT : KRUSHA_SHOUT_BIT;
-            if (krushaProgressRead(file(),bit,1)) return;
-            krushaProgressWrite(file(),bit,1,1);
+        if (CurrentMap==25 && data[0xB]==4 && data[0x11]==1) {
+            /* The free voice lesson owns only the roar and its initial energy.
+             * The stock instrument purchase would also grant a second melon. */
+            if (krushaProgressRead(file(),KRUSHA_SHOUT_BIT,1)) return;
+            krushaProgressWrite(file(),KRUSHA_SHOUT_BIT,1,1);
+            m3ProgressTick();
+            change(7,0,9999);
+            krushaProgressRequestSave();
+            return;
+        }
+        if (data[0xB]==2 && data[0x11]==1) {
+            if (krushaProgressRead(file(),KRUSHA_GUN_BIT,1)) return;
+            krushaProgressWrite(file(),KRUSHA_GUN_BIT,1,1);
         }
     }
     /* Native grant/refill/payment/save remains authoritative. Its base move
@@ -155,7 +165,6 @@ void m3ShopPurchase(void* menu, void* progress) {
         /* Mirror the native shared grants before filling Krusha's stock. */
         m3ProgressTick();
         if (data[0xB]==2 || data[0xB]==3 || data[0xB]==4) {
-            void (*change)(int,u8,s16)=(void*)0x806F91B4;
             change(data[0xB]==4 ? 7 : 2,0,9999);
         }
     }
@@ -202,7 +211,7 @@ void m3ShopInstrument(void) {
 void* m3PurchaseText(int bank,int index,int arg) {
     if (active() && offer_value==1) {
         if (CurrentMap==1 && offer_type==2) return "BAZOOKA";
-        if (CurrentMap==25 && offer_type==4) return "THUNDER ROAR";
+        if (CurrentMap==25 && offer_type==4) return "PRIMITIVE ROAR";
     }
     return m3NativePurchaseText(bank,index,arg);
 }
