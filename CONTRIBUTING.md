@@ -34,6 +34,7 @@ For a map view, run `/usr/bin/python3 tools/build-map-atlas.py` and open `runtim
 | Prison exterior, interior, locks and dialogue | [Exterior geometry](build/recruitment_assets.py), [interior geometry](build/recruitment_room.py), [dialogue and scene](src/krusha_prison_scene.c) |
 | Gear, prices and voice | [Shop logic](src/m3_progress.c), [Candy’s text](build/candy_dialogue.py), [bazooka](src/krusha_ammo.c), [Primitive Roar](src/krusha_roar.c) |
 | Progress, save compatibility and pause totals | [Save layout](include/krusha_progress.h), [progress](src/krusha_progress.c), [colored-key display](src/krusha_recruitment_pause.c) |
+| Portraits, title artwork and shout audio | [Media sources and conversion commands](assets/README.md) |
 | Tag barrel, options and widescreen | [Tag barrel](src/krusha_barrel.c), [Options](src/krusha_options.c), [widescreen](src/widescreen.c), [mirror mode](src/mirror.c) |
 
 The assembly entry points and symbol map are under `asm/` and `include/`. The Python modules under `build/` read the original ROM, compile the C hooks and assemble game resources. Generated objects, headers, emulator profiles and atlas output stay local. [AI handoff](codex_handoff/README.md) · [License and scope](LICENSE.md)
