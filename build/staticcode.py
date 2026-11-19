@@ -62,6 +62,17 @@ def patchStaticCode(filename):
 		fh.seek(-8, 1)
 		fh.write((0x08000000 | ((int(symbols['islesrambiowner'],16) & 0x0FFFFFFF) >> 2)).to_bytes(4,'big'))
 
+		# Start the Isles Rambi cue at accepted entry, where the shared
+		# crate actor already starts the transition song. Skip its late cue.
+		for address, name, instruction in [
+			(0x8067E9E4, 'completioncrateentrysong', '0c180aa5'),
+			(0x8067F334, 'islesrambiemergencesound', '0c182450'),
+		]:
+			fh.seek(address - 0x805FB300)
+			assert fh.read(4) == bytes.fromhex(instruction)
+			fh.seek(-4, 1)
+			fh.write((0x0C000000 | ((int(symbols[name], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+
 		# The only animal first-use dialogue call. Leave the native dialogue
 		# and its flags intact in the original levels.
 		fh.seek(0x806EDD0C - 0x805FB300)

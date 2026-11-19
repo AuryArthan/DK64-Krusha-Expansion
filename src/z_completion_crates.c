@@ -7,6 +7,14 @@ static SpawnerTest const nativeInRange = (SpawnerTest)0x80689F80;
 static u32 next_check;
 static u8 unlocked;
 
+void completionCrateEntrySong(s32 song, f32 volume) {
+    playSong(song, volume);
+    /* The legacy CurrentActorPointer label refers to the last spawn. */
+    const u8* crate = *(const u8**)0x807FBB40;
+    if (CurrentMap == 34 && *(const u32*)(crate + 0x58) == 18)
+        playSound(748, 0x7FFF, 63.0f, 1.0f, 0, 0);
+}
+
 static u8 rewardInRange(void* node) {
     if (!DetectAdventure() || !nativeInRange(node)) return 0;
     /* Refresh on approach, then at most once per second in the endgame.
