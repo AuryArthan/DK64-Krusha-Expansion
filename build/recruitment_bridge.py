@@ -11,6 +11,17 @@ PRISON=(2954.,POSITION[1],3340.)
 SOURCE_A=(2973.5,500.,3681.666666667)
 SOURCE_B=(3106.,500.,3501.666666667)
 SCALE=.23
+TETHER_TINT=(.54,.57,.63)
+
+
+def tint_vertex(raw):
+    # The Model2 copy uses prelit vertex colors. Keep the texture and its
+    # shading detail, soften the strongest warm accents and bias toward blue.
+    red, green, blue = raw[12:15]
+    gray = .21 * red + .72 * green + .07 * blue
+    tinted = bytes(round((.9 * gray + .1 * channel) * factor)
+                   for channel, factor in zip((red, green, blue), TETHER_TINT))
+    return raw[:12] + tinted + raw[15:]
 
 
 def triangles(rom):
@@ -46,7 +57,9 @@ def triangles(rom):
                             mapped.append((SHIP[0]+t*dx-side*SCALE*nz,SHIP[1]+t*(PRISON[1]-SHIP[1])+(y-500)*SCALE,SHIP[2]+t*dz+side*SCALE*nx))
                     # Same native pipeline, omit redundant previous texture loads.
                     material=history if texture==0x24e else history[:10]+history[20:] if texture==0x251 else history[:4]+history[-18:]
-                    out.append(dict(raw=raw,world=mapped,material=material,texture=texture,source_command=p))
+                    shaded = [tint_vertex(vertex) for vertex in raw]
+                    out.append(dict(raw=shaded, world=mapped, material=material,
+                                    texture=texture, source_command=p))
             elif op==0xdf:cursor+=loaded;loaded=0;cache={};texture=None;history=[]
             elif op not in(0,3):
                 history.append((a,b))
