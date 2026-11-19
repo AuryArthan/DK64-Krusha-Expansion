@@ -346,30 +346,8 @@ void krushaBarrelControl(BarrelData* data) {
     u8* barrel = *(u8**)0x807FBB40;
     data->spotlight = sixth;
     selecting_sixth=data->selected==5;
-    /* Vanilla automatically rotates past locked originals. The agreed sixth
-     * question mark must remain highlightable: suppress only that idle skip,
-     * keeping s0=locked so native confirmation still refuses it. Horizontal
-     * rotation and the original five retain native rules. */
-    int locked_sixth = selecting_sixth && *(u32*)((u8*)sixth + 0x58) == 317;
-    if (locked_sixth) {
-        /* Native control increments +3C before its 9001-tick timeout. Let
-         * that timeout skip the lock and leave through an available original;
-         * forcing idle retention afterward would trap all carousel input. */
-        patch(0x80683768, *(u32*)((u8*)data + 0x3C) < 9000 ?
-              0x10000032 : 0x16000032);
-        /* Locked originals keep their previous travel direction while they
-         * auto-skip. A retained sixth must read the current stick instead.
-         * Let native control update direction at its normal timer/input gate;
-         * changing it before that gate would distort an in-flight rotation. */
-        /* With no horizontal input, automatic timeout travel retains the
-         * native previous direction. Only a real new stick turn overrides it. */
-        patch(0x806837A0, *(u8*)0x807FD640 >= 41 ? 0 : 0x1200000B);
-    }
+    /* The native selector skips every type-317 display in the travel direction. */
     vanillaBarrelControl(data);
-    if (locked_sixth) {
-        patch(0x80683768, 0x16000032);
-        patch(0x806837A0, 0x1200000B);
-    }
     selecting_sixth=0;
     if (barrel[0x154] == 1) {
         data->spotlight = spotlight;
@@ -384,7 +362,7 @@ void krushaBarrelControl(BarrelData* data) {
 char* krushaBarrelName(BarrelData* data, s32 index) {
     if (index == 5) {
         if (!owns(data) || !sixth) return 0;
-        return *(u32*)((u8*)sixth + 0x58) == 316 ? "KRUSHA" : "???";
+        return *(u32*)((u8*)sixth + 0x58) == 316 ? "KRUSHA" : 0;
     }
     if (index < 0 || index >= 5) return 0;
     return vanillaBarrelName(data, index);

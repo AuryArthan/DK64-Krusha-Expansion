@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_recruitment.h"
 
 extern const void* krushaProgressFace(void);
 extern void krushaNativeGBHUDInit(s32);
@@ -8,11 +9,10 @@ extern Gfx* widescreenNativeHUDCounter(s32,void*,Gfx*);
 /* The native five portrait arrays abut unrelated state. The sixth face owns
  * a separate transform; no sixth access is ever made to those native arrays. */
 f32 krushaGBPortraitTransform[3]={-200,-200,1};
-static int enabled(void) { return krushaEnabled() && DetectAdventure(); }
 
 static void portrait(void* sprite,s8* done) {
     u8* p=sprite;
-    if (!enabled() || krushaGBPortraitTransform[0]==-200) { *done=1;return; }
+    if (krushaGBPortraitTransform[0]==-200 || !krushaCampaignAvailable()) { *done=1;return; }
     *(f32*)(p+0x340)=krushaGBPortraitTransform[0];
     *(f32*)(p+0x344)=krushaGBPortraitTransform[1];
     *(f32*)(p+0x360)=*(f32*)(p+0x364)=krushaGBPortraitTransform[2];
@@ -21,7 +21,7 @@ static void portrait(void* sprite,s8* done) {
 
 void krushaGBHUDInit(s32 item) {
     krushaNativeGBHUDInit(item);
-    if (!enabled() || item!=8) return;
+    if (item!=8 || !krushaCampaignAvailable()) return;
     void (*reset)(void)=(void*)0x8071495C;
     void (*layer)(s32)=(void*)0x807149FC;
     void (*callback)(void*)=(void*)0x8071498C;
@@ -33,7 +33,7 @@ void krushaGBHUDInit(s32 item) {
 }
 
 Gfx* krushaGBHUDGroup(s32 item,void* child,Gfx* dl) {
-    if (!enabled() || item!=8) return widescreenNativeHUDGroup(item,child,dl);
+    if (item!=8 || !krushaCampaignAvailable()) return widescreenNativeHUDGroup(item,child,dl);
     s32* origin=*(s32**)((u8*)child+0x14);
     s32 saved_y=origin[1],saved_count=HUD[item].hud_count;
     /* Six native-size rows. Leave room for the selected sixth portrait's

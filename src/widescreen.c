@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_recruitment.h"
 
 extern void widescreenNativeOrtho(Mtx*, f32, f32, f32, f32, f32, f32, f32);
 extern void widescreenNativeSpriteRect(Gfx**, s16, s16);
@@ -132,7 +133,7 @@ Gfx* widescreenHUDGroup(s32 item, void* counter, Gfx* dl) {
         return krushaGBHUDGroup(item, counter, dl);
     /* The six-row layout already uses the full safe vertical span. Moving
      * it another six pixels up clips DK's first portrait in Widescreen. */
-    if (item==8 && krushaEnabled()) y=0;
+    if (item==8 && krushaCampaignAvailable()) y=0;
     /* This renderer derives all five GB icons from the same counter origin.
      * Shift the group once so its numbers and icons stay together. */
     s32* position = *(s32**)((u8*)counter + 0x14);
