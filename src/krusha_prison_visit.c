@@ -8,8 +8,8 @@
  * return; native transformation owns Mini's flags, matrix and interpolation. */
 enum { OUTSIDE, ENTERING, STAGED, RETURNING };
 static u32 phase, ticks, travel_ticks, cooldown, file, previous_buttons;
-static u8 skip,restore_mini,door_return;
-enum { RETURN_HUD = 1, RETURN_THEME = 2, MINI_MONKEY_SONG = 16 };
+static u8 skip,restore_mini,door_return,entry_cue_wait;
+enum { RETURN_HUD = 1, RETURN_THEME = 2, MINI_MONKEY_SONG = 16, IRIS_CLOSING_SONG = 44 };
 static u8 exterior_effects;
 static u32 exterior_started;
 /* phase, entries, returns, aborts, drain calls suppressed, entry crystals,
@@ -85,6 +85,10 @@ static void end(int returned) {
     if (returned) {krushaPrisonVisitTrace[2]++;krushaPrisonVisitTrace[7]=CollectableBase.Crystals;}
     else krushaPrisonVisitTrace[3]++;
     krushaPrisonSceneReset();
+    if (entry_cue_wait) {
+        ((void (*)(s32,u8))0x80602B60)(IRIS_CLOSING_SONG,0);
+        entry_cue_wait=0;
+    }
     phase=OUTSIDE;restore_mini=door_return=0;cooldown=45;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=OUTSIDE;
 }
@@ -96,7 +100,13 @@ s32 krushaPrisonVisitBegin(void) {
     phase=ENTERING;restore_mini=1;door_return=0;file=*(u8*)0x807467C8;ticks=travel_ticks=skip=previous_buttons=0;
     krushaPrisonVisitTrace[0]=phase;krushaPrisonVisitTrace[1]++;
     krushaPrisonVisitTrace[5]=CollectableBase.Crystals;
-    initiateTransition(RECRUITMENT_ROOM_MAP,0);
+    /* Prime the native closing jingle before the iris starts. Queuing both
+     * together can leave the restored audio player stopped during the fade.
+     * The native transition sees the same pending song and lets it continue. */
+    if (*(u8*)0x80744824==1 && *(u8*)0x807444F8!=1 && !(*(u8*)0x807FBB68&2)) {
+        playSong(IRIS_CLOSING_SONG,1.0f);
+        entry_cue_wait=6;
+    } else initiateTransition(RECRUITMENT_ROOM_MAP,0);
     return 1;
 }
 void krushaPrisonVisitTick(void) {
@@ -139,6 +149,12 @@ void krushaPrisonVisitTick(void) {
             }
         }
     } else {
+        if (phase==ENTERING && entry_cue_wait && !(TBVoidByte&3)) {
+            if (((f32 (*)(s32))0x80602D4C)(IRIS_CLOSING_SONG)>0 || !--entry_cue_wait) {
+                entry_cue_wait=0;
+                initiateTransition(RECRUITMENT_ROOM_MAP,0);
+            }
+        }
         /* Restore native Mini/camera during the loading fade, rather than
          * waiting until the exterior walk-in finishes in visible gameplay. */
         if (phase==RETURNING && ObjectModel2Timer>0 && liveTiny()) {

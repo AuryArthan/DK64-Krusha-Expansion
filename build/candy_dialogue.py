@@ -8,8 +8,11 @@ LESSON_BEFORE = (
 )
 LESSON_AFTER = (
     "WHAT A ROAR! YOU KNOW... THAT ROAR OF YOURS IS LIKELY JUST AS STRONG AS "
-    "THE OTHER KONGS' INSTRUMENT ABILITIES. JUST USE Z AND C-UP TO USE IT. "
-    "HEADPHONES REFILL YOUR SHOUT ENERGY. AND NO NEED TO PAY ME A DIME, "
+    "THE OTHER KONGS' INSTRUMENT ABILITIES. JUST PRESS AND HOLD",
+    112,  # Native Z button sprite.
+    "THEN PRESS",
+    114,  # Native C-Up button sprite.
+    "TO USE IT. HEADPHONES REFILL YOUR SHOUT ENERGY. AND NO NEED TO PAY ME A DIME, "
     "HONEY, CONSIDER THIS VOICE LESSON ON ME."
 )
 
@@ -31,9 +34,14 @@ def patch_candy_dialogue(filename):
     assert pos + 2 + offset == len(original)
     text = bytearray(original[pos + 2:])
     boxes = bytearray()
-    for line in (LESSON_BEFORE, LESSON_AFTER):
-        encoded = line.encode('ascii')
-        boxes += struct.pack('>3BIHHI', 1, 1, 1, len(text), len(encoded), 0, 0)
-        text.extend(encoded)
+    for lesson in ((LESSON_BEFORE,), LESSON_AFTER):
+        boxes.append(len(lesson))
+        for block in lesson:
+            if isinstance(block, int):
+                boxes += struct.pack('>BBHHI', 2, 1, block, 0, 0)
+            else:
+                encoded = block.encode('ascii')
+                boxes += struct.pack('>BBIHHI', 1, 1, len(text), len(encoded), 0, 0)
+                text.extend(encoded)
     path.write_bytes(bytes([original[0] + 2]) + original[1:pos] + boxes +
                      struct.pack('>H', len(text)) + text)

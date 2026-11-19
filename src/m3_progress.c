@@ -101,32 +101,32 @@ void m3RestoreMoves(unsigned int slot, int refill) {
 
 typedef struct { s16 type,value,price; } Offer;
 static const Offer funky[7]={{2,1,3},{-1,0,0},{3,1,3},{-1,0,0},{2,2,5},{3,2,5},{2,3,7}};
-static const Offer candy[7]={{-1,0,0},{4,1,0},{-1,0,0},{4,2,5},{-1,0,0},{4,3,7},{4,4,9}};
 
 void m3FindPurchase(void* menu, void* progress, int first) {
     u8* data=menu;
-    int latest=6;
     int (*level)(int,int)=(void*)0x805FF030;
-    while (latest>=0 && !checkFlag(0x1C5+latest,0)) latest--;
     data[0xC]=level(CurrentMap,0);
     data[0xB]=0xFF;
     data[0x10]=CollectableBase.Melons;
     *(s16*)(data+4)=0;
     *(s16*)0x80750AC8=0;
     offer_type=-1;
-    const Offer* stock=CurrentMap==1 ? funky : CurrentMap==25 ? candy : 0;
-    if (!stock) return; /* Preserve Cranky's native Jetpac eligibility path. */
-    /* Candy's first visit is a free lesson regardless of latest world. */
-    if (CurrentMap==25 && !(MovesBase[5].instrument_bitfield&1)) {
-        data[0xB]=4;data[0x11]=1;lesson_scene=1;
-        offer_type=4;offer_value=1;
+    if (CurrentMap==25) {
+        /* Candy supplies one free lesson. Later visits use her no-stock path. */
+        if (!(MovesBase[5].instrument_bitfield&1)) {
+            data[0xB]=4;data[0x11]=1;lesson_scene=1;
+            offer_type=4;offer_value=1;
+        }
         return;
     }
+    if (CurrentMap!=1) return; /* Preserve Cranky's native Jetpac path. */
+    int latest=6;
+    while (latest>=0 && !checkFlag(0x1C5+latest,0)) latest--;
     for (int i=0;i<=latest;i++) {
-        const Offer* o=&stock[i];
+        const Offer* o=&funky[i];
         if (o->type<0) continue;
         int have=((u8*)&MovesBase[5])[o->type];
-        if (o->type==2 || o->type==4) {
+        if (o->type==2) {
             if (have & (1<<(o->value-1))) continue;
         } else if (have>=o->value) continue;
         data[0xB]=o->type;data[0x11]=o->value;
@@ -152,9 +152,7 @@ void m3ShopPurchase(void* menu, void* progress) {
      * and our frame adapter mirrors only their shared upgrade bits. */
     m3NativeShopPurchase(menu,progress);
     if (active()) {
-        /* Native shared-upgrade grants loop over five records. Mirror them
-         * before the final refill, so a sixth Candy/belt purchase fills the
-         * new capacity rather than the old capacity. Never charge twice. */
+        /* Mirror the native shared grants before filling Krusha's stock. */
         m3ProgressTick();
         if (data[0xB]==2 || data[0xB]==3 || data[0xB]==4) {
             void (*change)(int,u8,s16)=(void*)0x806F91B4;
@@ -165,9 +163,18 @@ void m3ShopPurchase(void* menu, void* progress) {
 
 void m3ShopControl(void* menu, void* progress, int flag) {
     u8* data=menu;
-    if (active() && CurrentMap==25 && lesson_scene &&
-        !(MovesBase[5].instrument_bitfield&1) && data[0xD]==1 &&
-        (data[0xE]==1 || data[0xE]==5)) data[0xE]=10;
+    if (active() && CurrentMap==25) {
+        if (lesson_scene && !(MovesBase[5].instrument_bitfield&1) &&
+            data[0xD]==1 && (data[0xE]==1 || data[0xE]==5)) data[0xE]=10;
+        if (data[0xD]==3 && data[0xE]==1) {
+            /* The native farewell checks instrument ownership for a refill.
+             * Keep the real move and energy out of that service check. */
+            KongBase farewell=*(KongBase*)progress;
+            farewell.instrument_bitfield&=~1;
+            m3NativeShopControl(menu,&farewell,flag);
+            return;
+        }
+    }
     m3NativeShopControl(menu,progress,flag);
 }
 
@@ -218,14 +225,17 @@ const char* m3ShopDialogue(const u8* text,u16 length) {
 
 void m3QueueShopDialogue(void* actor,u16 bank,u8 index) {
     void (*loadText)(void*,u16,u8)=(void*)0x8070D8C0;
-    if (bank==9 && CurrentMap==25 && active() && lesson_scene &&
-        actor && *(u32*)((u8*)actor+0x58)==191) {
-        if (index==18) {
+    if (bank==9 && CurrentMap==25 && active() && actor &&
+        *(u32*)((u8*)actor+0x58)==191) {
+        if (lesson_scene && index==18) {
             /* The native tutorial is queued after the demonstration. */
             loadText(actor,bank,23);
             return;
         }
-        if (!(MovesBase[5].instrument_bitfield&1) && (index==0 || index==3 || index==4)) {
+        if (MovesBase[5].instrument_bitfield&1) {
+            /* The full lesson reply is the farewell on its purchase visit. */
+            if (index==0 || (lesson_scene && (index==1 || index==10))) return;
+        } else if (lesson_scene && (index==0 || index==3 || index==4)) {
             /* A first shop visit queues both a greeting and an offer.
              * Collapse them to one lesson opener, including on later visits. */
             if (!lesson_greeted) {

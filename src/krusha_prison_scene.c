@@ -208,7 +208,7 @@ static const char* first[][6]={
     {"KRUSHA", "NAME'S KRUSHA. THE", "OTHER KREMLINGS...", "THEY IMPRISONED ME", "HERE, THAT'S WHAT.",0},
     {"TINY", "WHY DID THEY DO THAT?",0,0,0,0},
     {"KRUSHA", "THEY WERE MAD AT ME.", "SEE... A FEW DAYS AGO,", "WE CAUGHT US A BUNCH", "OF MONKEYS.",0},
-    {"KRUSHA", "I WAS HUNGRY, SO I", "DEALT WITH THE WHOLE", "BUNCH MYSELF, WHILE", "THE OTHERS WERE", "SLEEPING."},
+    {"KRUSHA", "I WAS HUNGRY, SO I", "DEALT WITH THE WHOLE", "LOT MYSELF, WHILE", "THE OTHERS WERE", "SLEEPING."},
     {"TINY", "YOU FREED THEM? AND", "THE OTHER KREMLINGS", "PUNISHED YOU?",0,0},
     {"KRUSHA", "ER... YES, YES,", "FREED THEM... THEY", "WERE FURIOUS I", "HADN'T SHARED.",0},
     {"TINY", "SHARED THE CREDIT?",0,0,0,0},
@@ -494,7 +494,10 @@ int krushaPrisonSceneTick(void) {
         else if (sequence==2 || empty) finished=1;
         else if (intro && page<FIRST_PAGE_COUNT) {
             page++;
-            if (page==FIRST_PAGE_COUNT && !krushaPrisonPendingKeys(file)) sequence=2;
+            if (page==FIRST_PAGE_COUNT && !krushaPrisonPendingKeys(file)) {
+                if (krushaRecruitmentLocks(file)) sequence=2;
+                else finished=1;
+            }
         } else if (krushaPrisonPendingKeys(file)) {
             sequence=1;page++;krushaPrisonTurnBegin(file);
         } else finished=1;
