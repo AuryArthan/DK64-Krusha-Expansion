@@ -14,17 +14,17 @@ from campaign_data import ground, verify_ground_in_rom
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64-krusha-dev.z64')
-    parser.add_argument('--release', action='store_true', help='Also compare ROM and BPS to the approved v0.16.0 digests')
+    parser.add_argument('--release', action='store_true', help='Also compare ROM and BPS to the v1.0.0 release fingerprints')
     args = parser.parse_args()
     verify_ground_in_rom(args.rom)
     print(f'All {len(ground())} ground pickups match the placement data.')
     if args.release:
-        manifest = json.loads((ROOT / 'docs/releases/v0.16.0.json').read_text())
+        manifest = json.loads((ROOT / 'docs/releases/v1.0.0.json').read_text())
         files = [(args.rom, 'rom_sha256'), (ROOT / 'runtime/krusha/dk64-krusha-adventure.bps', 'bps_sha256')]
         for path, key in files:
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             if digest != manifest[key]:
-                raise SystemExit(f'{path.name} differs from v0.16.0: {digest}')
+                raise SystemExit(f'{path.name} differs from {manifest["version"]}: {digest}')
             print(f'{path.name}  {digest}')
 
 

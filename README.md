@@ -4,7 +4,7 @@
 
 **Recruit Krusha as the sixth playable character in Donkey Kong 64.** The Kremling from Battle Mode has a cell of his own on DK Isles. Get him out and he’ll take his place in the tag barrel, put Funky’s bazooka to work, and help himself to a share of the bananas. His adventure adds **24 Golden Bananas** across the seven main worlds and DK Isles.
 
-**[Download the v0.16.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v0.16.0/DK64-TagAnywhere%2BKrusha.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
+**[Download the v1.0.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v1.0.0/DK64-TagAnywhere%2BKrusha.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
 
 ## Five Kongs, five keys
 
@@ -14,7 +14,7 @@ Tiny can bring back the keys in batches. When the fifth lock opens, look for Kru
 
 | The little prison off DK Isles | Tiny meets its only resident |
 | --- | --- |
-| ![The blue prison with three pink horns and a tether leading to the Kremling ship](docs/screenshots/prison-tether-after.png) | ![Tiny looks up at Krusha behind five colored padlocks](docs/screenshots/v0.16.0/tiny-meets-krusha.png) |
+| ![The blue prison with three pink horns and a tether leading to the Kremling ship](docs/screenshots/prison-tether-after.png) | ![Tiny looks up at Krusha behind five colored padlocks](docs/screenshots/tiny-meets-krusha.png) |
 
 ## Give a Kremling a bazooka
 
@@ -36,7 +36,7 @@ Each main world **and DK Isles** holds three Golden Bananas for him. Return a si
 
 | Silver bananas by moonlight in Creepy Castle | A blueprint payday at Snide’s HQ |
 | --- | --- |
-| ![A silver banana on the moonlit path beside Krusha in Creepy Castle](docs/screenshots/castle-user-slot-1.png) | <img src="docs/screenshots/v0.16.0/snides-reward.png" width="320" alt="Krusha celebrating a Golden Banana at Snide’s counter"> |
+| ![A silver banana on the moonlit path beside Krusha in Creepy Castle](docs/screenshots/castle-user-slot-1.png) | <img src="docs/screenshots/snides-reward.png" width="320" alt="Krusha celebrating a Golden Banana at Snide’s counter"> |
 
 ## Play your way
 
@@ -55,7 +55,7 @@ A fresh game starts with **Krusha enabled**, **tag barrels required**, and the o
 
 ## How to play
 
-1. Apply the **v0.16.0 BPS** to a clean, big-endian **Donkey Kong 64 (USA)** ROM (`.z64`) with a BPS patcher such as Floating IPS. The source ROM’s SHA-1 is `CF806FF2603640A748FCA5026DED28802F1F4A50`.
+1. Apply the **v1.0.0 BPS** to a clean, big-endian **Donkey Kong 64 (USA)** ROM (`.z64`) with a BPS patcher such as Floating IPS. The source ROM’s SHA-1 is `CF806FF2603640A748FCA5026DED28802F1F4A50`.
 2. Open the patched ROM in **Mupen64Plus with Glide64mk2**, or **Mupen64Plus-Next with GLideN64** in RetroArch. Use **8 MB Expansion Pak**, **EEPROM 16K** and **CountPerOp = 1**. Keep framebuffer emulation enabled with GLideN64.
 3. Start a **fresh Adventure file** for the recruitment campaign. For a 16:9 display, enable Widescreen inside DK64, set the emulator display to 16:9, and leave its separate widescreen hack off.
 
