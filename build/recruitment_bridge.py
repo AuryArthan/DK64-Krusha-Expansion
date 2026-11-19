@@ -5,8 +5,9 @@ End plinths scale uniformly .23; stretch the central tether to span the new gap.
 """
 import math,struct
 from barrel_assets import read_file
+from recruitment_assets import POSITION
 SHIP=(2900.,500.,3520.)
-PRISON=(2954.,498.,3340.)
+PRISON=(2954.,POSITION[1],3340.)
 SOURCE_A=(2973.5,500.,3681.666666667)
 SOURCE_B=(3106.,500.,3501.666666667)
 SCALE=.23

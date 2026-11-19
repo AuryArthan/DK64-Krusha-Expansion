@@ -112,8 +112,7 @@ void krushaPrisonTick(void) {
      * Also require completed native small-scale interpolation and crystals. */
     int small=tiny && cc[0x2C0]==0 && *(f32*)(data+0x1CC)>.045f &&
         *(f32*)(data+0x1CC)<.055f && CollectableBase.Crystals>0;
-    /* The lowered private deck is498; the untouched original prison annulus
-     * overlaps the connector at500. Both are legitimate native supports. */
+    /* Use the authored door height and a small tolerance for native collision. */
     int height=y>=RECRUITMENT_DOOR_Y-.5f && y<=RECRUITMENT_DOOR_Y+3.0f;
     int moving=p[0x154]==12 || p[0x154]==13 || p[0x154]==14;
     int eligible=small && height && moving;

@@ -14,7 +14,8 @@ MIRROR_INDEX=148
 TEXTURE_BASE=149
 TEXTURE_TOKEN=7800
 SOURCE_TEXTURES=tuple(range(0x514,0x51D))
-POSITION=(2977.0,498.0,3288.0)
+# The ring extends 20 model units below the deck, crossing the sea at Y 490.
+POSITION=(2977.0,493.0,3288.0)
 FACING_TARGET=(2800.0,2200.0) # central DK island; rear aperture faces the island
 ROTATION_Y=math.atan2(FACING_TARGET[0]-POSITION[0],FACING_TARGET[1]-POSITION[2])-math.atan2(-.438993779,.898490440)
 
