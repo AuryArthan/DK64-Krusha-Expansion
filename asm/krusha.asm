@@ -537,20 +537,6 @@ islesRambiOwner:
     J 0x8067ED34
     NOP
 
-; On the Isles we play this same SFX at entry. The cue call from the
-; original Jungle Japes crate still uses its native timing and arguments.
-islesRambiEmergenceSound:
-    LUI t0, hi(CurrentMap)
-    LW t0, lo(CurrentMap)(t0)
-    ADDIU t1, zero, 34
-    BEQ t0, t1, @@return
-    NOP
-    J playSound
-    NOP
-@@return:
-    JR ra
-    NOP
-
 ; Skip the first-use dialogue on the Isles without setting the native flag.
 islesAnimalFirstUseText:
     LUI t0, hi(CurrentMap)
