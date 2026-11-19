@@ -33,3 +33,9 @@ For recruitment changes, exercise a wrong-owner key touch, collect the same key 
 Two past bugs make good regression targets. A state that moved Chunky directly from underwater to dry land carried the underwater lighting into a key screenshot. Use a normal land approach for that check. Mini Tiny once came out of prison at the right size with the wrong music. Leave with crystals, listen for the Mini theme, and use up the last crystal to check that the local music returns.
 
 Testing has concentrated on emulated Adventure mode. Physical N64 hardware, the full multiplayer mode and a complete start-to-111% playthrough remain unverified.
+
+## v0.16.0 publication checks
+
+A clean checkout reproduced both release fingerprints with the pinned toolchain. The fresh-Adventure test reached the Training Grounds as DK with all fourteen recruitment and personal-move bits clear. With ordinary D-pad tagging enabled, both directions still offered only DK. The host turn-in test covered 729 valid file/key/lock cases and 600 possible interruption frames.
+
+In a separate checkout we applied the 20-unit JP-S01 move from the contributor guide. All 189 ground pickup records matched the edited data. In Mupen64Plus we loaded a disposable native file with the banana still uncollected, staged Krusha at its edited location, and observed normal pickup collision set slot 13. The released ROM keeps JP-S01 at its original coordinates. Both placement atlases were also generated from the USA ROM, and a five-key export was successfully converted back into a runtime plan.

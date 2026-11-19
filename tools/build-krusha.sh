@@ -40,10 +40,11 @@ elif link.exists():
     raise SystemExit('runtime/krusha/current must be a symlink, not a directory')
 link.symlink_to('../roms/' + digest, target_is_directory=True)
 upstream = 'e9ca72f5070c7e4bad69d37382c5a0798b06462f'
-revision = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--verify', 'HEAD'],
-                          capture_output=True, text=True)
+revision = None
+if (repo / '.git').exists():
+    revision = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
 manifest = {'rom': str(rom.relative_to(root)),
-    'source_commit': revision.stdout.strip() or None,
+    'source_commit': revision,
     'upstream_commit': upstream,
     'size': len(data), 'sha1': hashlib.sha1(data).hexdigest(),
     'sha256': digest, 'md5': hashlib.md5(data).hexdigest(),
