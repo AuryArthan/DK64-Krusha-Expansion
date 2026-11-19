@@ -1,107 +1,80 @@
-# Donkey Kong 64 - Tag Anywhere V5
+# Donkey Kong 64 · Krusha Expansion
 
-Made with ❤️ by Isotarge
+<p align="center"><img src="assets/intro/expansion-source.png" width="540" alt="Krusha Expansion"></p>
 
-With help from:
-- Tom Ballaam
-- Murdyll
-- 2dos
-- Mittenz
-- retroben
-- Kaze Emanuar
-- SubDrag
-- runehero123
-- Skill
-- TJ Blakely
-- GloriousLiar
-- Adam Whitmore
-- Znernicus
-- Zorulda
-- ChristianVega64
-- Rain
-- Shygoo
-- tj90241
+**Recruit Krusha as the sixth playable character in Donkey Kong 64.** The Kremling from Battle Mode has a cell of his own on DK Isles. Get him out and he’ll take his place in the tag barrel, put Funky’s bazooka to work, and help himself to a share of the bananas. His adventure adds **24 Golden Bananas** across the seven main worlds and DK Isles.
 
-It takes a village to free a kong.
+**[Download the v0.16.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v0.16.0/DK64-TagAnywhere%2BKrusha.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
 
-## Controls
-- D-Pad Left to tag backwards through the kong rotation
-- D-Pad Right or L Button to tag forwards through the kong rotation
+## Five Kongs, five keys
 
-DK -> Diddy -> Lanky -> Tiny -> Chunky
+Look for the small prison offshore. Tiny can get through the entrance with Mini Monkey, and the prisoner has a rather questionable story about how he got there. His cage has five colored locks. Each original Kong can find a matching key on DK Isles once that Kong is free. Check **Colored Keys** in the pause menu to see whose key is still out there.
 
-We have put significant time and effort into ensuring that you can not tag in situations that would cause softlocks or crashes. If you hear a "denied" sound when attempting to tag, it means tagging has been temporarily disabled for that reason.
+Tiny can bring back the keys in batches. When the fifth lock opens, look for Krusha in the tag barrel. His silver collectibles will start appearing around the islands.
 
-## Features
-- Mystery menu options are unlocked without capturing banana fairies for your convenience.
-- This patch includes two modes, toggled by the Speed Mode option in the options menu.
-  - Speed Mode off is intended for casual players.
-  - Speed Mode on is intended for speedrunners to set new personal bests on [this leaderboard](https://www.speedrun.com/dk64ce#Tag_Anywhere).
-- The Speed Mode setting will be remembered through resets.
+| The little prison off DK Isles | Tiny meets its only resident |
+| --- | --- |
+| ![The blue prison with three pink horns and a tether leading to the Kremling ship](docs/screenshots/prison-tether-after.png) | ![Tiny looks up at Krusha behind five colored padlocks](docs/screenshots/v0.16.0/tiny-meets-krusha.png) |
 
-### Speed Mode Off
-- [x] Only DK unlocked from start, but you can tag anywhere once other kongs are unlocked
-- [x] No other changes to gameplay
+## Give a Kremling a bazooka
 
-### Speed Mode On
-- [x] Intro story and level intros skipped (called Story Skip in the vanilla game)
-- [x] All kongs are unlocked from beginning and can immediately be tagged anywhere
-- [x] All moves, guns, simian slam, shockwave, and camera unlocked from the start
-- [x] Golden Banana dances skipped
-- [x] All first time text skipped from beginning
-- [x] Training barrels completed
-- [x] File starts in in DK Isles rather than Training Grounds
-- [x] K. Lumsy cutscenes compressed
-  - [x] All keys behave like 3 and 8
-- [x] Snide's cutscenes compressed
-  - [x] Shortest contraption animation at all Snide's HQ locations
-  - [x] Single golden banana animation when turning in multiple blueprints
-- [x] Faster Troff 'n' Scoff feeding
+Funky will sell Krusha a **bazooka** for three of his own silver coins. Its lime-green rounds explode on impact and can break open his banana cages. Ammo crates feed the bazooka, leaving his throwable oranges available for a different kind of trouble.
 
-## Known Issues
-- Save is broken on older EverDrives
-  - Nothing I can do about this unfortunately
-- Save is broken on some emulators out of the box
-  - Set the emulator configuration to use the "EEPROM 16K" save type
-    - This might require modifying a gameDB or ini file
-    - Get in touch with your emulator's author for help
-  - Alternatively, use your emulator's savestate feature to save your progress between play sessions
-- Save is broken and bone displacement is present on BizHawk
-  - Set N64 -> Use Expansion Slot to true
-  - EEPROM 16K setting for this ROM needed in BizHawk's gamedb_n64.txt
-    - Copy the settings line for Donkey Kong 64 (USA) but replace the vanilla ROM's SHA1 hash with the SHA1 hash of the Tag Anywhere ROM
-  - Use these gameshark codes to fix bone displacement:
-    - 8161963C 0000
-    - 8161963E 0000
-- Tagging immediately before hitting a tree causes you to warp to the map origin
-  - Haven't thought of a good way to fix this yet
-- 101% runners should enter Arcade from the mystery menu and hit "delete highscores"
-  - This fills the high score table with 999950 and skips entering initials during the run
-  - Probably only needs to be done once
+Candy gives him a free voice lesson. **Primitive Roar** clears nearby enemies, complete with a spotlight and a camera orbit. Headphones recharge it. Try it on a pad bearing Krusha’s face and a rare Klump answers the call. Watch his throwing hand. He can lob three grenades at once.
 
-## A note on emulation
-This patch will work on both real N64 hardware and modern emulators. For the best experience, it is recommended that you play on real N64 hardware with an EverDrive64 v3 or later.
+| Krusha opens fire in Jungle Japes | A rare Klump on the Isles beach |
+| --- | --- |
+| <img src="docs/screenshots/bazooka-muzzle-flash.png" width="320" alt="A flash lights the muzzle as Krusha fires his bazooka in Jungle Japes"> | ![The rare Klump on the beach with three orange grenades airborne](docs/screenshots/klump-royal-grenades.png) |
 
-If you do not have access to real N64 hardware, modern emulators like [simple64](https://github.com/simple64/simple64/releases) (v2021.12.3 or later), [Project64](https://www.pj64-emu.com/) (v3 or later), or [mupen64plus-next](https://github.com/libretro/mupen64plus-libretro-nx) will provide a reasonable experience.
+Away from combat, Krusha can lift boulders, ride Bananaports, photograph Banana Fairies with the shared camera, and fight for Battle Crowns. He can also feed his bananas to Troff ’n’ Scoff to help open the boss door.
 
-You may need to configure your emulator to use the EEPROM 16K save type for saves to persist between resets. If this option is not available, you will need to ask your emulator author to add it. In the mean time, you can use the savestate feature of your emulator to save your progress.
+## Follow the silver bananas
 
-![Project64 EEPROM Configuration](build/pj64-eeprom-config.png)
+Krusha has **350 silver bananas** to find, 50 in each of the seven main worlds. Follow the singles through tunnels and along trails, look up for bunches, and keep the bazooka handy for balloons. His **63 silver coins** come nine to a world and give him his own money to spend at Funky’s.
 
-Please do not bug me about this, I have no control over the direction of the various emulation projects and I cannot fix it by modifying how this patch works.
+Each main world **and DK Isles** holds three Golden Bananas for him. Return a silver-haired Kasplat’s blueprint to Snide, defeat the Klump summoned by a shout pad, or land a bazooka shot on a marked cage. The pause menu tracks Krusha’s haul alongside the other five. Reach **111%** for a sweet surprise.
 
-## Building Pre-requisites
-- Python 3
-- [n64chain](https://github.com/tj90241/n64chain/releases/tag/9.1.0)
+| Silver bananas by moonlight in Creepy Castle | A blueprint payday at Snide’s HQ |
+| --- | --- |
+| ![A silver banana on the moonlit path beside Krusha in Creepy Castle](docs/screenshots/castle-user-slot-1.png) | <img src="docs/screenshots/v0.16.0/snides-reward.png" width="320" alt="Krusha celebrating a Golden Banana at Snide’s counter"> |
 
-## Build Setup (Windows)
-1. Download ```n64chain-windows.zip``` from [here](https://github.com/tj90241/n64chain/releases/tag/9.1.0)
-2. Extract to ```C:\n64chain```
-3. Add ```C:\n64chain\tools\bin``` to your system %path% environment variable
-4. Install ```Python 3```
-5. Git clone (or download a zip + extract) this repo to somewhere convenient
-6. Create a ```rom``` subdirectory in the root of the repo
-7. Put ```dk64.z64``` (SHA1: CF806FF2603640A748FCA5026DED28802F1F4A50) in the ```rom``` subdirectory
-8. Run ```build.bat```
+## Play your way
 
-Provided everything is working, the built ROM will appear in the ```rom``` subdirectory
+A fresh game starts with **Krusha enabled**, **tag barrels required**, and the original **4:3** view. The title screen’s Options menu lets you change the following independently.
+
+| Option | What it does |
+| --- | --- |
+| **Tag-Anywhere** | **OFF** uses tag barrels. **ON** also lets you cycle through unlocked characters with the D-pad. **Speed Mode** adds fast starts, moves and cutscene shortcuts. With Krusha enabled, it permanently grants his rescue on the active file, so choose OFF or ON to play the key hunt. |
+| **Widescreen** | Adapts the game to 16:9, including HUD and pause sprites, tag-barrel entry and instrument cameras. |
+| **Mirror Mode** | Flips the world and its controls left to right while keeping dialogue, counters and menus readable. |
+| **Krusha** | Switch him off to play with the original five. You can still use Tag-Anywhere, Widescreen and Mirror Mode. |
+
+| Krusha’s place in the tag barrel | The Options barrel |
+| --- | --- |
+| ![Krusha under the tag barrel spotlight after his rescue](docs/screenshots/recruitment-verification/first-barrel.png) | ![Options menu with separate Krusha, Widescreen, Tag-Anywhere and Mirror Mode rows](docs/screenshots/options-shadow-off.png) |
+
+## How to play
+
+1. Apply the **v0.16.0 BPS** to a clean, big-endian **Donkey Kong 64 (USA)** ROM (`.z64`) with a BPS patcher such as Floating IPS. The source ROM’s SHA-1 is `CF806FF2603640A748FCA5026DED28802F1F4A50`.
+2. Open the patched ROM in **Mupen64Plus with Glide64mk2**, or **Mupen64Plus-Next with GLideN64** in RetroArch. Use **8 MB Expansion Pak**, **EEPROM 16K** and **CountPerOp = 1**. Keep framebuffer emulation enabled with GLideN64.
+3. Start a **fresh Adventure file** for the recruitment campaign. For a 16:9 display, enable Widescreen inside DK64, set the emulator display to 16:9, and leave its separate widescreen hack off.
+
+### Compatibility and limits
+
+- This patch targets the USA release. The recruitment campaign uses a different save format from v0.13.2 and earlier releases. Keep old saves with their respective ROMs, and load emulator states only on the exact build that created them.
+- The original five retain their exclusive puzzle moves, boss assignments and banana medals. Krusha’s 50 silver bananas per world count toward his personal total and can be donated. His roar activates his own pads.
+- Testing has focused on single-player Adventure in emulation. Original N64 hardware, multiplayer and a complete end-to-end 111% playthrough remain unverified. [Testing and compatibility](docs/testing.md)
+
+## Behind the hack
+
+**Arthan** directed and playtested the expansion, supplied the scream recording and title artwork, and selected and refined Krusha’s portrait. The project used **OpenAI Codex** for implementation, debugging and emulator testing, and AI-assisted artwork for the portrait.
+
+**Isotarge and the DK crew** built the Tag Anywhere hack that this expansion grew from. Their character-switching code, Speed Mode and ROM-building tools provided its foundation. [Original Tag Anywhere project and credits](https://github.com/Isotarge/dk64-tag-anywhere)
+
+The DK64 decompilation and recompilation projects helped identify native game behavior and engine symbols. Mirror Mode draws on the DK64 Randomizer team’s work. DonkViewer’s geometry research helped bring the Isles into the collectible placement atlas. [DK64 decompilation](https://gitlab.com/dk64_decomp/dk64) · [DK64 Recompiled](https://github.com/Rainchus/Donkey-Kong-64-Recompiled) · [Mirror Mode attribution](THIRD_PARTY.md) · [DonkViewer](https://github.com/theballaam96/DonkViewer)
+
+**Want to modify the hack?** The repository includes a handoff skill for a fresh coding session, plus a human-readable guide to the source, build tools and gameplay tests. Start there to find the code behind a feature and the tests that cover it. [Handoff skill](.agents/skills/krusha-handoff/SKILL.md) · [Project handoff](codex_handoff/README.md) · [Build from source](CONTRIBUTING.md)
+
+Donkey Kong 64 and its characters belong to Nintendo and Rare. The download contains the patch only.
+
+[License for the expansion contributions](LICENSE.md) · [Third-party notices](THIRD_PARTY.md)

@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import struct
 
-PLAN = Path(__file__).resolve().parents[1] / 'docs/planning/krusha-adventure-expansion/placements/native-pickup-adjustments.json'
+PLAN = Path(__file__).resolve().parents[1] / 'data/placements/native-pickup-adjustments.json'
 
 def removals(mid):
     return [p for p in json.loads(PLAN.read_text())['remove_model2'] if p['map'] == mid]

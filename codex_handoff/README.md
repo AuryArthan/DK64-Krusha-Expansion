@@ -1,0 +1,17 @@
+# Krusha Expansion · developer handoff
+
+Start with the feature table and first edit in the [contributor guide](../CONTRIBUTING.md). This repository builds the USA single-player expansion. Public `main` preserves the Tag Anywhere history up to `e9ca72f`, followed by the expansion’s source changes in development order. The public release manifest records the original gameplay and archive commits for comparison. [v0.16.0 fingerprints](../docs/releases/v0.16.0.json)
+
+## Where a change belongs
+
+- **A pickup, reward or patrol moved.** Edit the existing marker or world row in `data/placements/campaign.json`. The builder uses the stable IDs to generate both map setup records and C tables. Coordinates are X, Y, Z with Y up. Japes also has earlier base and override tables used to reconstruct native resources. The current campaign file supplies the released ground positions. Rebuild and run the placement check before opening the emulator. [Feature map](../CONTRIBUTING.md#find-the-feature-you-want-to-change)
+- **Keys or recruitment changed.** `build/recruitment_keys.py` creates the five outside objects. `src/krusha_recruitment.c` owns per-file quest transitions. `src/krusha_prison_visit.c` controls visits and Mini restoration, `src/krusha_prison_scene.c` presents the conversation, and `src/krusha_prison_turnin.c` commits locks during the presentation. A carried key and an opened lock are different facts. Test partial delivery, duplicate entry, cold reload, and the final lock. [Host and gameplay tests](../docs/testing.md)
+- **A change seems to affect another Kong.** Start with the current player and map checks at the hook. Krusha has his own character slot, wallet, inventory flags and collectible registry. A few native mechanics accept only the original five. Existing hooks adapt individual interactions, such as the barrel or feeding Troff ’n’ Scoff. A global identity swap would also confer another Kong’s pickup eligibility.
+- **A visual is broken in one mode.** Character meshes, pause sprites, mirrored world geometry and instrument cameras have separate paths. Read `src/widescreen.c`, `src/mirror.c`, and the affected HUD or scene file. Check both renderer configurations and the transition frames as well as the final pose.
+- **The ROM works but a test starts in a different state.** Run the launcher with `--info`. Use a native K14.0 Adventure save for applicable progress and a state made by the exact ROM for frame-level replay. Old development fixtures are private. The release, placement and host checks run without them. [Test guide](../docs/testing.md)
+
+## Before changing a saved identity
+
+Krusha’s progress uses 512 bits within each expanded save record. The first 384 are reserved for individual pickup slots. A bunch or balloon consumes one slot regardless of its banana value. Retired slots stay reserved. The bit assignments for keys, locks, recruitment and gear are in the header. The host turn-in test checks writes across all three files and resets the controller during the animation. [Layout constants](../include/krusha_progress.h) · [Native save audit](../tools/audit-save-layout.py)
+
+A clean build uses the original ROM and a tool cache. The source excludes expanded ROMs, browser-local placement edits, save states and the development session archive. For an ordinary build the default launcher and the BPS share one output ROM. Use a separate output path and profile when building an instrumented ROM.

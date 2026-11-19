@@ -21,7 +21,7 @@ def encoded(path):
 def main():
     repo=Path(__file__).resolve().parent.parent
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('input',type=Path)
-    parser.add_argument('--encoder',type=Path,default=repo.parent/'tools/vadpcm/build/vadpcm')
+    parser.add_argument('--encoder',type=Path,default=repo/'tools/vadpcm/build/vadpcm')
     parser.add_argument('--peak-dbfs',type=float,default=-.5,help='Decoded joint-channel peak ceiling; default -0.5 dBFS.')
     args=parser.parse_args();out=repo/'assets/krusha';out.mkdir(exist_ok=True)
     if not -12<=args.peak_dbfs<=-.05:parser.error('Use a peak ceiling between -12 and -0.05 dBFS.')

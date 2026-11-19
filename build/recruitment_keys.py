@@ -3,7 +3,7 @@ from pathlib import Path
 import json, struct, zlib, math
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parents[1]
-PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/recruitment-keys-runtime.json'
+PLAN=ROOT/'data/placements/recruitment-keys.json'
 # R09 slots175/176 remain immutable. New materials/geometry append after them.
 MODEL_TYPES=(60,62,63,64,65)
 MODEL=177

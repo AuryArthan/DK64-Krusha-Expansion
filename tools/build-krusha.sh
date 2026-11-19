@@ -40,26 +40,16 @@ elif link.exists():
     raise SystemExit('runtime/krusha/current must be a symlink, not a directory')
 link.symlink_to('../roms/' + digest, target_is_directory=True)
 upstream = 'e9ca72f5070c7e4bad69d37382c5a0798b06462f'
-tracked = subprocess.check_output(['git', '-C', str(repo), 'diff', '--name-only', upstream], text=True).splitlines()
-added = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others', '--exclude-standard'], text=True).splitlines()
-source_changes = sorted(set(tracked + added))
-patch = subprocess.check_output(['git', '-C', str(repo), 'diff', '--binary', upstream])
-for name in added:
-    result = subprocess.run(['git', 'diff', '--no-index', '--binary', '--', '/dev/null', name],
-                            cwd=repo, stdout=subprocess.PIPE, check=False)
-    if result.returncode not in (0, 1):
-        raise SystemExit('Could not preserve source diff for ' + name)
-    patch += result.stdout
-(record / 'source-changes.patch').write_bytes(patch)
+revision = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--verify', 'HEAD'],
+                          capture_output=True, text=True)
 manifest = {'rom': str(rom.relative_to(root)),
-    'source_commit': subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip(),
+    'source_commit': revision.stdout.strip() or None,
     'upstream_commit': upstream,
     'size': len(data), 'sha1': hashlib.sha1(data).hexdigest(),
     'sha256': digest, 'md5': hashlib.md5(data).hexdigest(),
     'compiler': 'n64chain GCC 9.1.0', 'assembler': 'armips 0.11.0', 'gzip': '1.2.4',
     'baseline_sha256': '9fc6f92cbd27632af572dfb9961164148f4054a7dffcf51cb17d02ac4d60fa47',
-    'integration': 'Sixth adventure character; no global identity spoof',
-    'source_changes': source_changes}
+    'integration': 'Sixth adventure character'}
 (record / 'build-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
 PY
 

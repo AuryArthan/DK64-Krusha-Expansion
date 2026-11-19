@@ -199,49 +199,23 @@ def group(map_id):
 
 
 def write_placement_draft(out):
-    source=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
-    if source.exists():
-        draft=json.loads(source.read_text())
-        assert draft['format']=='krusha-atlas-notes-v2' and draft['draft_id']=='assistant-v1'
-        assert draft['source_sha1']=='cf806ff2603640a748fca5026ded28802f1f4a50'
-        (out/'assistant-draft-v1.json').write_text(json.dumps(draft,indent=2)+'\n')
-        drafts=[draft]
-        polish=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
-        if polish.exists():
-            from m2_pickups import rows,balloons
-            historical=json.loads((polish.parent/'japes-polish-v1.json').read_text())
-            drafts.append(historical)
-            drafts.append(json.loads((polish.parent/'japes-50-v1.json').read_text()))
-            current=json.loads((polish.parent/'three-japes-implemented.json').read_text())
-            current.update(draft_id='japes-paths-v1',title='Japes pilot — connected trails and riverbed singles',scope='implemented-japes-pilot')
-            current.pop('rom_sha256',None) # Source layout, not a binary certification.
-            current['pins']=[p for p in current['pins'] if p.get('label')!='JP-SW01']
-            for pin in current['pins']:
-                pin['notes']=pin.get('notes','').replace('2x','1.6x').replace('five','eight').replace('twice ordinary size','1.6 times ordinary size')
-            current['pins']=rows()+balloons()+current['pins']
-            drafts.append(current)
-            (out/'japes-50-implemented.json').write_text(json.dumps(current,indent=2)+'\n')
-            draft=current
-        campaign=ROOT/'docs/planning/krusha-adventure-expansion/placements/campaign-m5-v1.json'
-        if campaign.exists():
-            data=json.loads(campaign.read_text())
-            draft=dict(format='krusha-atlas-notes-v2',source_sha1=data['source_sha1'],
-                       draft_id=data['draft_id'],title=data['title'],scope='implemented-campaign',
-                       banana_target=50,coin_target=data.get('coin_target',72),reward_target=3,pins=list(data['pins']))
-            for w in data['worlds']:
-                for name,kind,key,notes in [
-                    ('PAD','switch','pad','Shout here to summon the rare Klump. One paid shout; eight bazooka hits.'),
-                    ('KLUMP','gb','boss','Rare Klump drops one GB at its death location. About 1.47 times native size, eight hits, triple grenades.'),
-                    ('CAGE','gb','cage','Hit the compact cage with a bazooka projectile. Lime projectile hint on its roof.'),
-                    ('BP','blueprint','kasplat','Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black.')]:
-                    mid=w['kasplat_map'] if key=='kasplat' else w['map']
-                    draft['pins'].append(dict(id='m5-'+w['code']+'-'+name,map=mid,map_name=w['name'],
-                        label=w['code']+'-'+name,kind=kind,quantity=1,xyz=w[key],notes=w.get('placement_notes',{}).get(key,notes),status='campaign-draft'))
-            drafts.append(draft)
-            (out/'campaign-m5-v1.json').write_text(json.dumps(draft,indent=2)+'\n')
-        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFTS='+json.dumps(drafts,separators=(',',':'))+';\nwindow.KRUSHA_DRAFT='+json.dumps(draft,separators=(',',':'))+';\n')
-    else:
-        (out/'draft-seed.js').write_text('window.KRUSHA_DRAFT=null;\n')
+    campaign = ROOT / 'data/placements/campaign.json'
+    data=json.loads(campaign.read_text())
+    draft=dict(format='krusha-atlas-notes-v2',source_sha1=data['source_sha1'],
+               draft_id=data['draft_id'],title=data['title'],scope='implemented-campaign',
+               banana_target=50,coin_target=sum(p['kind'] == 'coin' for p in data['pins']),reward_target=3,pins=list(data['pins']))
+    for w in data['worlds']:
+        for name,kind,key,notes in [
+            ('PAD','switch','pad','Shout here to summon the rare Klump. One paid shout; eight bazooka hits.'),
+            ('KLUMP','gb','boss','Rare Klump drops one GB at its death location. About 1.47 times native size, eight hits, triple grenades.'),
+            ('CAGE','gb','cage','Hit the compact cage with a bazooka projectile. Lime projectile hint on its roof.'),
+            ('BP','blueprint','kasplat','Gray Kasplat: one blueprint, one GB from Snide. Collected-blueprint hair becomes black.')]:
+            mid=w['kasplat_map'] if key=='kasplat' else w['map']
+            draft['pins'].append(dict(id='m5-'+w['code']+'-'+name,map=mid,map_name=w['name'],
+                label=w['code']+'-'+name,kind=kind,quantity=1,xyz=w[key],notes=w.get('placement_notes',{}).get(key,notes),status='campaign-draft'))
+    (out / 'campaign.json').write_text(json.dumps(draft, indent=2) + '\n')
+    seed = json.dumps(draft, separators=(',', ':'))
+    (out / 'draft-seed.js').write_text('window.KRUSHA_DRAFTS=[' + seed + '];\nwindow.KRUSHA_DRAFT=' + seed + ';\n')
 
 
 def main():
@@ -258,7 +232,7 @@ def main():
             raise SystemExit('Refresh requires an existing matching USA atlas.')
         backup = out / 'ui-history' / str(time.time_ns())
         backup.mkdir(parents=True)
-        for name in UI_FILES + ('draft-seed.js', 'assistant-draft-v1.json', 'japes-50-implemented.json'):
+        for name in UI_FILES + ('draft-seed.js', 'campaign.json'):
             if (out / name).exists():
                 shutil.copyfile(out / name, backup / name)
         for name in UI_FILES:

@@ -4,7 +4,7 @@ import json, struct, zlib
 from barrel_assets import read_file
 
 ROOT=Path(__file__).resolve().parents[1]
-PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
+PLAN=ROOT/'data/placements/japes-base.json'
 TYPE=9
 CAGE_TYPE=46
 CAGE_XYZ=(1680,286.27,4245)

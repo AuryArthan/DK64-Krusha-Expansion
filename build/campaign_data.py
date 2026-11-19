@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 from functools import lru_cache
 ROOT=Path(__file__).resolve().parents[1]
-PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/campaign-m5-v1.json'
+PLAN=ROOT/'data/placements/campaign.json'
 @lru_cache(None)
 def plan():return json.loads(PLAN.read_text())
 def worlds():return plan()['worlds']

@@ -13,14 +13,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--rom', type=Path, default=ROOT / 'rom/dk64.z64')
-    parser.add_argument('--runtime-plan', type=Path, help='Seed a separate atlas from implemented R10 positions')
-    parser.add_argument('--draft-id', default='recruitment-keys-r10-v1', choices=('recruitment-keys-r10-v1','recruitment-keys-v15-v1','recruitment-keys-v15-refined-v1','recruitment-keys-v15-pipes-v1','recruitment-keys-v15-ridge-v1'))
+    parser.add_argument('--runtime-plan', type=Path, default=ROOT / 'data/placements/recruitment-keys.json', help='Implemented positions for the five keys')
+    parser.add_argument('--draft-id', default='recruitment-keys-v15-ridge-v1', choices=('recruitment-keys-r10-v1','recruitment-keys-v15-v1','recruitment-keys-v15-refined-v1','recruitment-keys-v15-pipes-v1','recruitment-keys-v15-ridge-v1'))
     parser.add_argument('--title', default='Implemented keys — placements for review')
     args = parser.parse_args()
     out = args.out.resolve()
     if out.exists():
         raise SystemExit('Choose a new output directory; existing edits are preserved.')
-    seed = json.loads((ROOT / 'docs/planning/krusha-adventure-expansion/placements/recruitment-keys-v1.json').read_text())
+    seed = json.loads((ROOT / 'data/placements/key-editor-template.json').read_text())
     if args.runtime_plan:
         runtime = json.loads(args.runtime_plan.read_text())
         assert {p['id'] for p in runtime['keys']} == {p['id'] for p in seed['pins']}
@@ -59,7 +59,7 @@ def main():
         ';\nwindow.KRUSHA_DRAFT=' + json.dumps(seed) + ';\n')
     (out / seed_name).write_text(json.dumps(seed, indent=2) + '\n')
     index = out / 'index.html'
-    index.write_text(index.read_text().replace('Krusha’s collectibles', 'Recruitment keys').replace('assistant-draft-v1.json', seed_name).replace('Edit Krusha collectible', 'Edit recruitment key').replace('Room for one more.', 'Five keys. One new ally.').replace('Krusha • collectible placement atlas', 'Krusha • recruitment key atlas'))
+    index.write_text(index.read_text().replace('Krusha’s collectibles', 'Recruitment keys').replace('campaign.json', seed_name).replace('Edit Krusha collectible', 'Edit recruitment key').replace('Room for one more.', 'Five keys. One new ally.').replace('Krusha • collectible placement atlas', 'Krusha • recruitment key atlas'))
     (out / 'keys.html').write_text('<!doctype html><meta charset="utf-8">'
         '<title>Krusha recruitment keys</title><meta http-equiv="refresh" '
         f'content="0;url=index.html?map=34&amp;style=A&amp;draft={draft_id}">'

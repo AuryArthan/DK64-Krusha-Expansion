@@ -1,0 +1,11 @@
+# Credits and third-party notices
+
+**Tag Anywhere.** Isotarge and the DK crew built the character-switching system, Speed Mode and ROM patching framework this project extends. Their original commits and author credits are preserved through `e9ca72f5070c7e4bad69d37382c5a0798b06462f`. That revision contains no project-wide license grant. Permission for broader redistribution of their work remains to be clarified with its rights holders. Credits and the expansion’s GPL apply to different contributions. [Original README and full credits](https://github.com/Isotarge/dk64-tag-anywhere/blob/e9ca72f5070c7e4bad69d37382c5a0798b06462f/README.md)
+
+**DK64 Randomizer.** Its MIT-licensed mirror patch informed triangle winding, camera projection and input handling in the expansion. The geometry bank and Options integration are specific to this project. [License notice](docs/licenses/DK64-Randomizer-MIT.txt) · [Geometry patch](https://github.com/2dos/DK64-Randomizer/blob/1fb1c75ae852bc5f7f0d9c37b81e0d9451c77f6e/randomizer/Patching/MirrorMode.py) · [Native patches](https://github.com/2dos/DK64-Randomizer/blob/1fb1c75ae852bc5f7f0d9c37b81e0d9451c77f6e/randomizer/Patching/ASM/Kaizo.py)
+
+**DonkViewer.** Ballaam’s MIT-licensed collision and geometry research informed the offline atlas and the prison geometry reader. [License notice](tools/map-atlas/DonkViewer-LICENSE.txt) · [Reference revision](https://github.com/theballaam96/DonkViewer/tree/57324aa2317a2baf814c67e8297f1b693ebd9c62)
+
+**Engine research.** The DK64 decompilation and recompilation projects helped identify game functions, symbols and behavior. The build uses the player’s original USA ROM. [DK64 decompilation](https://gitlab.com/dk64_decomp/dk64) · [DK64 Recompiled](https://github.com/Rainchus/Donkey-Kong-64-Recompiled)
+
+**Tools and media.** n64chain, armips, gzip and Mupen64Plus are separate projects. Their own terms apply to downloads and to tool binaries inherited from Tag Anywhere. The optional shout encoder is depp’s MPL-2.0 VADPCM project. Arthan supplied the roar recording and title artwork. Screenshots depict Nintendo and Rare’s game. [VADPCM](https://github.com/depp/vadpcm/tree/413d52043a928c5fac066ccda1e69b73c7f7132b) · [Expansion license](LICENSE.md)

@@ -3,8 +3,8 @@ from pathlib import Path
 import json, struct, zlib
 from barrel_assets import read_file
 ROOT=Path(__file__).resolve().parent.parent
-PLAN=ROOT/'docs/planning/krusha-adventure-expansion/placements/assistant-draft-v1.json'
-POLISH=ROOT/'docs/planning/krusha-adventure-expansion/placements/japes-pickup-polish.json'
+PLAN=ROOT/'data/placements/japes-base.json'
+POLISH=ROOT/'data/placements/japes-overrides.json'
 # Japes pilot registry; the three-object contact proof is preserved under runtime/.
 GROUND_SLOTS=tuple(range(10))+tuple(range(13,33))+tuple(range(231,241))
 BALLOON_SLOTS=(10,11)
