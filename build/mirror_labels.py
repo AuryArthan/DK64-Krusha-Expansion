@@ -1,0 +1,168 @@
+"""Readable world markings for the USA mirror geometry bank.
+
+Rules address a printed material inside one model. The renderer can replace
+some images at runtime (digit wheels, portal animation frames), so those
+panels keep their original texture commands and animation-table offsets.
+"""
+import struct
+
+
+def rules(table, model):
+    """Return horizontal UV sums, texture swaps and panel reflection types."""
+    uv, swaps, panels = {}, {}, {}
+
+    def pair(left, right, extent=992):
+        uv[left] = uv[right] = extent
+        swaps[left], swaps[right] = right, left
+
+    if table == 5 and model == 100:  # B. Locker, three animated segments
+        pair(0x0C000000, 0x0E000000)
+        uv[0x0D000000] = 992
+    elif table != 4:
+        return uv, swaps, panels
+    elif model == 0x79:
+        uv[0xB85] = 2016  # Snide's 64-pixel wooden board
+    elif model == 0x7A:
+        uv[0xB8E] = 2016  # Funky's ARMORY stencil
+    elif model == 0x73:
+        pair(0xB72, 0xB73)
+        pair(0xB74, 0xB75)
+    elif model == 0x124:
+        pair(0xC7A, 0xC7B)  # Each side uses both halves of Candy's name
+    elif model == 0x2AB:
+        panels = dict.fromkeys(range(0x391, 0x394), 'quota')
+    elif model == 0x2AD:
+        panels = dict.fromkeys(range(0x3A3, 0x3A7), 'portal')
+    elif model == 0x2AE:
+        uv[0x391] = 992  # Same animated number plate for all eight locks
+    elif 0x210 <= model <= 0x214:
+        uv[(0xDF0, 0xDF3, 0xD45, 0xDF8, 0xDFB)[model-0x210]] = 992
+    elif 0xF4 <= model <= 0x103:
+        uv[0x1FE + 2*(model-0xF4)] = 992
+    elif 0x14A <= model <= 0x14D:
+        uv[(0x3A1, 0xAB1, 0x3CE, 0x3A6)[model-0x14A]] = 992
+    elif 0x147 <= model <= 0x149:
+        first = 0xCE0 + 4*(model-0x147)
+        pair(first, first+1, 1504)
+        pair(first+2, first+3, 1504)
+    elif 0xA4 <= model <= 0xA7:
+        halves = [(0xBBD,0xBBE), (0xBBF,0xBC0), (0xBBC,0xBC1), (0xBC2,0xBC3)]
+        pair(*halves[model-0xA4])
+    elif 0x247 <= model <= 0x24A:
+        uv[(0xDFB,0xDF8,0xDF3,0xD45)[model-0x247]] = 992
+    elif model == 0xDC:
+        uv[0xC17] = 2016  # The four printed sides, CI4 with a separate palette
+    return uv, swaps, panels
+
+
+def fix_shared_corners(b, original, uses, edits):
+    """A few switch faces share UVs with their bevel. Change the cached ST only
+    between draws. Two TRI1 commands fit in one TRI2, leaving the model size,
+    vertex loads, material addresses and animated texture slots intact.
+    """
+    transitions = []
+    for v, draws in uses.items():
+        if v not in edits or all(marked for _, _, marked in draws):
+            continue
+        assert edits[v][0] == 'u'
+        extent = edits.pop(v)[1]
+        u, t = struct.unpack_from('>hh', original, v + 8)
+        first_marked = draws[0][2]
+        if first_marked:
+            struct.pack_into('>h', b, v+8, extent-u)
+        changes = [(left, right) for left, right in zip(draws, draws[1:])
+                   if left[2] != right[2]]
+        assert len(changes) == 1
+        old, new = changes[0]
+        assert old[1] == new[1]
+        # All shared corners in these small models cross one material boundary.
+        transitions.append((old[0], new[0], old[1], extent-u if new[2] else u, t))
+    if not transitions:
+        return
+    after = max(item[0] for item in transitions)
+    before = min(item[1] for item in transitions)
+    assert after < before and 1 not in original[after+8:before:8]
+    n = len(transitions)
+    # Pack the end of the old surface, or the start of the new surface.
+    start = after - (2*n-1)*8
+    suffix = all(b[k] == 5 for k in range(start,after+8,8))
+    if not suffix:
+        start = before
+    assert all(b[k] == 5 for k in range(start,start+16*n,8))
+    tris = []
+    for k in range(start,start+16*n,16):
+        tris.append(bytes([6])+b[k+1:k+4]+bytes([0])+b[k+9:k+12])
+    mods = [struct.pack('>Ihh',0x02140000 | (slot*2),u,t)
+            for _,_,slot,u,t in transitions]
+    b[start:start+16*n] = b''.join(tris+mods if suffix else mods+tris)
+
+
+def correct_labels(data, table, model):
+    uv, swaps, panels = rules(table, model)
+    selected = uv.keys() | panels.keys()
+    if not selected:
+        return data
+    b = bytearray(data)
+
+    def word(p):
+        return struct.unpack_from('>I', b, p)[0]
+
+    if table == 4:
+        start, end = word(0x40), word(0x48)
+        vertices = end
+    else:
+        end = 0x28 + word(4) - word(0)
+        start = 0x28 + word(end) - word(0)
+        vertices = 0x28
+
+    slots, edits, seen = {}, {}, set()
+    uses = {}
+    material = None
+    for p in range(start, end, 8):
+        cmd, arg = struct.unpack_from('>II', data, p)
+        op = cmd >> 24
+        if op == 1:  # F3DEX2 G_VTX, relative to the model's vertex segment
+            count = (cmd >> 12) & 255
+            first = (cmd & 255)//2 - count
+            for j in range(count):
+                slots[first+j] = vertices + (arg & 0xFFFFFF) + 16*j
+        elif op == 0xFD:
+            # A TLUT load does not change the indexed image being drawn.
+            if 0xF0 not in data[p+8:p+40:8]:
+                material = arg
+                if arg in swaps:
+                    struct.pack_into('>I', b, p+4, swaps[arg])
+        elif (op == 0xD7 and (cmd & 255) == 0) or op == 0xFC:
+            # Reset at the start of a new material, including untextured trim.
+            material = None
+        elif op in (5, 6, 7):
+            triangles = (cmd,) if op == 5 else (cmd, arg)
+            for tri in triangles:
+                for shift in (16, 8, 0):
+                    slot = ((tri >> shift) & 255)//2
+                    v = slots[slot]
+                    uses.setdefault(v, []).append((p,slot,material in selected))
+                    if material not in selected:
+                        continue
+                    seen.add(material)
+                    edit = ('u', uv[material]) if material in uv else (panels[material],0)
+                    prior_edit = edits.setdefault(v, edit)
+                    assert prior_edit == edit
+            if material in panels:
+                # Reflect the printed mesh in its own plane. Undo the bank's
+                # winding flip for these triangles only so the face stays visible.
+                for off in (2,6):
+                    b[p+off], b[p+off+1] = b[p+off+1], b[p+off]
+    fix_shared_corners(b, data, uses, edits)
+    assert seen == selected, (table, model, seen, uv, panels)
+    for v, (kind, extent) in edits.items():
+        offset = v + (8 if kind == 'u' else 0)
+        old, = struct.unpack_from('>h', data, offset)
+        if kind == 'u':
+            value = extent - old
+        elif kind == 'quota':
+            value = 1 - old  # [-44,45], with matching digit boundaries
+        else:
+            value = 1 - old if old else 0  # portal tiles meet at local X=0
+        struct.pack_into('>h', b, offset, value)
+    return bytes(b)

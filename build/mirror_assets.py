@@ -8,6 +8,7 @@ changes. Native resource loading/reference counting owns the alternate files.
 from pathlib import Path
 import struct,hashlib,json
 from barrel_assets import read_file as read_payload
+from mirror_labels import correct_labels
 BASE=0x101C50
 MIRROR_TABLE=28
 MIRROR_ROM=0x02200000
@@ -55,6 +56,7 @@ def appendMirrorAssets(path):
             kind=table if table!=27 else 5 if index in PRIVATE_ACTORS else 4 if index in PRIVATE_MODELS else 0
             source=read_file(original,table,index) if kind else b''
             data,count=flip(source,kind) if kind else (b'',0)
+            data=correct_labels(data,table,index)
             payloads.append(data);entries.append(dict(table=table,index=index,kind=kind,bytes=len(data),triangle_commands=count,source_sha256=hashlib.sha256(source).hexdigest(),mirror_sha256=hashlib.sha256(data).hexdigest()))
     assert len(original)<=MIRROR_ROM
     pointer=MIRROR_ROM+(len(payloads)+1)*4;offsets=[]
