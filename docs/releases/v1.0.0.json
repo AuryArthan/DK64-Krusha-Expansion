@@ -2,11 +2,11 @@
   "version": "v1.0.0",
   "input": "Donkey Kong 64 (USA), big-endian",
   "input_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
-  "rom_sha256": "9720ad064c6e0a8cd0d76ecb8970a2677e391159847b6a6af801d42ad3187db9",
+  "rom_sha256": "293052544ed98c34edd430f1c8d180f32c4bd1d51c959fa8f96d582e90fc708b",
   "bps_filename": "DK64-TagAnywhere+Krusha.bps",
-  "bps_sha256": "c69c9e4a0d6cb555022b8a19bea3edecb2bcb13f44e9797c6a423d992efa10eb",
+  "bps_sha256": "1e0135b46d57448d0b78d4f85d1850a38580ce3f0ba6285a548bbc3ecdc35400",
   "upstream_commit": "e9ca72f5070c7e4bad69d37382c5a0798b06462f",
-  "original_gameplay_commit": "f11a5e4768e0fca35bb6cd1a2a3f8e38fcc6f7e8",
-  "candidate_tag": "v1.0.0-rc0",
-  "publication_gameplay_commit": "ae84d7ef2d03bda3bde45635b7779e2fbca04765"
+  "original_gameplay_commit": "32a605257ca732db31c74537795d755181c11b31",
+  "candidate_tag": "v1.0.0-rc1",
+  "publication_gameplay_commit": "24a0f170f1292cda653a69431fb6e724d4059c61"
 }
