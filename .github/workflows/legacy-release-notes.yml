@@ -1,0 +1,28 @@
+name: Update v0.6.1 release notes
+
+on:
+  push:
+    branches: [main]
+    paths: ['docs/releases/v0.6.1.md']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.repository == 'AuryArthan/DK64-Krusha-Expansion' && github.ref == 'refs/heads/main'
+    concurrency: legacy-v061-release-notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        with:
+          persist-credentials: false
+          ref: main
+      - name: Update the description on the existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/v0.6.1" --jq .id)
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$release" \
+            -F 'body=@docs/releases/v0.6.1.md' --silent

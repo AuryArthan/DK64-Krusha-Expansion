@@ -1,6 +1,6 @@
 # Donkey Kong 64 · Krusha Expansion
 
-<p align="center"><img src="assets/intro/expansion-source.png" width="540" alt="Krusha Expansion"></p>
+<p align="center"><img src="assets/intro/expansion-source.png" width="378" alt="Krusha Expansion"></p>
 
 **Recruit Krusha as the sixth playable character in Donkey Kong 64.** The Kremling from Battle Mode has a cell of his own on DK Isles. Get him out and he’ll take his place in the tag barrel, put Funky’s bazooka to work, and help himself to a share of the bananas. His adventure adds **24 Golden Bananas** across the seven main worlds and DK Isles.
 
@@ -14,7 +14,7 @@ Tiny can bring back the keys in batches. When the fifth lock opens, look for Kru
 
 | The little prison off DK Isles | Tiny meets its only resident |
 | --- | --- |
-| ![The blue prison with three pink horns and a tether leading to the Kremling ship](docs/screenshots/prison-tether-after.png) | ![Tiny looks up at Krusha behind five colored padlocks](docs/screenshots/tiny-meets-krusha.png) |
+| <img src="docs/screenshots/prison-tether-after.png" width="384" alt="The blue prison with three pink horns and a tether leading to the Kremling ship"> | <img src="docs/screenshots/tiny-meets-krusha.png" width="384" alt="Tiny looks up at Krusha behind five colored padlocks"> |
 
 ## Give a Kremling a bazooka
 
@@ -24,7 +24,7 @@ Candy gives him a free voice lesson. **Primitive Roar** clears nearby enemies, c
 
 | Krusha opens fire in Jungle Japes | A rare Klump on the Isles beach |
 | --- | --- |
-| <img src="docs/screenshots/bazooka-muzzle-flash.png" width="320" alt="A flash lights the muzzle as Krusha fires his bazooka in Jungle Japes"> | ![The rare Klump on the beach with three orange grenades airborne](docs/screenshots/klump-royal-grenades.png) |
+| <img src="docs/screenshots/bazooka-muzzle-flash.png" width="384" alt="A flash lights the muzzle as Krusha fires his bazooka in Jungle Japes"> | <img src="docs/screenshots/klump-royal-grenades.png" width="384" alt="The rare Klump on the beach with three orange grenades airborne"> |
 
 Away from combat, Krusha can lift boulders, ride Bananaports, photograph Banana Fairies with the shared camera, and fight for Battle Crowns. He can also feed his bananas to Troff ’n’ Scoff to help open the boss door.
 
@@ -36,7 +36,7 @@ Each main world **and DK Isles** holds three Golden Bananas for him. Return a si
 
 | Silver bananas by moonlight in Creepy Castle | A blueprint payday at Snide’s HQ |
 | --- | --- |
-| ![A silver banana on the moonlit path beside Krusha in Creepy Castle](docs/screenshots/castle-user-slot-1.png) | <img src="docs/screenshots/snides-reward.png" width="320" alt="Krusha celebrating a Golden Banana at Snide’s counter"> |
+| <img src="docs/screenshots/castle-user-slot-1.png" width="384" alt="A silver banana on the moonlit path beside Krusha in Creepy Castle"> | <img src="docs/screenshots/snides-reward.png" width="384" alt="Krusha celebrating a Golden Banana at Snide’s counter"> |
 
 ## Play your way
 
@@ -51,7 +51,7 @@ A fresh game starts with **Krusha enabled**, **tag barrels required**, and the o
 
 | Krusha’s place in the tag barrel | The Options barrel |
 | --- | --- |
-| ![Krusha under the tag barrel spotlight after his rescue](docs/screenshots/recruitment-verification/first-barrel.png) | ![Options menu with separate Krusha, Widescreen, Tag-Anywhere and Mirror Mode rows](docs/screenshots/options-shadow-off.png) |
+| <img src="docs/screenshots/recruitment-verification/first-barrel.png" width="384" alt="Krusha under the tag barrel spotlight after his rescue"> | <img src="docs/screenshots/options-shadow-off.png" width="384" alt="Options menu with separate Krusha, Widescreen, Tag-Anywhere and Mirror Mode rows"> |
 
 ## How to play
 
