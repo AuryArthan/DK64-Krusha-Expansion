@@ -53,3 +53,6 @@ __pycache__/
 
 # Reproducible offline documentation previews
 /htmls/
+
+# Approved patch for the v1.0.0 GitHub Release uploader.
+!/release-assets/v1.0.0/DK64-Krusha-Expansion.bps
