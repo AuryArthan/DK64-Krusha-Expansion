@@ -4,7 +4,7 @@
 
 **Recruit Krusha as the sixth playable character in Donkey Kong 64.** The Kremling from Battle Mode has a cell of his own on DK Isles. Get him out and he’ll take his place in the tag barrel, put Funky’s bazooka to work, and help himself to a share of the bananas. His adventure adds **24 Golden Bananas** across the seven main worlds and DK Isles.
 
-**[Download the v1.0.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v1.0.0/DK64-TagAnywhere%2BKrusha.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
+**[Download the v1.0.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v1.0.0/DK64-Krusha-Expansion.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
 
 ## Five Kongs, five keys
 
@@ -61,7 +61,7 @@ A fresh game starts with **Krusha enabled**, **tag barrels required**, and the o
 
 ### Compatibility and limits
 
-- This patch targets the USA release. The recruitment campaign uses a different save format from v0.13.2 and earlier releases. Keep old saves with their respective ROMs, and load emulator states only on the exact build that created them.
+- This patch targets the USA release. The recruitment campaign uses a different save format from v0.13.2 and earlier releases. Keep old saves with their respective ROMs, and load emulator states only on the exact build that created them. [Earlier Krusha + Tag Anywhere release (v0.6.1)](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/tag/v0.6.1)
 - The original five retain their exclusive puzzle moves, boss assignments and banana medals. Krusha’s 50 silver bananas per world count toward his personal total and can be donated. His roar activates his own pads.
 - Testing has focused on single-player Adventure in emulation. Original N64 hardware, multiplayer and a complete end-to-end 111% playthrough remain unverified. [Testing and compatibility](docs/testing.md)
 

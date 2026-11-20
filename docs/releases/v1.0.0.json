@@ -3,7 +3,7 @@
   "input": "Donkey Kong 64 (USA), big-endian",
   "input_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
   "rom_sha256": "ee27e76197891a2afa0427be09988265e1a65d28bc895a911406e7fe0ac62a65",
-  "bps_filename": "DK64-TagAnywhere+Krusha.bps",
+  "bps_filename": "DK64-Krusha-Expansion.bps",
   "bps_sha256": "74250cf677e4f4ce7380f88832b69e65106ed0341a82d44c7932c475a7142bae",
   "upstream_commit": "e9ca72f5070c7e4bad69d37382c5a0798b06462f",
   "original_gameplay_commit": "6692be7803e4e328589b6ac544a7597c60984869",
