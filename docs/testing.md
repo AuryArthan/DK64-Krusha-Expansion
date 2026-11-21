@@ -22,6 +22,8 @@ The host test covers key/lock ordering across files, interrupted turn-ins, dupli
 
 After setting up the bundled Mupen64Plus, run `/usr/bin/python3 tests/fresh-adventure.py`. It opens a private X display on Linux, creates its own erased EEPROM, selects ordinary tagging through Options and reaches the Training Grounds as DK. The test checks the default options, locked roster, empty quest and healthy engine, and records a screenshot and report under `runtime/tests/`. It stages DK at the ordinary Treehouse exit. Supply ImageMagick’s `import` for screenshots. Set `DK64_DISPLAY` to an unused X display if another test is running.
 
+Run `/usr/bin/python3 tests/speed-roar.py` to start a separate Speed Mode file, play DK’s instrument, tag to Krusha and use his roar. It checks starting energy for all six characters, the cost of each use, and the starting stock after reopening the file.
+
 ## Gameplay checks
 
 Use Mupen64Plus with Glide64mk2 for the local launcher, or Mupen64Plus-Next with GLideN64 in RetroArch. Set 8 MB expansion memory, EEPROM 16K and CountPerOp 1. Enable framebuffer emulation for GLideN64. For widescreen, select 16:9 in the game and emulator display, and leave the emulator’s separate widescreen hack off.

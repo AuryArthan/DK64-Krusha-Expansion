@@ -9,7 +9,8 @@ extern s32 mirrorEnabled(void);
 
 /* Global flags occupy the first 64 bits of the native global block. Vanilla
  * uses through 0x2B; 0x23 is the existing Speed option and 0x24 Krusha OFF.
- * Zero is intentionally the default for both new options. */
+ * An unset widescreen flag keeps the original 4:3 default on older saves. */
+enum { WIDESCREEN_FLAG = 0x2E };
 static s32 options_loaded;
 static s32 tag_enabled;
 static u32 options_shadow_flag;
@@ -20,6 +21,7 @@ void gameOptionsTick(void) {
         StorySkip = checkFlag(0x23, 1);
         tag_enabled = checkFlag(0x2C, 1) != 0;
         mirrorSetEnabled(checkFlag(0x2D, 1));
+        ScreenRatio = checkFlag(WIDESCREEN_FLAG, 1) != 0;
         options_loaded = 1;
     }
 }
@@ -68,7 +70,12 @@ void krushaOptionsInput(void* actor, s32 input) {
         } else if (((input & 0xC) && !(old & 0xC)) || (input & 1)) {
             s32 direction = (input & 4) ? -1 : 1;
             switch (selected) {
-                case 0: *(u8*)0x807444C0 ^= 1; changed = 1; break;
+                case 0:
+                    ScreenRatio = !ScreenRatio;
+                    setFlag(WIDESCREEN_FLAG, ScreenRatio, 1);
+                    SaveToGlobal();
+                    changed = 1;
+                    break;
                 case 1: setTagMode((gameOptionsMode() + direction + 3) % 3); changed = 1; break;
                 case 3: *(u8*)0x80744530 ^= 1; changed = 1; break;
                 case 4: krushaSetEnabled(!krushaEnabled()); changed = 1; break;
@@ -96,7 +103,7 @@ Gfx* krushaOptionsDraw(void* actor, Gfx* dl) {
     char** strings = *(char***)0x80033F28;
     char* labels[6] = {"WIDESCREEN", "TAG-ANYWHERE", strings[44], strings[45], "KRUSHA", "MIRROR MODE"};
     char* values[6] = {
-        *(u8*)0x807444C0 ? "ON" : "OFF",
+        ScreenRatio ? "ON" : "OFF",
         gameOptionsMode() == 2 ? "SPEED MODE" : gameOptionsMode() ? "ON" : "OFF",
         "PRESS Z", strings[52 + *(u8*)0x80744530],
         krushaEnabled() ? "ON" : "OFF", mirrorEnabled() ? "ON" : "OFF"

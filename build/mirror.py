@@ -12,3 +12,13 @@ def validate_code(fh):
 def validate_data(rom):
  data=zlib.decompress(rom[0xC29D4:],31)
  assert struct.unpack_from('>I',data,0x807599B0-0x80744460)[0]==0x3FB47AE1
+
+
+def patch_map_texture_reload(fh, symbols):
+    # USA map chunk teardown saves this index for the next G_SETTIMG load.
+    offset = 0x80653F14 - 0x805FB300
+    fh.seek(offset)
+    assert fh.read(4) == bytes.fromhex('0c19adeb')
+    address = int(symbols['mirrormaptextureidentity'], 16)
+    fh.seek(offset)
+    fh.write(struct.pack('>I', 0x0C000000 | ((address >> 2) & 0x03FFFFFF)))

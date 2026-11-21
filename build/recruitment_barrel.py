@@ -31,7 +31,8 @@ def exterior_payloads(rom):
     model, _ = make_model(read_file(rom, 5, 0xC0), locked=True)
     mirrored, count = flip(model, 5)
     assert count > 0
-    return [model, mirrored]
+    from mirror_prints import mark_geometry
+    return [model, mark_geometry(mirrored, 27, 0)]
 
 
 def payloads(rom):

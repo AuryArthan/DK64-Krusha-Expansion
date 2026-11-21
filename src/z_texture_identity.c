@@ -27,3 +27,14 @@ void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
     /* Native ownership/refcounts are untouched: only these two callers'
      * temporary reload tokens change. All other textures pass through. */
 }
+
+/* A map chunk unloads its image pointers and keeps only the index for the
+ * next table-25 lookup. Preserve the display-list token on that round trip.
+ * Native release still uses its own reference record for the real allocation. */
+void mirrorMapTextureIdentity(void* texture, s32* table, s32* index) {
+    ((void (*)(void*, s32*, s32*))0x8066B7AC)(texture, table, index);
+    if (*table == 29 && *index >= 75 && *index < 87) {
+        *table = 25;
+        *index = 8100 + (*index - 75);
+    }
+}

@@ -155,6 +155,24 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
     if ((table==14 || table==25) && index>=8000 && index<8075) {
         table=29; index-=8000;
     }
+    /* New geometry references private static prints. Native hint doors also
+     * request their closed glyphs by frame ID, including the composite
+     * Aztec and Forest mechanisms. Route just those frames in lobby maps.
+     * Door animation tables, portrait frames and hinge transforms stay native. */
+    if (table == 25 && index >= 8100 && index < 8114) {
+        table = 29;
+        index = 75 + (index - 8100);
+    }
+    if (table == 7 && ((index >= 0x14A && index <= 0x14B) ||
+                       (index >= 0x1F8 && index <= 0x1FD)) && mirrorEnabled()) {
+        switch (CurrentMap) {
+            case 169: case 173: case 174: case 175:
+            case 178: case 193: case 194:
+                table = 29;
+                index = index < 0x1F8 ? 89 + (index - 0x14A) : 91 + (index - 0x1F8);
+                break;
+        }
+    }
     if (table == 25 && index >= 7100 && index <= 7123) {
         table = 27;
         index -= 7090;

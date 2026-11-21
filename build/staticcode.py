@@ -1,6 +1,6 @@
 def patchStaticCode(filename):
 	with open(filename, "r+b") as fh:
-		from mirror import validate_code
+		from mirror import validate_code, patch_map_texture_reload
 		validate_code(fh)
 		# Experimental M1 save foundation. Install before native EEPROM startup.
 		# All original layout users derive sizes from 807ECEA0; adding a reserved
@@ -10,6 +10,7 @@ def patchStaticCode(filename):
 		rom = os.environ.get('DK64_BUILD_ROM', './rom/dk64-krusha-dev.z64')
 		symbols = dict(line.split()[:2][::-1] for line in
 			Path(rom.replace('.z64', '.sym')).read_text().splitlines() if len(line.split()) >= 2)
+		patch_map_texture_reload(fh, symbols)
 		for address, name, prologue in [
 			(0x80713764, 'krushaintrotitle', '3c0e807485ce4490'),
 			(0x8060B7F0, 'krushasavelayoutinit', '27bdffd8afb1001c'),

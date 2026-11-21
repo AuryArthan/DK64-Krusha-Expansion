@@ -323,6 +323,9 @@ void tagAnywhere(void) {
 				MovesBase[i].instrument_bitfield = 15;
 				MovesBase[i].instrument_energy = 20;
 			}
+			if (krushaEnabled()) {
+				MovesBase[5].instrument_energy = MovesBase[0].instrument_energy;
+			}
 
 			// Refill consumables
 			CollectableBase.Melons = 3;

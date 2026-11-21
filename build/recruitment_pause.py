@@ -47,6 +47,9 @@ def append_rotation_assets(path):
     frames = [read_file(source, 25, 5877 + i) for i in range(16)]
     assert all(len(frame) == 44 * 44 * 2 for frame in frames)
     files = [tint(frame, color) for color in COLORS for frame in frames[1:]]
+    from mirror_prints import BANK_INDEX, payloads as print_payloads
+    assert len(files) == BANK_INDEX
+    files += print_payloads(source, read_file)
     start = (len(source) + 15) & ~15
     end = start + (len(files) + 1) * 4
     offsets = []
@@ -66,8 +69,8 @@ def append_rotation_assets(path):
         f.seek(BASE + (32 + ROTATION_TABLE) * 4)
         f.write(struct.pack('>I', len(files)))
     Path(str(path) + '.key-rotation-assets.json').write_text(json.dumps(dict(
-        table=ROTATION_TABLE, rom_start=start, rom_end=end, token=ROTATION_TOKEN,
+        table=ROTATION_TABLE, print_files=len(files)-BANK_INDEX, rom_start=start, rom_end=end, token=ROTATION_TOKEN,
         entries=[dict(index=i, owner=i // 15, frame=i % 15 + 1,
-                      sha256=hashlib.sha256(data).hexdigest()) for i, data in enumerate(files)]
+                      sha256=hashlib.sha256(data).hexdigest()) for i, data in enumerate(files[:BANK_INDEX])]
     ), indent=2) + '\n')
     print('Embedded75 native colored-key turn frames; end', hex(end))
