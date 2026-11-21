@@ -4,7 +4,7 @@
 
 **Recruit Krusha as the sixth playable character in Donkey Kong 64.** The Kremling from Battle Mode has a cell of his own on DK Isles. Get him out and he’ll take his place in the tag barrel, put Funky’s bazooka to work, and help himself to a share of the bananas. His adventure adds **24 Golden Bananas** across the seven main worlds and DK Isles.
 
-**[Download the v1.0.0 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v1.0.0/DK64-Krusha-Expansion.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
+**[Download the v1.0.1 BPS patch](https://github.com/AuryArthan/DK64-Krusha-Expansion/releases/download/v1.0.1/DK64-Krusha-Expansion.bps)** · [How to play](#how-to-play) · [Build and modify the hack](CONTRIBUTING.md)
 
 ## Five Kongs, five keys
 
@@ -55,7 +55,7 @@ A fresh game starts with **Krusha enabled**, **tag barrels required**, and the o
 
 ## How to play
 
-1. Apply the **v1.0.0 BPS** to a clean, big-endian **Donkey Kong 64 (USA)** ROM (`.z64`) with a BPS patcher such as Floating IPS. The source ROM’s SHA-1 is `CF806FF2603640A748FCA5026DED28802F1F4A50`.
+1. Apply the **v1.0.1 BPS** to a clean, big-endian **Donkey Kong 64 (USA)** ROM (`.z64`) with a BPS patcher such as Floating IPS. The source ROM’s SHA-1 is `CF806FF2603640A748FCA5026DED28802F1F4A50`.
 2. Open the patched ROM in **Mupen64Plus with Glide64mk2**, or **Mupen64Plus-Next with GLideN64** in RetroArch. Use **8 MB Expansion Pak**, **EEPROM 16K** and **CountPerOp = 1**. Keep framebuffer emulation enabled with GLideN64.
 3. Start a **fresh Adventure file** for the recruitment campaign. For a 16:9 display, enable Widescreen inside DK64, set the emulator display to 16:9, and leave its separate widescreen hack off.
 

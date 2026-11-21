@@ -36,6 +36,10 @@ Two past bugs make good regression targets. A state that moved Chunky directly f
 
 Testing has concentrated on emulated Adventure mode. Physical N64 hardware, the full multiplayer mode and a complete start-to-111% playthrough remain unverified.
 
+## v1.0.1 verification
+
+A clean build reproduced the tested ROM and patch. In RetroArch with Mupen64Plus-Next and GLideN64, the Factory lobby directory and the Training Area sign read correctly with Mirror Mode and widescreen enabled, including the sign after returning to the map. [Release fingerprints](releases/v1.0.1.json)
+
 ## v1.0.0 verification
 
 The publication source reproduces the ROM and BPS recorded in the [release manifest](releases/v1.0.0.json). Applying the BPS to the original USA ROM reproduces the same playable file.

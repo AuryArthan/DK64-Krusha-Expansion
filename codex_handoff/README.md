@@ -1,6 +1,6 @@
 # Krusha Expansion · developer handoff
 
-Start with the feature table and first edit in the [contributor guide](../CONTRIBUTING.md). This repository builds the USA single-player expansion. Public `main` preserves the Tag Anywhere history up to `e9ca72f`, followed by the expansion’s source changes in development order. The public release manifest records the release candidate tag and its development and publication gameplay commits for comparison. [v1.0.0 fingerprints](../docs/releases/v1.0.0.json)
+Start with the feature table and first edit in the [contributor guide](../CONTRIBUTING.md). This repository builds the USA single-player expansion. Public `main` preserves the Tag Anywhere history up to `e9ca72f`, followed by the expansion’s source changes in development order. The release manifest records the ROM and patch fingerprints and the corresponding development and publication source commits. [v1.0.1 fingerprints](../docs/releases/v1.0.1.json)
 
 ## Where a change belongs
 
