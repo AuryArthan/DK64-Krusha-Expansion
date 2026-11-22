@@ -2,9 +2,11 @@
 import colorsys
 import hashlib
 import json
+import math
 from pathlib import Path
 import struct
 from recruitment_keys import COLORS
+from key_geometry import END_SCALE, along_key
 
 FIRST = 224
 TOKEN = 7250
@@ -24,12 +26,59 @@ def tint(native, target):
     return bytes(out)
 
 
+def colored_key_frame(native):
+    """Resample the native turn about its shaft, retaining the 44px canvas.
+
+    The texture is stored tip-up. Locate its actual endpoints per angle.
+    Filter in premultiplied alpha before quantizing to the N64's RGBA5551.
+    """
+    size = 44
+    pixels = struct.unpack('>1936H', native)
+    filled = [i // size for i, v in enumerate(pixels) if v & 1]
+    tip, bow = min(filled), max(filled) + 1
+    length = bow - tip
+    head_joint = tip + length * 110/341
+    bow_joint = tip + length * 196/341
+    original = (tip, head_joint, bow_joint, bow)
+    enlarged = [along_key(v, *original) for v in original]
+    output = [0] * len(pixels)
+    for y in range(tip, bow):
+        segment = 0 if y+.5 < enlarged[1] else 1 if y+.5 < enlarged[2] else 2
+        fraction = (y+.5-enlarged[segment])/(enlarged[segment+1]-enlarged[segment])
+        sy = original[segment] + fraction*(original[segment+1]-original[segment]) - .5
+        iy = math.floor(sy)
+        width_scale = 1 if segment == 1 else END_SCALE
+        for x in range(size):
+            sx = (x+.5-size/2)/width_scale + size/2-.5
+            ix = math.floor(sx)
+            alpha = red = green = blue = 0.
+            for row in (iy, iy+1):
+                if not 0 <= row < size:
+                    continue
+                for col in (ix, ix+1):
+                    if col >= size:
+                        continue
+                    value = pixels[size*row+col]
+                    if value & 1:
+                        weight = (1-abs(sy-row))*(1-abs(sx-col))
+                        alpha += weight
+                        red += weight*(value >> 11)
+                        green += weight*(value >> 6 & 31)
+                        blue += weight*(value >> 1 & 31)
+            if alpha >= .5:
+                output[y*size+x] = round(red/alpha)<<11 | round(green/alpha)<<6 | round(blue/alpha)<<1 | 1
+    updated = [i // size for i, v in enumerate(output) if v & 1]
+    assert (min(updated), max(updated)+1) == (tip, bow)
+    return struct.pack('>1936H', *output)
+
+
 def payloads(rom, read_file):
     # Native boss-key descriptor807210B8, not adjacent battle crown807210EC.
     native = read_file(rom, 25, 5877)
     assert len(native) == 44 * 44 * 2
     assert all(not read_file(rom, 25, i) for i in range(TOKEN, TOKEN + 5))
-    return [tint(native, color) for color in COLORS]
+    frame = colored_key_frame(native)
+    return [tint(frame, color) for color in COLORS]
 
 
 def append_rotation_assets(path):
@@ -46,7 +95,8 @@ def append_rotation_assets(path):
     assert all(not read_file(source, 25, token) for token in range(ROTATION_TOKEN, ROTATION_TOKEN + 75))
     frames = [read_file(source, 25, 5877 + i) for i in range(16)]
     assert all(len(frame) == 44 * 44 * 2 for frame in frames)
-    files = [tint(frame, color) for color in COLORS for frame in frames[1:]]
+    colored_frames = [colored_key_frame(frame) for frame in frames[1:]]
+    files = [tint(frame, color) for color in COLORS for frame in colored_frames]
     from mirror_prints import BANK_INDEX, payloads as print_payloads
     assert len(files) == BANK_INDEX
     files += print_payloads(source, read_file)

@@ -124,6 +124,10 @@ def fix_shared_corners(b, original, uses, edits):
 
 
 def correct_labels(data, table, model):
+    if (table, model) in ((4, 316), (5, 0xA4), (5, 0xCC)):
+        from key_geometry import PICKUP, BOSS_ACTOR, INSERTED, mirror_monogram
+        glyph = PICKUP if table == 4 else (BOSS_ACTOR if model == 0xA4 else INSERTED)
+        return mirror_monogram(data, glyph)
     if table == 4 and model in (0x196, 0x1CD, 0x235):
         from mirror_stars import two_sided_star
         return two_sided_star(data)

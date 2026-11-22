@@ -73,8 +73,9 @@ def payloads(r):
   for offset,token in((0xD88,TEXTURE_TOKEN+owner*2),(0x1090,TEXTURE_TOKEN+owner*2),(0x11E0,TEXTURE_TOKEN+owner*2+1)):
    assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
   from recruitment_key_bit import complete_key
-  b=complete_key(bytes(b))
-  result.extend([b,flip(b,5)[0]])
+  from key_geometry import INSERTED, resize_inserted, mirror_monogram
+  b=resize_inserted(complete_key(bytes(b)))
+  result.extend([b,mirror_monogram(flip(b,5)[0], INSERTED)])
  assert len(result)==CAGE_MODEL-MODEL
  from recruitment_cage import extended_cage
  cage=extended_cage(read_file(r,5,0xC3))

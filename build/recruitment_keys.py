@@ -72,8 +72,10 @@ def payloads(rom):
     normal=read_file(rom,4,316)
     mirrored,count=flip(normal,4);assert count>0
     result=[normal,mirrored] # approved R09 assets remain byte-exact
+    from key_geometry import PICKUP, resize_pickup, mirror_monogram
+    resized = resize_pickup(normal)
     for owner in range(5):
-        model=bytearray(normal)
+        model=bytearray(resized)
         assert struct.unpack_from('>II',model,0xC0)==(0xE200001C,0x0C192038)
         # Keep render-mode selection in the per-instance draw adapter. A
         # primitive-alpha blend works without the native fog-alpha shortcut.
@@ -83,7 +85,7 @@ def payloads(rom):
         assert struct.unpack_from('>II',model,0x128)==(0xFD100000,0xC6F)
         struct.pack_into('>I',model,0x12C,PALETTE_TOKEN+owner)
         alternate,n=flip(bytes(model),4);assert n==count
-        result.extend([bytes(model),alternate])
+        result.extend([bytes(model),mirror_monogram(alternate, PICKUP)])
     palette=read_file(rom,25,0xC6F);assert len(palette)==32
     for owner,target in enumerate(COLORS):
         out=bytearray()
