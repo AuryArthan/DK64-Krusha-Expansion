@@ -1,6 +1,6 @@
 # Build and modify Krusha Expansion
 
-## Build v1.0.1
+## Build v1.0.2
 
 The supported developer setup is Linux x86-64 on an Ubuntu-compatible distribution. You’ll need Git, curl, tar, make, host C and C++ compilers, apt/dpkg, and Pillow available to `/usr/bin/python3`. Setup installs its compiler, assembler and compression tools into a local cache.
 
@@ -13,7 +13,7 @@ The supported developer setup is Linux x86-64 on an Ubuntu-compatible distributi
 /usr/bin/python3 tools/check-build.py --release
 ```
 
-The playable file is `rom/dk64-krusha-dev.z64`. The builder also writes the BPS to `runtime/krusha/dk64-krusha-adventure.bps`. You can reuse an existing compatible tool cache by exporting `DK64_TOOL_ROOT` as its absolute path. [Release fingerprints](docs/releases/v1.0.1.json)
+The playable file is `rom/dk64-krusha-dev.z64`. The builder also writes the BPS to `runtime/krusha/dk64-krusha-adventure.bps`. You can reuse an existing compatible tool cache by exporting `DK64_TOOL_ROOT` as its absolute path. [Release fingerprints](docs/releases/v1.0.2.json)
 
 ## First edit · move one banana
 

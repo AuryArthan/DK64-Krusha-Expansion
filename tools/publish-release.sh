@@ -7,7 +7,7 @@ patch="release-assets/$tag/$asset"
 repo=AuryArthan/DK64-Krusha-Expansion
 case "$tag" in
   v1.0.0) [[ $(git rev-parse "$tag^{commit}") == 2199402915fbbe0463c58a87b7054a2c84f408db ]] ;;
-  v1.0.1) [[ $(git rev-parse "$tag^{commit}") == $(git rev-parse HEAD) ]] ;;
+  v1.0.1|v1.0.2) [[ $(git rev-parse "$tag^{commit}") == $(git rev-parse HEAD) ]] ;;
   *) exit 2 ;;
 esac
 manifest=$(git show "$tag:docs/releases/$tag.json")
