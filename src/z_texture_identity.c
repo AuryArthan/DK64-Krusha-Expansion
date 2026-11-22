@@ -8,13 +8,22 @@
  * the file index returned here, then assumes table25 when reloading. */
 volatile u32 krushaModel2TextureTrace[4];
 
+static void restorePrintToken(s32* table, s32* index) {
+    if (*index >= MIRROR_EXTRA_BANK && *index < MIRROR_EXTRA_BANK + MIRROR_EXTRA_COUNT) {
+        *index += MIRROR_EXTRA_TOKEN - MIRROR_EXTRA_BANK;
+        *table = 25;
+    } else if (*index >= MIRROR_WORLD_BANK && *index < MIRROR_WORLD_BANK + MIRROR_WORLD_COUNT) {
+        *index += MIRROR_WORLD_TOKEN - MIRROR_WORLD_BANK;
+        *table = 25;
+    }
+}
+
 void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
     void (*native)(void*,s32*,s32*)=(void*)0x8066B7AC;
     native(texture,table,index);
     krushaModel2TextureTrace[0]++;
-    if (*table == 29 && *index >= MIRROR_WORLD_BANK && *index < MIRROR_WORLD_BANK + MIRROR_WORLD_COUNT) {
-        *table = 25;
-        *index += MIRROR_WORLD_TOKEN - MIRROR_WORLD_BANK;
+    if (*table == 29) {
+        restorePrintToken(table, index);
         return;
     }
     if (*table!=27) return;
@@ -39,9 +48,11 @@ void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
  * Native release still uses its own reference record for the real allocation. */
 void mirrorMapTextureIdentity(void* texture, s32* table, s32* index) {
     ((void (*)(void*, s32*, s32*))0x8066B7AC)(texture, table, index);
-    if (*table == 29 && ((*index >= 75 && *index < 87) ||
-                         (*index >= MIRROR_WORLD_BANK && *index < MIRROR_WORLD_BANK + MIRROR_WORLD_COUNT))) {
+    if (*table != 29) return;
+    if (*index >= 75 && *index < 87) {
         *table = 25;
         *index = 8100 + (*index - 75);
+    } else {
+        restorePrintToken(table, index);
     }
 }

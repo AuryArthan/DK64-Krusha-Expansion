@@ -20,6 +20,13 @@ def rules(table, model):
         uv[0x0D000000] = 992
     elif table == 5 and 0xC5 <= model <= 0xCA:
         uv[(0xDFB, 0xDF8, 0xDF3, 0xD45, 0xDF0, 0x134F)[model-0xC5]] = 992
+    elif table == 5 and model == 0x24:
+        uv[0xF4E] = 1024  # Mad Jack's painted question mark
+    elif table == 5 and model in (0x1F, 0x7C, 0x8D):
+        # Four 16-texel strips repeat around the TNT barrel. Reflect
+        # around the front seam, also keeping every native mip level.
+        pair(0xF22, 0xF23, 512)
+        pair(0xF2B, 0xF2C, 512)
     elif table == 5 and model == 3:
         uv[0xE8D] = 992  # DK's tie, including its native mipmaps
     elif table == 5 and model in (0x68, 0x87, 0xD4):
@@ -39,6 +46,8 @@ def rules(table, model):
         pair(0xC4A, 0xC54, 2016)
     elif model == 0x1B1:
         panels = dict.fromkeys(range(0xD5B, 0xD5F), 'helm_back')
+    elif model == 0x1A6:
+        uv[0xD45] = 992  # Helm four-crown requirement
     elif model == 0x1A7:
         uv.update(dict.fromkeys((0xD48, 0xD49), 1376))  # two 44px coin plaques
     elif model in (0x8B, 0x8C):
@@ -124,6 +133,16 @@ def fix_shared_corners(b, original, uses, edits):
 
 
 def correct_labels(data, table, model):
+    if table == 4 and model in (0xEC, 0x1D2):
+        # DK race coin and multiplayer variant. Their billboard quad stores
+        # four raw ST pairs after the frame descriptor. The HUD owns its quad.
+        b = bytearray(data)
+        assert len(b) == 0x154 and data[0x124:0x126] == bytes.fromhex('01f0')
+        st = struct.unpack_from('>8h', data, 0x140)
+        assert st == (1536, 0, 1536, 1344, -32, 1344, -32, 0)
+        for i in range(4):
+            struct.pack_into('>h', b, 0x140 + 4*i, 1504 - st[2*i])
+        return bytes(b)
     if (table, model) in ((4, 316), (5, 0xA4), (5, 0xCC)):
         from key_geometry import PICKUP, BOSS_ACTOR, INSERTED, mirror_monogram
         glyph = PICKUP if table == 4 else (BOSS_ACTOR if model == 0xA4 else INSERTED)

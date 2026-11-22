@@ -33,7 +33,7 @@ MODEL_PRINTS[0x1B1] = HELM_IV
 MATERIALS.extend((*CARGO_MAPS, *HELM_IV))
 # Map, image width and codec come from each material's F3DEX2 tile.
 RACE_PRINTS = {
-    0x04F: (64, 'ci4', (4,)), 0x0AC: (32, 'rgba', (6, 55)),
+    0x04F: (64, 'ci4', (4,)), 0x0AC: (32, 'rgba', (6, 55, 171)),
     0x296: (48, 'rgba', (17, 28, 152)), 0x38D: (64, 'ci4', (26,)),
     **dict.fromkeys(range(0x3D4, 0x3D8), (64, 'rgba', (27,))),
     0x51F: (64, 'ci4', (34, 153, 213)), 0x9EE: (64, 'rgba', (154,)),
@@ -47,6 +47,42 @@ MODEL_PRINTS[0x11E] = (0x9EE,)
 MODEL_PRINTS[0x1C3] += (0x51F,)  # Same small control panel on the arcade cabinet.
 MATERIALS.extend(RACE_PRINTS)
 FIRST_TOKEN = 8122  # 97 in private table 29, following the hint-door frames
+# Four course-map images already occupy the slots immediately after RACE_PRINTS.
+# Append these prints after the images so both the original tokens and the
+# table-29 offsets used by the HUD remain stable.
+COURSE_SLOT = len(MATERIALS)
+BLOCKS = tuple(range(0x397, 0x3AA))
+TRACK_BLOCKS = (*BLOCKS[:-1], 0x3CD, 0x3CE, 0x3CF, 0x3D0, 0xAB1, 0xABA)
+MAP_PRINTS[26] += BLOCKS
+MAP_PRINTS[185] += TRACK_BLOCKS
+MAP_PRINTS[25] = (0x325,)  # Candy's music stand
+MAP_PRINTS[171] += (0xA5C,)  # DK rug
+MODEL_PRINTS[0xCF] = (0x3A5, 0x3A6, 0x3A8, 0x3CF, 0x3D0)
+NEW_PRINTS = tuple(dict.fromkeys((*BLOCKS, *TRACK_BLOCKS, 0x325, 0xA5C)))
+MATERIALS.extend(NEW_PRINTS)
+
+
+def material_token(material):
+    index = MATERIALS.index(material)
+    return FIRST_TOKEN + index if index < COURSE_SLOT else 7900 + index - COURSE_SLOT
+
+
+def block_faces(raw, material):
+    # Some 64x32 strips contain two independent blocks. Keep each letter
+    # on its own block. The left purple D and orange 3 are on their sides.
+    width = 64 if material in (0x398, 0x399, 0x39A, 0x39E) else 32
+    assert len(raw) == width * 32 * 2
+    pixels = struct.unpack('>%dH' % (width * 32), raw)
+    out = []
+    for y in range(32):
+        for x in range(width):
+            if x < 32 and material in (0x39A, 0x39E):
+                out.append(pixels[(31-y)*width+x])
+            else:
+                out.append(pixels[y*width+(x ^ 31)])
+    return struct.pack('>%dH' % len(out), *out)
+
+
 # Both ends of the boxing slogan spill onto the neighboring logo tiles.
 SWAPS = {a: b for x, y in ((0xAF6, 0xAFB), (0xAF7, 0xAF8), (0xD95, 0xD9E), (0xD96, 0xD9D), (0x3D4, 0x3D7), (0x3D5, 0x3D6))
          for a, b in ((x, y), (y, x))}
@@ -124,16 +160,21 @@ def helm_numeral(rom, read, material, pixels):
 
 def payloads(rom, read):
     header = Path(__file__).resolve().parents[1] / 'include' / 'mirror_world_prints.h'
-    constants = dict(line.split()[1:] for line in header.read_text().splitlines() if line.startswith('#define '))
+    constants = dict(line.split(maxsplit=2)[1:] for line in header.read_text().splitlines() if line.startswith('#define '))
     assert int(constants['MIRROR_WORLD_TOKEN']) == FIRST_TOKEN
-    assert int(constants['MIRROR_WORLD_COUNT']) == len(MATERIALS)
+    assert int(constants['MIRROR_WORLD_COUNT']) == COURSE_SLOT
     assert int(constants['MIRROR_WORLD_BANK']) == FIRST_TOKEN - 8025
     output = []
     for n, mat in enumerate(MATERIALS):
-        assert not read(rom, 25, FIRST_TOKEN+n)
+        assert not read(rom, 25, material_token(mat))
+        if n == COURSE_SLOT:
+            output.extend(course_tiles(rom, read, constants, len(output)))
         raw = read(rom, 25, SWAPS.get(mat, mat))
-        width = 32 if mat in (0xD96, 0xD9D) else 64
-        indexed = mat in CARGO_MAPS or mat in (0xBA, 0xD30, 0xD36, 0xD1E, 0xC31, 0xC35)
+        if mat in NEW_PRINTS and mat not in (0x325, 0xA5C):
+            output.append(block_faces(raw, mat))
+            continue
+        width = 32 if mat in (0xD96, 0xD9D, 0x325) else 64
+        indexed = mat in CARGO_MAPS or mat in (0xA5C, 0xBA, 0xD30, 0xD36, 0xD1E, 0xC31, 0xC35)
         if mat in RACE_PRINTS:
             width, codec, _ = RACE_PRINTS[mat]
             indexed = codec == 'ci4'
@@ -182,9 +223,17 @@ def payloads(rom, read):
             data = struct.pack('>%dH' % len(result), *result)
         assert len(data) == len(raw)
         output.append(data)
+    assert int(constants['MIRROR_EXTRA_COUNT']) == len(NEW_PRINTS)
+    assert int(constants['MIRROR_EXTRA_BANK']) == 97 + COURSE_SLOT + 4
+    assert int(constants['MIRROR_EXTRA_TOKEN']) == material_token(NEW_PRINTS[0])
+    return output
+
+
+def course_tiles(rom, read, constants, prior_count):
+    output = []
     # The race HUD draws four IA8 tiles upright. Swap their centres at the
     # call sites and reverse each scanline in its own private image.
-    assert int(constants['MIRROR_RACE_BANK']) == 97 + len(output)
+    assert int(constants['MIRROR_RACE_BANK']) == 97 + prior_count
     for native in range(0x46, 0x4A):
         tile = read(rom, 14, native)
         assert len(tile) == 64*64

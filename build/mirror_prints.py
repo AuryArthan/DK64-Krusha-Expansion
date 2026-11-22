@@ -113,7 +113,8 @@ def payloads(rom, read):
 def mark_geometry(data, table, model):
     """Redirect exact print commands, preserving texture palettes and UV seams."""
     word = lambda p: struct.unpack_from('>I', data, p)[0]
-    original_maps = {1: (0x00A,), 26: FACTORY, 176: SIGNS}
+    original_maps = {1: (0x00A,), 26: FACTORY, 176: SIGNS, 198: SIGNS,
+                     185: (0x38F,), **dict.fromkeys((203, 204, 205, 206, 207, 215), (0x385,))}
     if table == 1 and (model in original_maps or model in world.MAP_PRINTS):
         selected = original_maps.get(model, ()) + world.MAP_PRINTS.get(model, ())
         start, end = word(0x34), word(0x38)
@@ -134,7 +135,7 @@ def mark_geometry(data, table, model):
         material = word(p+4)
         if material in selected:
             assert 0xF0 not in data[p+8:p+32:8], 'Unexpected shared palette'
-            token = (world.FIRST_TOKEN + world.MATERIALS.index(material) if material in world.MATERIALS
+            token = (world.material_token(material) if material in world.MATERIALS
                      else TOKEN + MATERIALS.index(material))
             struct.pack_into('>I', b, p+4, token)
             seen.add(material)

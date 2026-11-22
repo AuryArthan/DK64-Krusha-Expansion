@@ -169,6 +169,10 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
         table = 29;
         index = 75 + (index - 8100);
     }
+    if (table == 25 && index >= MIRROR_EXTRA_TOKEN && index < MIRROR_EXTRA_TOKEN + MIRROR_EXTRA_COUNT) {
+        table = 29;
+        index += MIRROR_EXTRA_BANK - MIRROR_EXTRA_TOKEN;
+    }
     if (table == 7 && ((index >= 0x14A && index <= 0x14B) ||
                        (index >= 0x1F8 && index <= 0x1FD)) && mirrorEnabled()) {
         switch (CurrentMap) {

@@ -602,3 +602,20 @@ mirrorRaceMapImage:
 @@draw:
     J widescreenImage
     NOP
+
+; Race overlay has already computed the angle between the camera and the next
+; checkpoint. Its native subtraction runs in the jump delay slot. t4 is dead
+; here (the returning MFC1 overwrites it).
+mirrorCastleBearing:
+    LUI t4, hi(mirrorModeEnabled)
+    LW t4, lo(mirrorModeEnabled)(t4)
+    BEQ t4, r0, @@done
+    LUI t4, hi(CurrentMap)
+    LW t4, lo(CurrentMap)(t4)
+    ADDIU t4, t4, -185
+    BNE t4, r0, @@done
+    NOP
+    NEG.S f6, f6
+@@done:
+    J 0x8002F5D8
+    TRUNC.W.S f8, f6

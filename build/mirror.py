@@ -38,3 +38,11 @@ def patch_race_map(filename):
             assert f.read(4) == bytes.fromhex('0c1a316a')
             f.seek(-4, 1)
             f.write(struct.pack('>I', hook))
+
+        # Camera-relative checkpoint bearing, calculated in race overlay code.
+        # Keep the checkpoint and vehicle simulation in native world space.
+        f.seek(0x8002F5D0 - 0x80024000)
+        assert f.read(8) == bytes.fromhex('460081814600320d')
+        address = int(symbols['mirrorcastlebearing'], 16)
+        f.seek(-8, 1)
+        f.write(struct.pack('>II', 0x08000000 | ((address >> 2) & 0x03FFFFFF), 0x46008181))
