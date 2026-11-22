@@ -55,8 +55,14 @@ def triangles(rom):
                             # stretch the native endpoint overhang past them.
                             t=max(0.,min(1.,t))
                             mapped.append((SHIP[0]+t*dx-side*SCALE*nz,SHIP[1]+t*(PRISON[1]-SHIP[1])+(y-500)*SCALE,SHIP[2]+t*dz+side*SCALE*nx))
-                    # Same native pipeline, omit redundant previous texture loads.
-                    material=history if texture==0x24e else history[:10]+history[20:] if texture==0x251 else history[:4]+history[-18:]
+                    # Capture the material at this draw. The map parser keeps
+                    # appending commands for other surfaces to history.
+                    if texture == 0x24e:
+                        material = history.copy()
+                    elif texture == 0x251:
+                        material = history[:10] + history[20:]
+                    else:
+                        material = history[:4] + history[-18:]
                     shaded = [tint_vertex(vertex) for vertex in raw]
                     out.append(dict(raw=shaded, world=mapped, material=material,
                                     texture=texture, source_command=p))
@@ -65,4 +71,7 @@ def triangles(rom):
                 history.append((a,b))
                 if op==0xfd:texture=b
     assert len(out)==36,len(out)
+    for face in out:
+        last_image = next(b for a, b in reversed(face["material"]) if a >> 24 == 0xFD)
+        assert last_image == face["texture"], "Tether material changed after its draw"
     return out
