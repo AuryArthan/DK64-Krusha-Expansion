@@ -218,6 +218,8 @@ static const char* first[][6]={
 enum { FIRST_PAGE_COUNT=sizeof(first)/sizeof(first[0]) };
 static const char* again[6]={"KRUSHA","STILL LOCKED UP.","STILL HUNGRY.","KEEP LOOKING!",0,0};
 static const char* held[6]={"TINY","WE'VE ALREADY FOUND","SOME. LET'S TRY THEM.",0,0,0};
+static const char* found_one[6]={"TINY","FOUND A KEY...","HOLD STILL!",0,0,0};
+static const char* found_some[6]={"TINY","FOUND SOME KEYS...","HOLD STILL!",0,0,0};
 static const char* more[6]={"TINY","MORE KEYS.","HOLD STILL!",0,0,0};
 static const char* release[3][6]={
     {"KRUSHA","FREE AT LAST!","I'M WITH YOU NOW.",0,0,0},
@@ -236,7 +238,13 @@ static const char** lines(void) {
         for (int i=0;i<5;i++) if (!(mask&(1u<<i))) count++;
         remaining[1]=counts[count?count-1:0];return remaining;
     }
-    if (krushaPrisonPendingKeys(file)) return intro?held:more;
+    u32 pending=krushaPrisonPendingKeys(file);
+    if (pending) {
+        if (intro) return held;
+        if (krushaRecruitmentLocks(file)) return more;
+        /* Each set bit is one owner's unpresented key. */
+        return (pending & (pending-1)) ? found_some : found_one;
+    }
     return again;
 }
 static void poseWorld(int i,f32 x,f32 y,f32 z,f32 scale,s16 yaw) {
