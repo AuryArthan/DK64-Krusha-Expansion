@@ -39,20 +39,29 @@ def without_inserted_key(source):
 def payloads(r):
  from mirror_assets import flip
  from recruitment_keys import COLORS
- from recruitment_materials import metal_rgb
+ from recruitment_materials import metal_rgb, polished_lock_rgb
  source=without_inserted_key(read_file(r,5,0xCC));result=[]
  assert struct.unpack_from('>II',source,0xD88)==(0xFD100000,0xBAB)
  for owner in range(5):
   b=bytearray(source)
-  for offset,token in((0xD88,TEXTURE_TOKEN+owner*2),(0x1090,TEXTURE_TOKEN+owner*2),(0x11E0,TEXTURE_TOKEN+owner*2+1)):
+  for offset,token in((0xD88,TEXTURE_TOKEN+owner*2),(0x1090,TEXTURE_TOKEN+owner*2+1)):
    assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
   result.extend([bytes(b),flip(bytes(b),5)[0]])
+ # The native keyhole decal at 0x11E0 contains only transparent and solid
+ # black. Both meshes can use it directly. Reuse its former five duplicate
+ # slots for the lock reflections, leaving the animated key metal separate.
+ assert struct.unpack_from('>II',source,0x11E0)==(0xFD100000,0x130F)
+ decal=read_file(r,25,0x130F)
+ assert set(value for value, in struct.iter_unpack('>H',decal))=={0,1}
+ texture=read_file(r,25,0xBAB)
+ assert len(texture)==32*32*2
  for color in COLORS:
-  for index,size in((0xBAB,2048),(0x130F,2744)):
-   texture=read_file(r,25,index);assert len(texture)==size;out=bytearray()
-   for(v,)in struct.iter_unpack('>H',texture):
+  for finish in (metal_rgb, polished_lock_rgb):
+   out=bytearray()
+   for (v,) in struct.iter_unpack('>H',texture):
     rgb=(v>>11&31,v>>6&31,v>>1&31)
-    c=metal_rgb(rgb,color);out+=struct.pack('>H',c[0]<<11|c[1]<<6|c[2]<<1|v&1)
+    red,green,blue=finish(rgb,color)
+    out+=struct.pack('>H',red<<11|green<<6|blue<<1|v&1)
    result.append(bytes(out))
  assert len(result)==20
  # Independent key components, keeping the original skeleton/bind pose.
@@ -70,8 +79,8 @@ def payloads(r):
     if bone!=3:struct.pack_into('>II',b,pos,0,0)
     else:kept+=1
   assert kept>0
-  for offset,token in((0xD88,TEXTURE_TOKEN+owner*2),(0x1090,TEXTURE_TOKEN+owner*2),(0x11E0,TEXTURE_TOKEN+owner*2+1)):
-   assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,token)
+  for offset in (0xD88,0x1090):
+   assert b[offset]==0xFD;struct.pack_into('>I',b,offset+4,TEXTURE_TOKEN+owner*2)
   from recruitment_key_bit import complete_key
   from key_geometry import INSERTED, resize_inserted, mirror_monogram
   b=resize_inserted(complete_key(bytes(b)))
