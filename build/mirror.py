@@ -22,3 +22,19 @@ def patch_map_texture_reload(fh, symbols):
     address = int(symbols['mirrormaptextureidentity'], 16)
     fh.seek(offset)
     fh.write(struct.pack('>I', 0x0C000000 | ((address >> 2) & 0x03FFFFFF)))
+
+
+def patch_race_map(filename):
+    import os
+    from pathlib import Path
+    rom = Path(os.environ.get('DK64_BUILD_ROM', './rom/dk64-krusha-dev.z64'))
+    symbols = dict(line.split()[:2][::-1] for line in rom.with_suffix('.sym').read_text().splitlines()
+                   if len(line.split()) >= 2)
+    hook = 0x0C000000 | ((int(symbols['mirrorracemapimage'], 16) >> 2) & 0x03FFFFFF)
+    with open(filename, 'r+b') as f:
+        # One native marker draw shared by all racers, then the four map tiles.
+        for address in (0x8002BED0, 0x8002CDF4, 0x8002CE44, 0x8002CE94, 0x8002CEE4):
+            f.seek(address - 0x80024000)
+            assert f.read(4) == bytes.fromhex('0c1a316a')
+            f.seek(-4, 1)
+            f.write(struct.pack('>I', hook))

@@ -18,6 +18,8 @@ def rules(table, model):
     if table == 5 and model == 100:  # B. Locker, three animated segments
         pair(0x0C000000, 0x0E000000)
         uv[0x0D000000] = 992
+    elif table == 5 and 0xC5 <= model <= 0xCA:
+        uv[(0xDFB, 0xDF8, 0xDF3, 0xD45, 0xDF0, 0x134F)[model-0xC5]] = 992
     elif table == 5 and model == 3:
         uv[0xE8D] = 992  # DK's tie, including its native mipmaps
     elif table == 5 and model in (0x68, 0x87, 0xD4):
@@ -30,6 +32,11 @@ def rules(table, model):
         uv[0xB7D] = 1024  # collectible and decorative Golden Bananas
     elif model == 0x288:
         uv[0xAD5] = 1120  # Fairy Isle reward's 36-pixel Rareware decal
+    elif model in (0x11A, 0x11C):
+        # The printed face is four CI4 tiles. Swap matching palettes too.
+        top = (0xC48, 0xC50) if model == 0x11A else (0xC60, 0xC62)
+        pair(*top, 2016)
+        pair(0xC4A, 0xC54, 2016)
     elif model == 0x1B1:
         panels = dict.fromkeys(range(0xD5B, 0xD5F), 'helm_back')
     elif model == 0x1A7:
@@ -117,6 +124,9 @@ def fix_shared_corners(b, original, uses, edits):
 
 
 def correct_labels(data, table, model):
+    if table == 4 and model in (0x196, 0x1CD, 0x235):
+        from mirror_stars import two_sided_star
+        return two_sided_star(data)
     uv, swaps, panels = rules(table, model)
     selected = uv.keys() | panels.keys()
     if not selected:
@@ -151,6 +161,8 @@ def correct_labels(data, table, model):
                 material = arg
                 if arg in swaps:
                     struct.pack_into('>I', b, p+4, swaps[arg])
+            elif table == 4 and model in (0x11A, 0x11C) and arg-1 in swaps:
+                struct.pack_into('>I', b, p+4, swaps[arg-1]+1)
         elif (op == 0xD7 and (cmd & 255) == 0) or op == 0xFC:
             # Reset at the start of a new material, including untextured trim.
             material = None

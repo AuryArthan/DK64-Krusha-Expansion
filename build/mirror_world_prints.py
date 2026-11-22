@@ -31,9 +31,24 @@ MODEL_PRINTS[0x120] = (0x049, 0x34B)
 HELM_IV = (0xD5B, 0xD5C, 0xD5D, 0xD5E)
 MODEL_PRINTS[0x1B1] = HELM_IV
 MATERIALS.extend((*CARGO_MAPS, *HELM_IV))
+# Map, image width and codec come from each material's F3DEX2 tile.
+RACE_PRINTS = {
+    0x04F: (64, 'ci4', (4,)), 0x0AC: (32, 'rgba', (6, 55)),
+    0x296: (48, 'rgba', (17, 28, 152)), 0x38D: (64, 'ci4', (26,)),
+    **dict.fromkeys(range(0x3D4, 0x3D8), (64, 'rgba', (27,))),
+    0x51F: (64, 'ci4', (34, 153, 213)), 0x9EE: (64, 'rgba', (154,)),
+    0xAA3: (64, 'rgba', (184,)), 0xAA4: (32, 'rgba', (184,)),
+    0xAD4: (76, 'rgba', (191,)), 0xAD5: (36, 'rgba', (191,)),
+}
+for material, (_, _, maps) in RACE_PRINTS.items():
+    for map_id in maps:
+        MAP_PRINTS[map_id] = (*MAP_PRINTS.get(map_id, ()), material)
+MODEL_PRINTS[0x11E] = (0x9EE,)
+MODEL_PRINTS[0x1C3] += (0x51F,)  # Same small control panel on the arcade cabinet.
+MATERIALS.extend(RACE_PRINTS)
 FIRST_TOKEN = 8122  # 97 in private table 29, following the hint-door frames
 # Both ends of the boxing slogan spill onto the neighboring logo tiles.
-SWAPS = {a: b for x, y in ((0xAF6, 0xAFB), (0xAF7, 0xAF8), (0xD95, 0xD9E), (0xD96, 0xD9D))
+SWAPS = {a: b for x, y in ((0xAF6, 0xAFB), (0xAF7, 0xAF8), (0xD95, 0xD9E), (0xD96, 0xD9D), (0x3D4, 0x3D7), (0x3D5, 0x3D6))
          for a, b in ((x, y), (y, x))}
 
 
@@ -119,6 +134,9 @@ def payloads(rom, read):
         raw = read(rom, 25, SWAPS.get(mat, mat))
         width = 32 if mat in (0xD96, 0xD9D) else 64
         indexed = mat in CARGO_MAPS or mat in (0xBA, 0xD30, 0xD36, 0xD1E, 0xC31, 0xC35)
+        if mat in RACE_PRINTS:
+            width, codec, _ = RACE_PRINTS[mat]
+            indexed = codec == 'ci4'
         if indexed:
             pixels = unpack_ci4(raw)
         elif mat == 0xE4C:
@@ -126,7 +144,7 @@ def payloads(rom, read):
         else:
             pixels = [v for v, in struct.iter_unpack('>H', raw)]
         height = len(pixels)//width
-        assert height in (16, 32, 64) and len(pixels) == width*height
+        assert height in (16, 21, 32, 42, 48, 64) and len(pixels) == width*height
         if mat == 0xD1E:
             result = crate(raw, rom, read)
         elif mat in HELM_IV:
@@ -143,9 +161,19 @@ def payloads(rom, read):
             bounds = (0, width-1, 0, height-1)
             if mat == 0x3F1:
                 bounds = (11, 60, 6, 26)  # brass nameplate, excluding the pointing hand
-            elif mat in (0xC47, 0xC64):
+            elif mat in (0xC47, 0xC64, 0x9EE):
                 bounds = (6, 57, 13, 24)  # printed word, above the vertical arrows
-            result = reflect_region(pixels, width, *bounds)
+            elif mat == 0x38D:
+                bounds = (7, 57, 32, 53)  # CARD above the slot
+            if mat == 0x51F:
+                # Separate decals on the left, at the red button and by the
+                # upper switches. Preserve the controls each label belongs to.
+                result = pixels
+                for bounds in ((6, 20, 6, 17), (45, 59, 8, 15),
+                               (8, 19, 20, 26), (45, 55, 20, 26)):
+                    result = reflect_region(result, width, *bounds)
+            else:
+                result = reflect_region(pixels, width, *bounds)
         if indexed:
             data = bytes(a << 4 | b for a,b in zip(result[::2], result[1::2]))
         elif mat == 0xE4C:
@@ -154,4 +182,11 @@ def payloads(rom, read):
             data = struct.pack('>%dH' % len(result), *result)
         assert len(data) == len(raw)
         output.append(data)
+    # The race HUD draws four IA8 tiles upright. Swap their centres at the
+    # call sites and reverse each scanline in its own private image.
+    assert int(constants['MIRROR_RACE_BANK']) == 97 + len(output)
+    for native in range(0x46, 0x4A):
+        tile = read(rom, 14, native)
+        assert len(tile) == 64*64
+        output.append(b''.join(tile[p:p+64][::-1] for p in range(0, len(tile), 64)))
     return output

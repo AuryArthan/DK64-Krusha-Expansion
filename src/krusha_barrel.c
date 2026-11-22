@@ -140,6 +140,10 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
         table = 27;
         index -= 6999;
     }
+    if (table == 14 && index >= MIRROR_RACE_TOKEN && index < MIRROR_RACE_TOKEN + 4) {
+        table = 29;
+        index = MIRROR_RACE_BANK + (index - MIRROR_RACE_TOKEN);
+    }
     if (table == 14 && index == 7200) {
         table = 27;
         index = 34;

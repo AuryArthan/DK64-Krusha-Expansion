@@ -576,3 +576,29 @@ islesRambiSwimDepthHook:
     LW t6, 0(s0)
     J 0x806D85B8
     ADDIU at, zero, 0x4E
+
+; Tail-call displayImage with the original o32 stack arguments. Its map tile
+; centres are 136 and 264 quarter-pixels (axis 200). The same projection
+; reflects the dots in both aspect ratios, inside the native inset frame.
+mirrorRaceMapImage:
+    LUI t0, hi(mirrorModeEnabled)
+    LW t0, lo(mirrorModeEnabled)(t0)
+    BEQ t0, r0, @@draw
+    LUI t0, hi(CurrentMap)
+    LW t0, lo(CurrentMap)(t0)
+    ADDIU t1, r0, 27
+    BNE t0, t1, @@draw
+    LW t0, 0x18(sp)
+    ADDIU t1, r0, 400
+    SUBU t0, t1, t0
+    SW t0, 0x18(sp)
+    ; Map images 0x46..0x49 have private, scanline-reflected copies.
+    ; The circular dot has its own image and retains its native pixels.
+    ADDIU t0, a1, -0x46
+    SLTIU t1, t0, 4
+    BEQ t1, r0, @@draw
+    NOP
+    ADDIU a1, t0, 8179
+@@draw:
+    J widescreenImage
+    NOP

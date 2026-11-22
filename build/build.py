@@ -77,6 +77,7 @@ from recompute_pointer_table import pointer_tables, dumpPointerTableDetails, rep
 from recompute_overlays import isROMAddressOverlay, readOverlayOriginalData, replaceOverlayData, writeModifiedOverlaysToROM
 
 # Patcher functions for the extracted files
+from mirror import patch_race_map
 from staticcode import patchStaticCode
 from mainmenu import patchMainMenu, patchDolbyText
 from krusha import patchKrushaShop
@@ -113,6 +114,11 @@ file_dict += [
 	 "source_file":"bin/M2JapesPaths.bin", "patcher":patchM2Paths, "do_not_compress":True},
 	{"name":"M2 Japes pickups", "pointer_table_index":9, "file_index":7,
 	 "source_file":"bin/M2JapesSetup.bin", "patcher":lambda name:(patchM2Setup(name),patchM4Japes(name))},
+	{
+		"name": "Factory race map draw calls", "start": 0xDF600,
+		"compressed_size": 0xE649A - 0xDF600, "source_file": "bin/KrushaRace.bin",
+		"use_external_gzip": True, "patcher": patch_race_map,
+	},
 	{
 		"name": "Shop menu code",
 		"start": 0xCBE70,
