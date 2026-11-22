@@ -1,11 +1,8 @@
 #include "../include/common.h"
-#include "../include/krusha_progress.h"
 
-extern void krushaCollectTotals(void);
+enum { K_ROOL_DEFEATED = 0x1B0 };
 typedef u8 (*SpawnerTest)(void*);
 static SpawnerTest const nativeInRange = (SpawnerTest)0x80689F80;
-static u32 next_check;
-static u8 unlocked;
 
 f32 islesRambiSwimDepth(f32 nativeDepth, const playerData* actor) {
     if (CurrentMap != 34 || actor->characterID != 8 || actor->control_state != 0x4E)
@@ -20,23 +17,14 @@ f32 islesRambiSwimDepth(f32 nativeDepth, const playerData* actor) {
 }
 
 static u8 rewardInRange(void* node) {
-    if (!DetectAdventure() || !nativeInRange(node)) return 0;
-    /* Refresh on approach, then at most once per second in the endgame.
-     * A final pickup on the Isles can unlock both crates during this visit. */
-    if (!unlocked && MovesBase[5].gb_count[7] == 3 &&
-        ObjectModel2Timer >= next_check) {
-        next_check = ObjectModel2Timer + 30;
-        krushaCollectTotals();
-        unlocked = krushaProgressFullSet();
-    }
-    return unlocked;
+    /* Chunky's final punch sets this permanent flag on the Adventure file. */
+    return DetectAdventure() && nativeInRange(node) && checkFlag(K_ROOL_DEFEATED, 0);
 }
 
 void completionCrateSetup(void* setup) {
     void (*nativeSetup)(void*) = (void*)0x80688FC0;
     nativeSetup(setup);
     if (CurrentMap != 34) return;
-    next_check = unlocked = 0;
     for (u8* node = *(u8**)0x807FC400; node; node = *(u8**)(node + 0x68)) {
         s16 kind = *(s16*)node;
         s16 id = *(s16*)(node + 0x5A);

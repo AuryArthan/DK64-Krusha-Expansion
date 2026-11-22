@@ -11,6 +11,16 @@ def patchStaticCode(filename):
 		symbols = dict(line.split()[:2][::-1] for line in
 			Path(rom.replace('.z64', '.sym')).read_text().splitlines() if len(line.split()) >= 2)
 		patch_map_texture_reload(fh, symbols)
+		# Preserve the startup video argument and both original delay slots.
+		# The wrapper calls the controller initializer once, before drawing.
+		fh.seek(0x805FBD40 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('0c17ee51ac2ca0a8')
+		fh.seek(-8, 1)
+		fh.write((0x0C000000 | ((int(symbols['widescreenbootvideosetup'], 16) & 0x0FFFFFFF) >> 2)).to_bytes(4, 'big'))
+		fh.seek(0x805FBD58 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('0c182a4000000000')
+		fh.seek(-8, 1)
+		fh.write(bytes(4))
 		for address, name, prologue in [
 			(0x80713764, 'krushaintrotitle', '3c0e807485ce4490'),
 			(0x8060B7F0, 'krushasavelayoutinit', '27bdffd8afb1001c'),
@@ -143,24 +153,24 @@ def patchStaticCode(filename):
 		fh.seek(0x806E98A0 - 0x805FB300)
 		fh.write(bytes.fromhex("2b210006"))
 
-		# Startup image: CPU copy into the native 320x240 framebuffer.
-		# Keep 1 source texel = 1 framebuffer pixel; extend, do not rescale.
-		# The four-pixel unrolled loop requires a width divisible by four.
+		# Replace just the CPU pixel-copy loop between decompression and the
+		# native clear/writeback. s2 points to the two framebuffer pointers.
 		from PIL import Image
 		with Image.open("bin/Nintendo_Krusha.png") as logo:
 			width, height = logo.size
 		assert height == 48 and width % 4 == 0 and width <= 320
-		left, top = (320-width)//2, (240-height)//2
-		patches = [
-			(0x805FB8A8, 0x3401F080, 0x34010000 | ((top*320+left)*2)),
-			(0x805FB8B8, 0x240500C0, 0x24050000 | width),
-			(0x805FB900, 0x24630100, 0x24630000 | ((320-width)*2)),
-		]
-		for address, expected, replacement in patches:
-			fh.seek(address - 0x805FB300)
-			assert int.from_bytes(fh.read(4), "big") == expected, "Startup copy differs from USA 1.0"
-			fh.seek(address - 0x805FB300)
-			fh.write(replacement.to_bytes(4, "big"))
+		fh.seek(0x805FB8A0 - 0x805FB300)
+		assert fh.read(12) == bytes.fromhex('8e4300003c0700023401f080')
+		fh.seek(0x805FB900 - 0x805FB300)
+		assert fh.read(8) == bytes.fromhex('246301008e430004')
+		fh.seek(0x805FB8A0 - 0x805FB300)
+		words = (0x8E440000, 0x8FA5004C,  # lw a0,0(s2); lw a1,0x4c(sp)
+		         0x0C000000 | ((int(symbols['krushabootlogocopy'], 16) & 0x0FFFFFFF) >> 2),
+		         0x24060000 | width,       # copy width in the call delay slot
+		         0x3C070002, 0x08000000 | ((0x805FB904 & 0x0FFFFFFF) >> 2),
+		         0x34E75800)               # restore framebuffer byte count
+		for word in words:
+			fh.write(word.to_bytes(4, 'big'))
 
 		# Heap Shrink
 		fh.seek(0x15212)

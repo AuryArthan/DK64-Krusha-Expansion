@@ -216,6 +216,7 @@ s32 krushaModelPickupAllowed(s16 object_id, u8 player, u16 type) {
             case 0x8F:  /* ammo crate, which spills five native ammo props */
             case 0x91:  /* peanut */
             case 0x98:  /* camera film: preserve native camera-unlock check */
+            case 0xB7:  /* unearthed Rainbow Coin, shared across all wallets */
             case 0xEC:  /* temporary minecart/race DK coin */
             case 0x13C: /* boss key */
             case 0x15D: /* feather */

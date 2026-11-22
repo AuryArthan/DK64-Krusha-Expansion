@@ -88,12 +88,12 @@ Gfx* widescreenPauseMelon(Gfx* dl, u16 image, s32 a, s32 b, s32 width,
 
 void widescreenPerspective(Mtx* matrix, u16* norm, f32 fov, f32 aspect,
                           f32 near, f32 far, f32 scale) {
-    /* Native cutscenes remove widescreen correction. Keep the full 16:9
-     * factor throughout instruments and tag-barrel entry/selection/exit,
-     * including the entry cutscene and its gradual aspect restoration. */
-    if (active() && DetectAdventure() && Player &&
-        *(u8*)0x807FC928 == 1 &&
-        (((u8*)Player)[0x154] == 103 || ((u8*)Player)[0x154] == 66)) {
+    /* Logo, opening cinematic, DK Rap and DK TV use game modes 0–3.
+     * Normalize the native camera multiplier even during cutscenes and fades.
+     * Adventure uses this override only for instrument and tag sequences. */
+    if (active() && ((u8)Gamemode <= 3 ||
+        (DetectAdventure() && Player && *(u8*)0x807FC928 == 1 &&
+         (((u8*)Player)[0x154] == 103 || ((u8*)Player)[0x154] == 66)))) {
         f32 native_scale = *(f32*)0x80747CD0;
         if (native_scale > 0.5f && native_scale < 2.0f)
             aspect *= (4.0f / 3.0f) / native_scale;

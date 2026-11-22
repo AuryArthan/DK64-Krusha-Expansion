@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/krusha_progress.h"
 
 extern void vanillaOptionsInput(void*, s32);
 extern void krushaSetEnabled(s32);
@@ -11,6 +12,34 @@ extern s32 mirrorEnabled(void);
  * uses through 0x2B; 0x23 is the existing Speed option and 0x24 Krusha OFF.
  * An unset widescreen flag keeps the original 4:3 default on older saves. */
 enum { WIDESCREEN_FLAG = 0x2E };
+/* K14 uses four 492-byte Adventure records, a 64-byte global record
+ * (60 bytes + native CRC), then the format signature. Only peek at the
+ * display flag here. The native save worker owns recovery and all writes. */
+static s32 bootWidescreen(OSMesgQueue* queue) {
+    enum { GLOBAL_BLOCK = 4 * 492 / EEPROM_BLOCK_SIZE, GLOBAL_BYTES = 64 };
+    union { u32 words[GLOBAL_BYTES / 4]; u8 bytes[GLOBAL_BYTES]; } global;
+    u8 signature[EEPROM_BLOCK_SIZE];
+    const char expected[] = KRUSHA_SAVE_SIGNATURE;
+    u32 (*nativeChecksum)(u8*, u16) = (void*)0x8060B968;
+    if (osEepromRead(queue, GLOBAL_BLOCK, global.bytes) ||
+        !(global.bytes[WIDESCREEN_FLAG / 8] & (1 << (WIDESCREEN_FLAG % 8)))) return 0;
+    if (osEepromRead(queue, GLOBAL_BLOCK + GLOBAL_BYTES / EEPROM_BLOCK_SIZE, signature)) return 0;
+    for (u32 i = 0; i < sizeof(expected); i++)
+        if (signature[i] != expected[i]) return 0;
+    for (u32 offset = EEPROM_BLOCK_SIZE; offset < GLOBAL_BYTES; offset += EEPROM_BLOCK_SIZE)
+        if (osEepromRead(queue, GLOBAL_BLOCK + offset / EEPROM_BLOCK_SIZE, global.bytes + offset)) return 0;
+    return nativeChecksum(global.bytes, GLOBAL_BYTES - 4) == global.words[GLOBAL_BYTES / 4 - 1];
+}
+
+void widescreenBootVideoSetup(s32 mode) {
+    /* Both initializers run once on the main thread. Set up the normal SI
+     * queue before the first CPU-drawn splash, before any controller poll or
+     * save worker starts. In-game video-mode changes use the native entry. */
+    ((s32 (*)(void))0x8060A900)();
+    ScreenRatio = bootWidescreen((OSMesgQueue*)0x807ECCF0);
+    ((void (*)(s32))0x805FB944)(mode);
+}
+
 static s32 options_loaded;
 static s32 tag_enabled;
 static u32 options_shadow_flag;

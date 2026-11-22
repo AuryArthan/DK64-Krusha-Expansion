@@ -3,6 +3,18 @@
 extern Gfx* widescreenImage(Gfx*, u16, s32, s32, s32, s32, s16, s16,
                              f32, f32, s32, f32);
 
+/* The first logo is copied into a cleared 320x240 CPU framebuffer.
+ * The build supplies the asset width. Sample texel centres in the wide
+ * rendition, and retain the exact one-to-one copy in the standard rendition. */
+void krushaBootLogoCopy(u16* framebuffer, const u16* image, s32 width) {
+    s32 displayed = ScreenRatio ? (3 * width + 2) / 4 : width;
+    u16* row = framebuffer + 320 * ((240 - 48) / 2) + (320 - displayed) / 2;
+    for (s32 y = 0; y < 48; y++, row += 320, image += width) {
+        for (s32 x = 0; x < displayed; x++)
+            row[x] = image[displayed == width ? x : (4 * x + 2) / 3];
+    }
+}
+
 /* The bundled SDK uses old SetOtherMode/matrix bit fields with F3DEX2
  * opcodes. Use the verified native command words for those operations. */
 static Gfx* command(Gfx* dl, u32 a, u32 b) {

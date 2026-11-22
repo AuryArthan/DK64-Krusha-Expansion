@@ -5,7 +5,7 @@
 
 ; Patch boot routine to DMA our code from ROM to RAM and run it
 .definelabel bootStart, 0x01FED020
-.definelabel residentBytes, 0x1A900 ; RAM end805F5700, ROM end02007920
+.definelabel residentBytes, 0x1AC00 ; RAM end805F5A00, ROM end02007C20
 ; Heap still ends at805DAE00; native static begins805FB300. The existing
 ; relocated pointer tables start02008000. Guard BOTH limits before linking.
 .if (0x805DAE00 + residentBytes) > 0x805FB300

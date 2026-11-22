@@ -32,7 +32,9 @@ Away from combat, Krusha can lift boulders, ride Bananaports, photograph Banana 
 
 Krusha has **350 silver bananas** to find, 50 in each of the seven main worlds. Follow the singles through tunnels and along trails, look up for bunches, and keep the bazooka handy for balloons. His **63 silver coins** come nine to a world and give him his own money to spend at Funky’s.
 
-Each main world **and DK Isles** holds three Golden Bananas for him. Return a silver-haired Kasplat’s blueprint to Snide, defeat the Klump summoned by a shout pad, or land a bazooka shot on a marked cage. The pause menu tracks Krusha’s haul alongside the other five. Reach **111%** for a sweet surprise.
+Each main world **and DK Isles** holds three Golden Bananas for him. Return a silver-haired Kasplat’s blueprint to Snide, defeat the Klump summoned by a shout pad, or land a bazooka shot on a marked cage. The pause menu tracks Krusha’s haul alongside the other five. Krusha’s collectibles bring full completion to **111%**.
+
+Your first victory over K. Rool unlocks a surprise back on DK Isles.
 
 | Silver bananas by moonlight in Creepy Castle | A blueprint payday at Snide’s HQ |
 | --- | --- |
