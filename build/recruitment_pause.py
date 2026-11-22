@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import struct
 from recruitment_keys import COLORS
-from key_geometry import HANDLE_SCALE, HEAD_SCALE, along_key
+from key_geometry import HANDLE_SCALE, HEAD_SCALE, OVERALL_SCALE, SHAFT_SCALE, along_key
 
 FIRST = 224
 TOKEN = 7250
@@ -40,14 +40,17 @@ def colored_key_frame(native):
     head_joint = tip + length * 110/341
     bow_joint = tip + length * 196/341
     original = (tip, head_joint, bow_joint, bow)
-    enlarged = [along_key(v, *original) for v in original]
+    center = (bow + tip) / 2
+    edges = [center + OVERALL_SCALE * (along_key(v, *original) - center) for v in original]
     output = [0] * len(pixels)
     for y in range(tip, bow):
-        segment = 0 if y+.5 < enlarged[1] else 1 if y+.5 < enlarged[2] else 2
-        fraction = (y+.5-enlarged[segment])/(enlarged[segment+1]-enlarged[segment])
+        if not edges[0] <= y+.5 < edges[-1]:
+            continue
+        segment = 0 if y+.5 < edges[1] else 1 if y+.5 < edges[2] else 2
+        fraction = (y+.5-edges[segment])/(edges[segment+1]-edges[segment])
         sy = original[segment] + fraction*(original[segment+1]-original[segment]) - .5
         iy = math.floor(sy)
-        width_scale = (HEAD_SCALE, 1, HANDLE_SCALE)[segment]
+        width_scale = OVERALL_SCALE * (HEAD_SCALE, SHAFT_SCALE, HANDLE_SCALE)[segment]
         for x in range(size):
             sx = (x+.5-size/2)/width_scale + size/2-.5
             ix = math.floor(sx)
@@ -56,7 +59,7 @@ def colored_key_frame(native):
                 if not 0 <= row < size:
                     continue
                 for col in (ix, ix+1):
-                    if col >= size:
+                    if not 0 <= col < size:
                         continue
                     value = pixels[size*row+col]
                     if value & 1:
@@ -68,7 +71,7 @@ def colored_key_frame(native):
             if alpha >= .5:
                 output[y*size+x] = round(red/alpha)<<11 | round(green/alpha)<<6 | round(blue/alpha)<<1 | 1
     updated = [i // size for i, v in enumerate(output) if v & 1]
-    assert (min(updated), max(updated)+1) == (tip, bow)
+    assert abs(min(updated) - edges[0]) <= 1 and abs(max(updated)+1 - edges[-1]) <= 1
     return struct.pack('>1936H', *output)
 
 

@@ -6,6 +6,8 @@ import struct
 PICKUP = (0x1718, 0x1B78)
 BOSS_ACTOR = (0xD38, 0x11C8)
 INSERTED = (0x7E8, 0x9C8)
+OVERALL_SCALE = 0.95
+SHAFT_SCALE = 1.10
 HEAD_SCALE = 1.15
 HANDLE_SCALE = 1.05
 
@@ -35,9 +37,10 @@ def resize_pickup(data):
         if 0x12F8 <= p < 0x1608:  # Lower collar and teeth.
             scale = HEAD_SCALE
         elif 0x1608 <= p < 0x1718:
-            scale = 1
+            scale = SHAFT_SCALE
+        scale *= OVERALL_SCALE
         struct.pack_into('>3h', out, p, round(.5 + (x-.5)*scale),
-                         round(along_key(y, 0, 110, 196, 341)), round(.5 + (z-.5)*scale))
+                         round(OVERALL_SCALE * along_key(y, 0, 110, 196, 341)), round(.5 + (z-.5)*scale))
     # Width comes from the bow and depth from a collar. Refit the box to
     # the finished mesh so both caps keep the same culling extents.
     axes = list(zip(*(struct.unpack_from('>3h', out, p) for p in range(start, bounds, 16))))
@@ -57,9 +60,12 @@ def resize_inserted(data):
             x, y, z = struct.unpack_from('>3h', data, p)
             scale = HEAD_SCALE if p >= 0xD08 else HANDLE_SCALE
             if 0x728 <= p < 0x7E8:
-                scale = 1
+                scale = SHAFT_SCALE
+            scale *= OVERALL_SCALE
+            # Shrink toward the inserted tip so it still seats in the lock.
+            depth = along_key(z, -112, 8, 149, 393)
             struct.pack_into('>3h', out, p, round(x*scale), round(y*scale),
-                             round(along_key(z, -112, 8, 149, 393)))
+                             round(-112 + OVERALL_SCALE * (depth + 112)))
     return bytes(out)
 
 
