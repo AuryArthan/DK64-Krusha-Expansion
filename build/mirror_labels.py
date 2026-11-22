@@ -22,6 +22,13 @@ def rules(table, model):
         uv[(0xDFB, 0xDF8, 0xDF3, 0xD45, 0xDF0, 0x134F)[model-0xC5]] = 992
     elif table == 5 and model == 0x24:
         uv[0xF4E] = 1024  # Mad Jack's painted question mark
+    elif table == 5 and model == 0xDF:
+        uv[0x1379] = 1024  # DK stamp in the center of a Rainbow Coin patch
+    elif table == 5 and model == 0x9D:
+        pair(0x1301, 0x1302, 1024)  # TO and YS meet across the chest panel.
+    elif table == 5 and model == 0x38:
+        # Four upright digits plus the upper and lower faces of the toy block.
+        uv.update(dict.fromkeys((0x1041, 0x1045, 0x1046, 0x1049, 0x104B, 0x104C), 1024))
     elif table == 5 and model in (0x1F, 0x7C, 0x8D):
         # Four 16-texel strips repeat around the TNT barrel. Reflect
         # around the front seam, also keeping every native mip level.
@@ -35,6 +42,10 @@ def rules(table, model):
         uv[0xB7D] = 1024  # Krusha's copy of the world Golden Banana
     elif table != 4:
         return uv, swaps, panels
+    elif model in (0x48, 0x28F):
+        # Nintendo and Rareware Adventure rewards. Every turn frame uses the
+        # same four corners, with native S coordinates from -32 to 1376.
+        uv[0x12C if model == 0x48 else 0x389] = 1344
     elif model in (0x74, 0x290):
         uv[0xB7D] = 1024  # collectible and decorative Golden Bananas
     elif model == 0x288:

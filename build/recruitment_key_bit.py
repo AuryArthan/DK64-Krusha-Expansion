@@ -47,6 +47,30 @@ def triangles():
     return result
 
 
+def append_collar(vertices, commands, vertex_base):
+    """Match the octagonal band on the Isles pickup at the shaft/bit joint."""
+    # The source pickup has a 45-unit collar on a 27-unit shaft. The
+    # animated shaft is 48 units wide. Two shared rings fit in one RSP load.
+    rim = ((40, 0), (28, 28), (0, 40), (-28, 28),
+           (-40, 0), (-28, -28), (0, -40), (28, -28))
+    offset = vertex_base + len(vertices)
+    for z, nz in ((-5, -64), (23, 64)):
+        for x, y in rim:
+            # Tilt the radial normals toward each lip for a beveled highlight.
+            normal_scale = math.sqrt(127**2 - nz**2) / math.hypot(x, y)
+            vertices.extend(struct.pack('>3hH2h3bB', x, y, z, 0, 0, 0,
+                                        round(x*normal_scale), round(y*normal_scale), nz, 255))
+    commands.extend(struct.pack('>II', 0x01010020, 0x03000000 + offset))
+    def pair(a, b, c, d, e, f):
+        commands.extend(struct.pack('>II', 0x06000000 | a<<17 | b<<9 | c<<1,
+                                    d<<17 | e<<9 | f<<1))
+    for i in range(8):
+        j = (i+1) % 8
+        pair(i, j, j+8, i, j+8, i+8)
+    for i in range(1, 7):
+        pair(0, i+1, i, 8, i+8, i+9)
+
+
 def complete_key(source):
     u=lambda off:struct.unpack_from('>I',source,off)[0]
     base=u(0);end=u(4)-base+40;start=u(end)-base+40
@@ -61,7 +85,7 @@ def complete_key(source):
     commands=bytearray()
     # Join the EXISTING key draw block while its material/lighting is active.
     # A second G_DL_NOPUSH segment7 header replaces the native segment binding
-    # (8061324C/80614C38), skipping the original bow/shank. Put all teeth before
+    # (8061324C/80614C38), skipping the original bow/shank. Put the teeth and collar before
     # its original lighting reset and segment7 alternate-branch marker.
     insert=0x1050
     assert source[insert:insert+16]==bytes.fromhex('d9f9ffff000000000000000000000007')
@@ -71,6 +95,7 @@ def complete_key(source):
         commands+=struct.pack('>II',0x01000000|batch<<12|batch<<1,0x03000000+start-40+first*16)
         for i in range(0,batch,6):
             commands+=struct.pack('>II',0x06000000|i*2<<16|(i+1)*2<<8|(i+2)*2,(i+3)*2<<16|(i+4)*2<<8|(i+5)*2)
+    append_collar(vertices, commands, start-40)
     delta=len(vertices)+len(commands)
     out=bytearray(source[:start]+vertices+source[start:insert]+commands+source[insert:])
     for off in (4,8,12,16):

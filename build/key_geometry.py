@@ -53,9 +53,13 @@ def resize_pickup(data):
 
 def resize_inserted(data):
     # Bone 3 points along Z. Leave the lock/shackle, skeleton and all
-    # matrices in their original space. The extra tooth mesh starts at D08.
+    # matrices in their original space. The new teeth and collar occupy the end of the vertex buffer.
     out = bytearray(data)
-    for start, end in ((0x68, 0x9C8), (0xD08, 0xD08+108*16)):
+    base, dl_end = struct.unpack_from('>II', data)
+    dl_start = struct.unpack_from('>I', data, 40 + dl_end - base)[0]
+    vertex_end = 40 + dl_start - base
+    assert vertex_end > 0xD08 and (vertex_end - 0xD08) % 16 == 0
+    for start, end in ((0x68, 0x9C8), (0xD08, vertex_end)):
         for p in range(start, end, 16):
             x, y, z = struct.unpack_from('>3h', data, p)
             scale = HEAD_SCALE if p >= 0xD08 else HANDLE_SCALE
