@@ -2,10 +2,10 @@
   "version": "v1.0.2",
   "input": "Donkey Kong 64 (USA), big-endian",
   "input_sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
-  "rom_sha256": "ccf8bb48f8d1703586952af1a91d2546d897d9533f4a6f19c9ef5ebe8c135f53",
+  "rom_sha256": "63390e9f358bd2a49f026a393fd92c43da32c8926b286b9a2139927a94f32161",
   "bps_filename": "DK64-Krusha-Expansion.bps",
-  "bps_sha256": "49decd1fca4212bb7bbc75843aa8ea3316fdebff0eea65503add384555cce782",
+  "bps_sha256": "c5e513d084855e8484f69402b22aad1012ce3d9a1d3b3e7ddd59dd0066d8ee5d",
   "upstream_commit": "e9ca72f5070c7e4bad69d37382c5a0798b06462f",
-  "original_gameplay_commit": "f4eab9fe379dfdb8feb49ebf2cb2ee2a617d115f",
-  "publication_gameplay_commit": "ab32730001e997b6e77550e4001b837f551b30ad"
+  "original_gameplay_commit": "3d65e4a4e9d6975125e4263b5042b43d500b417d",
+  "publication_gameplay_commit": "8dd867e0fe99721a6ae62bd3ead85dea11e20135"
 }
