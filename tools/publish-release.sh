@@ -38,9 +38,9 @@ actual=$(asset_field "$asset" digest)
 if [[ "$actual" != "sha256:$digest" ]]; then
   if [[ "$draft" == true ]]; then
     gh release upload "$tag" "$patch" -R "$repo" --clobber
-  elif [[ "$tag" == v1.0.2 && "$id" == 454685667 && "$digest" == c5e513d084855e8484f69402b22aad1012ce3d9a1d3b3e7ddd59dd0066d8ee5d ]]; then
+  elif [[ "$tag" == v1.0.2 && "$id" == 454685667 && "$digest" == eddb2d5e1afeebd41b1ebf2c531c777a32f9df21198c2f50ad793098c670a2c6 ]]; then
     # Stage and verify the replacement before retiring the original download.
-    original=sha256:49decd1fca4212bb7bbc75843aa8ea3316fdebff0eea65503add384555cce782
+    original=sha256:c5e513d084855e8484f69402b22aad1012ce3d9a1d3b3e7ddd59dd0066d8ee5d
     staged="DK64-Krusha-Expansion-${digest:0:12}.bps"
     pending=$(asset_field "$staged" digest)
     if [[ "$actual" == "$original" ]]; then
