@@ -1,5 +1,6 @@
 """Mirror-only printed materials. Tokens are referenced only by alternate geometry."""
 import struct
+import mirror_world_prints as world
 
 TOKEN = 8100
 BANK_INDEX = 75  # After the five sets of 15 rotating pause-key frames in table 29.
@@ -105,13 +106,20 @@ def payloads(rom, read):
         raw = read(rom, 7, frame ^ 1)
         assert len(raw) == 4096
         output.append(reflect_rgba(raw, 32))
-    return output
+    assert TOKEN + len(output) == world.FIRST_TOKEN
+    return output + world.payloads(rom, read)
 
 
 def mark_geometry(data, table, model):
     """Redirect exact print commands, preserving texture palettes and UV seams."""
     word = lambda p: struct.unpack_from('>I', data, p)[0]
-    if table == 1 and model in (1, 26, 176):
+    if table == 1 and model in world.MAP_PRINTS:
+        selected = world.MAP_PRINTS[model]
+        start, end = word(0x34), word(0x38)
+    elif table == 4 and model in world.MODEL_PRINTS:
+        selected = world.MODEL_PRINTS[model]
+        start, end = word(0x40), word(0x48)
+    elif table == 1 and model in (1, 26, 176):
         selected = {1: (0x00A,), 26: FACTORY, 176: SIGNS}[model]
         start, end = word(0x34), word(0x38)
     elif (table, model) in ((5, 0xC0), (5, 18), (27, 0)):
@@ -128,7 +136,9 @@ def mark_geometry(data, table, model):
         material = word(p+4)
         if material in selected:
             assert 0xF0 not in data[p+8:p+32:8], 'Unexpected shared palette'
-            struct.pack_into('>I', b, p+4, TOKEN+MATERIALS.index(material))
+            token = (world.FIRST_TOKEN + world.MATERIALS.index(material) if material in world.MATERIALS
+                     else TOKEN + MATERIALS.index(material))
+            struct.pack_into('>I', b, p+4, token)
             seen.add(material)
     assert seen == set(selected), (table, model, seen)
     return bytes(b)

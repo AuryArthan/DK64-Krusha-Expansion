@@ -1,3 +1,4 @@
+#include "../include/mirror_world_prints.h"
 #include "../include/common.h"
 #include "../include/recruitment_assets.generated.h"
 #include "../include/recruitment_keys.generated.h"
@@ -11,6 +12,11 @@ void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
     void (*native)(void*,s32*,s32*)=(void*)0x8066B7AC;
     native(texture,table,index);
     krushaModel2TextureTrace[0]++;
+    if (*table == 29 && *index >= MIRROR_WORLD_BANK && *index < MIRROR_WORLD_BANK + MIRROR_WORLD_COUNT) {
+        *table = 25;
+        *index += MIRROR_WORLD_TOKEN - MIRROR_WORLD_BANK;
+        return;
+    }
     if (*table!=27) return;
     if (*index>=RECRUITMENT_TEXTURE_BASE && *index<RECRUITMENT_TEXTURE_BASE+RECRUITMENT_TEXTURE_COUNT) {
         *table=25;*index+=RECRUITMENT_TEXTURE_TOKEN-RECRUITMENT_TEXTURE_BASE;
@@ -33,7 +39,8 @@ void krushaModel2TextureIdentity(void* texture,s32* table,s32* index) {
  * Native release still uses its own reference record for the real allocation. */
 void mirrorMapTextureIdentity(void* texture, s32* table, s32* index) {
     ((void (*)(void*, s32*, s32*))0x8066B7AC)(texture, table, index);
-    if (*table == 29 && *index >= 75 && *index < 87) {
+    if (*table == 29 && ((*index >= 75 && *index < 87) ||
+                         (*index >= MIRROR_WORLD_BANK && *index < MIRROR_WORLD_BANK + MIRROR_WORLD_COUNT))) {
         *table = 25;
         *index = 8100 + (*index - 75);
     }

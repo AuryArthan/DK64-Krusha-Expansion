@@ -1,3 +1,4 @@
+#include "../include/mirror_world_prints.h"
 #include "../include/recruitment_keys.generated.h"
 #include "../include/recruitment_scene.generated.h"
 #include "../include/common.h"
@@ -159,7 +160,8 @@ void* krushaBarrelFile(s32 table, s32 index, u8 synchronous, u8 unique) {
      * request their closed glyphs by frame ID, including the composite
      * Aztec and Forest mechanisms. Route just those frames in lobby maps.
      * Door animation tables, portrait frames and hinge transforms stay native. */
-    if (table == 25 && index >= 8100 && index < 8114) {
+    if (table == 25 && ((index >= 8100 && index < 8114) ||
+                        (index >= MIRROR_WORLD_TOKEN && index < MIRROR_WORLD_TOKEN + MIRROR_WORLD_COUNT))) {
         table = 29;
         index = 75 + (index - 8100);
     }
