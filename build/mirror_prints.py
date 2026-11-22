@@ -113,15 +113,13 @@ def payloads(rom, read):
 def mark_geometry(data, table, model):
     """Redirect exact print commands, preserving texture palettes and UV seams."""
     word = lambda p: struct.unpack_from('>I', data, p)[0]
-    if table == 1 and model in world.MAP_PRINTS:
-        selected = world.MAP_PRINTS[model]
+    original_maps = {1: (0x00A,), 26: FACTORY, 176: SIGNS}
+    if table == 1 and (model in original_maps or model in world.MAP_PRINTS):
+        selected = original_maps.get(model, ()) + world.MAP_PRINTS.get(model, ())
         start, end = word(0x34), word(0x38)
     elif table == 4 and model in world.MODEL_PRINTS:
         selected = world.MODEL_PRINTS[model]
         start, end = word(0x40), word(0x48)
-    elif table == 1 and model in (1, 26, 176):
-        selected = {1: (0x00A,), 26: FACTORY, 176: SIGNS}[model]
-        start, end = word(0x34), word(0x38)
     elif (table, model) in ((5, 0xC0), (5, 18), (27, 0)):
         selected = (SHIRT,) if table == 5 and model == 18 else (BARREL,)
         end = 40 + word(4) - word(0)

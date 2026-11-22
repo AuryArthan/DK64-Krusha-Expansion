@@ -18,8 +18,27 @@ def rules(table, model):
     if table == 5 and model == 100:  # B. Locker, three animated segments
         pair(0x0C000000, 0x0E000000)
         uv[0x0D000000] = 992
+    elif table == 5 and model == 3:
+        uv[0xE8D] = 992  # DK's tie, including its native mipmaps
+    elif table == 5 and model in (0x68, 0x87, 0xD4):
+        uv[0x1266] = 1024  # N64 decal on the animated Golden Banana actors
+    elif table == 27 and model == 65:
+        uv[0xB7D] = 1024  # Krusha's copy of the world Golden Banana
     elif table != 4:
         return uv, swaps, panels
+    elif model in (0x74, 0x290):
+        uv[0xB7D] = 1024  # collectible and decorative Golden Bananas
+    elif model == 0x288:
+        uv[0xAD5] = 1120  # Fairy Isle reward's 36-pixel Rareware decal
+    elif model == 0x1B1:
+        panels = dict.fromkeys(range(0xD5B, 0xD5F), 'helm_back')
+    elif model == 0x1A7:
+        uv.update(dict.fromkeys((0xD48, 0xD49), 1376))  # two 44px coin plaques
+    elif model in (0x8B, 0x8C):
+        first = 0xBA5 if model == 0x8B else 0xBA7
+        uv.update(dict.fromkeys((first, first+1), 992))  # digit and its shadow
+    elif model in (0x251, 0x252):
+        uv[0xE32 + model - 0x251] = 992
     elif model == 0x79:
         uv[0xB85] = 2016  # Snide's 64-pixel wooden board
     elif model == 0x7A:
@@ -107,7 +126,7 @@ def correct_labels(data, table, model):
     def word(p):
         return struct.unpack_from('>I', b, p)[0]
 
-    if table == 4:
+    if table == 4 or (table, model) == (27, 65):
         start, end = word(0x40), word(0x48)
         vertices = end
     else:
@@ -136,30 +155,39 @@ def correct_labels(data, table, model):
             # Reset at the start of a new material, including untextured trim.
             material = None
         elif op in (5, 6, 7):
-            triangles = (cmd,) if op == 5 else (cmd, arg)
-            for tri in triangles:
-                for shift in (16, 8, 0):
-                    slot = ((tri >> shift) & 255)//2
+            for word_offset, tri in ((0, cmd),) if op == 5 else ((0, cmd), (4, arg)):
+                slots_used = [((tri >> shift) & 255)//2 for shift in (16, 8, 0)]
+                panel = panels.get(material)
+                marked = material in selected
+                if panel == 'helm_back':
+                    # Both sides use the same four prints. The hub-facing
+                    # surface reads IV with the corrected print alone. Reflect
+                    # the opposite face about local Z=0 to read IV there too.
+                    xs = {struct.unpack_from('>h', data, slots[i])[0] for i in slots_used}
+                    assert xs in ({-9}, {3})
+                    marked = xs == {3}
+                for slot in slots_used:
                     v = slots[slot]
-                    uses.setdefault(v, []).append((p,slot,material in selected))
-                    if material not in selected:
+                    uses.setdefault(v, []).append((p,slot,marked))
+                    if not marked:
                         continue
                     seen.add(material)
-                    edit = ('u', uv[material]) if material in uv else (panels[material],0)
+                    edit = ('u', uv[material]) if material in uv else (panel,0)
                     prior_edit = edits.setdefault(v, edit)
                     assert prior_edit == edit
-            if material in panels:
-                # Reflect the printed mesh in its own plane. Undo the bank's
-                # winding flip for these triangles only so the face stays visible.
-                for off in (2,6):
-                    b[p+off], b[p+off+1] = b[p+off+1], b[p+off]
+                if marked and panel:
+                    # A second in-plane reflection restores native winding.
+                    off = p + word_offset + 2
+                    b[off], b[off+1] = b[off+1], b[off]
     fix_shared_corners(b, data, uses, edits)
     assert seen == selected, (table, model, seen, uv, panels)
     for v, (kind, extent) in edits.items():
-        offset = v + (8 if kind == 'u' else 0)
+        offset = v + (8 if kind == 'u' else 4 if kind == 'helm_back' else 0)
         old, = struct.unpack_from('>h', data, offset)
         if kind == 'u':
             value = extent - old
+        elif kind == 'helm_back':
+            value = -old
         elif kind == 'quota':
             value = 1 - old  # [-44,45], with matching digit boundaries
         else:

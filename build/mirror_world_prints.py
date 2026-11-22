@@ -16,6 +16,21 @@ MODEL_PRINTS = {
     0x280: (0xE49,), 0x284: (0xE4C,),
 }
 MATERIALS = sorted({m for group in (*MAP_PRINTS.values(), *MODEL_PRINTS.values()) for m in group})
+# Keep existing table 29 slots stable when adding materials. Some shipping
+# labels occur in both static level geometry and separately streamed props.
+CARGO_MAPS = {
+    0x049: (4, 5, 26, 29, 57, 58, 61, 62, 178, 185, 203, 204, 205, 206, 207, 215),
+    0x04D: (4, 5, 26, 30, 57, 58, 59, 61, 62, 185, 203, 204, 205, 206, 207, 215),
+    0x2AE: (17, 28, 57, 152, 196),
+    0x34B: (26, 29, 185), 0x34D: (26, 29, 57, 185), 0x7AF: (57, 58, 61, 62, 178),
+}
+for material, maps in CARGO_MAPS.items():
+    for map_id in maps:
+        MAP_PRINTS[map_id] = (*MAP_PRINTS.get(map_id, ()), material)
+MODEL_PRINTS[0x120] = (0x049, 0x34B)
+HELM_IV = (0xD5B, 0xD5C, 0xD5D, 0xD5E)
+MODEL_PRINTS[0x1B1] = HELM_IV
+MATERIALS.extend((*CARGO_MAPS, *HELM_IV))
 FIRST_TOKEN = 8122  # 97 in private table 29, following the hint-door frames
 # Both ends of the boxing slogan spill onto the neighboring logo tiles.
 SWAPS = {a: b for x, y in ((0xAF6, 0xAFB), (0xAF7, 0xAF8), (0xD95, 0xD9E), (0xD96, 0xD9D))
@@ -62,6 +77,36 @@ def crate(raw, rom, read):
     return out
 
 
+def helm_numeral(rom, read, material, pixels):
+    # Left/right pairs cover the bottom and top of one 128px-wide door.
+    # The blue IV straddles the vertical seam. Keep the hinges and bevels.
+    left = material < 0xD5D
+    neighbor = material + (2 if left else -2)
+    other = [v for v, in struct.iter_unpack('>H', read(rom, 25, neighbor))]
+    def paint_mask(tile):
+        ink = set()
+        for p, value in enumerate(tile):
+            red, green, blue = rgb555(value)
+            if blue > max(red, green) + 2:
+                row, col = divmod(p, 64)
+                # Include the antialiased edge and the dark drop shadow.
+                for y in range(max(0, row-2), min(32, row+3)):
+                    for x in range(max(0, col-2), min(64, col+3)):
+                        ink.add(y*64+x)
+        return ink
+
+    old_ink, opposite_ink = paint_mask(pixels), paint_mask(other)
+    result = pixels.copy()
+    columns = range(44, 64) if left else range(20)
+    ys = range(10, 32) if material in (0xD5B, 0xD5D) else range(11)
+    for y in ys:
+        for x in columns:
+            dest, src = y*64+x, y*64+63-x
+            if dest in old_ink or src in opposite_ink:
+                result[dest] = other[src]
+    return result
+
+
 def payloads(rom, read):
     header = Path(__file__).resolve().parents[1] / 'include' / 'mirror_world_prints.h'
     constants = dict(line.split()[1:] for line in header.read_text().splitlines() if line.startswith('#define '))
@@ -73,7 +118,7 @@ def payloads(rom, read):
         assert not read(rom, 25, FIRST_TOKEN+n)
         raw = read(rom, 25, SWAPS.get(mat, mat))
         width = 32 if mat in (0xD96, 0xD9D) else 64
-        indexed = mat in (0xBA, 0xD30, 0xD36, 0xD1E, 0xC31, 0xC35)
+        indexed = mat in CARGO_MAPS or mat in (0xBA, 0xD30, 0xD36, 0xD1E, 0xC31, 0xC35)
         if indexed:
             pixels = unpack_ci4(raw)
         elif mat == 0xE4C:
@@ -84,6 +129,16 @@ def payloads(rom, read):
         assert height in (16, 32, 64) and len(pixels) == width*height
         if mat == 0xD1E:
             result = crate(raw, rom, read)
+        elif mat in HELM_IV:
+            result = helm_numeral(rom, read, mat, pixels)
+        elif mat == 0x2AE:
+            # WINCH runs vertically in the atlas. Reflect its nameplate along
+            # V, leaving the adjacent mechanism and button surfaces untouched.
+            result = pixels.copy()
+            for y in range(15, 49):
+                start = y*64+16
+                source = (63-y)*64+16
+                result[start:start+11] = pixels[source:source+11]
         else:
             bounds = (0, width-1, 0, height-1)
             if mat == 0x3F1:
