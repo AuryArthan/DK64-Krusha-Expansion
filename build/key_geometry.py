@@ -6,18 +6,19 @@ import struct
 PICKUP = (0x1718, 0x1B78)
 BOSS_ACTOR = (0xD38, 0x11C8)
 INSERTED = (0x7E8, 0x9C8)
-END_SCALE = 1.2
+HEAD_SCALE = 1.15
+HANDLE_SCALE = 1.05
 
 
 def along_key(value, tip, lower_joint, upper_joint, bow):
     """Scale each end about its outer endpoint; join them with a shorter shaft."""
-    lower = tip + (lower_joint - tip) * END_SCALE
-    upper = bow + (upper_joint - bow) * END_SCALE
+    lower = tip + (lower_joint - tip) * HEAD_SCALE
+    upper = bow + (upper_joint - bow) * HANDLE_SCALE
     assert lower < upper
     if value <= lower_joint:
-        return tip + (value - tip) * END_SCALE
+        return tip + (value - tip) * HEAD_SCALE
     if value >= upper_joint:
-        return bow + (value - bow) * END_SCALE
+        return bow + (value - bow) * HANDLE_SCALE
     return lower + (value - lower_joint) * (upper - lower) / (upper_joint - lower_joint)
 
 
@@ -26,12 +27,24 @@ def resize_pickup(data):
     start, end = struct.unpack_from('>II', data, 0x48)
     assert (start, end) == (0xBD8, 0x1BF8)
     out = bytearray(data)
-    for p in range(start, end, 16):
+    bounds = end - 8*16
+    for p in range(start, bounds, 16):
         x, y, z = struct.unpack_from('>3h', data, p)
         # The long shaft has its own vertices, interlocking with both collars.
-        scale = 1 if 0x1608 <= p < 0x1718 else END_SCALE
+        scale = HANDLE_SCALE
+        if 0x12F8 <= p < 0x1608:  # Lower collar and teeth.
+            scale = HEAD_SCALE
+        elif 0x1608 <= p < 0x1718:
+            scale = 1
         struct.pack_into('>3h', out, p, round(.5 + (x-.5)*scale),
                          round(along_key(y, 0, 110, 196, 341)), round(.5 + (z-.5)*scale))
+    # Width comes from the bow and depth from a collar. Refit the box to
+    # the finished mesh so both caps keep the same culling extents.
+    axes = list(zip(*(struct.unpack_from('>3h', out, p) for p in range(start, bounds, 16))))
+    for p in range(bounds, end, 16):
+        corner = struct.unpack_from('>3h', data, p)
+        xyz = [max(axis) if side > 0 else min(axis) for side, axis in zip(corner, axes)]
+        struct.pack_into('>3h', out, p, *xyz)
     return bytes(out)
 
 
@@ -42,7 +55,9 @@ def resize_inserted(data):
     for start, end in ((0x68, 0x9C8), (0xD08, 0xD08+108*16)):
         for p in range(start, end, 16):
             x, y, z = struct.unpack_from('>3h', data, p)
-            scale = 1 if 0x728 <= p < 0x7E8 else END_SCALE
+            scale = HEAD_SCALE if p >= 0xD08 else HANDLE_SCALE
+            if 0x728 <= p < 0x7E8:
+                scale = 1
             struct.pack_into('>3h', out, p, round(x*scale), round(y*scale),
                              round(along_key(z, -112, 8, 149, 393)))
     return bytes(out)

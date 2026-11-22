@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import struct
 from recruitment_keys import COLORS
-from key_geometry import END_SCALE, along_key
+from key_geometry import HANDLE_SCALE, HEAD_SCALE, along_key
 
 FIRST = 224
 TOKEN = 7250
@@ -47,7 +47,7 @@ def colored_key_frame(native):
         fraction = (y+.5-enlarged[segment])/(enlarged[segment+1]-enlarged[segment])
         sy = original[segment] + fraction*(original[segment+1]-original[segment]) - .5
         iy = math.floor(sy)
-        width_scale = 1 if segment == 1 else END_SCALE
+        width_scale = (HEAD_SCALE, 1, HANDLE_SCALE)[segment]
         for x in range(size):
             sx = (x+.5-size/2)/width_scale + size/2-.5
             ix = math.floor(sx)
