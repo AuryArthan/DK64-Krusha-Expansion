@@ -5,13 +5,13 @@
 
 ; Patch boot routine to DMA our code from ROM to RAM and run it
 .definelabel bootStart, 0x01FED020
-.definelabel residentBytes, 0x1AC00 ; RAM end805F5A00, ROM end02007C20
-; Heap still ends at805DAE00; native static begins805FB300. The existing
-; relocated pointer tables start02008000. Guard BOTH limits before linking.
+.definelabel residentBytes, 0x1B3E0
+; Heap ends at805DAE00; native static begins805FB300. The relocated pointer
+; tables start02008400. Guard both boundaries for production and QA builds.
 .if (0x805DAE00 + residentBytes) > 0x805FB300
     .error "Resident overlaps native static RAM"
 .endif
-.if (bootStart + residentBytes) > 0x02008000
+.if (bootStart + residentBytes) > 0x02008400
     .error "Resident overlaps relocated ROM pointer tables"
 .endif
 

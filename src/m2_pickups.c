@@ -9,6 +9,8 @@ extern int m4SetupHidden(s32,s32);
 /* Only the setup constructor's permanent-object predicate calls this wrapper.
  * The original pickup ordering/counts are unchanged, as are cached map files. */
 s32 m2SetupHidden(s32 map, s32 object_id) {
+    /* One decorative dead tree occupies the Castle encounter platform. */
+    if (map==87 && object_id==86 && krushaEnabled() && DetectAdventure()) return 1;
     int key=krushaRecruitmentKeyHidden(map,object_id);
     if (key>=0) return key;
     if (map==34 && object_id==RECRUITMENT_OBJECT_ID) return !krushaEnabled() || !DetectAdventure();
@@ -37,13 +39,78 @@ static s32 m2Award(u16 slot,u8 units,u8 coin,u8 world) {
             playSong(23,1.0f);
         } else {
             s32 total=before+units;
-            MovesBase[5].cb_count[world]=total-MovesBase[5].tns_cb_count[world];
-            playSound(0x2A0,0x7FFF,63.0f,1.0f,0,0);
+            MovesBase[5].cb_count[world]+=units;
+            if (units!=5) playSound(0x2A0,0x7FFF,63.0f,1.0f,0,0);
             if (before<50 && total>=50) playSong(172,1.0f);
         }
         void (*refresh)(s32,u8,s32)=(void*)0x806F8BC4;
         if (Character == 5) refresh(coin ? 1 : 0,0,0);
         return 1;
+}
+
+/* Native single-player flight queue. Each child has a silver single model.
+ * Its receipt uses the private bunch type, whose native HUD destination and
+ * speed match a banana. The map object alone owns the permanent pickup bit. */
+typedef struct {
+    s16 id,type,owner,flag,x,y,z;
+    u8 taken,pad;
+    s16 delay;
+    u8 sound,variant;
+} BunchContact;
+
+typedef struct BananaFlight {
+    s16 id,type;
+    u8 native_motion[20];
+    u8 delay,sound,receipt,pad;
+    struct BananaFlight* next;
+} BananaFlight;
+
+BananaFlight* m2MakeFlight(BunchContact* contact) {
+    BananaFlight* (*make)(BunchContact*)=(void*)0x806F53EC;
+    BananaFlight* parent=make(contact);
+    if (contact->type!=4) return parent;
+    int (*level)(int,int)=(void*)0x805FF030;
+    int world=level(CurrentMap,1);
+    if ((unsigned)world>=7) return parent;
+    parent->receipt=0;
+    parent->sound=1; /* Single cue if the native prop pool is full. */
+    u8 file=*(u8*)0x807467C8;
+    int (*spawn)(s32,f32,f32,f32,f32,u8)=(void*)0x80632630;
+    BananaFlight** head=(void*)0x807FD730;
+    BananaFlight** tail=(void*)0x807FD734;
+    for (int i=0;i<5;i++) {
+        if (ObjectModel2Count_Dupe>=*(s16*)0x807F614A) break;
+        int id=spawn(2,contact->x,contact->y,contact->z,0.0f,0);
+        if (id<0) break;
+        BananaFlight* child=make(contact);
+        child->id=id;
+        child->delay=i*3;
+        parent->sound=0;
+        child->sound=1;
+        child->receipt=0x80|(file<<3)|world;
+        child->next=0;
+        if (*head) (*tail)->next=child;
+        else *head=child;
+        *tail=child;
+        /* Credit this unit when it reaches the HUD. Unspawned units keep
+         * their initial credit when the native prop pool is at capacity. */
+        MovesBase[5].cb_count[world]--;
+    }
+    return parent;
+}
+
+/* Arrival, a forced flush, and map teardown each release a flight exactly
+ * once. Attribute it to its original wallet even if the player just tagged. */
+void m2FreeFlight(BananaFlight* flight) {
+    u8 receipt=flight->receipt;
+    if (flight->type==4 && (receipt&0x80)) {
+        int world=receipt&7;
+        int file=(receipt>>3)&3;
+        if (world<7 && file==*(u8*)0x807467C8 &&
+            MovesBase[5].cb_count[world]+MovesBase[5].tns_cb_count[world]<krushaProgressBananas(file,world))
+            MovesBase[5].cb_count[world]++;
+    }
+    ((void (*)(void*))0x8061130C)(flight);
 }
 
 volatile u32 m2ContactTrace[6] = {0,0,0,0,0,0};
@@ -57,7 +124,7 @@ s32 m2PickupAllowed(s16 object_id,u8 player,u16 type) {
     for (s32 i=0;i<sizeof(m2Pickups)/sizeof(m2Pickups[0]);i++) {
         if (CurrentMap!=m2Pickups[i].map || object_id != m2Pickups[i].object_id || type != m2Pickups[i].type) continue;
         m2ContactTrace[4]++;
-        if (!m2Award(m2Pickups[i].slot,m2Pickups[i].units,m2Pickups[i].coin,m2Pickups[i].world)) return 0;
+        if (!m2Award(m2Pickups[i].slot,type==4 ? 5 : 1,type==6,m2Pickups[i].world)) return 0;
         m2ContactTrace[5]++;
         return 1;
     }

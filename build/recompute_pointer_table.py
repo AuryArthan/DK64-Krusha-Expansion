@@ -203,7 +203,7 @@ main_pointer_table_offset = 0x101C50
 # The address of the next available byte of free space in ROM
 # used when appending files to the end of the ROM
 #next_available_free_space = 0x1FED020
-next_available_free_space = 0x2008000  # After guarded R12 resident ROM end02007020
+next_available_free_space = 0x2008400  # Immediately after the guarded resident DMA region in asm/main.asm
 
 # These will be indexed by pointer table index then by SHA1 hash of the data
 pointer_table_files = []

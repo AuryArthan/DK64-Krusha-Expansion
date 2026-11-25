@@ -32,6 +32,7 @@ extern void m4CollectEffect(s16,u8);
 extern void m4RewardsTick(void);
 extern void m4BonusInstall(void);
 extern void m4EncounterInstall(void);
+extern int m4EncounterKlump(void* actor);
 extern void m4EncounterActionResult(s16,void*,u8,u8);
 extern s32 vanillaBuildActorBones(void* actor);
 extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
@@ -42,6 +43,15 @@ extern void vanillaDialogueLine(void* owner, u8* text, u16 length);
 s32 krushaBuildActorBones(void* actor_ptr) {
     u8* actor = actor_ptr;
     u32 type = *(u32*)(actor + 0x58);
+    if (type == 187 && m4EncounterKlump(actor)) {
+        /* Keep the 1.3% visual offset through every pose, including landing. */
+        f32* root_y = (f32*)(actor + 0x40);
+        f32 y = *root_y;
+        *root_y = y - 1.04f;
+        s32 result = vanillaBuildActorBones(actor);
+        *root_y = y;
+        return result;
+    }
     s32 enlarge = (type == 7 && actor_ptr == Player) ||
         (type == 316 && *(u16*)*(u8**)(actor + 0x174) == 7 && CurrentMap!=216);
     extern f32 krushaPrisonVisualScale(void*);

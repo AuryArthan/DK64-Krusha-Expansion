@@ -132,6 +132,10 @@ m4NativeDamage:
     J 0x80675DD8
     NOP
 
+m4KlumpContactLookup:
+    J m4EncounterContactRules
+    MOVE a3, s3 ; target actor retained by the native collision dispatcher
+
 m4NativePlayerDamage:
     ANDI t6, a0, 0xFF
     SLL t8, t6, 2
@@ -495,9 +499,21 @@ m3BlueprintOwner:
     J 0x806F74A4
     NOP
 @@ordinary:
+    ; t7 is the actor type matched against this collect definition. Let the
+    ; settled boulder bunch materialize even while a nonowner is watching.
+    ; The physical green pickup still checks Chunky's ownership on contact.
+    LI v0, 110
+    BNE t7, v0, @@checkOwner
+    NOP
+    LBU t2, 0x154(s2)
+    LI v0, 0x64
+    BEQ t2, v0, @@convert
+    NOP
+@@checkOwner:
     LH v0, 0xC(s3)
     BNEZ v0, @@owned
     NOP
+@@convert:
     LH t2, 0x10(s3)
     J 0x806F74B4
     NOP

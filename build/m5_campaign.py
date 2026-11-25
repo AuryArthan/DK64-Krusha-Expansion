@@ -22,6 +22,24 @@ def prepare(rom_path):
     for w in worlds():text+='    {%d,%d,%d,%d,%d,%d,%s,%s,%s},\n'%(w['map'],w['gate_id'],w['pad_id'],w['reward_id'],w['world'],w['trigger'],f(w['pad']),f(w['boss']),f(w['cage']))
     text+='};\nstatic const M5Kasplat m5Kasplats[8] = {\n'+''.join('    {%d,%d,%d},\n'%(w['kasplat_map'],w['world'],w['kasplat_id']) for w in worlds())+'};\n'
     text+='static const struct {u16 table,map,index;} m5Files[] = {\n'+''.join('    {%d,%d,%d},\n'%(v['table'],v['map'],v['index']) for v in aliases())+'};\n'
+    # Solid-looking palm/Castle trunk models in the eight encounter arenas.
+    # Billboards and distant trees on other floors need no walking obstacle.
+    text+='static const struct {s16 map,x,y,z;} m5Trunks[] = {\n'
+    for w in worlds():
+        setup=read_file(rom,9,w['map'])
+        fence=w['fence']
+        xmin,xmax=min(v[0] for v in fence)-48,max(v[0] for v in fence)+48
+        zmin,zmax=min(v[2] for v in fence)-48,max(v[2] for v in fence)+48
+        for i in range(struct.unpack_from('>I',setup)[0]):
+            offset=4+i*48
+            kind=struct.unpack_from('>H',setup,offset+40)[0]
+            x,y,z=struct.unpack_from('>3f',setup,offset)
+            if w['map']==87 and struct.unpack_from('>H',setup,offset+42)[0]==86:
+                assert kind==497  # Tree omitted from the Castle encounter.
+                continue
+            if kind in (108,109,110,497) and xmin<=x<=xmax and zmin<=z<=zmax:
+                text+='    {%d,%d,%d,%d},\n'%(w['map'],round(x),round(y),round(z))
+    text+='};\n'
     (ROOT/'include/m5_campaign.generated.h').write_text(text)
 
 def spawners(rom,mid):

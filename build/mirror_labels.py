@@ -42,6 +42,8 @@ def rules(table, model):
         uv[0xB7D] = 1024  # Krusha's copy of the world Golden Banana
     elif table != 4:
         return uv, swaps, panels
+    elif model == 0x250:
+        pair(0xE30, 0xE31)  # DK plaque split across Galleon’s underwater gate.
     elif model in (0x48, 0x28F):
         # Nintendo and Rareware Adventure rewards. Every turn frame uses the
         # same four corners, with native S coordinates from -32 to 1376.
@@ -144,11 +146,12 @@ def fix_shared_corners(b, original, uses, edits):
 
 
 def correct_labels(data, table, model):
-    if table == 4 and model in (0xEC, 0x1D2):
-        # DK race coin and multiplayer variant. Their billboard quad stores
+    if table == 4 and model in (0x98, 0xEC, 0x1D2):
+        # Camera film and both DK race coins. Their billboard quad stores
         # four raw ST pairs after the frame descriptor. The HUD owns its quad.
         b = bytearray(data)
-        assert len(b) == 0x154 and data[0x124:0x126] == bytes.fromhex('01f0')
+        first_frame = 0x1AF if model == 0x98 else 0x1F0
+        assert len(b) == 0x154 and struct.unpack_from('>H', data, 0x124)[0] == first_frame
         st = struct.unpack_from('>8h', data, 0x140)
         assert st == (1536, 0, 1536, 1344, -32, 1344, -32, 0)
         for i in range(4):

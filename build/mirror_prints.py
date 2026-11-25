@@ -64,24 +64,6 @@ def mirror_words(raw, bare, material):
     return struct.pack('>2048H', *result)
 
 
-def reflect_rgba(raw, width):
-    rows = struct.Struct('>'+'H'*width)
-    return b''.join(rows.pack(*row[::-1]) for row in rows.iter_unpack(raw))
-
-
-def shirt_mips(raw):
-    # Native actor mipmaps are padded to a full eight-byte TMEM word per
-    # row below 4 pixels. Preserve those final rows (imperceptible at distance).
-    assert len(raw) == 2744
-    out = bytearray(raw)
-    start = 0
-    for width in (32, 16, 8, 4):
-        end = start + width*width*2
-        out[start:end] = reflect_rgba(raw[start:end], width)
-        start = end
-    return bytes(out)
-
-
 def payloads(rom, read):
     output = []
     for n, material in enumerate(MATERIALS):
@@ -95,17 +77,18 @@ def payloads(rom, read):
             data = bytes((v >> 4) | ((v & 15) << 4) for p in range(0, len(raw), 32)
                          for v in raw[p:p+32][::-1])
         elif material == SHIRT:
-            data = shirt_mips(raw)
+            assert len(raw) == 2744
+            data = world.reflect_rgba_mips(raw)
         else:
             assert len(raw) == 4096
-            data = reflect_rgba(raw, 32 if material == BARREL else 64)
+            data = world.reflect_rgba(raw, 32 if material == BARREL else 64)
         assert len(data) == len(raw)
         output.append(data)
     for frame in DOOR_FRAMES:
         # The mirrored left half needs the reflected right half, and vice versa.
         raw = read(rom, 7, frame ^ 1)
         assert len(raw) == 4096
-        output.append(reflect_rgba(raw, 32))
+        output.append(world.reflect_rgba(raw, 32))
     assert TOKEN + len(output) == world.FIRST_TOKEN
     return output + world.payloads(rom, read)
 

@@ -33,27 +33,105 @@ static int valid(void* p,u32 size) {return (u32)p>=0x80000000 && (u32)p<=0x80800
 static u32 frame(void) {return *(u32*)0x8076A064;}
 static int won(void) {const M5Area* area=m5Area(CurrentMap);return !area || krushaProgressRead(*(u8*)0x807467C8,KRUSHA_GB_BIT+area->world*5,1);}
 
-/* Adventure player damage is a separate native path: its hurt initializers
- * normally request one slice regardless of actor+136. Associate an accepted
- * action with a live, owned grenade before its native node can be deleted.
- * Never dereference that source later or change its identity. */
-void m4EncounterActionResult(s16 action,void* source,u8 player,u8 accepted) {
-    if (!accepted || player) return;
-    hurt_source=0;
-    if (!m5Area(CurrentMap) || !krushaEnabled() || !DetectAdventure() || !valid(source,0x180)) return;
-    if (*(u32*)((u8*)source+0x58)!=50) return;
+int m4EncounterKlump(void* pointer) {
+    u8* actor=pointer;
+    if (!m5Area(CurrentMap) || !valid(actor,0x180) || *(u32*)(actor+0x58)!=187) return 0;
+    /* Klump has an extra module at+178. The common enemy AI at+174 owns
+     * the reliable spawner link; do not copy Kasplat's module offsets. */
+    u8* ai=*(u8**)(actor+0x174);
+    if (!valid(ai,0x38)) return 0;
+    u8* spawner=*(u8**)ai;
+    return valid(spawner,0x48) && spawner[0]==9 && spawner[19]==ENCOUNTER_TRIGGER &&
+        *(void**)(spawner+0x18)==actor;
+}
+
+typedef struct {
+    u16 target_mask,source_mask;
+    u8 (*accept)(void*,void*,void*);
+    u8 result,contact,stop,padding;
+} KlumpContactRule;
+
+#define KLUMP_MELEE_MASK 0xBEC
+static void* melee_target;
+static u8 impact_played;
+
+static u8 observeMelee(void* target,void* source,void* collision) {
+    const KlumpContactRule* rules=(const void*)0x8074B568;
+    u16 attack=*(u16*)((u8*)source+0x132);
+    if (source==(void*)Player) {
+        for (int i=0;i<6;i++) {
+            const KlumpContactRule* rule=&rules[i];
+            if (rule->result==9 || !(rule->source_mask & attack)) continue;
+            if (!rule->accept || rule->accept(target,source,collision)) {
+                melee_target=target;
+                break;
+            }
+        }
+    }
+    /* Observe the strike without consuming the collision. The belly can
+     * still connect with a player who lands a punch on this same update. */
+    return 0;
+}
+
+static const KlumpContactRule big_klump_contacts[]={
+    {0xFFFF,KLUMP_MELEE_MASK,observeMelee,0,0,1,0},
+    {2,0xFFFF,(void*)0x80676730,1,12,2,0},
+    {0xFFFF,0xFFFF,0,2,2,0,0}
+};
+
+void* m4EncounterContactRules(void* table,s16 source_type,s16 source_class,void* target) {
+    void* (*native_lookup)(void*,s16,s16)=(void*)0x80675E3C;
+    if (table==(void*)0x8074B5C8 && source_class==1 && m4EncounterKlump(target))
+        return (void*)big_klump_contacts;
+    return native_lookup(table,source_type,source_class);
+}
+
+static void playMeleeImpact(u8* actor) {
+    int landed=melee_target==actor;
+    melee_target=0;
+    if (!Player || hits>=ENCOUNTER_HITS || *(s16*)(actor+0x134)<=0) return;
+    /* The attack bit can survive the first frame of Krusha's hurt animation.
+     * Rearm on the end of his attack window, not on an animation change. */
+    if (!(*(u16*)((u8*)Player+0x132) & KLUMP_MELEE_MASK)) {
+        impact_played=0;
+        return;
+    }
+    if (landed && !impact_played) {
+        /* The two feedback calls at the start of the native Klump flinch.
+         * The star helper uses the current actor, which is this Klump here. */
+        void (*star)(void)=(void*)0x8072D9D4;
+        void (*sound)(void*,s16,u8,s16,u8)=(void*)0x80608528;
+        star();
+        sound(actor,0x1CA,0xFF,0x7F,0x14);
+        impact_played=1;
+    }
+}
+
+/* Check ownership while the source is live. The hurt initializer can run
+ * after the grenade despawns, so retain its identity with the accepted action. */
+static int encounterAttack(void* source) {
+    if (!valid(source,0x180)) return 0;
+    u32 type=*(u32*)((u8*)source+0x58);
+    if (type==187) return m4EncounterKlump(source);
+    if (type!=50) return 0;
+
     u8* node=*(u8**)0x807FC400;
     for (int n=0;node && n<512;n++,node=*(u8**)(node+0x68)) {
         if (*(void**)(node+0x44)!=source) continue;
-        for (int i=0;i<24;i++) if (grenades[i].pointer==node && grenades[i].id==*(u16*)(node+0x5A)) {
-            hurt_source=source;hurt_frame=frame();
-            hurt_uid=*(u32*)((u8*)source+0x54);hurt_action=action;
-            m4EncounterHurtTrace[0]++;m4EncounterHurtTrace[1]=action;
-            m4EncounterHurtTrace[2]=(u32)source;
-            return;
-        }
-        return;
+        for (int i=0;i<24;i++) if (grenades[i].pointer==node && grenades[i].id==*(u16*)(node+0x5A)) return 1;
+        return 0;
     }
+    return 0;
+}
+
+void m4EncounterActionResult(s16 action,void* source,u8 player,u8 accepted) {
+    if (!accepted || player) return;
+    hurt_source=0;
+    if (!m5Area(CurrentMap) || !krushaEnabled() || !DetectAdventure() || !encounterAttack(source)) return;
+    hurt_source=source;hurt_frame=frame();
+    hurt_uid=*(u32*)((u8*)source+0x54);hurt_action=action;
+    m4EncounterHurtTrace[0]++;m4EncounterHurtTrace[1]=action;
+    m4EncounterHurtTrace[2]=(u32)source;
 }
 
 s32 m4EncounterPlayerDamage(u8 player,s8 amount) {
@@ -75,18 +153,6 @@ s32 m4EncounterPlayerDamage(u8 player,s8 amount) {
         hurt_source=0;
     }
     return m4NativePlayerDamage(player,amount);
-}
-
-int m4EncounterKlump(void* pointer) {
-    u8* actor=pointer;
-    if (!m5Area(CurrentMap) || !valid(actor,0x180) || *(u32*)(actor+0x58)!=187) return 0;
-    /* Klump has an extra module at+178. The common enemy AI at+174 owns
-     * the reliable spawner link; do not copy Kasplat's module offsets. */
-    u8* ai=*(u8**)(actor+0x174);
-    if (!valid(ai,0x38)) return 0;
-    u8* spawner=*(u8**)ai;
-    return valid(spawner,0x48) && spawner[0]==9 && spawner[19]==ENCOUNTER_TRIGGER &&
-        *(void**)(spawner+0x18)==actor;
 }
 
 void m4EncounterShout(void) {
@@ -131,6 +197,14 @@ void m4EncounterDamage(void* target,void* source) {
     m4EncounterTrace[1]=hits;m4EncounterTrace[2]=ENCOUNTER_HITS-hits;
 }
 
+static actorData* walkingKlump;
+
+void m4EnemyWalk(actorData* actor) {
+    void (*walk)(actorData*)=(void*)0x806651FC;
+    if (actor==walkingKlump) m5SteerPastScenery(actor);
+    walk(actor);
+}
+
 void m4EncounterKlumpUpdate(void) {
     u8* actor=*(u8**)0x807FBB40;
     void (*native)(void)=(void*)0x806AEE84;
@@ -150,7 +224,10 @@ void m4EncounterKlumpUpdate(void) {
      * kill flags (shockwave/slam) must not bypass the eight-projectile fight. */
     context[0x15]=0;
     if (hits<ENCOUNTER_HITS && context[0x200]==9) context[0x200]=0;
+    playMeleeImpact(actor);
+    walkingKlump=(actorData*)actor;
     native();
+    walkingKlump=0;
     m4EncounterTrace[8]=*(u16*)(actor+0x136);
     m4EncounterTrace[9]=*(u16*)(actor+0x134);
 }
@@ -160,14 +237,24 @@ void m4EncounterThrow(s16 type,s16 model,f32 scale,s16 angle,f32 forward,f32 ver
     if (!m4EncounterKlump(parent)) {native(type,model,scale,angle,forward,vertical,parent);return;}
     /* Native Klump aims along its body yaw but releases at its right hand.
      * At this scale that lateral offset is conspicuous. Aim the middle round
-     * from the actual release point to the player, retaining native speeds. */
+     * from the actual release point to the player. */
     f32 x=*(f32*)0x807FC7B0,y=*(f32*)0x807FC7B4,z=*(f32*)0x807FC7B8;
-    /* The enlarged body needs clearance above the low crouched hand pose.
-     * Keep native launch speeds/angles and leave ordinary enemies alone. */
+    /* Clear the enlarged body even on a low throw. */
     f32 release_y=y+32.0f;
     s16 (*toward)(f32,f32,f32,f32)=(void*)0x80665DE0;
     void (*origin)(f32,f32,f32)=(void*)0x806907F0;
-    if (Player) angle=toward(Player->xPos,Player->zPos,x,z);
+    if (Player) {
+        f32 dx=Player->xPos-x, dz=Player->zPos-z;
+        angle=toward(Player->xPos,Player->zPos,x,z);
+        /* Cross the target at torso height in about 20 game updates. The
+         * native grenade moves 0.65 * forward / 40 per update and loses
+         * 20 vertical speed each update. Aim once, so a sidestep still works. */
+        forward=sqrtf(dx*dx+dz*dz)/(0.65f*0.5f);
+        vertical=190.0f+2.0f*(Player->yPos+18.0f-release_y);
+        if (forward>960.0f) forward=960.0f;
+        if (vertical>220.0f) vertical=220.0f;
+        if (vertical<0.0f) vertical=0.0f;
+    }
     for (int n=-1;n<=1;n++) {
         origin(x,release_y,z);
         native(type,model,scale,(angle+n*170)&4095,forward,vertical,parent);
@@ -230,6 +317,7 @@ void m4EncounterTick(void) {
     if (CurrentMap!=previous_map || frame()<previous_frame) {
         pending=dropped=hits=0;m4EncounterPickupID=-1;
         hurt_source=0;
+        melee_target=0;impact_played=0;
         for (int i=0;i<24;i++) grenades[i].pointer=0;
     }
     previous_map=CurrentMap;previous_frame=frame();
@@ -259,17 +347,24 @@ void m4EncounterTick(void) {
         if (record[0x42]==5 || record[0x42]==6) {pending=0;return;}
         if (!spawnActor(187,0xEE)) return;
         u8* actor=*(u8**)0x807FBB44;
+        /* Isles setup 53 enables the wreck and its collision when keys 3
+         * and 8 have both been turned in. The normal spawn is on its hull.
+         * Set the private spawner origin before native AI records its home. */
+        if (CurrentMap==34 && checkFlag(0x1BE,0) && checkFlag(0x1C3,0)) {
+            *(s16*)(record+4)=3075;
+            *(s16*)(record+8)=895;
+        }
         void (*init)(void*,void*)=(void*)0x80726744;
         init(actor,record);
-        /* Apply the requested additional8% exactly. The packed spawner size
-         * is integral; rounding80 to74 would be only7.5%. Native collision
-         * and shadow helpers use these same animation scales. */
+        /* All rare spawners use size 80. Keep the fractional adjustment on
+         * all three model axes, shared by native collision and shadow helpers. */
         u8* animation=*(u8**)(actor+4);
-        for (int axis=0;axis<3;axis++) *(f32*)(animation+0x34+axis*4)*=0.92f;
+        for (int axis=0;axis<3;axis++) *(f32*)(animation+0x34+axis*4)*=0.92f * 0.95f;
         *(u16*)(record+0x46)|=0x44; /* native: force loaded, instrument immune */
         *(s16*)(actor+0x134)=ENCOUNTER_HITS;
         *(s16*)(actor+0x136)=2 * *(s16*)(0x8074D0C4+187*4+2);
         pending=0;hits=0;m4EncounterTrace[0]++;m4EncounterTrace[2]=ENCOUNTER_HITS;
+        melee_target=0;impact_played=0;
         m4EncounterTrace[11]=*(u32*)(actor+0x54);
         m4EncounterTrace[12]=frame();return;
     }

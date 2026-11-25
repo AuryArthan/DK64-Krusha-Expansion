@@ -55,11 +55,14 @@ BLOCKS = tuple(range(0x397, 0x3AA))
 TRACK_BLOCKS = (*BLOCKS[:-1], 0x3CD, 0x3CE, 0x3CF, 0x3D0, 0xAB1, 0xABA)
 MAP_PRINTS[26] += BLOCKS
 MAP_PRINTS[185] += TRACK_BLOCKS
-MAP_PRINTS[25] = (0x325,)  # Candy's music stand
+MAP_PRINTS[25] = (0x325, 0x338)  # Music stand and Nintendo console label.
+for map_id in (176, 198):  # Training Grounds and its ending copy.
+    MAP_PRINTS[map_id] = (0xA8B,)  # N64 sticker on discarded banana peels.
 MAP_PRINTS[171] += (0xA5C,)  # DK rug
 MODEL_PRINTS[0xCF] = (0x3A5, 0x3A6, 0x3A8, 0x3CF, 0x3D0)
 NEW_PRINTS = tuple(dict.fromkeys((*BLOCKS, *TRACK_BLOCKS, 0x325, 0xA5C)))
-MATERIALS.extend(NEW_PRINTS)
+EXTRA_PRINTS = (*NEW_PRINTS, 0x338, 0xA8B)
+MATERIALS.extend(EXTRA_PRINTS)
 
 
 def material_token(material):
@@ -86,6 +89,24 @@ def block_faces(raw, material):
 # Both ends of the boxing slogan spill onto the neighboring logo tiles.
 SWAPS = {a: b for x, y in ((0xAF6, 0xAFB), (0xAF7, 0xAF8), (0xD95, 0xD9E), (0xD96, 0xD9D), (0x3D4, 0x3D7), (0x3D5, 0x3D6))
          for a, b in ((x, y), (y, x))}
+
+
+def reflect_rgba(raw, width):
+    rows = struct.Struct('>'+'H'*width)
+    return b''.join(rows.pack(*row[::-1]) for row in rows.iter_unpack(raw))
+
+
+def reflect_rgba_mips(raw):
+    # The map decal ends at 4x4. The shirt has another 24 bytes of padded
+    # sub-4px mip levels, which keep their native encoding.
+    assert len(raw) in (2720, 2744)
+    out = bytearray(raw)
+    start = 0
+    for width in (32, 16, 8, 4):
+        end = start + width*width*2
+        out[start:end] = reflect_rgba(raw[start:end], width)
+        start = end
+    return bytes(out)
 
 
 def reflect_region(pixels, width, left, right, bottom, top):
@@ -170,6 +191,10 @@ def payloads(rom, read):
         if n == COURSE_SLOT:
             output.extend(course_tiles(rom, read, constants, len(output)))
         raw = read(rom, 25, SWAPS.get(mat, mat))
+        if mat == 0xA8B:
+            assert len(raw) == 2720
+            output.append(reflect_rgba_mips(raw))
+            continue
         if mat in NEW_PRINTS and mat not in (0x325, 0xA5C):
             output.append(block_faces(raw, mat))
             continue
@@ -223,7 +248,7 @@ def payloads(rom, read):
             data = struct.pack('>%dH' % len(result), *result)
         assert len(data) == len(raw)
         output.append(data)
-    assert int(constants['MIRROR_EXTRA_COUNT']) == len(NEW_PRINTS)
+    assert int(constants['MIRROR_EXTRA_COUNT']) == len(EXTRA_PRINTS)
     assert int(constants['MIRROR_EXTRA_BANK']) == 97 + COURSE_SLOT + 4
     assert int(constants['MIRROR_EXTRA_TOKEN']) == material_token(NEW_PRINTS[0])
     return output

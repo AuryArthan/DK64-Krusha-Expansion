@@ -269,7 +269,7 @@ static void present(void) {
         pose(i+7,x,-2000,503.639f,.48f,2048);
     }
     if (phase==PRISON_KEY_FLY) {
-        f32 p=timer/PRISON_FLY_FRAMES;
+        f32 p=timer*((f32)PRISON_FLY_SPEED_NUM/(PRISON_FLY_SPEED_DEN*PRISON_FLY_BASE_FRAMES));
         /* Keep the approved key origin while Tiny moves another half-step
          * left. This is intentionally independent of her render staging. */
         f32* pos=(f32*)((u8*)Player+0x7C);
@@ -450,6 +450,10 @@ int krushaPrisonSceneTick(void) {
             krushaPrisonUnlockTrace[0]++;krushaPrisonUnlockTrace[1]=krushaPrisonTurnTrace[1];
         }
         if (done) {
+            /* Match the native Chunky rescue. FINAL_READY is reached only
+             * when the fifth lock and recruitment have both been saved. */
+            if (krushaPrisonTurnTrace[0]==PRISON_FINAL_READY)
+                playSong(40,1.0f); /* MUSIC_40_SUCCESS */
             sequence=krushaRecruitmentRecruited(file)?3:2;
             page=sequence==3?0:page+1;age=text_clock=0;
         }

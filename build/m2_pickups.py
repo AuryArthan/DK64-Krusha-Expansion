@@ -79,6 +79,13 @@ def prepare(rom_path):
     assert not special & {p['object_id'] for p in rows()}
     native=data[0x80753EF0-0x80744460:0x80753EF0-0x80744460+42*20]
     defs=bytearray(native)
+    # Only Chunky's green bunch can materialize from the boulder drop (actor 110).
+    # The other four Model2 bunches keep their usual owners and pickup behavior.
+    for row in range(10, 15):
+        owner, actor = struct.unpack_from('>HH', native, row*20+12)
+        assert actor == 110 and owner in range(2, 7)
+        if owner != 6:
+            struct.pack_into('>H', defs, row*20+14, 0)
     for kind,row in [('single',0),('bunch',10),('coin',9)]:
         value=bytearray(native[row*20:(row+1)*20]);struct.pack_into('>H',value,0,KINDS[kind][0]);struct.pack_into('>hh',value,12,7,0);defs+=value
     # M3's dynamic private blueprint; native actor scanning still stops at42.
@@ -96,8 +103,12 @@ def prepare(rom_path):
     words=struct.unpack('>%dI'%(len(defs)//4),defs)
     header='/* Generated from verified original USA data by build/m2_pickups.py. */\n'
     header+='const u32 m2CollectDefs[%d] = {\n'%len(words)+''.join('0x%08X,%s'%(w,'\n' if i%5==4 else ' ') for i,w in enumerate(words))+'};\n'
-    header+='static const struct { u16 slot, object_id, type, map; u8 units, coin, world; } m2Pickups[] = {\n'
-    for p in registry_rows(None):header+='    {%d,%d,%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['type'],p['map'],{'single':1,'bunch':5,'coin':0}[p['kind']],p['kind']=='coin',p['world'])
+    # Six bytes per entry leave boot DMA space for the recruitment QA driver.
+    # Both four-bit fields are private C data, never serialized into a save.
+    header+='static const struct { u16 slot, object_id; u8 map, type:4, world:4; } m2Pickups[] = {\n'
+    for p in registry_rows(None):
+        assert 0<=p['map']<256 and p['type'] in (2,4,6) and 0<=p['world']<8
+        header+='    {%d,%d,%d,%d,%d},\n'%(p['pickup_slot'],p['object_id'],p['map'],p['type'],p['world'])
     header+='};\n'
     header+='static const struct { u16 slot, spawner_id, map; u8 world; } m2Balloons[] = {\n'+''.join('    {%d,%d,%d,%d},\n'%(p['pickup_slot'],p['spawner_id'],p['map'],p['world']) for p in balloons(None))+'};\n'
     (ROOT/'include/m2_pickups.generated.h').write_text(header)
@@ -179,6 +190,13 @@ def patch_code(fh,symbols):
     def patch(a,expected,new):
         assert word(a)==expected,hex(a)
         fh.seek(a-base);fh.write(new.to_bytes(4,'big'))
+    # Actor 110 uses the native owner-tinted bouncing drop routine. Its physics
+    # and sprite scale match the original; Krusha and other nonowners see it
+    # ghosted even before the settled drop becomes a regular green bunch.
+    patch(0x806A6574,0x3C0E8080,0x3C048072)  # lui a0, 0x8072
+    patch(0x806A6578,0x8DCEBB40,0x24840EBC)  # addiu a0, a0, green bunch sprite
+    patch(0x806A657C,0x27BDFFE0,0x08000000 | (0x806A6004 & 0x0FFFFFFF) >> 2)
+    patch(0x806A6580,0xAFBF0014,0x24050006)  # delay: a1 = Chunky actor
     # Only the setup constructor's existing ownership classifier call. Native
     #3D rendering and suction use its original per-prop ownership flags.
     patch(0x806322BC,0x0C18CB9D,0x0C000000|(int(symbols['krusharecruitmentkeyowner'],16)&0xFFFFFFF)>>2)
@@ -186,6 +204,12 @@ def patch_code(fh,symbols):
     assert word(0x80637AC4)==0x00003025 # preserve native a2=0 delay slot
     # Native2D model2 ownership-opacity call; original routine remains callable.
     patch(0x806380B0,0x0C18E4AF,0x0C000000|(int(symbols['m2pickupopacity'],16)&0xFFFFFFF)>>2)
+    # Flight allocation, then its three mutually exclusive native release sites.
+    for site,original,name in [(0x806F63D8,0x0C1BD4FB,'m2makeflight'),
+                               (0x806F5340,0x0C1844C3,'m2freeflight'),
+                               (0x806F53C0,0x0C1844C3,'m2freeflight'),
+                               (0x806F6DC8,0x0C1844C3,'m2freeflight')]:
+        patch(site,original,0x0C000000|(int(symbols[name],16)&0x0FFFFFFF)>>2)
     target=int(symbols['m2collectdefs'],16)
     for h,l,offset in [(0x806F48D0,0x806F48D4,0),(0x806F4E7C,0x806F4E8C,0),(0x806F51C0,0x806F51CC,12),(0x806F5554,0x806F5560,2),(0x806F626C,0x806F6278,0),(0x806F6AC4,0x806F6ACC,0),(0x806F7428,0x806F7448,0),(0x806F7994,0x806F7998,42*20)]:
         hi,lo=word(h),word(l);signed=(lo&65535)-(65536 if lo&32768 else 0)
