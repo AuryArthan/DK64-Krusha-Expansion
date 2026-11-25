@@ -36,6 +36,10 @@ Two past bugs make good regression targets. A state that moved Chunky directly f
 
 Testing has concentrated on emulated Adventure mode. Physical N64 hardware, the full multiplayer mode and a complete start-to-111% playthrough remain unverified.
 
+## v1.1.0 verification
+
+The release ROM matches the build used to test Big Klump beside Candy’s in Crystal Caves. Across three approaches in standalone Mupen64Plus, his torso stayed outside the shop. Krusha could still enter Candy’s, and Big Klump also steered around the Factory tower. The release patch reproduces that ROM from the clean USA input. [Release fingerprints](releases/v1.1.0.json)
+
 ## v1.0.2 verification
 
 The development and publication builds produced identical ROMs. Applying the release BPS to the original USA ROM reproduced the tested ROM byte for byte. In standalone Mupen64Plus, both Adventure arcade reward coins registered in normal and Mirror Mode. Chunky also unearthed a Rainbow Coin in each mode. [Release fingerprints](releases/v1.0.2.json)
